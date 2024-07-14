@@ -1,55 +1,188 @@
 ﻿<!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>@ViewData["Title"] - mystap</title>
-    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
-    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
-    <link rel="stylesheet" href="~/mystap.styles.css" asp-append-version="true" />
-    <link href="~/lib/datatables/css/dataTables.bootstrap4.css" rel="stylesheet" />
-</head>
-<body>
-    <header>
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
-            <div class="container-fluid">
-                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">mystap</a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
-                        aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
-                    <ul class="navbar-nav flex-grow-1">
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Test" asp-action="Plans">Plans</a>
-                        </li>
-                    </ul>
-                </div>
-            </div>
-        </nav>
-    </header>
-    <div class="container">
-        <main role="main" class="pb-3">
-            @RenderBody()
-        </main>
-    </div>
+	<meta charset="utf-8" />
+	<title>@ViewData["Title"] - mystap</title>
+	<meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport" />
+	<meta content="" name="description" />
+	<meta content="" name="author" />
+	<meta name="csrf-token" content="{{ csrf_token() }}">
 
-    <footer class="border-top footer text-muted">
-        <div class="container">
-            &copy; 2024 - mystap - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
-        </div>
-    </footer>
-    <script src="~/lib/jquery/dist/jquery.min.js"></script>
-    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="~/lib/datatables/js/jquery.dataTables.js"></script>
-    <script src="~/lib/datatables/js/dataTables.bootstrap4.js"></script>
-    <script src="~/js/site.js" asp-append-version="true"></script>
-    @await RenderSectionAsync("Scripts", required: false)
+	<!-- ================== BEGIN core-css ================== -->
+	<link href="~/assets/assets/css/vendor.min.css" rel="stylesheet" />
+	<link href="~/assets/assets/css/default/app.min.css" rel="stylesheet" />
+	<!-- =======~/= END core-css ================== -->
+	<link href="~/assets/assets/plugins/datatables.net-bs5/css/dataTables.bootstrap5.min.css" rel="stylesheet" />
+	<link href="~/assets/assets/plugins/datatables.net-responsive-bs5/css/responsive.bootstrap5.min.css" rel="stylesheet" />
+	<link href="~/assets/assets/plugins/datatables.net-fixedcolumns-bs5/css/fixedColumns.bootstrap5.min.css" rel="stylesheet" />
+	<link href="~/assets/assets/plugins/sweetalert/sweetalert2.min.css" rel="stylesheet" type="text/css" />
+	<link href="~/assets/assets/plugins/popover/jquery.webui-popover.min.css" rel="stylesheet" type="text/css" />
+	<link href="~/assets/assets/plugins/select2/dist/css/select2.min.css" rel="stylesheet" />
+	<link href="~/assets/assets/plugins/select-picker/dist/picker.min.css" rel="stylesheet" />
+	<link href="~/assets/assets/plugins/bootstrap-datepicker/dist/css/bootstrap-datepicker.css" rel="stylesheet" />
+
+
+</head>
+
+
+<body>
+
+	<!-- BEGIN page-cover -->
+	<div class="app-cover"></div>
+	<!-- END page-cover -->
+	<!-- BEGIN #loader -->
+	<div id="loader" class="app-loader">
+		<span class="spinner"></span>
+	</div>
+	<!-- END #loader -->
+	<!-- BEGIN #app -->
+	<div id="app" class="app app-header-fixed app-sidebar-fixed">
+		<!-- BEGIN #header -->
+		<div id="header" class="app-header">
+			<!-- BEGIN navbar-header -->
+			<div class="navbar-header">
+				<a href="/" class="navbar-brand"> <img src="~/assets/images/mystapxpertamina.png" style="margin-right:10px" width="100%" alt=""></a>
+				<button type="button" class="navbar-mobile-toggler" data-toggle="app-sidebar-mobile">
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+				</button>
+			</div>
+			<!-- END navbar-header -->
+			<!-- BEGIN header-nav -->
+			<div class="navbar-nav">
+				<div class="navbar-item navbar-user dropdown">
+					<a href="#" class="navbar-link dropdown-toggle d-flex align-items-center" data-bs-toggle="dropdown">
+						<div class="me-2 avatar-sm rounded-circle" alt="profile-image">
+
+							<img style="object-fit: cover;" src="" alt="" class="mr-2" />
+						</div>
+						<span>
+							<span class="d-none d-md-inline"></span>
+							<b class="caret"></b>
+						</span>
+					</a>
+					<div class="dropdown-menu dropdown-menu-end me-1">
+						<a href="/profile" class="dropdown-item">Edit Profile</a>
+
+						<div class="dropdown-divider"></div>
+						<a href="" onclick="event.preventDefault(); document.getElementById('logout-form').submit();" class="dropdown-item">Log Out</a>
+
+					</div>
+				</div>
+			</div>
+			<!-- END header-nav -->
+		</div>
+		<!-- END #header -->
+		<!-- BEGIN theme-panel -->
+		<!-- END #app -->
+		@await Html.PartialAsync("Sidebar.cshtml");
+		<div id="content" class="app-content">
+
+			@RenderBody()
+			<div class="footer-fixed">
+				<p style="margin-left:30px; margin-bottom:0px">&copy; 2023 Turn Around All Rights Reserved</p>
+			</div>
+		</div>
+
+	</div>
+	<div class="theme-panel">
+		<a href="javascript:;" data-toggle="theme-panel-expand" class="theme-collapse-btn"><i class="fa fa-cog"></i></a>
+		<div class="theme-panel-content" data-scrollbar="true" data-height="100%">
+			<h5>App Settings</h5>
+
+			<!-- BEGIN theme-list -->
+			<div class="theme-list">
+				<div class="theme-list-item"><a href="javascript:;" class="theme-list-link bg-red" data-theme-class="theme-red" data-toggle="theme-selector" data-bs-toggle="tooltip" data-bs-trigger="hover" data-bs-container="body" data-bs-title="Red">&nbsp;</a></div>
+				<div class="theme-list-item"><a href="javascript:;" class="theme-list-link bg-pink" data-theme-class="theme-pink" data-toggle="theme-selector" data-bs-toggle="tooltip" data-bs-trigger="hover" data-bs-container="body" data-bs-title="Pink">&nbsp;</a></div>
+				<div class="theme-list-item"><a href="javascript:;" class="theme-list-link bg-orange" data-theme-class="theme-orange" data-toggle="theme-selector" data-bs-toggle="tooltip" data-bs-trigger="hover" data-bs-container="body" data-bs-title="Orange">&nbsp;</a></div>
+				<div class="theme-list-item"><a href="javascript:;" class="theme-list-link bg-yellow" data-theme-class="theme-yellow" data-toggle="theme-selector" data-bs-toggle="tooltip" data-bs-trigger="hover" data-bs-container="body" data-bs-title="Yellow">&nbsp;</a></div>
+				<div class="theme-list-item"><a href="javascript:;" class="theme-list-link bg-lime" data-theme-class="theme-lime" data-toggle="theme-selector" data-bs-toggle="tooltip" data-bs-trigger="hover" data-bs-container="body" data-bs-title="Lime">&nbsp;</a></div>
+				<div class="theme-list-item"><a href="javascript:;" class="theme-list-link bg-green" data-theme-class="theme-green" data-toggle="theme-selector" data-bs-toggle="tooltip" data-bs-trigger="hover" data-bs-container="body" data-bs-title="Green">&nbsp;</a></div>
+				<div class="theme-list-item"><a href="javascript:;" class="theme-list-link bg-teal" data-theme-class="theme-teal" data-toggle="theme-selector" data-bs-toggle="tooltip" data-bs-trigger="hover" data-bs-container="body" data-bs-title="Teal">&nbsp;</a></div>
+				<div class="theme-list-item"><a href="javascript:;" class="theme-list-link bg-cyan" data-theme-class="theme-cyan" data-toggle="theme-selector" data-bs-toggle="tooltip" data-bs-trigger="hover" data-bs-container="body" data-bs-title="Cyan">&nbsp;</a></div>
+				<div class="theme-list-item"><a href="javascript:;" class="theme-list-link bg-blue" data-theme-class="" data-toggle="theme-selector" data-bs-toggle="tooltip" data-bs-trigger="hover" data-bs-container="body" data-bs-title="Default">&nbsp;</a></div>
+				<div class="theme-list-item"><a href="javascript:;" class="theme-list-link bg-purple" data-theme-class="theme-purple" data-toggle="theme-selector" data-bs-toggle="tooltip" data-bs-trigger="hover" data-bs-container="body" data-bs-title="Purple">&nbsp;</a></div>
+				<div class="theme-list-item"><a href="javascript:;" class="theme-list-link bg-indigo" data-theme-class="theme-indigo" data-toggle="theme-selector" data-bs-toggle="tooltip" data-bs-trigger="hover" data-bs-container="body" data-bs-title="Indigo">&nbsp;</a></div>
+				<div class="theme-list-item"><a href="javascript:;" class="theme-list-link bg-gray" data-theme-class="theme-gray-600" data-toggle="theme-selector" data-bs-toggle="tooltip" data-bs-trigger="hover" data-bs-container="body" data-bs-title="Black">&nbsp;</a></div>
+				<div class="theme-list-item active"><a href="javascript:;" class="theme-list-link bg-black" data-theme-class="theme-black" data-toggle="theme-selector" data-bs-toggle="tooltip" data-bs-trigger="hover" data-bs-container="body" data-bs-title="Black">&nbsp;</a></div>
+			</div>
+			<!-- END theme-list -->
+
+			<div class="theme-panel-divider"></div>
+
+			<div class="row mt-10px">
+				<div class="col-8 control-label  fw-bold">
+					<div>Dark Mode </div>
+					<div class="lh-14">
+						<small class="text-white opacity-50">
+							Adjust the appearance to reduce glare and give your eyes a break.
+						</small>
+					</div>
+				</div>
+				<div class="col-4 d-flex">
+					<div class="form-check form-switch ms-auto mb-0">
+						<input type="checkbox" class="form-check-input" name="app-theme-dark-mode" id="appThemeDarkMode" value="1" />
+						<label class="form-check-label" for="appThemeDarkMode">&nbsp;</label>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<!-- END theme-panel -->
+	<!-- BEGIN scroll-top-btn -->
+	<a href="javascript:;" class="btn btn-icon btn-circle btn-success btn-scroll-to-top" data-toggle="scroll-to-top"><i class="fa fa-angle-up"></i></a>
+	<!-- END scroll-top-btn -->
+	<!-- ================== BEGIN core-js ================== -->
+	{{--
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script> --}}
+	<script src="~/assets/assets/js/vendor.min.js"></script>
+	<script src="~/assets/assets/js/app.min.js"></script>
+	<!-- ================== END core-js ================== -->
+	<script src="~/assets/assets/plugins/datatables.net/js/jquery.dataTables.min.js"></script>
+	<script src="~/assets/assets/plugins/datatables.net-bs5/js/dataTables.bootstrap5.min.js"></script>
+	<script src="~/assets/assets/plugins/datatables.net-responsive/js/dataTables.responsive.min.js"></script>
+	<script src="~/assets/assets/plugins/datatables.net-responsive-bs5/js/responsive.bootstrap5.min.js"></script>
+	<script src="~/assets/assets/js/demo/table-manage-default.demo.js"></script>
+	<script src="~/assets/assets/plugins/highlightjs/cdn-assets/highlight.min.js"></script>
+	<script src="~/assets/assets/js/demo/render.highlight.js"></script>
+	<script src="~/assets/assets/plugins/datatables.net-fixedcolumns/js/dataTables.fixedColumns.min.js"></script>
+	<script src="~/assets/assets/plugins/datatables.net-fixedcolumns-bs5/js/fixedColumns.bootstrap5.min.js"></script>
+
+
+	<script src="~/assets/assets/plugins/datatables.net-colreorder/js/dataTables.colReorder.min.js"></script>
+	<script src="~/assets/assets/plugins/datatables.net-colreorder-bs5/js/colReorder.bootstrap5.min.js"></script>
+	<script src="~/assets/assets/plugins/datatables.net-keytable/js/dataTables.keyTable.min.js"></script>
+	<script src="~/assets/assets/plugins/datatables.net-keytable-bs5/js/keyTable.bootstrap5.min.js"></script>
+	<script src="~/assets/assets/plugins/datatables.net-rowreorder/js/dataTables.rowReorder.min.js"></script>
+	<script src="~/assets/assets/plugins/datatables.net-rowreorder-bs5/js/rowReorder.bootstrap5.min.js"></script>
+	<script src="~/assets/assets/plugins/datatables.net-select/js/dataTables.select.min.js"></script>
+	<script src="~/assets/assets/plugins/datatables.net-select-bs5/js/select.bootstrap5.min.js"></script>
+	<script src="~/assets/assets/plugins/datatables.net-buttons/js/dataTables.buttons.min.js"></script>
+	<script src="~/assets/assets/plugins/datatables.net-buttons-bs5/js/buttons.bootstrap5.min.js"></script>
+	<script src="~/assets/assets/plugins/datatables.net-buttons/js/buttons.colVis.min.js"></script>
+	<script src="~/assets/assets/plugins/datatables.net-buttons/js/buttons.flash.min.js"></script>
+	<script src="~/assets/assets/plugins/datatables.net-buttons/js/buttons.html5.min.js"></script>
+	<script src="~/assets/assets/plugins/datatables.net-buttons/js/buttons.print.min.js"></script>
+	<script src="~/assets/assets/plugins/pdfmake/build/pdfmake.min.js"></script>
+	<script src="~/assets/assets/plugins/pdfmake/build/vfs_fonts.js"></script>
+	<script src="~/assets/assets/plugins/jszip/dist/jszip.min.js"></script>
+
+	<script src="~/assets/assets/plugins/parsleyjs/dist/parsley.min.js"></script>
+	<script src="~/assets/assets/plugins/select-picker/dist/picker.min.js"></script>
+
+	<script src="~/assets/assets/plugins/jquery-validation/jquery.validate.min.js"></script>
+	<script src="~/assets/assets/plugins/sweetalert/sweetalert2.min.js"></script>
+	<script src="~/assets/assets/plugins/popover/jquery.webui-popover.min.js"></script>
+
+	<script src="~/assets/assets/plugins/select2/dist/js/select2.min.js"></script>
+	{{--
+	<script src="https://cdn.jsdelivr.net/npm/select2@4.0.13/dist/js/select2.full.min.js"></script> --}}
+	<script src="~/assets/assets/plugins/bootstrap-datepicker/dist/js/bootstrap-datepicker.js"></script>
+	@* <script>
+	var fungsi_user = '{{Auth::user()->subSection}}';
+	</script> *@
+	@await RenderSectionAsync("Scripts", required: false)
 </body>
+
 </html>

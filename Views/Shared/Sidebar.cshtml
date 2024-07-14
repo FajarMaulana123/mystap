@@ -1,0 +1,337 @@
+﻿@{
+    ViewData["Title"] = "Awal";
+}
+<div id="sidebar" class="app-sidebar">
+    <!-- BEGIN scrollbar -->
+    <div class="app-sidebar-content" data-scrollbar="true" data-height="100%">
+        <!-- BEGIN menu -->
+        <div class="menu">
+            <div class="menu-profile">
+                <a href="/profile" class="menu-profile-link" data-toggle="app-sidebar-profile" data-target="#appSidebarProfileMenu">
+                    <div class="menu-profile-cover with-shadow"></div>
+                    <div class="menu-profile-image menu-profile-image-icon bg-gray-900 text-gray-600">
+                       
+                        <img src="" alt="" />
+                    </div>
+                    <div class="menu-profile-info">
+                        <div class="d-flex align-items-center">
+                            <div class="flex-grow-1">
+                                
+                            </div>
+                        </div>
+                        <small></small>
+                    </div>
+                </a>
+            </div>
+         
+
+            <div class="menu-header">Navigation</div>
+          
+            <div class="menu-item has-sub">
+                <a href="javascript:;" class="menu-link">
+                    <div class="menu-icon">
+                        <i class="fas fa-chart-pie fa-fw"></i>
+                    </div>
+                    <div class="menu-text">Dashboard</div>
+                    <div class="menu-caret"></div>
+                </a>
+                <div class="menu-submenu">
+
+                  
+                    <div class="menu-item">
+                        <a href="/dashboard_equipment" class="menu-link ">
+                            <div class="menu-text">Dashboard Equipment</div>
+                        </a>
+                    </div>
+                  
+                    <div class="menu-item">
+                        <a href="/dashboard_joblist" class="menu-link ">
+                            <div class="menu-text">Dashboard Joblist</div>
+                        </a>
+                    </div>
+                   
+                    <div class="menu-item">
+                        <a href="/dashboard_jobplan" class="menu-link ">
+                            <div class="menu-text">Dashboard Jobplan</div>
+                        </a>
+                    </div>
+                   
+                  
+                    <div class="menu-item">
+                        <a href="/dashboard_material" class="menu-link ">
+                            <div class="menu-text">Dashboard Material</div>
+                        </a>
+                    </div>
+                  
+                    <div class="menu-item">
+                        <a href="/dashboard_kontrak" class="menu-link ">
+                            <div class="menu-text">Dashboard Kontrak</div>
+                        </a>
+                    </div>
+                   
+                    <div class="menu-item">
+                        <a href="/dashboard_inventory" class="menu-link ">
+                            <div class="menu-text">Dashboard Inventory</div>
+                        </a>
+                    </div>
+                   
+                </div>
+            </div>
+         
+
+            
+            <div class="menu-item">
+                <a href="/plant" class="menu-link">
+                    <div class="menu-icon">
+                        <i class="fas fa-location-dot fa-fw"></i>
+                    </div>
+                    <div class="menu-text">Plant</div>
+                </a>
+            </div>
+           
+            <div class="menu-item">
+                <a href="/project" class="menu-link">
+                    <div class="menu-icon">
+                        <i class="fas fa-diagram-project fa-fw"></i>
+                    </div>
+                    <div class="menu-text">Project</div>
+                </a>
+            </div>
+            
+
+            
+            <div class="menu-item has-sub">
+                <a href="javascript:;" class="menu-link">
+                    <div class="menu-icon">
+                        <i class="fas fa-clipboard-check fa-fw"></i>
+                    </div>
+                    <div class="menu-text">Joblist</div>
+                    <div class="menu-caret"></div>
+                </a>
+                <div class="menu-submenu">
+                   
+                    <div class="menu-item">
+                        <a href="/joblist" class="menu-link  ">
+                            <div class="menu-text">Manage Joblist</div>
+                        </a>
+                    </div>
+                   
+                    <div class="menu-item">
+                        <a href="/jobplan" class="menu-link ">
+                            <div class="menu-text">Planning Joblist</div>
+                        </a>
+                    </div>
+                   
+                    <div class="menu-item">
+                        <a href="/eksekusi_joblist" class="menu-link ">
+                            <div class="menu-text">Eksekusi Joblist</div>
+                        </a>
+                    </div>
+                   
+                    <div class="menu-item">
+                        <a href="/paket_joblist" class="menu-link ">
+                            <div class="menu-text">Manage Paket Joblist</div>
+                        </a>
+                    </div>
+                    
+                    <div class="menu-item">
+                        <a href="/notifikasi" class="menu-link ">
+                            <div class="menu-text">Notifikasi</div>
+                        </a>
+                    </div>
+                    
+                </div>
+            </div>
+     
+
+            
+            <div class="menu-item has-sub ">
+                <a href="javascript:;" class="menu-link">
+                    <div class="menu-icon">
+                        <i class="fas fa-cubes fa-fw"></i>
+                    </div>
+                    <div class="menu-text">Master Data</div>
+                    <div class="menu-caret"></div>
+                </a>
+                <div class="menu-submenu">
+                    
+                    <div class="menu-item has-sub ">
+                        <a href="javascript:;" class="menu-link">
+                            <div class="menu-text">Equipment</div>
+                            <div class="menu-caret"></div>
+                        </a>
+                        <div class="menu-submenu">
+                            
+                            <div class="menu-item ">
+                                <a href="/equipments" class="menu-link">
+                                    <div class="menu-text">Manage Equipment</div>
+                                </a>
+                            </div>
+                           
+                            <div class="menu-item">
+                                <a href="/catalog_profile" class="menu-link">
+                                    <div class="menu-text">Catalog Profile</div>
+                                </a>
+                            </div>
+                          
+                        </div>
+
+                    </div>
+                   
+                    <div class="menu-item"><a href="/request_memo" class="menu-link"><div class="menu-text">Memo</div></a></div>
+                    
+                    <div class="menu-item"><a href="/requestor" class="menu-link"><div class="menu-text">Requestor</div></a></div>
+                   
+                    <div class="menu-item"><a href="/unit" class="menu-link"><div class="menu-text">Manage Unit</div></a></div>
+                   
+                    <div class="menu-item"><a href="/bom" class="menu-link"><div class="menu-text">Data BOM</div></a></div>
+                   
+                </div>
+            </div>
+           
+
+            
+            <div class="menu-item has-sub">
+                <a href="javascript:;" class="menu-link">
+                    <div class="menu-icon">
+                        <i class="fas fa-file-contract fa-fw"></i>
+                    </div>
+                    <div class="menu-text">Paket Kontrak</div>
+                    <div class="menu-caret"></div>
+                </a>
+                <div class="menu-submenu">
+                    
+                    <div class="menu-item">
+                        <a href="/sow" class="menu-link  ">
+                            <div class="menu-text">Scope of Work</div>
+                        </a>
+                    </div>
+                   
+                    <div class="menu-item">
+                        <a href="/contracttracking" class="menu-link ">
+                            <div class="menu-text">Paket Jasa</div>
+                        </a>
+                    </div>
+                   
+                    <div class="menu-item">
+                        <a href="/durasi_step" class="menu-link">
+                            <div class="menu-text">SLA</div>
+                        </a>
+                    </div>
+                    
+                    <div class="menu-item">
+                        <a href="/last_po" class="menu-link">
+                            <div class="menu-text">Last PO</div>
+                        </a>
+                    </div>
+                 
+                </div>
+            </div>
+
+
+
+
+           
+            <div class="menu-item has-sub">
+                <a href="javascript:;" class="menu-link">
+                    <div class="menu-icon">
+                        <i class="fas fa-briefcase fa-fw"></i>
+                    </div>
+                    <div class="menu-text">Material</div>
+                    <div class="menu-caret"></div>
+                </a>
+                <div class="menu-submenu">
+
+                    
+                    <div class="menu-item">
+                        <a href="/material" class="menu-link ">
+                            <div class="menu-text">Reservasi</div>
+                        </a>
+                    </div>
+                   
+                    <div class="menu-item">
+                        <a href="/outstanding_reservasi" class="menu-link ">
+                            <div class="menu-text">Outstanding Reservasi</div>
+                        </a>
+                    </div>
+                    
+                    <div class="menu-item">
+                        <a href="/penggunaan_material" class="menu-link ">
+                            <div class="menu-text">Penggunaan Material</div>
+                        </a>
+                    </div>
+                    
+                    <div class="menu-item">
+                        <a href="/edit_pr" class="menu-link ">
+                            <div class="menu-text">Edit Reservasi PR</div>
+                        </a>
+                    </div>
+                   
+                    <div class="menu-item">
+                        <a href="/list_pr" class="menu-link ">
+                            <div class="menu-text">List PR</div>
+                        </a>
+                    </div>
+                   
+                    <div class="menu-item">
+                        <a href="/distribusi_pr" class="menu-link ">
+                            <div class="menu-text">Distribusi PR</div>
+                        </a>
+                    </div>
+                   
+                </div>
+            </div>
+          
+
+           
+            <div class="menu-header">Database</div>
+            
+            <div class="menu-item">
+                <a href="/steerco" class="menu-link">
+                    <div class="menu-icon">
+                        <i class="fas fa-users-gear fa-fw"></i>
+                    </div>
+                    <div class="menu-text">Steerco</div>
+                </a>
+            </div>
+           
+
+            
+            <div class="menu-item">
+                <a href="/rapat" class="menu-link">
+                    <div class="menu-icon">
+                        <i class="fas fa-users fa-fw"></i>
+                    </div>
+                    <div class="menu-text">Rapat Koordinasi</div>
+                </a>
+            </div>
+           
+
+          
+            <div class="menu-header">Settings</div>
+           
+            <div class="menu-item">
+                <a href="/user" class="menu-link">
+                    <div class="menu-icon">
+                        <i class="fas fa-user-group fa-fw"></i>
+                    </div>
+                    <div class="menu-text">User Management</div>
+                </a>
+            </div>
+           
+
+            <!-- BEGIN minify-button -->
+            <div class="menu-item d-flex">
+                <a href="javascript:;" class="app-sidebar-minify-btn ms-auto" data-toggle="app-sidebar-minify"><i class="fa fa-angle-double-left"></i></a>
+            </div>
+            <!-- END minify-button -->
+
+        </div>
+        <!-- END menu -->
+    </div>
+    <!-- END scrollbar -->
+</div>
+<div class="app-sidebar-bg"></div>
+<div class="app-sidebar-mobile-backdrop"><a href="#" data-dismiss="app-sidebar-mobile" class="stretched-link"></a></div>
+<!-- END #sidebar -->
+

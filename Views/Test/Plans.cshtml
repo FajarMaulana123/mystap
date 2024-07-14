@@ -1,19 +1,89 @@
 ﻿@{
     ViewData["Title"] = "Plans";
 }
-<div class="container">
-    <h3 class="text-primary">Customers</h3>
-    <hr />
+ <ol class="breadcrumb float-xl-end">
+        <li class="breadcrumb-item"><a href="javascript:void(0);"> <i data-feather="map-pin"></i></a></li>
+        <li class="breadcrumb-item active" aria-current="page"><span>Plant</span></li>
+    </ol>
+    <h1 class="page-header">Plant</h1>
+    <div class="panel panel-inverse">
+        <div class="panel-heading">
+            <h4 class="panel-title">Data Plant</h4>
+            <div class="panel-heading-btn">
+                <a href="javascript:;" class="btn btn-xs btn-icon btn-default" data-toggle="panel-expand"><i class="fa fa-expand"></i></a>
+                <a href="javascript:;" class="btn btn-xs btn-icon btn-warning" data-toggle="panel-collapse"><i class="fa fa-minus"></i></a>
+            </div>
+        </div> 
+        <div class="panel-body">
+            <div class="table-responsive mb-4 mt-4">
+                <table id="table" class="table small table-striped table-bordered dataTables_wrapper" width="100%">
+                    <thead>
+                        <tr>
+                           @*  <th>No</th> *@
+                            <th>location</th>
+                            <th>Plant Code</th>
+                            <th>Created By</th>
+                            <th>Date</th>
+                            @* <th>Modify By</th> *@
+                            @* <th>Action</th> *@
+                        </tr>
+                    </thead>
+                    
+                </table>
+            </div>
+        </div>
+    </div>
 
-    <table id="Customers" class="table table-striped table-bordered dt-responsive nowrap">
-        <thead>
-            <tr>
 
-                <th>PlanDesc</th>
-            </tr>
-        </thead>
-    </table>
-</div>
+
+
+@* <div class="modal fade" id="Modal" tabindex="-1" role="dialog" aria-labelledby="ModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title judul-modal" id="Modal"></h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-hidden="true"  aria-label="Close">
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-12">
+                        <div class="card">
+                            <div class="card-body">
+                                <form id="add-form">
+                                    <input type="hidden" name="hidden_status" id="hidden_status" value="add">
+                                    <input type="hidden" name="hidden_id" id="hidden_id">
+                                    <div class="row">
+                                        <div class="col-md-12 mb-2">
+                                            <div class="form-group">
+                                                <label>location</label>
+                                                <input type="text" name="planDesc" id="planDesc" class="form-control text-uppercase" placeholder="Location">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-12 mb-2">
+                                            <div class="form-group">
+                                                <label>Plant</label>
+                                                <input type="text" name="plans" id="plans" class="form-control" placeholder="Plant Code">
+                                                <input type="hidden" name="hidden_status" id="hidden_status">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <a href="javascript:;" class="btn btn-white" data-bs-dismiss="modal">Close</a>
+                    <button type="reset" class="btn btn-dark">Reset</button>
+                    <button type="submit" class="btn btn-success">Submit</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div> *@
 
 @section Scripts
 {
