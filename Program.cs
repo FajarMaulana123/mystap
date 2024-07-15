@@ -36,7 +36,12 @@ app.UseEndpoints(endpoints =>
         pattern: "plans",
         defaults: new { controller = "Test", action = "Plans" });
 
-	endpoints.MapControllerRoute(
+    endpoints.MapControllerRoute(
+       name: "project",
+       pattern: "project",
+       defaults: new { controller = "Data", action = "Project" });
+
+    endpoints.MapControllerRoute(
 		name: "awal",
 		pattern: "awal",
 		defaults: new { controller = "Awal", action = "Awal" });

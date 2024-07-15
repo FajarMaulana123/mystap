@@ -1,0 +1,190 @@
+﻿@{
+    ViewData["Title"] = "Plans";
+}
+   <ol class="breadcrumb float-xl-end">
+        <li class="breadcrumb-item"><a href="javascript:void(0);"> <i data-feather="package"></i></a></li>
+        <li class="breadcrumb-item active" aria-current="page"><span>Project</span></li>
+    </ol>
+    <h1 class="page-header">Project</h1>
+    <div class="panel panel-inverse">
+        <div class="accordion" id="accordion">
+            <div class="accordion-item border-0">
+                <div class="accordion-header" id="headingOne">
+                    <button class="accordion-button bg-gray-900 text-white px-3 py-10px pointer-cursor" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne">
+                        <i class="fa fa-circle fa-fw text-blue me-2 fs-8px"></i>Filter
+                    </button>
+                </div>
+                <div id="collapseOne" class="accordion-collapse collapse" data-bs-parent="#accordion">
+                    <div class="accordion-body bg-gray-800 text-white">
+                        <div class="row">
+                            <div class="col-md-4 mb-2">
+                                <label>Status</label>
+                                <select name="status_filter" id="status_filter" class="form-control form-control-sm">
+                                    <option value="">All</option>
+                                    <option value="1">Active</option>
+                                    <option value="0">In Active</option>
+                                </select>
+                            </div>
+                            <div class="col-md-4 mb-2">
+                                <label>TA/OH</label>
+                                <select name="taoh_filter" id="taoh_filter" class="form-control form-control-sm">
+                                    <option value="">All</option>
+                                    <option value="OH">OH</option>
+                                    <option value="TA">TA</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="row mt-3 mb-2">
+                            <div class="col-md-12">
+                                <button class="btn btn-primary" id="filter"> Filter</button>
+                                <button class="btn btn-warning" id="reset"> Reset</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="panel panel-inverse">
+        <div class="panel-heading">
+            <h4 class="panel-title">Data Project</h4>
+            <div class="panel-heading-btn">
+                <a href="javascript:;" class="btn btn-xs btn-icon btn-default" data-toggle="panel-expand"><i class="fa fa-expand"></i></a>
+                <a href="javascript:;" class="btn btn-xs btn-icon btn-warning" data-toggle="panel-collapse"><i class="fa fa-minus"></i></a>
+            </div>
+        </div> 
+        <div class="panel-body">
+            <div class="table-responsive mb-4 mt-4">
+                <table id="table" class="table small table-striped table-bordered dataTables_wrapper" width="100%">
+                    <thead>
+                        <tr>
+                            <th>No</th>
+                            <th>No Project</th>
+                            <th>Description</th>
+                            <th>Month</th>
+                            <th>Year</th>
+                            <th>Date</th>
+                            <th>Revision</th>
+                            <th>Status</th>
+                            <th>Durasi TA Brick</th>
+                            <th>TAOH</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                </table>
+            </div>
+        </div>
+    </div>
+
+
+@* <div class="modal fade" id="Modal" tabindex="-1" role="dialog" aria-labelledby="ModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title judul-modal" id="Modal"></h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-hidden="true"  aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-12">
+                        <div class="card">
+                            <div class="card-body>
+                                <input type="hidden" name="hidden_status" id="hidden_status"  value="add">
+                                <input type="hidden" name="hidden_id" id="hidden_id" >
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <div class="form-group">
+                                            <label>Plants</label>
+                                            <select name="plant" id="plant" class="form-control">
+                                                <option value="">Select Plant</option>
+                                                
+                                                    
+                                                
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <div class="form-group">
+                                            <label>month</label>
+                                            <input type="month" id="year" name="year" class="form-control">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label>Execution Date</label>
+                                            <input type="date" id="execution_date" name="execution_date" class="form-control" placeholder="col-md-6">
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label>Finish Date</label>
+                                            <input type="date" id="finish_date" name="finish_date" class="form-control" placeholder="col-md-6">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <div class="form-group">
+                                            <label>Revision</label>
+                                            <input type="text" id="revision" name="revision" class="form-control" >
+                                        </div>
+                                    </div>
+                                    <div class="col-md-12">
+                                        <div class="form-group">
+                                            <label>Description</label>
+                                            <textarea name="description" id="description" class="form-control" rows="3" placeholder="Text Here..."></textarea>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label>Durasi TA Brick</label>
+                                            <select name="durasiTABrick"  id="durasiTABrick" class="form-control">
+                                            <option value="">Select Durasi</option>
+                                        
+                                            <option value="21">21</option>
+                                            <option value="11">11</option>
+                                    
+                                    </select>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label>Section</label>
+                                            <select name="section" id="section" class="form-control">
+                                                <option value="">Select Section</option>
+                                            
+                                                <option value="OH">OH</option>
+                                                <option value="TA">TA</option>
+                                                <option value="PS">PS</option>
+                                            
+                                            </select
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <a href="javascript:;" class="btn btn-white" data-bs-dismiss="modal">Close</a>
+                <button type="reset" class="btn btn-dark">Reset</button>
+                <button type="submit" class="btn btn-success">Submit</button>
+            </div>
+       
+        </div>        
+    </div>
+</div> *@
+
+@section Scripts
+{
+    <script src="~/js/Project.js"></script>
+}

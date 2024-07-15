@@ -1,4 +1,6 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.CodeAnalysis;
+using Microsoft.EntityFrameworkCore;
+using mystap.Models;
 namespace mystap.Models
 {
     public class DatabaseContext : DbContext
@@ -10,3 +12,5 @@ namespace mystap.Models
         public DbSet<Users> users { get; set; }
     }
 }
+
+
