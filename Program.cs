@@ -32,11 +32,6 @@ app.UseAuthorization();
 app.UseEndpoints(endpoints =>
 {
     endpoints.MapControllerRoute(
-        name: "plans",
-        pattern: "plans",
-        defaults: new { controller = "Test", action = "Plans" });
-
-    endpoints.MapControllerRoute(
        name: "project",
        pattern: "project",
        defaults: new { controller = "Data", action = "Project" });
@@ -46,10 +41,30 @@ app.UseEndpoints(endpoints =>
 		pattern: "awal",
 		defaults: new { controller = "Awal", action = "Awal" });
 
-	endpoints.MapControllerRoute(
+    endpoints.MapControllerRoute(
+        name: "plant",
+        pattern: "plant",
+        defaults: new { controller = "Test", action = "Plans" });
+
+    endpoints.MapControllerRoute(
        name: "plant_",
        pattern: "plant_",
        defaults: new { controller = "Test", action = "Get_Plans" });
+
+    endpoints.MapControllerRoute(
+       name: "create_plant",
+       pattern: "create_plant",
+       defaults: new { controller = "Test", action = "Create_Plant" });
+
+    endpoints.MapControllerRoute(
+       name: "update_plant",
+       pattern: "update_plant",
+       defaults: new { controller = "Test", action = "Update_Plant" });
+
+    endpoints.MapControllerRoute(
+       name: "delete_plant",
+       pattern: "delete_plant",
+       defaults: new { controller = "Test", action = "Delete_Plant" });
 
     endpoints.MapControllerRoute(
         name: "default",

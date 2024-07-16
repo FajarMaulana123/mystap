@@ -1,28 +1,6 @@
-﻿/*$(document).ready(function () {
-    $('#Customers').dataTable({
-        "processing": true,
-        "serverSide": true,
-        "filter": true,
-        "ajax": {
-            "url": "/get_",
-            "type": "POST",
-            "datatype": "json"
-        },
+﻿$(document).ready(function () {
 
-        "columns": [
-
-            { "data": "planDesc", "name": "planDesc", "autowidth": true },
-
-
-        ]
-    });
-});*/
-
-$(document).ready(function () {
-    console.log('ahah')
-   
-
-    $('#table').DataTable({
+    var table = $('#table').DataTable({
         dom: '<"dataTables_wrapper dt-bootstrap"<"row"<"col-xl-7 d-block d-sm-flex d-xl-block justify-content-center"<"d-block d-lg-inline-flex me-0 me-md-3"l><"d-block d-lg-inline-flex"B>><"col-xl-5 d-flex d-xl-block justify-content-center"fr>>t<"row"<"col-md-5"i><"col-md-7"p>>>',
         processing: true,
         serverSide: true,
@@ -37,6 +15,13 @@ $(document).ready(function () {
             { data: 'planDesc', name: 'planDesc' },
             { data: 'created_by', name: 'created_by' },
             { data: 'createdDate', name: 'createdDate' },
+            {
+                "render": function (data, type, full, meta) {
+                    return '<div class="d-flex"><a href="javascript:void(0);" class="btn btn-warning  btn-xs edit mr-1" data-id="' + full.id + '" data-location="' + full.planDesc + '" data-plant="' + full.plans + '" ><i class="fas fa-pen fa-xs"></i></a><a href = "javascript:void(0);" style = "margin-left:5px" class="btn btn-danger btn-xs delete " data-id="'+full.id+'" > <i class="fas fa-trash fa-xs"></i></a ></div > ';
+                },
+                orderable: false,
+                searchable: false
+            },
             /*{ data: 'nama_', name: 'nama_' },
             {
                 data: 'action',
@@ -48,7 +33,7 @@ $(document).ready(function () {
        /* columnDefs: [
             (user_auth == 'user') ? { "visible": false, "targets": [6] } : {},
         ],*/
-       /* buttons: (user_auth == 'superadmin' || user_auth == 'admin') ? [{
+        buttons:/* (user_auth == 'superadmin' || user_auth == 'admin') ?*/ [{
             text: '<i class="far fa-edit"></i> New',
             className: 'btn btn-success',
             action: function (e, dt, node, config) {
@@ -68,7 +53,7 @@ $(document).ready(function () {
             exportOptions: {
                 columns: ':not(:last-child)',
             }
-        }] : [{
+        }] /*: [{
             extend: 'excel',
             title: 'Plant',
             className: 'btn',
@@ -79,10 +64,10 @@ $(document).ready(function () {
             }
         }]*/
     });
-    table.ajax.reload();
+    //table.ajax.reload();
     // table.button( 0 ).nodes().css('height', '35px')
 
-   /* $(document).on('click', '#tambah', function () {
+    $(document).on('click', '#tambah', function () {
         $('#add-form')[0].reset();
         $('.judul-modal').text('Tambah');
         $('#hidden_status').val('add');
@@ -182,7 +167,7 @@ $(document).ready(function () {
                     if (data.result != true) {
                         Swal.fire({
                             title: 'Gagal',
-                            text: "Gagal Tambah / Update User",
+                            text: "Gagal Tambah / Update Plant",
                             icon: 'error',
                             showCancelButton: false,
                             showConfirmButton: true,
@@ -205,6 +190,6 @@ $(document).ready(function () {
                 }
             });
         }
-    });*/
+    });
 
 });
