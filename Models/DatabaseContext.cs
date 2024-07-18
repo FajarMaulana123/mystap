@@ -10,6 +10,7 @@ namespace mystap.Models
 
         public DbSet<Plans> plans { get; set; }
         public DbSet<Users> users { get; set; }
+        public DbSet<ViewReadinessEquipment> view_readiness_equipment { get; set; }
     }
 }
 
