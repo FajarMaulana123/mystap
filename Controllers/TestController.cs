@@ -21,6 +21,7 @@ namespace mystap.Controllers
         }
         public IActionResult Plans()
         {
+
             return View();
         }
         

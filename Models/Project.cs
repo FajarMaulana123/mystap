@@ -13,8 +13,8 @@
         public int? updated { get; set; }
         public DateTime? tglTA { get; set; }
         public DateTime? tglSelesaiTA { get; set; }
-        public int? deleteBy { get; set; }
-        public int? createdBy { get; set; }
+        public long? deletedBy { get; set; }
+        public long? createdBy { get; set; }
         public DateTime? createdDate { get; set; }
         public DateTime? lastModify { get; set; }
         public long? modifyBy { get; set; }

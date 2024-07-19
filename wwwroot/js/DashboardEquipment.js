@@ -279,12 +279,8 @@
 
 $(document).ready(function() {
     var table_readiness = $('#table_tagno').DataTable({
-        dom: '<"dataTables_wrapper dt-bootstrap"<"row"<"col-xl-4 d-block d-sm-flex d-xl-block justify-content-center"<"d-block d-lg-inline-flex me-0 me-md-3"l><"d-block d-lg-inline-flex"B>><"col-xl-8 d-flex d-xl-block justify-content-center"fr>>t<"row"<"col-md-5"i><"col-md-7"p>>>',
-        scrollY: '300px',
-        scrollCollapse: true,
-        paging: false,
-        info:false,
-        // searching:false,
+        //dom: '<"dataTables_wrapper dt-bootstrap"<"row"<"col-xl-4 d-block d-sm-flex d-xl-block justify-content-center"<"d-block d-lg-inline-flex me-0 me-md-3"l><"d-block d-lg-inline-flex"B>><"col-xl-8 d-flex d-xl-block justify-content-center"fr>>t<"row"<"col-md-5"i><"col-md-7"p>>>',
+        
         processing: true,
         serverSide: true,
         ajax: {
@@ -299,8 +295,13 @@ $(document).ready(function() {
             {data: 'jobNo', name: 'jobNo'},
             // {data: 'projectNo', name: 'projectNo'},
             // {data: 'description', name: 'description'},
-            {data: 'eqtagno', name: 'eqtagno'},
-            {data: 'status', name: 'status'},
+            {
+                data: 'eqTagNo', name: 'eqTagNo',
+                render: function (data, type, full, meta) {
+                    return full.eqTagNo + '<span class="popover_ text-primary" style="margin-left:10px"><i class="fas fa-info-circle fa-sm"></i></span>';
+                },
+},
+            {data: 'status_tagno', name: 'status_tagno'},
             //{data: 'hidden', name: 'hidden'},
         ],
         buttons: [
