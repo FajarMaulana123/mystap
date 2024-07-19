@@ -1,7 +1,10 @@
-﻿namespace mystap.Models
+﻿using System.ComponentModel.DataAnnotations.Schema;
+
+namespace mystap.Models
 {
     public class Project
     {
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public long id { get; set; }
         public string? projectNo { get; set; }
         public string? description { get; set; }
@@ -24,5 +27,8 @@
         public string? additional1Date { get; set; }
         public string? additional2Date { get; set; }
         public string? taoh { get; set; }
+
+        [ForeignKey("createdBy")]
+        public Users? users { get; set; }
     }
 }
