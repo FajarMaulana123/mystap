@@ -1,4 +1,6 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using mystap.Models;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace joblist.Model
 {
@@ -24,5 +26,8 @@ namespace joblist.Model
         public DateTime? dateCreated { get; set; }
         public DateTime? lastModify { get; set; }
         public long? modifyBy { get; set; }
+
+        [ForeignKey("createdBy")]
+        public Users users { get; set; }
     }
 }

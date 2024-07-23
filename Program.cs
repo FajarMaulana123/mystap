@@ -10,6 +10,7 @@ builder.Services.AddDbContext<DatabaseContext>(options =>
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
+builder.Services.AddMemoryCache();
 
 
 var app = builder.Build();
@@ -46,6 +47,21 @@ app.UseEndpoints(endpoints =>
         name: "get_readiness_equipment",
         pattern: "get_readiness_equipment",
         defaults: new { controller = "Dashboard", action = "GetReadinessEquipment" });
+
+    endpoints.MapControllerRoute(
+        name: "grafik_readiness_equipment",
+        pattern: "grafik_readiness_equipment",
+        defaults: new { controller = "Dashboard", action = "GrafikReadinessEquipment" });
+
+    endpoints.MapControllerRoute(
+        name: "get_equipments",
+        pattern: "get_equipments",
+        defaults: new { controller = "Dashboard", action = "GetEquipment" });
+
+    endpoints.MapControllerRoute(
+        name: "readiness_detail",
+        pattern: "readiness_detail/{projectID?}/{rev?}/{joblist?}",
+        defaults: new { controller = "Dashboard", action = "ReadinessDetail" });
 
     endpoints.MapControllerRoute(
         name: "plant",

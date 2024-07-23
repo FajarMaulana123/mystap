@@ -83,8 +83,8 @@
                                 <tr>
                                     <th width="10%">No Job</th>
                                     <th>eqTagNo</th>
+                                    <th>hidden</th>
                                     <th width="20%">Status</th>
-                                    @* <th>hidden</th> *@
                                 </tr>
                             </thead>  
                         </table>
@@ -109,6 +109,10 @@
                         <div class="col-2">
                             <select name="area_filter" id="area_filter" class="form-control form-control-sm">
                                 <option value="">All</option>
+                                @foreach (var val in ViewBag.unit)
+                                {
+                                    <option value="@(val.unitCode)"> @(val.unitCode) ( @(val.unitProses) )</option>
+                                }
                             </select>
                         </div>
                     </div>

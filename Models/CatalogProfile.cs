@@ -1,6 +1,8 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 namespace mystap.Models
 {
+    [Table("catalog_profile")]
     public class CatalogProfile
     {
         public long id { get; set; }

@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 namespace mystap.Models
 {
     public class Equipments
@@ -17,7 +18,7 @@ namespace mystap.Models
         public string? planning_plant { get; set; }
         public string? planner_group { get; set; }
         public string? main_work_center { get; set; }
-        public string? catalog_profile { get; set; }
+        public int? catalog_profile { get; set; }
         public string? maint_plant { get; set; }
         public string? location { get; set; }
         public string? plant_section { get; set; }
@@ -54,6 +55,7 @@ namespace mystap.Models
         public string? eqGroupID { get; set; }
         public string? unitKilang { get; set; }
         public string? catProf { get; set; }
+
 
     }
 }
