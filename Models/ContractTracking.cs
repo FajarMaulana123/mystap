@@ -1,6 +1,4 @@
 ﻿using System.ComponentModel.DataAnnotations;
-using mystap.Models;
-using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 namespace mystap.Models
 {

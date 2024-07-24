@@ -22,11 +22,4 @@
     <Folder Include="wwwroot\lib\js\" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Content Update="wwwroot\js\Joblist_Detail.js">
-      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
-      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
-    </Content>
-  </ItemGroup>
-
 </Project>

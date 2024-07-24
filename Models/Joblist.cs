@@ -1,8 +1,7 @@
-﻿using mystap.Models;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace joblist.Model
+namespace mystap.Models
 {
     public class Joblist
     {

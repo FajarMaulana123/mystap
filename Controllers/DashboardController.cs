@@ -5,7 +5,6 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Caching.Memory;
 using mystap.Models;
 using System.Data;
-using System.Linq;
 using System.Linq.Dynamic.Core;
 
 namespace mystap.Controllers
@@ -230,6 +229,62 @@ namespace mystap.Controllers
                 throw;
             }
         }
+
+        public async Task<IActionResult> OrderDetail()
+        {
+            try
+            {
+                var id = Request.Form["id"].FirstOrDefault();
+                if(id != "")
+                {
+                    var draw = HttpContext.Request.Form["draw"].FirstOrDefault();
+                    // Skipping number of Rows count
+                    var start = Request.Form["start"].FirstOrDefault();
+                    // Paging Length 10, 20
+                    var length = Request.Form["length"].FirstOrDefault();
+                    // Sort Column Name
+                    var sortColumn = Request.Form["columns[" + Request.Form["order[0][column]"].FirstOrDefault() + "][name]"].FirstOrDefault();
+                    // Sort Column Direction (asc, desc)
+                    var sortColumnDirection = Request.Form["order[0][dir]"].FirstOrDefault();
+                    // Search Value from (Search box)
+                    var searchValue = Request.Form["search[value]"].FirstOrDefault();
+                    // Paging Size (10, 20, 50, 100)
+                    int pageSize = length != null ? Convert.ToInt32(length) : 0;
+                    int skip = start != null ? Convert.ToInt32(start) : 0;
+                    int recordsTotal = 0;
+
+                    var query = _context.view_detail_order.FromSql($"select work_order.main_work_ctr,work_order.[order],work_order.[description],zpm01.material,zpm01.itm,zpm01.material_description,zpm01.del,zpm01.unloading_point,zpm01.bun,zpm01.reqmt_date,zpm01.reqmt_qty,zpm01.qty_res,zpm01.pr as pr,zpm01.itm_pr as pr_item,zpm01.qty_pr as pr_qty,zpm01.status_pengadaan,purch_order.po,purch_order.po_quantity as po_qty,purch_order.item_po as po_item, purch_order.deliv_date as deliv_date,purch_order.dci as dci, (case when purch_order.po is not null then purch_order.deliv_date else DATEADD(DAY, ((case when zpm01.dt_purch is not null or zpm01.dt_purch != '' then zpm01.dt_purch when zpm01.dt_iv is not null or zpm01.dt_iv != '' then zpm01.dt_iv else (case when zpm01.dt_ta is not null or zpm01.dt_ta != '' then zpm01.dt_ta else 0 end) end) + (case when zpm01.dt_status_pengadaan is not null or zpm01.dt_status_pengadaan != '' then zpm01.dt_status_pengadaan else 52 end)), CONVERT (DATE, GETDATE())) end)as prognosa_, (case when zpm01.unloading_point = 'XX' then 'LLD' else 'Non LLD' end) as lld, (case when zpm01.pr is null or zpm01.pr = '' then (case when zpm01.reqmt_qty = zpm01.qty_res then 'terpenuhi_stock' else 'create_pr' end) else (case when (zpm01.pr is not null or zpm01.pr != '') and (purch_order.po is null or purch_order.po = '') then (case when (zpm01.status_pengadaan = 'tunggu_pr' or zpm01.status_pengadaan = 'evaluasi_dp3' or zpm01.status_pengadaan is null) then 'outstanding_pr' when zpm01.status_pengadaan = 'inquiry_harga' then 'inquiry_harga' when (zpm01.status_pengadaan = 'hps_oe' or zpm01.status_pengadaan = 'bidder_list' or zpm01.status_pengadaan = 'penilaian_kualifikasi' or zpm01.status_pengadaan = 'rfq') then 'hps_oe' when (zpm01.status_pengadaan = 'pemasukan_penawaran' or zpm01.status_pengadaan = 'pembukaan_penawaran' or zpm01.status_pengadaan = 'evaluasi_penawaran' or zpm01.status_pengadaan = 'klarifikasi_spesifikasi' or zpm01.status_pengadaan = 'evaluasi_teknis' or zpm01.status_pengadaan = 'evaluasi_tkdn' or zpm01.status_pengadaan = 'negisiasi'  or zpm01.status_pengadaan = 'lhp') then 'proses_tender' when (zpm01.status_pengadaan = 'pengumuman_pemenang' or zpm01.status_pengadaan = 'penunjuk_pemenang' or zpm01.status_pengadaan = 'purchase_order') then 'Penetapan Pemenang' else 'outstanding_pr' end) when (zpm01.pr is not null or zpm01.pr != '') and (purch_order.po is not null or purch_order.po != '') then (case when purch_order.dci is null or purch_order.dci = '' then 'tunggu_onsite' else 'onsite' end) end) end) as status_ from zpm01 left join work_order on work_order.[order] = zpm01.no_order left join purch_order on purch_order.material = zpm01.material AND purch_order.pr = zpm01.pr AND purch_order.item_pr = zpm01.itm_pr where work_order.[order] in ('8202205958') and ((del is null or del != 'X') and (zpm01.reqmt_qty is not null and zpm01.reqmt_qty != 0)) group by work_order.[order],zpm01.material,zpm01.itm,work_order.main_work_ctr,work_order.[description],zpm01.material_description,zpm01.del,zpm01.unloading_point, zpm01.bun,zpm01.reqmt_date,zpm01.reqmt_qty,zpm01.qty_res,  zpm01.status_pengadaan,purch_order.po, zpm01.pr,zpm01.itm_pr, zpm01.qty_pr ,purch_order.po_quantity,purch_order.item_po ,purch_order.deliv_date ,purch_order.dci ,zpm01.dt_purch,zpm01.dt_iv,zpm01.dt_ta,zpm01.dt_status_pengadaan");
+                    query.AsEnumerable();
+
+                    // Sorting
+                    if (!(string.IsNullOrEmpty(sortColumn) && string.IsNullOrEmpty(sortColumnDirection)))
+                    {
+                        query = query.OrderBy(sortColumn + " " + sortColumnDirection);
+                    }
+
+                    //search
+                    if (!string.IsNullOrEmpty(searchValue))
+                    {
+                        query = query.Where(m => m.order.StartsWith(searchValue) || m.itm.StartsWith(searchValue) || m.material.StartsWith(searchValue) || m.material_description.StartsWith(searchValue) || m.lld.StartsWith(searchValue) || m.status_.StartsWith(searchValue));
+                    }
+                    // Total number of rows count
+                    //Console.WriteLine(customerData);
+                    recordsTotal = query.Count();
+                    // Paging
+                    var data = await query.ToListAsync();
+                    // Returning Json Data
+                    return Json(new { draw = draw, recordsFiltered = recordsTotal, recordsTotal = recordsTotal, data = data });
+                }
+
+                return Json(new { draw = 0, recordsFiltered = 0, recordsTotal = 0, data = new { } });
+                
+            }
+            catch
+            {
+                throw;
+            }
+        }
+
 
 
     }

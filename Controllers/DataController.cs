@@ -443,7 +443,7 @@ namespace mystap.Controllers
                 int recordsTotal = 0;
 
 
-                var customerData = _context.catalog_profile.Include("users").Where(s => s.deleted == "0").Select(a => new { id = a.id, code = a.code, equipment_class = a.equipment_class, equipment_group = a.equipment_group, disiplin = a.disiplin, long_description = a.long_description });
+                var customerData = _context.catalogProfile.Include("users").Where(s => s.deleted == 0).Select(a => new { id = a.id, code = a.code, equipment_class = a.equipment_class, equipment_group = a.equipment_group, disiplin = a.disiplin, long_description = a.long_description });
 
                 if (!(string.IsNullOrEmpty(sortColumn) && string.IsNullOrEmpty(sortColumnDirection)))
                 {
@@ -468,20 +468,20 @@ namespace mystap.Controllers
         {
             try
             {
-                CatalogProfile catalog_profile = new CatalogProfile();
-                catalog_profile.code =formcollaction["code"];
-                catalog_profile.disiplin = formcollaction["disiplin"];
-                catalog_profile.equipment_class = formcollaction["equipment_class"];
-                catalog_profile.equipment_group = formcollaction["equipment_group"];
-                catalog_profile.long_description = formcollaction["long_description"];
-                catalog_profile.created_date = formcollaction["created_date"];
-                catalog_profile.createdBy = formcollaction["disiplin"];
-                catalog_profile.deleted = "0";
+                CatalogProfile catalogProfile = new CatalogProfile();
+                catalogProfile.code = Convert.ToInt32(formcollaction["code"]);
+                catalogProfile.disiplin = formcollaction["disiplin"];
+                catalogProfile.equipment_class = formcollaction["equipment_class"];
+                catalogProfile.equipment_group = formcollaction["equipment_group"];
+                catalogProfile.long_description = formcollaction["long_description"];
+                catalogProfile.created_date = formcollaction["created_date"];
+                catalogProfile.createdBy = formcollaction["disiplin"];
+                catalogProfile.deleted = 0;
 
                 Boolean t;
-                if (catalog_profile != null)
+                if (catalogProfile != null)
                 {
-                    _context.catalog_profile.Add(catalog_profile);
+                    _context.catalogProfile.Add(catalogProfile);
                     _context.SaveChanges();
                     t = true;
                 }
@@ -496,16 +496,16 @@ namespace mystap.Controllers
                 throw;
             }
         }
-        public IActionResult Update_Catalog_Profile(Rapat rapat)
+        public IActionResult Update_Catalog_Profile(CatalogProfile catalogProfile)
         {
             try
             {
                 int id = Int32.Parse(Request.Form["hidden_id"].FirstOrDefault());
-                CatalogProfile obj = _context.catalog_profile.Where(p => p.id == id).FirstOrDefault();
+                CatalogProfile obj = _context.catalogProfile.Where(p => p.id == id).FirstOrDefault();
 
                 if (obj != null)
                 {
-                    obj.code = Request.Form["code"].FirstOrDefault();
+                    obj.code = Convert.ToInt32(Request.Form["code"].FirstOrDefault());
                     obj.disiplin = Request.Form["disiplin"].FirstOrDefault();
                     obj.equipment_class = Request.Form["equipment_class"].FirstOrDefault();
                     obj.equipment_group = Request.Form["equipment_group"].FirstOrDefault();
@@ -521,16 +521,16 @@ namespace mystap.Controllers
             }
         }
 
-        public IActionResult Deleted_Catalog_Profile(Rapat rapat)
+        public IActionResult Deleted_Catalog_Profile(CatalogProfile catalogProfile)
         {
             try
             {
                 int id = Int32.Parse(Request.Form["id"].FirstOrDefault());
-                CatalogProfile obj = _context.catalog_profile.Where(p => p.id == id).FirstOrDefault();
+                CatalogProfile obj = _context.catalogProfile.Where(p => p.id == id).FirstOrDefault();
 
                 if (obj == null)
                 {
-                    obj.deleted = "1";
+                    obj.deleted = 1;
                     _context.SaveChanges();
 
                     return Json(new { title = "Sukses!", icon = "success", status = "Berhasil Dihapus" });

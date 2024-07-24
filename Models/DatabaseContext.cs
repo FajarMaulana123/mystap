@@ -1,9 +1,6 @@
-﻿using joblist.Model;
-using joblist_detail.models;
-
+﻿
 using Microsoft.CodeAnalysis;
 using Microsoft.EntityFrameworkCore;
-using mystap.Models;
 namespace mystap.Models
 {
     public class DatabaseContext : DbContext
@@ -16,16 +13,15 @@ namespace mystap.Models
         public DbSet<Project> project { get; set; }
         public DbSet<Rapat> rapat { get; set; }
         public DbSet<Unit> unit { get; set; }
-        public DbSet<Joblist> joblist { get; set; }
         public DbSet<Equipments> equipments { get; set; }
         public DbSet<CatalogProfile> catalogProfile { get; set; }
-        public DbSet<Joblist_Detail> joblist_detail { get; set; }
-        public DbSet<ContractTracking> contracttracking { get; set; }
-        public DbSet<CatalogProfile> catalog_profile { get; set; }
+        public DbSet<Joblist> joblist { get; set; }
+        public DbSet<Joblist_Detail> joblist_Detail { get; set; }
+        public DbSet<ContractTracking> contractTracking { get; set; }
         public DbSet<ViewReadinessEquipment> view_readiness_equipment { get; set; }
         public DbSet<ViewReadinessDetail> view_readiness_detail { get; set; }
         public DbSet<ViewGrafikReadiness> view_grafik_readiness { get; set; }
-
+        public DbSet<ViewDetailOrder> view_detail_order { get; set; }
     }
 }
 
