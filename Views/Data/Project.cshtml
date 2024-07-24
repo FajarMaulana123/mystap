@@ -1,5 +1,5 @@
 ﻿@{
-    ViewData["Title"] = "Plans";
+    ViewData["Title"] = "Project";
 }
    <ol class="breadcrumb float-xl-end">
         <li class="breadcrumb-item"><a href="javascript:void(0);"> <i data-feather="package"></i></a></li>
@@ -58,7 +58,7 @@
                 <table id="table" class="table small table-striped table-bordered dataTables_wrapper" width="100%">
                     <thead>
                         <tr>
-                            <th>No</th>
+                            @* <th>No</th> *@
                             <th>No Project</th>
                             <th>Description</th>
                             <th>Month</th>
@@ -77,7 +77,7 @@
     </div>
 
 
-@* <div class="modal fade" id="Modal" tabindex="-1" role="dialog" aria-labelledby="ModalLabel" aria-hidden="true">
+<div class="modal fade" id="Modal" tabindex="-1" role="dialog" aria-labelledby="ModalLabel" aria-hidden="true">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
@@ -182,9 +182,9 @@
        
         </div>        
     </div>
-</div> *@
+</div>
 
 @section Scripts
 {
-    <script src="~/js/Project.js"></script>
+    <script src="~/js/Project.js"> </script>
 }

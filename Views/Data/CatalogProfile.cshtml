@@ -1,0 +1,114 @@
+﻿@{
+    ViewData["Title"] = "Catalog Profile";
+}
+
+<ol class="breadcrumb float-xl-end">
+        <li class="breadcrumb-item"><a href="javascript:void(0);"> <i data-feather="hard-drive"></i></a></li>
+        <li class="breadcrumb-item"><a href="javascript:void(0);">Master Data</a></li>
+        <li class="breadcrumb-item"><a href="javascript:void(0);">Equipment</a></li>
+        <li class="breadcrumb-item active" aria-current="page"><span>Catalog Profile</span></li>
+</ol>
+<h1 class="page-header">Catalog Profile</h1>
+<div class="panel panel-inverse">
+    <div class="panel-heading">
+        <h4 class="panel-title">Data Catalog Profile</h4>
+        <div class="panel-heading-btn">
+            <a href="javascript:;" class="btn btn-xs btn-icon btn-default" data-toggle="panel-expand"><i class="fa fa-expand"></i></a>
+            <a href="javascript:;" class="btn btn-xs btn-icon btn-warning" data-toggle="panel-collapse"><i class="fa fa-minus"></i></a>    
+        </div>
+    </div>      
+    <div class="panel-body">
+        <div class="table-responsive mb-4 mt-4">         
+            <table id="table" class="table small table-striped table-bordered dataTables_wrapper" width="100%">
+                <thead>
+                    <tr>
+                        @* <th>No</th> *@
+                        <th>Code</th>
+                        <th>Equipment Class</th>
+                        <th>Equipment Group</th>
+                        <th>Disiplin</th>
+                        <th>Long Description</th>
+                        <th>action</th>
+                    </tr>
+                </thead>
+            </table>
+        </div>
+    </div>
+</div>
+
+
+<div class="modal fade" id="Modal" tabindex="-1" role="dialog" aria-labelledby="ModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title judul-modal" id="Modal"></h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-hidden="true"  aria-label="Close">
+                </button>
+            </div>
+            <form id="add-form">
+            <div class="modal-body">
+
+                <input type="hidden" name="hidden_status" id="hidden_status" value="add">
+                <input type="hidden" name="hidden_id" id="hidden_id">
+                        <div class="row">
+                            <div class="col-md-12 mb-2">
+                                <div class="form-group">
+                                    <label>Disiplin</label>
+                                    <select name="disiplin" id="disiplin" class="form-select">
+                                        <option value="">Select Disiplin</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                    <div class="row">
+                    <div class="col-md-12 mb-2">
+                        <div class="form-group">
+                            <label>Code </label>
+                            <input type="text" name="code" id="code" class="form-control">
+                      
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12 mb-2">
+                        <div class="form-group">
+                            <label>Equipment Class</label>
+                            <select name="equipment_class" id="equipment_class" class="form-select">
+                                <option value="">Select Equipment Class</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12 mb-2">
+                        <div class="form-group">
+                            <label>Equipment Group </label>
+                            <input type="text" name="equipment_group" id="equipment_group" class="form-control">
+                       
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12 mb-2">
+                        <div class="form-group">
+                            <label>Long Description</label>
+                            <input type="text" name="long_description" id="long_description" class="form-control">
+                            
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <a href="javascript:;" class="btn btn-white" data-bs-dismiss="modal">Close</a>
+                <button type="reset" class="btn btn-dark">Reset</button>
+                <button type="submit" class="btn btn-success">Submit</button>
+            </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts
+{
+    <script src="~/js/CatalogProfile.js"> </script>
+}

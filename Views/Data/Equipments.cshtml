@@ -1,0 +1,350 @@
+﻿@{
+    ViewData["Title"] = "Equipments";
+}
+
+<ol class="breadcrumb float-xl-end">
+        <li class="breadcrumb-item"><a href="javascript:void(0);"> <i data-feather="hard-drive"></i></a></li>
+        <li class="breadcrumb-item"><a href="javascript:void(0);">Master Data</a></li>
+        <li class="breadcrumb-item"><a href="javascript:void(0);">Equipment</a></li>
+        <li class="breadcrumb-item active" aria-current="page"><span>Manage Equipment</span></li>
+    </ol>
+    <h1 class="page-header">Manage Equipment</h1>
+   @*  <!-- <div class="panel panel-inverse">
+        <div class="accordion" id="accordion">
+            <div class="accordion-item border-0">
+                <div class="accordion-header" id="headingOne">
+                    <button class="accordion-button bg-gray-900 text-white px-3 py-10px pointer-cursor" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne">
+                        <i class="fa fa-circle fa-fw text-blue me-2 fs-8px"></i>Filter
+                    </button>
+                </div>
+                <div id="collapseOne" class="accordion-collapse collapse" data-bs-parent="#accordion">
+                    <div class="accordion-body bg-gray-800 text-white">
+                        <div class="row">
+                            <div class="col-md-4 mb-2">
+                                <label>Location</label>
+                                <select name="user_section_filter" id="user_section_filter" class="form-control select2">
+                                    <option value="">- Pilih User Section -</option>
+                                    <option value="TA">TA</option>
+                                    <option value="OH">OH</option>
+                                </select>
+                            </div>
+                            <div class="col-md-4 mb-2">
+                                <label>JobNo</label>
+                                <input type="text" name="jobNo_filter" id="jobNo_filter" class="form-control">
+                            </div>
+                            <div class="col-md-4 mb-2">
+                                <label>eqTagNo</label>
+                                <input type="text" name="eqTagNo_filter" id="eqTagNo_filter" class="form-control">
+                            </div> 
+                        </div>
+                        <div class="row mt-3">
+                            <div class="col-md-12">
+                                <button class="btn btn-primary" id="filter"> Filter</button>
+                                <button class="btn btn-warning" id="reset"> Reset</button>
+                            </div>
+                        </div>
+                    </div>   
+                </div>
+            </div>
+        </div>
+    </div> --> *@
+    <div class="panel panel-inverse">
+        <div class="panel-heading">
+            <h4 class="panel-title">Data Equipment</h4>
+            <div class="panel-heading-btn">
+                <a href="javascript:;" class="btn btn-xs btn-icon btn-default" data-toggle="panel-expand"><i class="fa fa-expand"></i></a>
+                <a href="javascript:;" class="btn btn-xs btn-icon btn-warning" data-toggle="panel-collapse"><i class="fa fa-minus"></i></a>   
+            </div>
+        </div>      
+        <div class="panel-body">
+            <div class="table-responsive mb-2">   
+                <table id="table" class="table small table-striped table-bordered dataTables_wrapper" width="100%">
+                    <thead>
+                        <tr>
+                            @* <th>No</th> *@
+                            <th>eqTagNo</th>
+                            <th>eqDesc</th>
+                            <th>funcLocID</th>
+                            <th>planner_group</th>
+                            <th>main_work_center</th>
+                            <th>location</th>
+                            <th>disiplin</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="Modal" tabindex="-1" role="dialog" aria-labelledby="ModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title judul-modal" id="Modal"></h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-hidden="true"  aria-label="Close">
+                </button>
+            </div>
+            <form id="add-form">
+                <div class="modal-body">
+                    <div class="col-12">
+                        <div class="card">
+                            <div class="card-body">
+                                <input type="hidden" name="hidden_status" id="hidden_status"  value="add">
+                                <input type="hidden" name="hidden_id" id="hidden_id" >
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="form-group mb-2">
+                                            <label>Equipment Tag No.</label>
+                                            <input type="text" id="eqtagno" name="eqtagno" class="form-control form-control-sm" >
+                                        </div>
+                                        <div class="form-group mb-2">
+                                            <label>Description</label>
+                                            <textarea name="description" id="description" class="form-control" rows="7"></textarea>
+                                        </div>
+                                        <div class="form-group mb-2">
+                                            <label>Funtion Location</label>
+                                            <select name="func_location" id="func_location" class="form-control form-control-sm search_dropdown">
+                                                <option value="">Select Function Location</option>
+                                               @*  @foreach (var val in ViewBag.funlocID)
+                                                {
+                                                    <option value="@(val.funLocID)">@(val.funLocID)</option>
+                                                } *@
+                                            </select>
+                                        </div>
+                                        <div class="form-group mb-2">
+                                            <label>Weight</label>
+                                            <div class="row">
+                                                <div class="col-md-8">
+                                                <input type="text" id="weight" name="weight" class="form-control form-control-sm" >
+                                                </div>
+                                                <div class="col-md-4">
+                                                <select name="jenis_weight" id="jenis_weight" class="form-select form-select-sm">
+                                                    <option value="">- select weight -</option>
+                                                      @*   @foreach (var val in ViewBag.weight)
+                                                        {
+                                                            <option value="@(val.weight)">@(val.)</option>
+                                                        } *@
+                                                </select>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="form-group mb-2">
+                                            <label>Size</label>
+                                            <input type="text" id="size" name="size" class="form-control form-control-sm" >
+                                        </div>
+                                        <div class="form-group mb-2">
+                                            <label>Start Up Date</label>
+                                            <input type="date" id="start_up_date" name="start_up_date" class="form-control form-control-sm" >
+                                        </div>
+                                        <div class="form-group mb-2">
+                                            <div class="row">
+                                                <div class="col-md-6">
+                                                    <label>Acquisition value</label>
+                                                    <input type="text" id="acquisition_value" name="acquisition_value" class="form-control form-control-sm" >
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <label>Date</label>
+                                                    <input type="date" name="date_acquisition" id="date_acquisition" class="form-control form-control-sm">
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="form-group mb-2">
+                                            <label>Currency Key</label>
+                                            <input type="text" id="currency_key" name="currency_key" class="form-control form-control-sm" >
+                                        </div>
+                                        <div class="form-group mb-2">
+                                             <div class="row">
+                                                <div class="col-md-6">
+                                                    <label>Planning plant</label>
+                                                    <input type="text" id="planning_plant" name="planning_plant" class="form-control form-control-sm" >
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <label>Planner Group</label>
+                                                    <select name="planning_group" id="planning_group" class="form-control form-control-sm">
+                                                        <option value="">- select planner group -</option>
+                                                      
+                                                    </select>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="form-group mb-2">
+                                            <label>Main Work Center</label>
+                                            <select name="main_work_center" id="main_work_center" class="form-control form-control-sm">
+                                                <option value="">- select main work center -</option>
+                                                                                          
+                                            </select>
+                                        </div>
+                                        <div class="form-group mb-2">
+                                            <label>Catalog Profile</label>
+                                            <input type="text" name="catalog_profile" id="catalog_profile" class="form-control form-control-sm">
+                                               
+                                        </div>
+                                        <div class="form-group mb-2">
+                                            <label>Main Plant</label>
+                                            <input type="text" name="main_plant" id="main_plant" class="form-control form-control-sm">
+                                               
+                                        </div>
+                                        <div class="form-group mb-2">
+                                            <label>Location</label>
+                                            <select name="location" id="location" class="form-control form-control-sm">
+                                                <option value="">- select location -</option>
+                                            </select>
+                                        </div>
+                                        <div class="form-group mb-2">
+                                            <label>Plant Section</label>
+                                            <input type="text" name="plant_section" id="plant_section" class="form-control form-control-sm">
+                                        </div>
+                                        <div class="form-group mb-2">
+                                            <label>Main Asset No.</label>
+                                            <input type="text" name="main_asset_no" id="main_asset_no" class="form-control form-control-sm">
+                                        </div>
+                                        <div class="form-group mb-2">
+                                            <label>Asset Sub No.</label>
+                                            <input type="text" name="asset_sub_no" id="asset_sub_no" class="form-control form-control-sm">
+                                        </div>
+                                        <div class="form-group mb-2">
+                                            <label>Cost Center</label>
+                                            <select name="cost_center" id="cost_center" class="form-control form-control-sm">
+                                                <option value="">- select cost center -</option>
+
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-group mb-2">
+                                            <label>WBS Elements</label>
+                                            <select name="wbsElement" id="wbsElement" class="form-control form-control-sm search_dropdown">
+                                                 <option value="">- select wbs element -</option>
+                                             
+                                            </select>
+                                        </div>
+                                        <div class="form-group mb-2">
+                                            <label>Position</label>
+                                            <input type="text" id="position" name="position" class="form-control form-control-sm" >
+                                        </div>
+                                        <div class="form-group mb-2">
+                                            <label>TIN</label>
+                                            <input type="text" id="tin" name="tin" class="form-control form-control-sm" >
+                                        </div>
+                                        <div class="form-group mb-2">
+                                            <label>Manufacture</label>
+                                            <select name="manufacturer" id="manufacturer" class="form-control form-control-sm search_dropdown">
+                                                 <option value="">- select manufacturer -</option>
+                                               
+                                            </select>
+                                        </div>
+                                        <div class="form-group mb-2">
+                                            <label>Model</label>
+                                            <input type="text" id="model" name="model" class="form-control form-control-sm" >
+                                        </div>
+                                        <div class="form-group mb-2">
+                                            <label>Part No.</label>
+                                            <input type="text" id="part_no" name="part_no" class="form-control form-control-sm" >
+                                        </div>
+                                        <div class="form-group mb-2">
+                                            <label>Part No.</label>
+                                            <input type="text" id="part_no" name="part_no" class="form-control form-control-sm" >
+                                        </div>
+                                        <div class="form-group mb-2">
+                                            <label>Serial No.</label>
+                                            <input type="text" id="serial_no" name="serial_no" class="form-control form-control-sm" >
+                                        </div>
+                                        <div class="form-group mb-2">
+                                            <label>Equipment Category</label>
+                                            <input type="text" id="equipment_category" name="equipment_category" class="form-control form-control-sm" >
+                                        </div>
+                                        <div class="form-group mb-2">
+                                            <label>Date Validation</label>
+                                            <input type="text" id="date_validation" name="date_validation" class="form-control form-control-sm" >
+                                        </div>
+                                        <div class="form-group mb-2">
+                                             <div class="row">
+                                                <div class="col-md-6">
+                                                    <label>Object Type</label>
+                                                    <input type="text" id="object_type" name="object_type" class="form-control form-control-sm" >
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <label>Craft</label>
+                                                    <select name="craft" id="craft" class="form-control form-control-sm">
+                                                         <option value="">- select craft -</option>
+                                                     
+                                                    </select>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="form-group mb-2">
+                                             <div class="row">
+                                                <div class="col-md-6">
+                                                    <label>Country Of Manufacture</label>
+                                                    <input type="text" id="country_of_manufacture" name="country_of_manufacture" class="form-control form-control-sm" >
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <label>Unit Proses</label>
+                                                    <select name="unit_proses" id="unit_proses" class="form-control form-control-sm">
+                                                        <option value="">Select unit proses </option>
+                                                       
+                                                    </select>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="form-group mb-2">
+                                             <div class="row">
+                                                <div class="col-md-6">
+                                                    <label>Year of Const</label>
+                                                    <input type="text" id="year_const" name="year_const" class="form-control form-control-sm" >
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <label>Unit Kilang</label>
+                                                    <select name="unit_kilang" id="unit_kilang" class="form-control form-control-sm">
+                                                        <option value="">Select unit kilang</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="form-group mb-2">
+                                            <label>Month Of Const</label>
+                                            <input type="text" id="month_const" name="month_const" class="form-control form-control-sm" >
+                                        </div>
+                                        <div class="form-group mb-2">
+                                            <label>Plant Main Work Center</label>
+                                            <input type="text" id="plant_main_work_center" name="plant_main_work_center" class="form-control form-control-sm" >
+                                        </div>
+                                        <div class="form-group mb-2">
+                                            <label>Const Type</label>
+                                            <input type="text" id="const_type" name="const_type" class="form-control form-control-sm" >
+                                        </div>
+                                        <div class="form-group mb-2">
+                                            <label>Premit Assign</label>
+                                            <input type="text" id="premit_assign" name="premit_assign" class="form-control form-control-sm" >
+                                        </div>
+                                        <div class="form-group mb-2">
+                                            <label>Criticality</label>
+                                            <input type="text" id="critical" name="critical" class="form-control form-control-sm" >
+                                        </div>
+                                        <div class="form-group mb-2">
+                                            <label>Remark</label>
+                                            <input type="text" id="remark" name="remark" class="form-control form-control-sm" >
+                                        </div>
+                                    </div>
+                                </div>
+                                
+    
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <a href="javascript:;" class="btn btn-white" data-bs-dismiss="modal">Close</a>
+                    <button type="reset" class="btn btn-dark">Reset</button>
+                    <button type="submit" class="btn btn-success">Submit</button>
+                </div>
+            </form>
+        </div>        
+    </div>
+</div>
+
+@section Scripts
+                            {
+    <script src="~/js/Equipments.js"> </script>
+}

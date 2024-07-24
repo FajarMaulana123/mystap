@@ -1,0 +1,144 @@
+﻿@{
+    ViewData["Title"] = "Joblist";
+}
+ <ol class="breadcrumb float-xl-end">
+        <li class="breadcrumb-item"><a href="javascript:void(0);">  <i data-feather="clipboard"></i></a></li>
+        <li class="breadcrumb-item active" aria-current="page"><span>Job List</span></li>
+    </ol>
+    <h1 class="page-header">Joblist</h1>
+    <div class="panel panel-inverse">
+        <div class="accordion" id="accordion">
+            <div class="accordion-item border-0">
+                <div class="accordion-header" id="headingOne">
+                    <button class="accordion-button bg-gray-900 text-white px-3 py-10px pointer-cursor" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne">
+                        <i class="fa fa-circle fa-fw text-blue me-2 fs-8px"></i>Filter
+                    </button>
+                </div>
+                <div id="collapseOne" class="accordion-collapse collapse" data-bs-parent="#accordion">
+                    <div class="accordion-body bg-gray-800 text-white">
+                        <div class="row">
+                            <div class="col-md-4 mb-2">
+                                <label>Project</label>
+                                <select name="project_filter" id="project_filter" class="form-control form-control-sm">
+                                </select> 
+                                </div> 
+                                <div class="col-md-4 mb-2">
+                                        <label>Unit</label>
+                                        <select name="unitCode_filter" id="unitCode_filter" class="form-control select2">
+                                            <option value="">- Pilih Unit -</option>
+                                        </select>
+                                </div>
+                                <div class="col-md-4 mb-2">
+                                    <label>User Section</label>
+                                    <select name="user_section_filter" id="user_section_filter" class="form-control select2">
+                                        <option value="">- Pilih User Section -</option>
+                                        <option value="TA">TA</option>
+                                        <option value="OH">OH</option>
+                                    </select>
+                                </div>
+                            
+                        </div>
+                        <div class="row">
+                        <div class="col-md-4 mb-2">
+                                    <label>JobNo</label>
+                                    <input type="text" name="jobNo_filter" id="jobNo_filter" class="form-control">
+                            </div>
+                                <div class="col-md-4 mb-2">
+                                    <label>eqTagNo</label>
+                                    <input type="text" name="eqTagNo_filter" id="eqTagNo_filter" class="form-control">
+                                </div>
+                                
+                               
+                            </div>
+                            <div class="row mt-3">
+                                <div class="col-md-12">
+                                    <button class="btn btn-primary" id="filter"> Filter</button>
+                                    <button class="btn btn-warning" id="reset"> Reset</button>
+                                </div>
+                            </div>
+                        </div>   
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="panel panel-inverse">
+            <div class="panel-heading">
+                <h4 class="panel-title">Data Joblist</h4>
+                <div class="panel-heading-btn">
+                    <a href="javascript:;" class="btn btn-xs btn-icon btn-default" data-toggle="panel-expand"><i class="fa fa-expand"></i></a>
+                    <a href="javascript:;" class="btn btn-xs btn-icon btn-warning" data-toggle="panel-collapse"><i class="fa fa-minus"></i></a>
+                </div>
+            </div> 
+            <div class="panel-body">
+                <div class="table-responsive mb-4 mt-4">
+                    <table id="table" class="table small table-striped table-bordered dataTables_wrapper" width="100%">
+                        <thead>
+                            <tr>
+                                @* <th>No</th> *@
+                                <th>Job No</th>
+                                <th>Project No</th>
+                                <th>Project</th>
+                                <th>Unit</th>
+                                <th>EqTagNo</th>
+                                <th>Status</th>
+                                <th>User Section</th>
+                                <th>Keterangan</th>
+                                <th>Create By</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        
+                    </table>
+                </div>
+            </div>
+        </div>
+
+
+
+
+@* <div class="modal fade" id="carry" tabindex="-1" role="dialog" aria-labelledby="ModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-sm" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title " id="Modal">Carry Over</h5>
+                <button type="button" class="btn-close"  data-bs-dismiss="modal" aria-label="Close">
+                </button>
+            </div>
+            <form id="carry-form">
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-md-12 mb-2">
+                        <div class="form-group">
+                            <label>Project</label>
+                            <input type="hidden" name="hidden_id" id="hidden_id" value="">
+                            <input type="hidden" name="eqTagNo" id="eqTagNo" value="">
+                            <select name="project" id="project" class="form-control form-control-sm">
+                                <option value="">- Pilih Project -</option>
+                                @foreach($data['project'] as $val)
+                                    <option value="{{$val->id}}" data-rev="{{$val->revision}}">{{$val->description}}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-md-12 mb-2">
+                        <div class="form-group">
+                            <label>Keterangan</label>
+                            <textarea class="form-control form-control-sm" name="keterangan" id="keterangan" cols="10" rows="5"></textarea>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <a href="javascript:;" class="btn btn-white" data-bs-dismiss="modal">Close</a>
+                <button type="submit" class="btn btn-success">Submit</button>
+            </div>
+            </form>
+        </div>
+    </div>
+</div>
+ *@
+
+@section Scripts
+{
+    <script src="~/js/Joblist.js"></script>
+}

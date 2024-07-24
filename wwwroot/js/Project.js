@@ -1,52 +1,64 @@
 ﻿$(document).ready(function () {
 
-    $.ajaxSetup({
-        headers: {
-            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-        }
-    });
-
     var table = $('#table').DataTable({
         dom: '<"dataTables_wrapper dt-bootstrap"<"row"<"col-xl-7 d-block d-sm-flex d-xl-block justify-content-center"<"d-block d-lg-inline-flex me-0 me-md-3"l><"d-block d-lg-inline-flex"B>><"col-xl-5 d-flex d-xl-block justify-content-center"fr>>t<"row"<"col-md-5"i><"col-md-7"p>>>',
         processing: true,
         serverSide: true,
         ajax: {
-            url: '/project_',
-            method: 'POST',
-            data: function (d) {
-                d.status = $('#status_filter').val();
-                d.taoh = $('#taoh_filter').val();
-            }
+            "url": "/project_",
+            "method": "POST",
+            "datatype": "json"
+            // data: function (d) {
+            //    d.id = id;
+            //}
+
+            //data: function (d) {
+            //    d.status = $('#status_filter').val();
+            //    d.taoh = $('#taoh_filter').val();
+            //}
         },
 
         columns: [
-            { data: 'DT_RowIndex', name: 'DT_RowIndex', orderable: false, searchable: false },
+            /* { data: 'DT_RowIndex', name: 'DT_RowIndex', orderable: false, searchable: false },*/
             { data: 'projectNo', name: 'projectNo' },
             { data: 'description', name: 'description' },
             { data: 'month', name: 'month' },
             { data: 'year', name: 'year' },
-            { data: 'date', name: 'date' },
+            {
+                data: 'tglTA', name: 'tglTA',
+                    render: function (data, type, full, meta) {
+                        return full.tglTA + " - " + full.tglSelesaiTA;
+                },
+            },
             { data: 'revision', name: 'revision' },
-            { data: 'status', name: 'status' },
+            {
+                data: 'status', name: 'status',
+                render: function (data, type, full, meta) {
+
+                    d = (full.active == 1) ? '<span class="badge bg-success">Active</span>' : '<span class="badge bg-danger">In Active</span>';
+                    full.status = d;
+                    return full.status;
+                },
+            },
             { data: 'durasiTABrick', name: 'durasiTABrick' },
             { data: 'taoh', name: 'taoh' },
-
             {
-                data: 'action',
-                name: 'action',
+                "render": function (data, type, full, meta) {
+                    return '<div class="d-flex"><a href="javascript:void(0);" class="btn btn-warning  btn-xs edit mr-1" data-id="' + full.id + '" data-plant="' + full.plansID + '" data-month="' + full.month + '" data-year="' + full.year + '" data-execution_date="' + full.tglTA + '" data-finish_date ="' + full.tglSelesaiTA + '" data-revision ="' + full.revision + '" data-description ="' + full.description + '" data-durasitabrick ="' + full.durasiTABrick + '" data-section ="' + full.taoh + '" ><i class="fas fa-pen fa-xs"></i></a><a href = "javascript:void(0);" style = "margin-left:5px" class="btn btn-danger btn-xs delete " data-id="' + full.id + '" > <i class="fas fa-trash fa-xs"></i></a ></div > ';
+                },
                 orderable: false,
                 searchable: false
             },
         ],
         columnDefs: [
             {
-                targets: [2, 5, 9],
+                targets: [1, 4, 8],
                 className: 'text-wrap width-200'
 
             },
-            (user_auth == 'user') ? { "visible": false, "targets": [10] } : {},
+            /*(user_auth == 'user') ? { "visible": false, "targets": [10] } : {},*/
         ],
-        buttons: (user_auth == 'superadmin' || user_auth == 'admin') ? [{
+        buttons:/* (user_auth == 'superadmin' || user_auth == 'admin') ?*/ [{
             text: '<i class="far fa-edit"></i> New',
             className: 'btn btn-success',
             action: function (e, dt, node, config) {
@@ -66,7 +78,7 @@
             exportOptions: {
                 columns: ':not(:last-child)',
             }
-        }] : [{
+        }] /*: [{
             extend: 'excel',
             title: 'Project',
             className: 'btn',
@@ -75,12 +87,12 @@
             exportOptions: {
                 columns: ':not(:last-child)',
             }
-        }]
+        }]*/
 
     });
     // table.button( 0 ).nodes().css('height', '35px')
 
-   /* $(document).on('click', '#tambah', function () {
+    $(document).on('click', '#tambah', function () {
         $('#add-form')[0].reset();
         $('.judul-modal').html('Tambah');
         $('#hidden_status').val('add');
@@ -274,6 +286,6 @@
 
     $(document).on('click', '#filter', function () {
         table.ajax.reload();
-    })*/
+    })
 
 });

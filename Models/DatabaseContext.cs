@@ -1,4 +1,6 @@
 ﻿using joblist.Model;
+using joblist_detail.models;
+
 using Microsoft.CodeAnalysis;
 using Microsoft.EntityFrameworkCore;
 using mystap.Models;
@@ -17,9 +19,13 @@ namespace mystap.Models
         public DbSet<Joblist> joblist { get; set; }
         public DbSet<Equipments> equipments { get; set; }
         public DbSet<CatalogProfile> catalogProfile { get; set; }
+        public DbSet<Joblist_Detail> joblist_detail { get; set; }
+        public DbSet<ContractTracking> contracttracking { get; set; }
+        public DbSet<CatalogProfile> catalog_profile { get; set; }
         public DbSet<ViewReadinessEquipment> view_readiness_equipment { get; set; }
         public DbSet<ViewReadinessDetail> view_readiness_detail { get; set; }
         public DbSet<ViewGrafikReadiness> view_grafik_readiness { get; set; }
+
     }
 }
 

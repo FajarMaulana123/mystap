@@ -1,8 +1,13 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using mystap.Models;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 namespace mystap.Models
 {
     public class ContractTracking
     {
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        [Key]
         public long idPaket { get; set; }
         public string? noPaket { get; set; }
         public string? judulPekerjaan { get; set; }

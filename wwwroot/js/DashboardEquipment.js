@@ -304,6 +304,7 @@ $(document).ready(function() {
                     return full.eqTagNo + '<span class="popover_ text-primary" style="margin-left:10px"><i class="fas fa-info-circle fa-sm"></i></span>';
                 },
             },
+
             { data: 'status_tagno', name: 'status_tagno' },
 
             {
@@ -320,6 +321,7 @@ $(document).ready(function() {
                     return status;
                 }
             },
+
             //{data: 'hidden', name: 'hidden'},
         ],
         buttons: [

@@ -6,6 +6,7 @@ namespace joblist.Model
 {
     public class Joblist
     {
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public long id { get; set; }
         public string? jobNo { get; set; }
         public string? projectNo { get; set; } 
@@ -27,7 +28,14 @@ namespace joblist.Model
         public DateTime? lastModify { get; set; }
         public long? modifyBy { get; set; }
 
+
         [ForeignKey("createdBy")]
         public Users users { get; set; }
+
+        public Project project { get; set; }
+
+        [ForeignKey("unitCode")]
+        public Unit unit { get; set; }
+
     }
 }

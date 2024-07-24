@@ -4,6 +4,7 @@ namespace mystap.Models
 {
     public class Equipments
     {
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public long id { get; set; }
         public string? eqTagNo { get; set; }
         public string? eqDesc { get; set; }
@@ -28,7 +29,7 @@ namespace mystap.Models
         public string? WBS_element { get; set; }
         public string? Position { get; set; }
         public string? tin { get; set; }
-        public string? manufacture { get; set; }
+        public string? manufacturer { get; set; }
         public string? model { get; set; }
         public string? part_no { get; set; }
         public string? serial_no { get; set; }
@@ -44,17 +45,20 @@ namespace mystap.Models
         public string? Criticallity { get; set; }
         public string? Remark { get; set; }
         public string? unitProses { get; set; }
-        public string? createdBy { get; set; }
-        public string? dateCreated { get; set; }
-        public string? update { get; set; }
-        public string? updateBy { get; set; }
-        public string? deleted { get; set; }
-        public string? deletedBy { get; set; }
-        public string? responbility { get; set; }
+        public long? createdBy { get; set; }
+        public DateTime? dateCreated { get; set; }
+        public string? updated { get; set; }
+        public long? updatedBy { get; set; }
+        public int? deleted { get; set; }
+        public long? deletedBy { get; set; }
+        public string? responsibility { get; set; }
         public string? craft { get; set; }
-        public string? eqGroupID { get; set; }
+        public long? eqGroupID { get; set; }
         public string? unitKilang { get; set; }
         public string? catProf { get; set; }
+
+        [ForeignKey("createdBy")]
+        public Users users { get; set; }
 
 
     }

@@ -1,9 +1,13 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using joblist.Model;
+using mystap.Models;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace joblist_detail.models
 {
     public class Joblist_Detail
     {
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public long id { get; set; }
         public long? joblist_id { get; set; }
         public long? id_paket { get; set; } 
@@ -53,6 +57,17 @@ namespace joblist_detail.models
         public string? mitigasi { get; set; }
         public string? keterangan { get; set; }
 
+        [ForeignKey("createBy")]
+        public Users users { get; set; }
 
-}
+        [ForeignKey("joblist_id")]
+        public Joblist joblist { get; set; }
+
+        [ForeignKey("unitCode")]
+        public Unit unit { get; set; }
+        public Equipments equipments { get; set; }
+        public ContractTracking contracttracking { get; set; }
+
+
+    }
 }
