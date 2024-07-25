@@ -2,6 +2,7 @@
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.FlowAnalysis;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using Microsoft.Extensions.Caching.Memory;
 using mystap.Models;
 using System.Data;
@@ -285,6 +286,119 @@ namespace mystap.Controllers
             }
         }
 
+        public IActionResult DetailJasa()
+        {
+            try
+            {
+                var order_ = Request.Form["order_"].FirstOrDefault();
+                var project_id = Request.Form["project_id"].FirstOrDefault();
+                var currStat = Request.Form["currStat"].FirstOrDefault();
+
+                var query = _context.contractTracking;
+
+                if (!string.IsNullOrEmpty(order_))
+                {
+                    var od = long.Parse(order_);
+                    query.Where(p => p.idPaket == od);
+                }
+
+                if(!string.IsNullOrEmpty(project_id))
+                {
+                    var pi = long.Parse(project_id);
+                    query.Where(p => p.projectID == pi);
+                }
+
+                if(!string.IsNullOrEmpty(currStat))
+                {
+                    query.Where(p => p.currStat == currStat);
+                }
+
+                var data = query.Where(p => p.deleted == 1).ToList();
+                var table = "";
+                if (data != null)
+                {
+                    foreach (var d in data) {
+                        var isi = "";
+                        if (d.aktualSP != null) {
+                            isi = "<span class='text-primary'><i class='fa fa-circle fs-20px fa-fw '></i></span>";
+                        } else
+                        {
+                            if (d.t_light > 30) {
+                                isi = "<span class='text-green-600 text-center'><i class='fa fa-circle fs-20px fa-fw'></i></span>";
+                            } else if (d.t_light <= 30 && d.t_light > 20) {
+                                isi = "<span class='text-warning text-center'><i class='fa fa-circle fs-20px fa-fw '></i></span>";
+                            } else if (d.t_light <= 20) {
+                                isi = "<span class='text-danger text-center'><i class='fa fa-circle fs-20px fa-fw'></i></span>";
+                            } else
+                            {
+                                isi = "-";
+                            }
+                        }
+
+                        table += "<tr><td rowspan = '2'>" + d.WO + "<br>" + d.po + "<br>" + d.PR + "<br>" + d.noSP + "</td>" +
+                            "<td rowspan = '2'>" + d.judulPekerjaan + "</td>"+
+                            "<td rowspan = '2' style = 'text-align: center;'>" + isi + "<br>" + d.pic + "</td>" +
+                            "<td> P </td>" +
+                            "<td style = 'text-align: center;  --bs-table-accent-bg: #ffcc80;'>" + d.target_kak + "</td>" +
+                            "<td style = 'text-align: center;  --bs-table-accent-bg: #ffcc80;'>" + d.target_oe + "</td>" +
+                            "<td style = 'text-align: center; color:blue;  --bs-table-accent-bg: #ffcc80;'>" + d.targetCO + "</td>" +
+                            "<td style = 'text-align: center;  --bs-table-accent-bg: #ffcc80;'>" + d.target_pengumuman + "</td>" +
+                            "<td style = 'text-align: center;  --bs-table-accent-bg: #ffcc80;'>" + d.target_sertifikasi + "</td> " +
+                            "<td style = 'text-align: center;  --bs-table-accent-bg: #ffcc80;'>" + d.target_prakualifikasi + "</td>" +
+                            "<td style = 'text-align: center;  --bs-table-accent-bg: #ffcc80;'>" + d.target_undangan + "</td>" +
+                            "<td style = 'text-align: center;  --bs-table-accent-bg: #ffcc80;'>" + d.target_pemberian + "</td>" +
+                            "<td style = 'text-align: center;   --bs-table-accent-bg: #ffcc80;'>" + d.targetBukaPH + "</td>" +
+                            "<td style = 'text-align: center;  --bs-table-accent-bg: #ffcc80;'>" + d.target_pembukaan + "</td>" +
+                            "<td style = 'text-align: center;  --bs-table-accent-bg: #ffcc80;'>" + d.target_evaluasi + "</td>" +
+                            "<td style = 'text-align: center;  --bs-table-accent-bg: #ffcc80;'>" + d.target_negosiasi + "</td>" +
+                            "<td style = 'text-align: center;  --bs-table-accent-bg: #ffcc80;'>" + d.target_usulan_pemenang + "</td>" +
+                            "<td style = 'text-align: center;  --bs-table-accent-bg: #ffcc80;'>" + d.target_keputusan_pemenang + "</td>" +
+                            "<td style = 'text-align: center;  --bs-table-accent-bg: #ffcc80;'>" + d.target_pengumuman_pemenang + "</td>" +
+                            "<td style = 'text-align: center;  --bs-table-accent-bg: #ffcc80;'>" + d.target_pengajuan_sanggah + "</td>" +
+                            "<td style = 'text-align: center;  --bs-table-accent-bg: #ffcc80;'>" + d.target_jawaban_sanggah + "</td>" +
+                            "<td style = 'text-align: center;  --bs-table-accent-bg: #ffcc80;'>" + d.target_penunjukan_pemenang + "</td>" +
+                            "<td style = 'text-align: center; color:blue; --bs-table-accent-bg: #ffcc80;'>" + d.targetSP + "</td>" +
+                            "<td rowspan = '2'>" + d.currStat + "</td>" +
+                        "</tr>" +
+                        "<tr>" +
+                            "<td> A </td>" +
+                            "<td style = 'text-align: center;'>" + d.akt_kak + "</td>" +
+                            "<td style = 'text-align: center;'>" + d.akt_oe + "</td>" +
+                            "<td style = 'text-align: center;'>" + d.aktualCO + "</td>" +
+                            "<td style = 'text-align: center;'>" + d.akt_pengumuman + "</td>" +
+                            "<td style = 'text-align: center;'>" + d.akt_sertifikasi + "</td>" +
+                            "<td style = 'text-align: center;'>" + d.akt_prakualifikasi + "</td>" +
+                            "<td style = 'text-align: center;'>" + d.akt_undangan + "</td>" +
+                            "<td style = 'text-align: center;'>" + d.akt_pemberian + "</td>" +
+                            "<td style = 'text-align: center;'>" + d.aktualBukaPH + "</td>" +
+                            "<td style = 'text-align: center;'>" + d.akt_pembukaan + "</td>" +
+                            "<td style = 'text-align: center;'>" + d.akt_evaluasi + "</td>" +
+                            "<td style = 'text-align: center;'>" + d.akt_negosiasi + "</td>" +
+                            "<td style = 'text-align: center;'>" + d.akt_usulan_pemenang +"</td>" +
+                            "<td style = 'text-align: center;'>" + d.akt_keputusan_pemenang + "</td>" +
+                            "<td style = 'text-align: center;'>" + d.akt_pengumuman_pemenang + "</td>" +
+                            "<td style = 'text-align: center;'>" + d.akt_pengajuan_sanggah + "</td>" +
+                            "<td style = 'text-align: center;'>" + d.akt_jawaban_sanggah + "</td>" +
+                            "<td style = 'text-align: center;'>" + d.akt_penunjukan_pemenang + "</td>" +
+                            "<td style = 'text-align: center;'>" + d.aktualSP + "</td>" +
+                        "</tr>";
+                    }
+                }
+                else
+                {
+                table += "<tr>" +
+                            "<td colspan = '24' style = 'text-align:center'> Data tidak ditemukan</td>" +
+                       "</tr>";
+                }
+
+                return Ok(table);
+
+            }
+            catch
+            {
+                throw;
+            }
+        }
 
 
     }

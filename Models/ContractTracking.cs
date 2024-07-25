@@ -43,14 +43,15 @@ namespace mystap.Models
         public DateTime? mulai { get; set; }
         public DateTime? selesai { get; set; }
         public int? waktuAdendum { get; set; }
-        public int? angkaWaktuAdendum { get; set; }
+        public int? angkaWaktuAddendum { get; set; }
         public string? tglAkhirAddendum { get; set; }
-        public int? nilaiAddendum { get; set; }
+        public int? nilaiAdendum { get; set; }
         public int? angkaAddendum { get; set; }
         public int? angkaAddendum1 { get; set; }
         public int? angkaAddendum2 { get; set; }
-        public string? kontenSPAddendum { get; set; }
-        public long? idVendor { get; set; }
+        public string? kontentSPAdendum { get; set; }
+        public string? ketKontentSPAddendum { get; set; }
+        public int? idVendor { get; set; }
         public string? contactPerson { get; set; }
         public string? polaShift { get; set; }
         public int? jamKerjaPerHari { get; set; }
@@ -71,8 +72,8 @@ namespace mystap.Models
         public DateTime? aktualBukaPH { get; set; }
         public string? lastStep { get; set; }
         public string? WO { get; set; }
-        public int? PR { get; set; }
-        public int? note { get; set; }
+        public string? PR { get; set; }
+        public string? note { get; set; }
         public long? updatedBy { get; set; }
         public DateTime? lastUpdate { get; set; }
         public int? statusTagihan { get; set; }
@@ -112,7 +113,7 @@ namespace mystap.Models
         public int? jmlMP3 { get; set; }
         public int? jmlMP4 { get; set; }
         public int? jmlMP5 { get; set; }
-        public string? notPengajuanBadge { get; set; }
+        public string? notePengajuanBadge { get; set; }
         public string? klasifikasiKontrak { get; set; }
         public string? organik { get; set; }
         public DateTime? targetBukaPH { get; set; }
@@ -154,7 +155,7 @@ namespace mystap.Models
         public DateTime? akt_penunjukan_pemenang { get; set; }
         public DateTime? target_spb { get; set; }
         public DateTime? akt_spb { get; set; }
-        public DateTime? bulan { get; set; }
-        public DateTime? tahun { get; set; }
+        public string? bulan { get; set; }
+        public string? tahun { get; set; }
     }
 }

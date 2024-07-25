@@ -298,7 +298,7 @@
                 order_ : wo
             },
             success: function(res){
-                // console.log(res
+                 console.log(res)
                 $('#isi_table').html(res);
             }
         })
@@ -434,8 +434,8 @@ $(document).ready(function() {
         get_data_order($(this).data('id'));
         $('#MySecondmodal').modal('show');
     })
-    //$(document).on('click', '.detail_kontrak', function(){
-    //    detail_jasa($(this).data('jasa'));
-    //    $('#Modal_kontrak').modal('show');
-    //})  
+    $(document).on('click', '.detail_kontrak', function(){
+        detail_jasa($(this).data('jasa'));
+        $('#Modal_kontrak').modal('show');
+    })  
 })
