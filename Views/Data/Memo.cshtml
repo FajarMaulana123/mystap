@@ -1,0 +1,166 @@
+﻿@{
+    ViewData["Title"] = "Memo";
+}
+<ol class="breadcrumb float-xl-end">
+        <li class="breadcrumb-item"><a href="javascript:void(0);"> <i data-feather="hard-drive"></i></a></li>
+        <li class="breadcrumb-item"><a href="javascript:void(0);">Master Data</a></li>
+        <li class="breadcrumb-item active" aria-current="page"><span>Request Memo</span></li>
+    </ol> 
+    <h1 class="page-header">Request Memo</h1>
+    <div class="panel panel-inverse">
+        <div class="accordion" id="accordion">
+            <div class="accordion-item border-0">
+                <div class="accordion-header" id="headingOne">
+                    <button class="accordion-button bg-gray-900 text-white px-3 py-10px pointer-cursor" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne">
+                        <i class="fa fa-circle fa-fw text-blue me-2 fs-8px"></i>Filter
+                    </button>
+                </div>
+                <div id="collapseOne" class="accordion-collapse collapse " data-bs-parent="#accordion">
+                    <div class="accordion-body bg-gray-800 text-white">
+                        <div class="row">
+                            <div class="col-md-4">
+                                <label>Project</label>
+                                <select name="project_filter" id="project_filter" class="form-control form-control-sm">
+                                    <option value="">All</option>
+                                @foreach (var val in ViewBag.project)
+                                {
+                                    <option value="@(val.projectNo)" data-id="@(val.id)" data-desc="@(val.description)" data-rev="@(val.revision)"> @(val.description)</option>
+                                }
+                                </select>
+                            </div>
+                            <div class="col-md-4">
+                                <label>Find No.Memo</label>
+                                <input type="text" name="memo_filter" id="memo_filter" class="form-control form-control-sm">
+                            </div>
+                        </div>
+                        <div class="row mt-3">
+                            <div class="col-md-12">
+                                <button class="btn btn-primary" id="filter"> Filter</button>
+                                <button class="btn btn-warning" id="reset"> Reset</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="panel panel-inverse">
+        <div class="panel-heading">
+            <h4 class="panel-title">Data Memo</h4>
+            <div class="panel-heading-btn">
+                <a href="javascript:;" class="btn btn-xs btn-icon btn-default" data-toggle="panel-expand"><i class="fa fa-expand"></i></a>
+                <a href="javascript:;" class="btn btn-xs btn-icon btn-warning" data-toggle="panel-collapse"><i class="fa fa-minus"></i></a>
+                
+            </div>
+        </div> 
+        <div class="panel-body">
+            <div class="table-responsive mb-4 mt-4">
+                <table id="table" class="table small table-striped table-bordered dataTables_wrapper" width="100%">
+                    <thead>
+                        <tr>
+                           @*  <th>No</th> *@
+                            <th>No. Memo</th>
+                            <th>Memo Description</th>
+                            <th>Memo Date</th>
+                            <th>Project</th>
+                            <th>Requestor</th>
+                            <th>file</th>
+                            <th>Showing</th>
+                            <th>Create By</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>          
+                </table>
+            </div>
+        </div>
+    </div>
+
+
+<div class="modal fade" id="Modal" tabindex="-1" role="dialog" aria-labelledby="ModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title judul-modal" id="Modal"></h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-hidden="true"  aria-label="Close">
+                </button>
+            </div>
+            <form id="add-form">
+            <div class="modal-body">
+                <input type="hidden" name="hidden_status" id="hidden_status" value="add">
+                <input type="hidden" name="hidden_id" id="hidden_id">   
+                <div class="row">
+                    <div class="col-md-6 mb-2">
+                        <div class="form-group">
+                            <label>Project </label>
+                            <select name="projectID" id="projectID" class="form-select form-select-sm">
+                                <option value="">- Pilih Project -</option>
+                                    @foreach (var val in ViewBag.project)
+                                    {
+                                        <option value="@(val.projectNo)" data-id="@(val.id)" data-desc="@(val.description)" data-rev="@(val.revision)"> @(val.description)</option>
+                                    }
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-md-6 mb-2">
+                        <div class="form-group">
+                            <label>Request Memo No. </label>
+                            <input type="text" name="reqNo" id="reqNo" class="form-control form-control-sm">
+                        </div>
+                    </div>
+                    <div class="col-md-12 mb-2">
+                        <div class="form-group">
+                            <label>Request Description </label>
+                            <textarea name="reqDesc" id="reqDesc" class="form-control form-control-sm" cols="5" rows="5"></textarea>
+                        </div>
+                    </div>
+                    <div class="col-md-6 mb-2">
+                        <div class="form-group">
+                            <label>Date </label>
+                            <input type="date" name="reqDate" id="reqDate" class="form-control form-control-sm">
+                        </div>
+                    </div>
+                    <div class="col-md-6 mb-2">
+                        <div class="form-group">
+                            <label>Requestor </label>
+                            <select name="requestor" id="requestor" class="form-select form-select-sm">
+                                <option value="">- Pilih Requestor -</option>
+                                    @foreach (var val in ViewBag.requestors)
+                                    {
+                                        <option value="@(val.id)"> @(val.name)</option>
+                                    }
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-md-6 mb-2">
+                        <div class="form-group">
+                            <label>Attachment File </label>
+                            <input type="file" name="attach" id="attach" class="form-control form-control-sm">
+                            <input type="hidden" name="attach_" id="attach_" class="form-control form-control-sm">
+                        </div>
+                    </div>
+                    <div class="col-md-6 mb-2">
+                        <div class="form-group">
+                            <label>Showing </label>
+                            <select name="showing" id="showing" class="form-select form-select-sm">
+                                <option value="1">Active</option>
+                                <option value="0">In Active</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                                
+            </div>
+            <div class="modal-footer">
+                <a href="javascript:;" class="btn btn-white" data-bs-dismiss="modal">Close</a>
+                <button type="reset" class="btn btn-dark">Reset</button>
+                <button type="submit" class="btn btn-success">Submit</button>
+            </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts
+{
+    <script src="~/js/Memo.js"></script>
+}

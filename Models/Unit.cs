@@ -1,4 +1,6 @@
-﻿namespace mystap.Models
+﻿using System.ComponentModel.DataAnnotations.Schema;
+
+namespace mystap.Models
 {
     public class Unit
     {
@@ -15,9 +17,15 @@
         public string? pengawas { get; set; }
         public int? deleted { get; set; }
         public long? deletedBy { get; set; }
+        public int? updated { get; set; }
+        public long? updatedBy { get; set; }
         public long? createdBy { get; set; }
         public DateTime? dateCreated { get; set; }
         public string? units { get; set; }
+
+        [ForeignKey("createdBy")]
+        public Users users { get; set; }
+
 
     }
 }

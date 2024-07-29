@@ -13,11 +13,16 @@ namespace mystap.Models
         public DbSet<Project> project { get; set; }
         public DbSet<Rapat> rapat { get; set; }
         public DbSet<Unit> unit { get; set; }
+        public DbSet<UnitProses> unitProses { get; set; }
         public DbSet<Equipments> equipments { get; set; }
         public DbSet<CatalogProfile> catalogProfile { get; set; }
         public DbSet<Joblist> joblist { get; set; }
         public DbSet<Joblist_Detail> joblist_Detail { get; set; }
         public DbSet<ContractTracking> contractTracking { get; set; }
+        public DbSet<Memo> memo { get; set; }
+        public DbSet<Requestor> requestors { get; set; }
+        public DbSet<Sow> sow { get; set; }
+        public DbSet<SowGroup> sowGroup { get; set; }
         public DbSet<ViewReadinessEquipment> view_readiness_equipment { get; set; }
         public DbSet<ViewReadinessDetail> view_readiness_detail { get; set; }
         public DbSet<ViewGrafikReadiness> view_grafik_readiness { get; set; }

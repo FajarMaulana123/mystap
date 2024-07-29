@@ -147,7 +147,7 @@ app.UseEndpoints(endpoints =>
 
     endpoints.MapControllerRoute(
 
-       name: "joblis",
+       name: "joblist",
        pattern: "joblist",
        defaults: new { controller = "Joblist", action = "Joblist" });
 
@@ -155,6 +155,11 @@ app.UseEndpoints(endpoints =>
        name: "joblist_detail",
        pattern: "joblist_detail",
        defaults: new { controller = "Joblist", action = "Planning" });
+
+    endpoints.MapControllerRoute(
+      name: "joblist_detail_",
+      pattern: "joblist_detail_",
+      defaults: new { controller = "Joblist", action = "Get_Joblist_Detail" });
 
     endpoints.MapControllerRoute(
        name: "rapat",
@@ -205,6 +210,162 @@ app.UseEndpoints(endpoints =>
        name: "delete_project",
        pattern: "delete_project",
        defaults: new { controller = "Data", action = "Delete_Project" });
+
+    endpoints.MapControllerRoute(
+       name: "equipments",
+       pattern: "equipments",
+       defaults: new { controller = "Data", action = "Equipments" });
+
+    endpoints.MapControllerRoute(
+       name: "equipments_",
+       pattern: "equipments_",
+       defaults: new { controller = "Data", action = "Get_Equipments" });
+
+    endpoints.MapControllerRoute(
+       name: "create_equipments",
+       pattern: "create_equipments",
+       defaults: new { controller = "Data", action = "Create_Equipments" });
+
+    endpoints.MapControllerRoute(
+       name: "update_equipments",
+       pattern: "update_equipments",
+       defaults: new { controller = "Data", action = "Update_Equipments" });
+
+    endpoints.MapControllerRoute(
+       name: "delete_equipments",
+       pattern: "delete_equipments",
+       defaults: new { controller = "Data", action = "Delete_Equipments" });
+
+    endpoints.MapControllerRoute(
+       name: "catalog_profile",
+       pattern: "catalog_profile",
+       defaults: new { controller = "Data", action = "CatalogProfile" });
+
+    endpoints.MapControllerRoute(
+       name: "catalog_profile_",
+       pattern: "catalog_profile_",
+       defaults: new { controller = "Data", action = "Get_Catalog_Profile" });
+
+    endpoints.MapControllerRoute(
+       name: "create_catalog_profile",
+       pattern: "create_catalog_profile",
+       defaults: new { controller = "Data", action = "Create_Catalog_Profile" });
+
+    endpoints.MapControllerRoute(
+       name: "update_catalog_profile",
+       pattern: "update_catalog_profile",
+       defaults: new { controller = "Data", action = "Update_Catalog_Profile" });
+
+    endpoints.MapControllerRoute(
+       name: "delete_catalog_profile",
+       pattern: "delete_catalog_profile",
+       defaults: new { controller = "Data", action = "Delete_Catalog_Profile" });
+
+    endpoints.MapControllerRoute(
+       name: "request_memo",
+       pattern: "request_memo",
+       defaults: new { controller = "Data", action = "Memo" });
+
+    endpoints.MapControllerRoute(
+       name: "request_memo_",
+       pattern: "request_memo_",
+       defaults: new { controller = "Data", action = "Get_Memo" });
+
+    endpoints.MapControllerRoute(
+       name: "create_memo",
+       pattern: "create_memo",
+       defaults: new { controller = "Data", action = "Create_Memo" });
+
+    endpoints.MapControllerRoute(
+       name: "update_memo",
+       pattern: "update_memo",
+       defaults: new { controller = "Data", action = "Update_Memo" });
+
+    endpoints.MapControllerRoute(
+       name: "delete_memo",
+       pattern: "delete_memo",
+       defaults: new { controller = "Data", action = "Delete_Memo" });
+
+    endpoints.MapControllerRoute(
+       name: "requestor",
+       pattern: "requestor",
+       defaults: new { controller = "Data", action = "Requestor" });
+
+    endpoints.MapControllerRoute(
+       name: "requestor_",
+       pattern: "requestor_",
+       defaults: new { controller = "Data", action = "Get_Requestor" });
+
+    endpoints.MapControllerRoute(
+       name: "create_requestor",
+       pattern: "create_requestor",
+       defaults: new { controller = "Data", action = "Create_Requestor" });
+
+    endpoints.MapControllerRoute(
+       name: "update_requestor",
+       pattern: "update_requestor",
+       defaults: new { controller = "Data", action = "Update_Requestor" });
+
+    endpoints.MapControllerRoute(
+       name: "delete_requestor",
+       pattern: "delete_requestor",
+       defaults: new { controller = "Data", action = "Delete_Requestor" });
+
+    endpoints.MapControllerRoute(
+       name: "unit",
+       pattern: "unit",
+       defaults: new { controller = "Data", action = "Unit" });
+
+    endpoints.MapControllerRoute(
+       name: "unit_",
+       pattern: "unit_",
+       defaults: new { controller = "Data", action = "Get_Unit" });
+
+    endpoints.MapControllerRoute(
+       name: "create_unit",
+       pattern: "create_unit",
+       defaults: new { controller = "Data", action = "Create_Unit" });
+
+    endpoints.MapControllerRoute(
+       name: "update_unit",
+       pattern: "update_unit",
+       defaults: new { controller = "Data", action = "Update_Unit" });
+
+    endpoints.MapControllerRoute(
+       name: "delete_unit",
+       pattern: "delete_unit",
+       defaults: new { controller = "Data", action = "Delete_Unit" });
+
+    endpoints.MapControllerRoute(
+      name: "sow",
+      pattern: "sow",
+      defaults: new { controller = "Contract", action = "Sow" });
+
+    endpoints.MapControllerRoute(
+       name: "sow_",
+       pattern: "sow_",
+       defaults: new { controller = "Contract", action = "Get_Sow" });
+
+    endpoints.MapControllerRoute(
+      name: "get_sow_group",
+      pattern: "get_sow_group",
+      defaults: new { controller = "Contract", action = "Get_SowGroup" });
+
+    endpoints.MapControllerRoute(
+       name: "create_sow",
+       pattern: "create_sow",
+       defaults: new { controller = "Contract", action = "Create_Sow" });
+    
+    endpoints.MapControllerRoute(
+       name: "update_sow",
+       pattern: "update_sow",
+       defaults: new { controller = "Contract", action = "Update_Sow" });
+
+    endpoints.MapControllerRoute(
+       name: "delete_sow",
+       pattern: "delete_sow",
+       defaults: new { controller = "Contract", action = "Delete_Sow" });
+
 
 });
 

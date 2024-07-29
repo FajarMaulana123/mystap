@@ -293,7 +293,16 @@ namespace mystap.Controllers
         public IActionResult Equipments()
         {
 
-            ViewBag.funlocID = _context.equipments.Where(p => p.funcLocID != "").GroupBy(p => p.funcLocID).Select(p => new{funcLocID = p.Key,Entity = p.FirstOrDefault()}).OrderBy(p => p.funcLocID).ToList();
+            ViewBag.equipments = _context.equipments
+                .Where(p => p.deleted == 0)
+                .GroupBy(x => new { x.funcLocID, x.weight })
+                .Select(z => new
+                {
+                    unitCode = z.Key.funcLocID,
+                    unitProses = z.Key.weight
+
+                })
+                .ToList();
             ViewBag.project = _context.project.Where(p => p.deleted == 0).ToList();
             return View();
         }
@@ -370,12 +379,12 @@ namespace mystap.Controllers
                 throw;
             }
         }
-        public IActionResult Update_Equipments(Rapat rapat)
+        /*public IActionResult Update_Equipments(Equipments equipments)
         {
             try
             {
                 int id = Int32.Parse(Request.Form["hidden_id"].FirstOrDefault());
-                Rapat obj = _context.rapat.Where(p => p.id == id).FirstOrDefault();
+                Equipments obj = _context.equipments.Where(p => p.id == id).FirstOrDefault();
 
                 if (obj != null)
                 {
@@ -392,14 +401,14 @@ namespace mystap.Controllers
             {
                 throw;
             }
-        }
+        }*/
 
-        public IActionResult Deleted_Equipments(Rapat rapat)
+        public IActionResult Deleted_Equipments(Equipments equipments)
         {
             try
             {
                 int id = Int32.Parse(Request.Form["id"].FirstOrDefault());
-                Rapat obj = _context.rapat.Where(p => p.id == id).FirstOrDefault();
+                Equipments obj = _context.equipments.Where(p => p.id == id).FirstOrDefault();
 
                 if (obj == null)
                 {
@@ -420,6 +429,7 @@ namespace mystap.Controllers
 
             
             ViewBag.project = _context.project.Where(p => p.deleted == 0).ToList();
+           
             return View();
         }
         public IActionResult Get_Catalog_Profile()
@@ -527,6 +537,398 @@ namespace mystap.Controllers
             {
                 int id = Int32.Parse(Request.Form["id"].FirstOrDefault());
                 CatalogProfile obj = _context.catalogProfile.Where(p => p.id == id).FirstOrDefault();
+
+                if (obj == null)
+                {
+                    obj.deleted = 1;
+                    _context.SaveChanges();
+
+                    return Json(new { title = "Sukses!", icon = "success", status = "Berhasil Dihapus" });
+                }
+                return Json(new { title = "Maaf!", icon = "error", status = "Tidak Dapat di Hapus!, Silahkan Hubungi Administrator " });
+            }
+            catch
+            {
+                throw;
+            }
+        }
+
+        public IActionResult Memo()
+        {
+
+            ViewBag.project = _context.project.Where(p => p.deleted == 0).ToList();
+            ViewBag.requestors = _context.requestors.Where(p => p.deleted == 0).ToList();
+            return View();
+        }
+        public IActionResult Get_Memo()
+        {
+            try
+            {
+                var draw = HttpContext.Request.Form["draw"].FirstOrDefault();
+
+                var start = Request.Form["start"].FirstOrDefault();
+
+                var length = Request.Form["length"].FirstOrDefault();
+
+                var sortColumn = Request.Form["columns[" + Request.Form["order[0][column]"].FirstOrDefault() + "][name]"].FirstOrDefault();
+
+                var sortColumnDirection = Request.Form["order[0][dir]"].FirstOrDefault();
+
+                var searchValue = Request.Form["search[value]"].FirstOrDefault();
+
+                int pageSize = length != null ? Convert.ToInt32(length) : 0;
+                int skip = start != null ? Convert.ToInt32(start) : 0;
+                int recordsTotal = 0;
+
+
+                var customerData = _context.memo.Include("project").Include("requestors").Include("users").Where(s => s.deleted == 0).Select(a => new { id = a.id, projectName = a.project.description, reqNo = a.reqNo, reqDate = a.reqDate, reqDesc = a.reqDesc, reqYear = a.reqYear, attach = a.attach, requestorName = a.requestors.name , showing = a.showing, deleted = a.deleted, deletedBy = a.users.name, updated = a.updated, updatedBy = a.users.name, createBy = a.users.alias, dateCreated = a.dateCreated  });
+
+                if (!(string.IsNullOrEmpty(sortColumn) && string.IsNullOrEmpty(sortColumnDirection)))
+                {
+                    customerData = customerData.OrderBy(sortColumn + " " + sortColumnDirection);
+                }
+
+                if (!string.IsNullOrEmpty(searchValue))
+                {
+                    customerData = customerData.Where(b => b.reqDesc.StartsWith(searchValue));
+                }
+                //Console.WriteLine(customerData);
+                recordsTotal = customerData.Count();
+                var data = customerData.Skip(skip).Take(pageSize).ToList();
+                return Json(new { draw = draw, recordsFilter = recordsTotal, recordsTotal = recordsTotal, data = data });
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+        public IActionResult Create_Memo(IFormCollection formcollaction)
+        {
+            try
+            {
+                Memo memo = new Memo();
+                memo.projectID = Convert.ToInt32(formcollaction["projectID"]);
+                memo.reqNo = formcollaction["reqNo"];
+                memo.reqDesc = formcollaction["reqDesc"];
+                memo.reqDate = formcollaction["reqDate"];
+                memo.requestor = Convert.ToInt32(formcollaction["requestor"]);
+                memo.attach = formcollaction["attach"];
+                memo.showing = Convert.ToInt32(formcollaction["showing"]);
+                memo.createdBy = 1;
+                memo.deleted = 0;
+
+                Boolean t;
+                if (memo != null)
+                {
+                    _context.memo.Add(memo);
+                    _context.SaveChanges();
+                    t = true;
+                }
+                else
+                {
+                    t = false;
+                }
+                return Json(new { result = t });
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+        public IActionResult Update_Memo(Memo memo)
+        {
+            try
+            {
+                int id = Int32.Parse(Request.Form["hidden_id"].FirstOrDefault());
+                Memo obj = _context.memo.Where(p => p.id == id).FirstOrDefault();
+
+                if (obj != null)
+                {
+                    obj.projectID = Convert.ToInt32(Request.Form["projectID"].FirstOrDefault());
+                    obj.reqNo = Request.Form["reqNo"].FirstOrDefault();
+                    obj.reqDesc = Request.Form["reqDesc"].FirstOrDefault();
+                    obj.reqDate = Request.Form["reqDate"].FirstOrDefault();
+                    obj.requestor = Convert.ToInt32(Request.Form["requestor"].FirstOrDefault());
+                    obj.attach = Request.Form["attach"].FirstOrDefault();
+                    obj.showing = Convert.ToInt32(Request.Form["showing"].FirstOrDefault());
+                    obj.updated = 1;
+                    obj.updatedBy = 1;
+                    _context.SaveChanges();
+                    return Json(new { Results = true });
+                }
+                return Json(new { Results = false });
+            }
+            catch
+            {
+                throw;
+            }
+        }
+
+        public IActionResult Deleted_Memo(Memo memo)
+        {
+            try
+            {
+                int id = Int32.Parse(Request.Form["id"].FirstOrDefault());
+                Memo obj = _context.memo.Where(p => p.id == id).FirstOrDefault();
+
+                if (obj == null)
+                {
+                    obj.deleted = 1;
+                    _context.SaveChanges();
+
+                    return Json(new { title = "Sukses!", icon = "success", status = "Berhasil Dihapus" });
+                }
+                return Json(new { title = "Maaf!", icon = "error", status = "Tidak Dapat di Hapus!, Silahkan Hubungi Administrator " });
+            }
+            catch
+            {
+                throw;
+            }
+        }
+
+        public IActionResult Requestor()
+        {
+
+            return View();
+        }
+        public IActionResult Get_Requestor()
+        {
+            try
+            {
+                var draw = HttpContext.Request.Form["draw"].FirstOrDefault();
+
+                var start = Request.Form["start"].FirstOrDefault();
+
+                var length = Request.Form["length"].FirstOrDefault();
+
+                var sortColumn = Request.Form["columns[" + Request.Form["order[0][column]"].FirstOrDefault() + "][name]"].FirstOrDefault();
+
+                var sortColumnDirection = Request.Form["order[0][dir]"].FirstOrDefault();
+
+                var searchValue = Request.Form["search[value]"].FirstOrDefault();
+
+                int pageSize = length != null ? Convert.ToInt32(length) : 0;
+                int skip = start != null ? Convert.ToInt32(start) : 0;
+                int recordsTotal = 0;
+
+
+                var customerData = _context.requestors.Include("users").Where(s => s.deleted == 0).Select(a => new { id = a.id, fungsi = a.fungsi, name = a.name, description = a.description,dateCreated = a.dateCreated });
+
+                if (!(string.IsNullOrEmpty(sortColumn) && string.IsNullOrEmpty(sortColumnDirection)))
+                {
+                    customerData = customerData.OrderBy(sortColumn + " " + sortColumnDirection);
+                }
+
+                if (!string.IsNullOrEmpty(searchValue))
+                {
+                    customerData = customerData.Where(b => b.description.StartsWith(searchValue));
+                }
+                //Console.WriteLine(customerData);
+                recordsTotal = customerData.Count();
+                var data = customerData.Skip(skip).Take(pageSize).ToList();
+                return Json(new { draw = draw, recordsFilter = recordsTotal, recordsTotal = recordsTotal, data = data });
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+        public IActionResult Create_Requestor(IFormCollection formcollaction)
+        {
+            try
+            {
+                Requestor requestor = new Requestor();
+                requestor.fungsi =formcollaction["fungsi"];
+                requestor.name = formcollaction["name"];
+                requestor.description = formcollaction["description"];
+                requestor.deleted = 0;
+                requestor.updated = 0;
+                requestor.createdBy = 1;
+                requestor.dateCreated = DateTime.Now;
+
+                Boolean t;
+                if (requestor != null)
+                {
+                    _context.requestors.Add(requestor);
+                    _context.SaveChanges();
+                    t = true;
+                }
+                else
+                {
+                    t = false;
+                }
+                return Json(new { result = t });
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+        public IActionResult Update_Requestor(Requestor requestor)
+        {
+            try
+            {
+                int id = Int32.Parse(Request.Form["hidden_id"].FirstOrDefault());
+                Requestor obj = _context.requestors.Where(p => p.id == id).FirstOrDefault();
+
+                if (obj != null)
+                {
+                    obj.fungsi = Request.Form["fungsi"].FirstOrDefault();
+                    obj.description = Request.Form["description"].FirstOrDefault();
+                    obj.name = Request.Form["name"].FirstOrDefault();
+                    obj.updated = 1;
+                    _context.SaveChanges();
+                    return Json(new { Results = true });
+                }
+                return Json(new { Results = false });
+            }
+            catch
+            {
+                throw;
+            }
+        }
+
+        public IActionResult Deleted_Requestor(Requestor requestor)
+        {
+            try
+            {
+                int id = Int32.Parse(Request.Form["id"].FirstOrDefault());
+                Requestor obj = _context.requestors.Where(p => p.id == id).FirstOrDefault();
+
+                if (obj == null)
+                {
+                    obj.deleted = 1;
+                    _context.SaveChanges();
+
+                    return Json(new { title = "Sukses!", icon = "success", status = "Berhasil Dihapus" });
+                }
+                return Json(new { title = "Maaf!", icon = "error", status = "Tidak Dapat di Hapus!, Silahkan Hubungi Administrator " });
+            }
+            catch
+            {
+                throw;
+            }
+        }
+
+        public IActionResult Unit()
+        {
+            ViewBag.plans = _context.plans.Where(p => p.deleted == 0).ToList();
+            ViewBag.unitProses = _context.unitProses.Where(p => p.deleted == 0).ToList();
+            return View();
+        }
+        public IActionResult Get_Unit()
+        {
+            try
+            {
+                var draw = HttpContext.Request.Form["draw"].FirstOrDefault();
+
+                var start = Request.Form["start"].FirstOrDefault();
+
+                var length = Request.Form["length"].FirstOrDefault();
+
+                var sortColumn = Request.Form["columns[" + Request.Form["order[0][column]"].FirstOrDefault() + "][name]"].FirstOrDefault();
+
+                var sortColumnDirection = Request.Form["order[0][dir]"].FirstOrDefault();
+
+                var searchValue = Request.Form["search[value]"].FirstOrDefault();
+
+                int pageSize = length != null ? Convert.ToInt32(length) : 0;
+                int skip = start != null ? Convert.ToInt32(start) : 0;
+                int recordsTotal = 0;
+
+
+                var customerData = _context.unit.Where(s => s.deleted == 0).Select(a => new { id = a.id, unitPlan = a.unitPlan, codeJob = a.codeJob, unitCode = a.unitCode, unitProses = a.unitProses, unitKilang = a.unitKilang, unitGroup = a.unitGroup, groupName = a.groupName, unitName =a.unitName });
+
+                if (!(string.IsNullOrEmpty(sortColumn) && string.IsNullOrEmpty(sortColumnDirection)))
+                {
+                    customerData = customerData.OrderBy(sortColumn + " " + sortColumnDirection);
+                }
+
+                if (!string.IsNullOrEmpty(searchValue))
+                {
+                    customerData = customerData.Where(b => b.unitPlan.StartsWith(searchValue));
+                }
+                //Console.WriteLine(customerData);
+                recordsTotal = customerData.Count();
+                var data = customerData.Skip(skip).Take(pageSize).ToList();
+                return Json(new { draw = draw, recordsFilter = recordsTotal, recordsTotal = recordsTotal, data = data });
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+        public IActionResult Create_Unit(IFormCollection formcollaction)
+        {
+            try
+            {
+                Unit unit = new Unit();
+                unit.unitPlan = formcollaction["unitPlan"];
+                unit.codeJob = formcollaction["codeJob"];
+                unit.unitCode = formcollaction["unitCode"];
+                unit.unitProses = formcollaction["unitProses"];
+                unit.unitKilang = formcollaction["unitKilang"];
+                unit.unitGroup = formcollaction["unitGroup"];
+                unit.groupName = formcollaction["groupName"];
+                unit.unitName = formcollaction["unitName"];
+                unit.createdBy = 1;
+                unit.deleted = 0;
+                unit.dateCreated = DateTime.Now;
+
+                Boolean t;
+                if (unit != null)
+                {
+                    _context.unit.Add(unit);
+                    _context.SaveChanges();
+                    t = true;
+                }
+                else
+                {
+                    t = false;
+                }
+                return Json(new { result = t });
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+        public IActionResult Update_Unit(Unit unit)
+        {
+            try
+            {
+                int id = Int32.Parse(Request.Form["hidden_id"].FirstOrDefault());
+                Unit obj = _context.unit.Where(p => p.id == id).FirstOrDefault();
+
+                if (obj != null)
+                {
+                    obj.unitPlan = Request.Form["unitPlan"].FirstOrDefault();
+                    obj.codeJob = Request.Form["codeJob"].FirstOrDefault();
+                    obj.unitCode = Request.Form["unitCode"].FirstOrDefault();
+                    obj.unitProses = Request.Form["unitProses"].FirstOrDefault();
+                    obj.unitKilang = Request.Form["unitKilang"].FirstOrDefault();
+                    obj.unitGroup = Request.Form["unitGroup"].FirstOrDefault();
+                    obj.groupName = Request.Form["groupName"].FirstOrDefault();
+                    obj.unitName = Request.Form["unitName"].FirstOrDefault();
+                    obj.updated = 1;
+                    obj.updatedBy = 1;
+                    _context.SaveChanges();
+                    return Json(new { Results = true });
+                }
+                return Json(new { Results = false });
+            }
+            catch
+            {
+                throw;
+            }
+        }
+
+        public IActionResult Deleted_Unit(Unit unit)
+        {
+            try
+            {
+                int id = Int32.Parse(Request.Form["id"].FirstOrDefault());
+                Unit obj = _context.unit.Where(p => p.id == id).FirstOrDefault();
 
                 if (obj == null)
                 {

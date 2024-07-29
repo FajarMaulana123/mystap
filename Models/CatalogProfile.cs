@@ -22,5 +22,8 @@ namespace mystap.Models
         public int? object_type { get; set; }
         public int? sort_num { get; set; }
 
+       
+        public Users users { get; set; }
+
     }
 }

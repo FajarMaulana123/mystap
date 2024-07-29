@@ -1,0 +1,145 @@
+﻿@{
+    ViewData["Title"] = "Unit";
+}
+
+<ol class="breadcrumb float-xl-end">
+        <li class="breadcrumb-item"><a href="javascript:void(0);"> <i data-feather="hard-drive"></i></a></li>
+        <li class="breadcrumb-item"><a href="javascript:void(0);">Master Data</a></li>
+        <li class="breadcrumb-item active" aria-current="page"><span>Manage Unit</span></li>
+    </ol>
+    <h1 class="page-header">Manage Unit</h1>
+    <div class="panel panel-inverse">
+        <div class="panel-heading">
+            <h4 class="panel-title">Data Unit</h4>
+            <div class="panel-heading-btn">
+                <a href="javascript:;" class="btn btn-xs btn-icon btn-default" data-toggle="panel-expand"><i class="fa fa-expand"></i></a>
+                <a href="javascript:;" class="btn btn-xs btn-icon btn-warning" data-toggle="panel-collapse"><i class="fa fa-minus"></i></a>
+            </div>
+        </div>      
+        <div class="panel-body">
+            <div class="table-responsive mb-4 mt-4"> 
+                <table id="table" class="table small table-striped table-bordered dataTables_wrapper" width="100%">
+                    <thead>
+                        <tr>
+                            @* <th>No</th> *@
+                            <th>Plant</th>
+                            <th>Code Job</th>
+                            <th>Unit Code</th>
+                            <th>Unit Proses</th>
+                            <th>Unit Kilang</th>
+                            <th>Unit Group</th>
+                            <th>Group Name</th>
+                            <th>Unit Name</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    
+                </table>
+            </div>
+        </div>
+    </div>
+
+
+
+<div class="modal fade" id="Modal" tabindex="-1" role="dialog" aria-labelledby="ModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-l" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title judul-modal" id="Modal"></h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-hidden="true"  aria-label="Close">
+                </button>
+            </div>
+            <form id="add-form">
+            <div class="modal-body">
+                <input type="hidden" name="hidden_status" id="hidden_status" value="add">
+                <input type="hidden" name="hidden_id" id="hidden_id">
+                <div class="row">
+                    <div class="col-md-12 mb-2">
+                        <div class="form-group">
+                            <label>Plants</label>
+                            <select name="unitPlan" id="unitPlan" class="form-control">
+                                <option value="">Select Plant</option>
+                                    @foreach (var val in ViewBag.plans)
+                                    {
+                                        <option value="@(val.plans)"> @(val.plans)</option>
+                                    }
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12 mb-2">
+                        <div class="form-group">
+                            <label>Code Job </label>
+                            <input type="text" name="codeJob" id="codeJob" class="form-control">
+                            <input type="hidden" name="hidden_status" id="hidden_status">
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12 mb-2">
+                        <div class="form-group">
+                            <label>Unit Proses</label>
+                            <select name="unitCode" id="unitCode" class="form-select">
+                                <option value="">Select Code</option>
+                                    @foreach (var val in ViewBag.unitProses)
+                                    {
+                                        <option value="@(val.inisial)" data-unit="@(val.description)"> @(val.inisial) @(val.description)</option>
+                                    }
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="row">
+                    <div class="col-md-12 mb-2">
+                        <div class="form-group">
+                            <label>Unit Kilang</label>
+                            <input type="text" name="unitKilang" id="unitKilang" class="form-control">
+                            <input type="hidden" name="hidden_status" id="hidden_status">
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12 mb-2">
+                        <div class="form-group">
+                            <label>Unit Group</label>
+                            <input type="text" name="unitGroup" id="unitGroup" class="form-control">
+                            <input type="hidden" name="hidden_status" id="hidden_status">
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12 mb-2">
+                        <div class="form-group">
+                            <label>Group Name</label>
+                            <input type="text" name="groupName" id="groupName" class="form-control">
+                            <input type="hidden" name="hidden_status" id="hidden_status">
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12 mb-2">
+                        <div class="form-group">
+                            <label>Unit Name</label>
+                            <input type="text" name="unitName" id="unitName" class="form-control">
+                            <input type="hidden" name="hidden_status" id="hidden_status">
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <a href="javascript:;" class="btn btn-white" data-bs-dismiss="modal">Close</a>
+                <button type="reset" class="btn btn-dark">Reset</button>
+                <button type="submit" class="btn btn-success">Submit</button>
+            </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts
+{
+    <script src="~/js/Unit.js"></script>
+}
+

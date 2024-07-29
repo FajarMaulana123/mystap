@@ -1,0 +1,303 @@
+﻿@{
+    ViewData["Title"] = "SOW";
+}
+
+<ol class="breadcrumb float-xl-end">
+        <li class="breadcrumb-item"><a href="javascript:void(0);">Paket Kontrak</a></li>
+        <li class="breadcrumb-item active" aria-current="page"><span>Scope Of Work</span></li>
+    </ol>
+    <h1 class="page-header"> Scope Of Work</h1>
+    <div class="panel panel-inverse">
+        <div class="accordion" id="accordion">
+            <div class="accordion-item border-0">
+                <div class="accordion-header" id="headingOne">
+                    <button class="accordion-button bg-gray-900 text-white px-3 py-10px pointer-cursor" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne">
+                        <i class="fa fa-circle fa-fw text-blue me-2 fs-8px"></i>Filter
+                    </button>
+                </div>
+                <div id="collapseOne" class="accordion-collapse collapse" data-bs-parent="#accordion">
+                    <div class="accordion-body bg-gray-800 text-white">
+                        <div class="row mb-2">
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label>Project</label>
+                                    <select name="project_filter" id="project_filter" class="form-control form-control-sm">
+                                    @foreach (var val in ViewBag.project)
+                                    {
+                                        <option value="@(val.projectNo)" data-id="@(val.id)" data-desc="@(val.description)" data-rev="@(val.revision)"> @(val.description)</option>
+                                    }
+                                    </select> 
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label>Event</label>
+                                    <select name="events_filter" id="events_filter" class="form-control  form-control-sm">
+                                        <option value="">All</option>
+                                        <option value="TA" data-event="TA">TA</option>
+                                        <option value="PIT STOP" data-event="PS">PIT STOP</option>
+                                        <option value="RKAP" data-event="RKAP">RKAP</option>
+                                        <option value="COC" data-event="COC">COC</option>
+                                        <option value="LTSA" data-event="LTSA">LTSA</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label>Group</label>
+                                    <select name="groups_filter" id="groups_filter" class="form-control  form-control-sm">
+                                        <option value="">All</option>
+                                    @foreach (var val in ViewBag.groups_)
+                                    {
+                                        <option value="@(val.groups_)" data-inisial="@(val.inisial)"> @(val.groups_)</option>
+                                    }
+                                    </select>
+                                </div>
+                            </div>     
+                        </div>
+                        <div class="row mb-2">
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label>Sub Group</label>
+                                    <select name="subGroup_filter" id="subGroup_filter" class="form-control  form-control-sm">
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label>Area</label>
+                                    <select name="area_filter" id="area_filter" class="selectpicker form-control  form-control-sm">
+                                        <option value="">Select Area</option>
+                                    @foreach (var val in ViewBag.unit)
+                                    {
+                                        <option value="@(val.unitCode)" > @(val.unitCode)</option>
+                                    }
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label>Kabo</label>
+                                    <select name="kabo_filter" id="kabo_filter" class="form-control  form-control-sm">
+                                        <option value="">Select Kabo</option>
+                                        <option value="MAN TA" data-kabo="1">MAN TA</option>
+                                        <option value="TA" data-kabo="2">TA</option>
+                                        <option value="OH" data-kabo="3">OH</option>
+                                        <option value="MAN PS" data-kabo="4">MPS</option>
+                                    </select>
+                                </div>
+                            </div>  
+                        </div>
+                        <div class="row mb-2">
+                        <div class="col-md-4">
+                                <div class="form-group">
+                                    <label>Year</label>
+                                    <select name="tahun_filter" id="tahun_filter" class="form-control  form-control-sm">
+                                        <option value="">Select Tahun</option>
+                                    </select>
+
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label>No.Scope Of Work</label>
+                                    <input type="text" name="no_filter" id="no_filter" class="form-control form-control-sm">
+                                </div>
+                            </div> 
+                        </div>
+                        <div class="row">
+                            <div class="col-md-12">
+                                <button class="btn btn-primary" id="filter"> Filter</button>
+                                <button class="btn btn-warning" id="reset"> Reset</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="panel panel-inverse">
+        <div class="panel-heading">
+            <h4 class="panel-title" id="title-sow">Scope Of Work</h4>
+            <div class="panel-heading-btn">
+                <a href="javascript:;" class="btn btn-xs btn-icon btn-default" data-toggle="panel-expand"><i class="fa fa-expand"></i></a>
+                <a href="javascript:;" class="btn btn-xs btn-icon btn-warning" data-toggle="panel-collapse"><i class="fa fa-minus"></i></a>
+                
+            </div>
+        </div> 
+        <div class="panel-body">
+            <div class="table-responsive mb-2">
+                <table id="table" class="table small table-striped table-bordered dataTables_wrapper" width="100%">
+                    <thead>
+                        <tr>
+                            <th>No.SOW</th>
+                            <th>Job Code</th>
+                            <th>Judul Pekerjaan</th>
+                            <th>Planner</th>
+                            <th>Kabo</th>
+                            <th>Event</th>
+                            <th>Group</th>
+                            <th>Sub Group</th>
+                            <th>Area</th>
+                            <th>Tahun</th>
+                            <th>Project</th>
+                            <th>Created By</th>
+                            <th>Modified</th>
+
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                </table>
+            </div>
+        </div>
+    </div>
+
+
+<div class="modal fade" id="Modal" tabindex="-1" role="dialog" aria-labelledby="ModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-md" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title judul-modal" id="Modal"></h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-hidden="true"  aria-label="Close">
+                    
+                </button>
+            </div>
+            <form id="add-form">
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-12">
+                                <input type="hidden" name="hidden_status" id="hidden_status" value="add">
+                                <input type="hidden" name="hidden_id" id="hidden_id">
+                                <div class="row mb-2">
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label>Event</label>
+                                            <select name="events" id="events" class="form-select  form-select-sm">
+                                                <option value="">Select Event</option>
+                                                <option value="TA" data-event="TA">TA</option>
+                                                <option value="PIT STOP" data-event="PS">PIT STOP</option>
+                                                <option value="RKAP" data-event="RKAP">RKAP</option>
+                                                <option value="COC" data-event="COC">COC</option>
+                                                <option value="LTSA" data-event="LTSA">LTSA</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label>Group</label>
+                                            <select name="groups_" id="groups" class="form-select  form-select-sm">
+                                                <option value="">Select Group</option>
+                                            @foreach (var val in ViewBag.groups_)
+                                            {
+                                                <option value="@(val.groups_)" data-inisial="@(val.inisial)"> @(val.groups_)</option>
+                                            }
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row mb-2">
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label>Sub Group</label>
+                                            <select name="subGroup" id="subGroup" class="form-select  form-select-sm">
+
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label>Area</label>
+                                            <select name="area" id="area" class="form-select  form-select-sm">
+                                                <option value="">Select Area</option>
+                                            @foreach (var val in ViewBag.unit)
+                                            {
+                                                <option value="@(val.unitCode)"> @(val.unitCode) ( @(val.unitProses) )</option>
+                                            }
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row mb-2">
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label>Kabo</label>
+                                            <select name="kabo" id="kabo" class="form-select  form-select-sm">
+                                                <option value="">Select Kabo</option>
+                                                <option value="MAN TA" data-kabo="1">MAN TA</option>
+                                                <option value="TA" data-kabo="2">TA</option>
+                                                <option value="OH" data-kabo="3">OH</option>
+                                                <option value="MAN PS" data-kabo="4">MAN PS</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label>Year</label>
+                                            <select name="tahun" id="tahun" class="form-select  form-select-sm">
+                                                <option value="">Select Tahun</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row mb-2">
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label>Project</label>
+                                            <select name="projectID" id="projectID" class="form-select  form-select-sm">
+                                                <option value="">Select Project</option>
+                                            @foreach (var val in ViewBag.project)
+                                            {
+                                                <option value="@(val.projectNo)" data-id="@(val.id)" data-desc="@(val.description)" data-rev="@(val.revision)"> @(val.description)</option>
+                                            }
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label>Planner</label>
+                                            <select name="planner" id="planner" class="form-select  form-select-sm">
+                                                <option value="">Select planner</option>
+                                            @foreach (var val in ViewBag.userAccount)
+                                            {
+                                                <option value="@(val.alias)"> @(val.alias)</option>
+                                            }
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row mb-2">
+                                    <div class="col-md-12">
+                                        <div class="form-group">
+                                            <label>Judul Pekerjaan </label>
+                                            <input type="text" name="judulPekerjaan" id="judulPekerjaan" class="form-control  form-control-sm">
+                                            <input type="hidden" name="hidden_status" id="hidden_status">
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="row mb-2">
+                                    <div class="col-md-12">
+                                        <div class="form-group">
+                                            <label>File Upload</label>
+                                            <input type="file" name="file" class="form-control form-control-sm" id="file">
+                                            <input type="hidden" name="file_" class="form-control form-control-sm" id="file_">
+                                        </div>
+                                    </div>
+                                </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <a href="javascript:;" class="btn btn-white" data-bs-dismiss="modal">Close</a>
+                <button type="reset" class="btn btn-dark">Reset</button>
+                <button type="submit" class="btn btn-success">Submit</button>
+            </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts
+{
+    <script src="~/js/Sow.js"> </script>
+}
