@@ -22,6 +22,7 @@ namespace mystap.Models
         public DbSet<ViewReadinessDetail> view_readiness_detail { get; set; }
         public DbSet<ViewGrafikReadiness> view_grafik_readiness { get; set; }
         public DbSet<ViewDetailOrder> view_detail_order { get; set; }
+        public DbSet<ViewReadinessJoblist> view_readiness_joblist { get; set; }
     }
 }
 

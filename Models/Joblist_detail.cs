@@ -16,7 +16,7 @@ namespace mystap.Models
         public string? engineer { get; set; }
         public string? revision { get; set; }
         public string? execution { get; set; }
-        public string? responbility { get; set; }
+        public string? responsibility { get; set; }
         public string? ram { get; set; }
         public int? cleaning { get; set; }
         public int? inspection { get; set; }
@@ -36,7 +36,7 @@ namespace mystap.Models
         public int? project { get; set; }
         public int? critical_job { get; set; }
         public int? freezing { get; set; }
-        public int? pic { get; set; }
+        public long? pic { get; set; }
         public int? deleted { get; set; }
         public int? jasa { get; set; }
         public int? no_jasa { get; set; }

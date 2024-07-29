@@ -38,6 +38,7 @@ app.UseEndpoints(endpoints =>
 		pattern: "awal",
 		defaults: new { controller = "Awal", action = "Awal" });
 
+    //DASHBOARD EQUIPMENT
     endpoints.MapControllerRoute(
         name: "dashboard_equipment",
         pattern: "dashboard_equipment",
@@ -72,6 +73,48 @@ app.UseEndpoints(endpoints =>
         name: "detail_jasa",
         pattern: "detail_jasa",
         defaults: new { controller = "Dashboard", action = "DetailJasa" });
+
+    //DASHBOARD JOBLIST
+    endpoints.MapControllerRoute(
+        name: "dashboard_joblist",
+        pattern: "dashboard_joblist",
+        defaults: new { controller = "Dashboard", action = "DashboardJoblist" });
+
+    endpoints.MapControllerRoute(
+        name: "get_readiness_joblist",
+        pattern: "get_readiness_joblist",
+        defaults: new { controller = "Dashboard", action = "GetReadinessJoblist" });
+
+    endpoints.MapControllerRoute(
+        name: "readiness_detail_joblist",
+        pattern: "readiness_detail_joblist/{projectID?}/{rev?}/{paketJoblist?}",
+        defaults: new { controller = "Dashboard", action = "ReadinessDetailJoblist" });
+
+    endpoints.MapControllerRoute(
+        name: "grafik_readiness_joblist",
+        pattern: "grafik_readiness_joblist",
+        defaults: new { controller = "Dashboard", action = "GrafikReadinessJoblist" });
+
+    //Dashboard Jobplan
+    endpoints.MapControllerRoute(
+        name: "dashboard_jobplan",
+        pattern: "dashboard_jobplan",
+        defaults: new { controller = "Dashboard", action = "DashboardJobplan" });
+
+    endpoints.MapControllerRoute(
+        name: "data_material",
+        pattern: "data_material",
+        defaults: new { controller = "Dashboard", action = "SummaryMaterial" });
+
+    endpoints.MapControllerRoute(
+        name: "data_jasa",
+        pattern: "data_jasa",
+        defaults: new { controller = "Dashboard", action = "SummaryJasa" });
+
+    endpoints.MapControllerRoute(
+        name: "grafik_jobplan",
+        pattern: "grafik_jobplan",
+        defaults: new { controller = "Dashboard", action = "GrafikJobplan" });
 
     endpoints.MapControllerRoute(
         name: "plant",
