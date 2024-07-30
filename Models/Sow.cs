@@ -25,10 +25,10 @@ namespace mystap.Models
         public DateTime? lastModify { get; set; }
         public int? deleted { get; set; }
 
-        [ForeignKey("createdBy")]
-        public Users users { get; set; }
+        //public Users users { get; set; }
+        [ForeignKey("projectID")]
         public Project project { get; set; }
-        
+
 
     }
 }

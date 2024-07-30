@@ -116,6 +116,32 @@ app.UseEndpoints(endpoints =>
         pattern: "grafik_jobplan",
         defaults: new { controller = "Dashboard", action = "GrafikJobplan" });
 
+    //Dashboard Kontrak
+    endpoints.MapControllerRoute(
+        name: "dashboard_kontrak",
+        pattern: "dashboard_kontrak",
+        defaults: new { controller = "Dashboard", action = "DashboardKontrak" });
+
+    endpoints.MapControllerRoute(
+        name: "kontrak_by_unit",
+        pattern: "kontrak_by_unit",
+        defaults: new { controller = "Dashboard", action = "KontrakByUnit" });
+
+    endpoints.MapControllerRoute(
+        name: "kontrak_by_status",
+        pattern: "kontrak_by_status",
+        defaults: new { controller = "Dashboard", action = "KontrakByStatus" });
+
+    endpoints.MapControllerRoute(
+        name: "chart_kontrak_status",
+        pattern: "chart_kontrak_status",
+        defaults: new { controller = "Dashboard", action = "ChartKontrakByStatus" });
+
+    endpoints.MapControllerRoute(
+        name: "count_progress_jasa",
+        pattern: "count_progress_jasa",
+        defaults: new { controller = "Dashboard", action = "CountProgressJasa" });
+
     endpoints.MapControllerRoute(
         name: "plant",
         pattern: "plant",

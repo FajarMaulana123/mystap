@@ -1,13 +1,17 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Azure.Core;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.FlowAnalysis;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using Microsoft.Extensions.Caching.Memory;
 using mystap.Models;
+using System;
 using System.ComponentModel.DataAnnotations;
 using System.Data;
+using System.Diagnostics;
 using System.Linq.Dynamic.Core;
+using System.Linq.Expressions;
 
 namespace mystap.Controllers
 {
@@ -841,6 +845,135 @@ namespace mystap.Controllers
                     return Json(new { data = data });
                 }
 
+                return Json(new { data = new { } });
+
+            }
+            catch
+            {
+                throw;
+            }
+        }
+
+        public IActionResult DashboardKontrak()
+        {
+            ViewBag.project = _context.project.Where(p => p.deleted == 0).Where(p => p.active == "1").ToList();
+            return View();
+        }
+
+        public async Task<IActionResult> KontrakByUnit()
+        {
+            try
+            {
+                var kategori = Request.Form["kategori"].FirstOrDefault();
+                var project = Request.Form["project"].FirstOrDefault();
+                var query = (from j in _context.contractTracking
+                             join p in _context.project on j.projectID equals p.id
+                             select new
+                             {
+                                 idPaket = j.idPaket,
+                                 projectID = p.id,
+                                 deleted = j.deleted,
+                                 unit = j.unit,
+                                 kategoriPaket = j.kategoriPaket,
+                                 kriteria = j.kriteria,
+                                 tipePaket = j.tipePaket,
+                                 dirPWS = j.dirPWS,
+                                 sourceVendor = j.sourceVendor,
+                                 asalSource = j.asalSource,
+                                 katTender = j.katTender
+
+
+                             });
+                query = query.Where(w => w.deleted == 0).Where(w => w.projectID == Convert.ToInt32(project));
+
+                if (kategori == "UNIT")
+                {
+                    var data = await query.GroupBy(g => new
+                    {
+                        g.unit
+                    }).Select(m => new {
+                        unit = m.Key.unit,
+                        total = m.Select(p => p.idPaket).Count()
+                    }).ToListAsync();
+                    return Json(new { data = data });
+                }
+
+                if (kategori == "KATEGORI") {
+                    var data = await query.GroupBy(g => new
+                    {
+                        g.kategoriPaket
+                    }).Select(m => new {
+                        unit = m.Key.kategoriPaket,
+                        total = m.Select(p => p.idPaket).Count()
+                    }).ToListAsync();
+                    return Json(new { data = data });
+                } 
+                
+                if (kategori == "KRITERIA") {
+                    var data = await query.GroupBy(g => new
+                    {
+                        g.kriteria
+                    }).Select(m => new {
+                        unit = m.Key.kriteria,
+                        total = m.Select(p => p.idPaket).Count()
+                    }).ToListAsync();
+                    return Json(new { data = data });
+                }
+                
+                if (kategori == "TIPE") {
+                    var data = await query.GroupBy(g => new
+                    {
+                        g.tipePaket
+                    }).Select(m => new {
+                        unit = m.Key.tipePaket,
+                        total = m.Select(p => p.idPaket).Count()
+                    }).ToListAsync();
+                    return Json(new { data = data });
+                } 
+                
+                if (kategori == "DIREKSI_PENGAWAS") {
+                    var data = await query.GroupBy(g => new
+                    {
+                        g.dirPWS
+                    }).Select(m => new {
+                        unit = m.Key.dirPWS,
+                        total = m.Select(p => p.idPaket).Count()
+                    }).ToListAsync();
+                    return Json(new { data = data });
+                } 
+                
+                if (kategori == "SOURCE_VENDOR") {
+                    var data = await query.GroupBy(g => new
+                    {
+                        g.sourceVendor
+                    }).Select(m => new {
+                        unit = m.Key.sourceVendor,
+                        total = m.Select(p => p.idPaket).Count()
+                    }).ToListAsync();
+                    return Json(new { data = data });
+                } 
+                
+                if (kategori == "ASAL_SOURCE") {
+                    var data = await query.GroupBy(g => new
+                    {
+                        g.asalSource
+                    }).Select(m => new {
+                        unit = m.Key.asalSource,
+                        total = m.Select(p => p.idPaket).Count()
+                    }).ToListAsync();
+                    return Json(new { data = data });
+                } 
+                
+                if (kategori == "PENGADAAN") {
+                    var data = await query.GroupBy(g => new
+                    {
+                        g.katTender
+                    }).Select(m => new {
+                        unit = m.Key.katTender,
+                        total = m.Select(p => p.idPaket).Count()
+                    }).ToListAsync();
+                    return Json(new { data = data });
+                }
 
 
 
@@ -853,5 +986,165 @@ namespace mystap.Controllers
                 throw;
             }
         }
+
+        public async Task<IActionResult> KontrakByStatus()
+        {
+            try
+            {
+                var project = Request.Form["project"].FirstOrDefault();
+                var query = (from j in _context.contractTracking
+                             join p in _context.project on j.projectID equals p.id
+                             select new
+                             {
+                                 idPaket = j.idPaket,
+                                 currStat = j.currStat,
+                                 projectID = p.id,
+                                 deleted = j.deleted,
+
+                             });
+                query = query.Where(w => w.currStat != null).Where(w => w.deleted == 0);
+
+                if(project != "")
+                {
+                    query = query.Where(w => w.projectID == Convert.ToInt32(project));
+                }
+                var list = new[] { "PENYUSUNAN KAK", "PENYUSUNAN OE", "KIRIM PAKET KE CO", "PENGUMUMAN PENDAFTARAN", "SERTIFIKASI", "PRAKUALIFIKASI", "UNDANGAN & PENGAMBILAN DOKUMEN", "PEMBERIAN PENJELASAN", "PENYAMPAIAN DOKUMEN PENAWARAN", "PEMBUKAAN DOKUMEN PENAWARAN", "EVALUASI PENAWARAN", "NEGOSIASI", "USULAN PENETAPAN CALON PEMENANG", "KEPUTUSAN PEMENANG", "PENGUMUMAN PEMENANG", "PENGAJUAN SANGGAH", "JAWABAN SANGGAH", "PENUNJUKAN PEMENANG", "PROSES SPB" };
+                var datas = await query.GroupBy(y => new
+                            {
+                                y.currStat
+                            }).OrderBy(o => list.Contains(o.Key.currStat)).Select(z => new
+                            {
+                                currStat = z.Key.currStat,
+                                total = z.Select(p => p.idPaket).Distinct().Count()
+                            }).ToListAsync();
+
+                var total = 0;
+                var isi = "" ;
+
+                foreach(var val in datas)
+                {
+                    total += val.total;
+
+                    isi += "<a class='widget-list-item  detail_kontrak rounded-0 pt-3px' style='background-color:white;' data-status='" + val.currStat + "'>" +
+                        "<div class='widget-list-media icon'>" +
+                        "<i class='fa fa-info-circle text-blue fs-10px me-2'></i>" +
+                        "</div>" +
+                        "<div class='widget-list-content'>" +
+                            "<div class='widget-list-title' style='color:black;'>" + val.currStat +"</div>" +
+                        "</div>" +
+                        "<div class='widget-list-action text-nowrap text-black-500'>" +
+                            "<span data-animation='number' data-value='"+ val.total + "'>" + val.total + "</span>"+
+                        "</div>"+
+                    "</a>";
+                }
+
+
+                return Json(new { data = isi, total = total });
+            }
+            catch
+            {
+                throw;
+            }
+        }
+
+        public async Task<IActionResult> ChartKontrakByStatus()
+        {
+            try
+            {
+                var project = Request.Form["project"].FirstOrDefault();
+                var query = (from j in _context.contractTracking
+                             join p in _context.project on j.projectID equals p.id
+                             select new
+                             {
+                                 idPaket = j.idPaket,
+                                 currStat = j.currStat,
+                                 projectID = p.id,
+                                 deleted = j.deleted,
+
+                             });
+                query = query.Where(w => w.currStat != null).Where(w => w.deleted == 0);
+
+                if (project != "")
+                {
+                    query = query.Where(w => w.projectID == Convert.ToInt32(project));
+                }
+                var list = new[] { "PENYUSUNAN KAK", "PENYUSUNAN OE", "KIRIM PAKET KE CO", "PENGUMUMAN PENDAFTARAN", "SERTIFIKASI", "PRAKUALIFIKASI", "UNDANGAN & PENGAMBILAN DOKUMEN", "PEMBERIAN PENJELASAN", "PENYAMPAIAN DOKUMEN PENAWARAN", "PEMBUKAAN DOKUMEN PENAWARAN", "EVALUASI PENAWARAN", "NEGOSIASI", "USULAN PENETAPAN CALON PEMENANG", "KEPUTUSAN PEMENANG", "PENGUMUMAN PEMENANG", "PENGAJUAN SANGGAH", "JAWABAN SANGGAH", "PENUNJUKAN PEMENANG", "PROSES SPB" };
+                var datas = await query.GroupBy(y => new
+                {
+                    y.currStat
+                }).OrderBy(o => list.Contains(o.Key.currStat)).Select(z => new
+                {
+                    currStat = z.Key.currStat,
+                    total = z.Select(p => p.idPaket).Distinct().Count()
+                }).ToListAsync();
+
+              
+
+
+                return Json(new { data = datas});
+            }
+            catch
+            {
+                throw;
+            }
+        }
+
+        public async Task<IActionResult> CountProgressJasa()
+        {
+            try
+            {
+                var project = Request.Form["project_filter"].FirstOrDefault();
+                var unit = Request.Form["unit_filter"].FirstOrDefault();
+                var pic = Request.Form["pic_filter"].FirstOrDefault();
+
+                var query = (from j in _context.contractTracking
+                             join p in _context.project on j.projectID equals p.id
+                             select new
+                             {
+                                idPaket = j.idPaket,
+                                deleted = j.deleted,
+                                projectID = p.id,
+                                unit = j.unit,
+                                pic = j.pic,
+                                sp = (j.aktualSP != null) ? (long?)j.idPaket : null,
+                                on_track = (j.t_light > 30 && j.aktualSP == null) ? (long?)j.idPaket : null,
+                                potensi_delay = (j.t_light <= 30 && j.t_light > 20 && j.aktualSP == null) ? (long?)j.idPaket : null,
+                                delay = (j.t_light <= 20 && j.aktualSP == null) ? (long?)j.idPaket : null,
+
+                             });
+                query = query.Where(w => w.deleted == 0);
+                if (project != "")
+                {
+                    query = query.Where(w => w.projectID == Convert.ToInt32(project));
+                }
+
+                //if (unit != "")
+                //{
+                //    query = query.Where(w => w.unit == unit);
+                //}
+
+                //if (pic != "")
+                //{
+                //    query = query.Where(w => w.pic == pic);
+                //}
+
+                var data = await query.GroupBy(g => new
+                            {})
+                            .Select(z => new
+                            {
+                                sp = z.Select(p => p.sp).Distinct().Count(),
+                                on_track = z.Select(p => p.on_track).Distinct().Count(),
+                                potensi_delay = z.Select(p => p.potensi_delay).Distinct().Count(),
+                                delay = z.Select(p => p.delay).Distinct().Count()
+                            }).FirstOrDefaultAsync();
+
+                return Json(new { data = data });
+            }
+            catch
+            {
+                throw;
+            }
+        }
+
     }
 }

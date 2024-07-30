@@ -91,7 +91,7 @@ namespace mystap.Controllers
                 int recordsTotal = 0;
 
 
-                var customerData = _context.sow.Include("project").Include("users").Where(s => s.deleted == 0).Select(a => new { id = a.id, noSOW = a.noSOW, jobCode = a.jobCode, judulPekerjaan = a.judulPekerjaan, planner = a.planner, kabo = a.kabo, events = a.events, groups = a.groups, subGroups = a.subGroups, area = a.area, tahun = a.tahun, description = a.project.description, createdBy = a.users.alias, modifyBy = a.users.alias });
+                var customerData = _context.sow.Include("project").Where(s => s.deleted == 0).Select(a => new { id = a.id, noSOW = a.noSOW, jobCode = a.jobCode, judulPekerjaan = a.judulPekerjaan, planner = a.planner, kabo = a.kabo, events = a.events, groups = a.groups, subGroups = a.subGroups, area = a.area, tahun = a.tahun, description = a.project.description, createdBy = a.createdBy, modifyBy = a.modifyBy });
 
                /* if (!(string.IsNullOrEmpty(sortColumn) && string.IsNullOrEmpty(sortColumnDirection)))
                 {
