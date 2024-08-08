@@ -1,6 +1,8 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 namespace mystap.Models
 {
+    [Table("history_reservasi")]
     public class HistoryReservasi
     {
         public long id {  get; set; }
@@ -15,6 +17,6 @@ namespace mystap.Models
         public int? penetapan_pemenang { get; set; }
         public int? tunggu_onsite { get; set; }
         public int? onsite { get; set; }
-        public DateTime? created_date { get; set; }
+        public DateTime created_date { get; set; }
     }
 }

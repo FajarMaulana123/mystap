@@ -8,14 +8,10 @@
             "url": "/project_",
             "method": "POST",
             "datatype": "json"
-            // data: function (d) {
-            //    d.id = id;
-            //}
-
-            //data: function (d) {
-            //    d.status = $('#status_filter').val();
-            //    d.taoh = $('#taoh_filter').val();
-            //}
+            data: function (d) {
+                d.status = $('#status_filter').val();
+                d.taoh = $('#taoh_filter').val();
+            }
         },
 
         columns: [
@@ -52,7 +48,7 @@
         ],
         columnDefs: [
             {
-                targets: [1, 4, 8],
+                targets: [3, 6, 9],
                 className: 'text-wrap width-200'
 
             },

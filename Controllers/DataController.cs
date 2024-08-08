@@ -298,7 +298,7 @@ namespace mystap.Controllers
         {
             return View();
         }
-        public IActionResult Get_Project()
+        public async Task<IActionResult> Get_Project()
         {
             try
             {
@@ -329,10 +329,9 @@ namespace mystap.Controllers
                 {
                     customerData = customerData.Where(b => b.description.StartsWith(searchValue));
                 }
-                Console.WriteLine(customerData);
                 recordsTotal = customerData.Count();
-                var data = customerData.Skip(skip).Take(pageSize).ToList();
-                return Json(new { draw, recordFiltered = recordsTotal, recordsTotal = recordsTotal, data = data });
+                var data = await customerData.Skip(skip).Take(pageSize).ToListAsync();
+                return Json(new { draw = draw, recordFiltered = recordsTotal, recordsTotal = recordsTotal, data = data });
             }
             catch (Exception)
             {

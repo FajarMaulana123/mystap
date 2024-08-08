@@ -142,6 +142,52 @@ app.UseEndpoints(endpoints =>
         pattern: "count_progress_jasa",
         defaults: new { controller = "Dashboard", action = "CountProgressJasa" });
 
+    //Dashboard Material
+    endpoints.MapControllerRoute(
+       name: "dashboard_material",
+       pattern: "dashboard_material",
+       defaults: new { controller = "Dashboard", action = "DashboardMaterial" });
+
+    endpoints.MapControllerRoute(
+       name: "grafik_status_summary",
+       pattern: "grafik_status_summary",
+       defaults: new { controller = "Dashboard", action = "CountSummaryMaterial" });
+
+    endpoints.MapControllerRoute(
+        name: "detail_summary_material",
+        pattern: "detail_summary_material/{rev?}/{filter?}/{lldi?}",
+        defaults: new { controller = "Dashboard", action = "DetailSummaryMaterial" });
+
+    endpoints.MapControllerRoute(
+       name: "detail_summary_material_",
+       pattern: "detail_summary_material_",
+       defaults: new { controller = "Dashboard", action = "DetailSummaryMaterial_" });
+
+    endpoints.MapControllerRoute(
+       name: "grafik_material",
+       pattern: "grafik_material",
+       defaults: new { controller = "Dashboard", action = "GrafikMaterial" });
+
+    endpoints.MapControllerRoute(
+       name: "grafik_progress_material",
+       pattern: "grafik_progress_material",
+       defaults: new { controller = "Dashboard", action = "GrafikProgresMaterial" });
+
+    endpoints.MapControllerRoute(
+       name: "summary_material_",
+       pattern: "summary_material_",
+       defaults: new { controller = "Dashboard", action = "SummaryMaterial_" });
+
+    endpoints.MapControllerRoute(
+       name: "detail_summary_material_pengadaan",
+       pattern: "detail_summary_material_pengadaan/{rev?}/{filter?}/{lldi?}",
+       defaults: new { controller = "Dashboard", action = "DetailMaterial" });
+
+    endpoints.MapControllerRoute(
+       name: "detail_summary_material_pengadaan_",
+       pattern: "detail_summary_material_pengadaan_",
+       defaults: new { controller = "Dashboard", action = "DetailMaterialPengadaan" });
+
     endpoints.MapControllerRoute(
         name: "plant",
         pattern: "plant",

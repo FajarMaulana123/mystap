@@ -6,12 +6,17 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using Microsoft.Extensions.Caching.Memory;
 using mystap.Models;
+using Newtonsoft.Json.Linq;
 using System;
 using System.ComponentModel.DataAnnotations;
 using System.Data;
 using System.Diagnostics;
 using System.Linq.Dynamic.Core;
 using System.Linq.Expressions;
+using System.Runtime.CompilerServices;
+using System.Runtime.InteropServices;
+using System.Xml.Schema;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace mystap.Controllers
 {
@@ -69,7 +74,7 @@ namespace mystap.Controllers
 
                 //var expirationTime = DateTimeOffset.Now.AddMinutes(5.0);
 
-                var customerData = _context.view_readiness_equipment.FromSql($"select joblist.id, joblist.projectID, project.revision, joblist.jobNo, joblist.eqTagNo, CASE WHEN count(case when  c.status = 'not_ready' then c.id else NULL end) > '0' THEN 'not_ready' WHEN c.status is null then 'not_ready' ELSE 'ready' END AS 'status_tagno' from Mystap.dbo.joblist  left join (SELECT  b.id, b.eqTagNo,  b.projectID,  b.joblist_id, (CASE WHEN b.dikerjakan = 'tidak' then 'ready' WHEN b.jasa != '0' AND b.material != '0' THEN CASE WHEN b.sts_material = 'ready' AND b.sts_kontrak = 'ready' THEN 'ready'  ELSE 'not_ready' END WHEN b.material != '0' THEN isnull(b.sts_material, 'not_ready') WHEN b.jasa != '0' THEN isnull(b.sts_kontrak, 'not_ready') END) as status FROM (SELECT a.id, a.joblist_id, joblist.eqTagNo, joblist.projectID, a.jobDesc, a.jasa, a.material, a.dikerjakan, (CASE WHEN a.dikerjakan = 'tidak' then 'not_execute' WHEN a.jasa != '0' THEN  (SELECT (CASE WHEN contracttracking.aktualSP is null THEN 'not_ready' ELSE 'ready' END) as status FROM Mystap.dbo.contracttracking left join Mystap.dbo.joblist_detail on joblist_detail.no_jasa = contracttracking.idPaket where contracttracking.projectID = { project_filter } and joblist_detail.id = a.id and contracttracking.deleted != '1') ELSE 'not_identify' END) as sts_kontrak, (CASE WHEN a.dikerjakan = 'tidak' then 'not_execute' WHEN a.material != '0' THEN (CASE WHEN a.status_material = 'COMPLETED' AND (SELECT (CASE WHEN joblist_detail.material != '0' THEN CASE WHEN count(DISTINCT case when procurement_.status_ != 'terpenuhi_stock' AND procurement_.status_ != 'onsite' then procurement_.[order] else NULL end) > '0' THEN 'not_ready' ELSE 'ready' END ELSE NULL END) as sts_material FROM (SELECT work_order.[order], (case when zpm01.pr is null or zpm01.pr = '' then (case when zpm01.reqmt_qty = zpm01.qty_res then 'terpenuhi_stock' else 'create_pr' end) else (case when (zpm01.pr is not null or zpm01.pr != '') and (p.po is null or p.po = '')then (case when (zpm01.status_pengadaan = 'tunggu_pr' or zpm01.status_pengadaan = 'evaluasi_dp3' or zpm01.status_pengadaan is null) then 'outstanding_pr' when zpm01.status_pengadaan = 'inquiry_harga' then 'inquiry_harga' when (zpm01.status_pengadaan = 'hps_oe' or zpm01.status_pengadaan = 'bidder_list' or zpm01.status_pengadaan = 'penilaian_kualifikasi' or zpm01.status_pengadaan = 'rfq') then 'hps_oe' when (zpm01.status_pengadaan = 'pemasukan_penawaran' or zpm01.status_pengadaan = 'pembukaan_penawaran' or zpm01.status_pengadaan = 'evaluasi_penawaran' or zpm01.status_pengadaan = 'klarifikasi_spesifikasi' or zpm01.status_pengadaan = 'evaluasi_teknis' or zpm01.status_pengadaan = 'evaluasi_tkdn' or zpm01.status_pengadaan = 'negisiasi'  or zpm01.status_pengadaan = 'lhp') then 'proses_tender' when (zpm01.status_pengadaan = 'pengumuman_pemenang' or zpm01.status_pengadaan = 'penunjuk_pemenang' or zpm01.status_pengadaan = 'purchase_order') then 'Penetapan Pemenang' else 'outstanding_pr' end) when (zpm01.pr is not null or zpm01.pr != '') and (p.po is not null or p.po != '') then (case when p.dci is null or p.dci = '' then 'tunggu_onsite' else 'onsite' end) end) end) as status_ FROM Mystap.dbo.zpm01 left join Mystap.dbo.work_order on work_order.[order] = zpm01.no_order left join Mystap.dbo.purch_order as p on p.material = zpm01.material AND p.pr = zpm01.pr AND p.item_pr = zpm01.itm_pr where work_order.revision = {project_rev} and ((del is null or del != 'X') and (zpm01.reqmt_qty is not null and zpm01.reqmt_qty != '0')) GROUP BY [work_order].[order],zpm01.material,zpm01.itm, zpm01.pr,zpm01.reqmt_qty, zpm01.qty_res, po, zpm01.status_pengadaan, dci) procurement_ join Mystap.dbo.joblist_detail_wo on joblist_detail_wo.[order] = procurement_.[order] join Mystap.dbo.joblist_detail on joblist_detail.id = joblist_detail_wo.jobListDetailID where joblist_detail.id = a.id GROUP by joblist_detail.material ) = 'ready' then 'ready' ELSE 'not_ready' END) ELSE 'not_identify' END) as sts_material FROM Mystap.dbo.joblist_detail a LEFT JOIN Mystap.dbo.joblist on joblist.id = a.joblist_id where joblist.projectID = {project_filter} and a.deleted != '1') b) c on c.joblist_id = joblist.id LEFT JOIN Mystap.dbo.project on project.projectNo = joblist.projectNo  where joblist.projectID = { project_filter } and joblist.deleted != '1' group by joblist.id, joblist.projectID, project.revision, joblist.jobNo, joblist.eqTagNo, c.status");
+                var customerData = _context.view_readiness_equipment.FromSql($"select joblist.id, joblist.projectID, project.revision, joblist.jobNo, joblist.eqTagNo, CASE WHEN count(case when  c.status = 'not_ready' then c.id else NULL end) > '0' THEN 'not_ready' WHEN c.status is null then 'not_ready' ELSE 'ready' END AS 'status_tagno' from Mystap.dbo.joblist  left join (SELECT  b.id, b.eqTagNo,  b.projectID,  b.joblist_id, (CASE WHEN b.dikerjakan = 'tidak' then 'ready' WHEN b.jasa != '0' AND b.material != '0' THEN CASE WHEN b.sts_material = 'ready' AND b.sts_kontrak = 'ready' THEN 'ready'  ELSE 'not_ready' END WHEN b.material != '0' THEN isnull(b.sts_material, 'not_ready') WHEN b.jasa != '0' THEN isnull(b.sts_kontrak, 'not_ready') END) as status FROM (SELECT a.id, a.joblist_id, joblist.eqTagNo, joblist.projectID, a.jobDesc, a.jasa, a.material, a.dikerjakan, (CASE WHEN a.dikerjakan = 'tidak' then 'not_execute' WHEN a.jasa != '0' THEN  (SELECT (CASE WHEN contracttracking.aktualSP is null THEN 'not_ready' ELSE 'ready' END) as status FROM Mystap.dbo.contracttracking left join Mystap.dbo.joblist_detail on joblist_detail.no_jasa = contracttracking.idPaket where contracttracking.projectID = { project_filter } and joblist_detail.id = a.id and contracttracking.deleted != '1') ELSE 'not_identify' END) as sts_kontrak, (CASE WHEN a.dikerjakan = 'tidak' then 'not_execute' WHEN a.material != '0' THEN (CASE WHEN a.status_material = 'COMPLETED' AND (SELECT (CASE WHEN joblist_detail.material != '0' THEN CASE WHEN count(DISTINCT case when procurement_.status_ != 'terpenuhi_stock' AND procurement_.status_ != 'onsite' then procurement_.[order] else NULL end) > '0' THEN 'not_ready' ELSE 'ready' END ELSE NULL END) as sts_material FROM (SELECT work_order.[order], (case when zpm01.pr is null or zpm01.pr = '' then (case when zpm01.reqmt_qty = zpm01.qty_res then 'terpenuhi_stock' else 'create_pr' end) else (case when (zpm01.pr is not null or zpm01.pr != '') and (p.po is null or p.po = '')then (case when (zpm01.status_pengadaan = 'tunggu_pr' or zpm01.status_pengadaan = 'evaluasi_dp3' or zpm01.status_pengadaan is null) then 'outstanding_pr' when zpm01.status_pengadaan = 'inquiry_harga' then 'inquiry_harga' when (zpm01.status_pengadaan = 'hps_oe' or zpm01.status_pengadaan = 'bidder_list' or zpm01.status_pengadaan = 'penilaian_kualifikasi' or zpm01.status_pengadaan = 'rfq') then 'hps_oe' when (zpm01.status_pengadaan = 'pemasukan_penawaran' or zpm01.status_pengadaan = 'pembukaan_penawaran' or zpm01.status_pengadaan = 'evaluasi_penawaran' or zpm01.status_pengadaan = 'klarifikasi_spesifikasi' or zpm01.status_pengadaan = 'evaluasi_teknis' or zpm01.status_pengadaan = 'evaluasi_tkdn' or zpm01.status_pengadaan = 'negosiasi'  or zpm01.status_pengadaan = 'lhp') then 'proses_tender' when (zpm01.status_pengadaan = 'pengumuman_pemenang' or zpm01.status_pengadaan = 'penunjuk_pemenang' or zpm01.status_pengadaan = 'purchase_order') then 'Penetapan Pemenang' else 'outstanding_pr' end) when (zpm01.pr is not null or zpm01.pr != '') and (p.po is not null or p.po != '') then (case when p.dci is null or p.dci = '' then 'tunggu_onsite' else 'onsite' end) end) end) as status_ FROM Mystap.dbo.zpm01 left join Mystap.dbo.work_order on work_order.[order] = zpm01.no_order left join Mystap.dbo.purch_order as p on p.material = zpm01.material AND p.pr = zpm01.pr AND p.item_pr = zpm01.itm_pr where work_order.revision = {project_rev} and ((del is null or del != 'X') and (zpm01.reqmt_qty is not null and zpm01.reqmt_qty != '0')) GROUP BY [work_order].[order],zpm01.material,zpm01.itm, zpm01.pr,zpm01.reqmt_qty, zpm01.qty_res, po, zpm01.status_pengadaan, dci) procurement_ join Mystap.dbo.joblist_detail_wo on joblist_detail_wo.[order] = procurement_.[order] join Mystap.dbo.joblist_detail on joblist_detail.id = joblist_detail_wo.jobListDetailID where joblist_detail.id = a.id GROUP by joblist_detail.material ) = 'ready' then 'ready' ELSE 'not_ready' END) ELSE 'not_identify' END) as sts_material FROM Mystap.dbo.joblist_detail a LEFT JOIN Mystap.dbo.joblist on joblist.id = a.joblist_id where joblist.projectID = {project_filter} and a.deleted != '1') b) c on c.joblist_id = joblist.id LEFT JOIN Mystap.dbo.project on project.projectNo = joblist.projectNo  where joblist.projectID = { project_filter } and joblist.deleted != '1' group by joblist.id, joblist.projectID, project.revision, joblist.jobNo, joblist.eqTagNo, c.status");
 
                 
                 // Sorting
@@ -112,7 +117,7 @@ namespace mystap.Controllers
             {
                 var project_filter = Request.Form["project_filter"].FirstOrDefault();
                 var project_rev = Request.Form["project_rev"].FirstOrDefault();
-                var customerData = _context.view_grafik_readiness.FromSql($"SELECT case when d.status_tagno = 'ready' then 'READY' else 'NOT READY' end as status_tagno,count(d.id) as total FROM ( select joblist.id, joblist.jobNo, joblist.eqTagNo, CASE WHEN count(case when  c.status = 'not_ready' then c.id else NULL end) > '0' THEN 'not_ready' WHEN c.status is null then 'not_ready' ELSE 'ready' END AS 'status_tagno' from Mystap.dbo.joblist  left join (SELECT  b.id, b.eqTagNo,  b.projectID,  b.joblist_id, (CASE WHEN b.dikerjakan = 'tidak' then 'ready' WHEN b.jasa != '0' AND b.material != '0' THEN CASE WHEN b.sts_material = 'ready' AND b.sts_kontrak = 'ready' THEN 'ready'  ELSE 'not_ready' END WHEN b.material != '0' THEN isnull(b.sts_material, 'not_ready') WHEN b.jasa != '0' THEN isnull(b.sts_kontrak, 'not_ready') END) as status FROM (SELECT a.id, a.joblist_id, joblist.eqTagNo, joblist.projectID, a.jobDesc, a.jasa, a.material, a.dikerjakan, (CASE WHEN a.dikerjakan = 'tidak' then 'not_execute' WHEN a.jasa != '0' THEN  (SELECT (CASE WHEN contracttracking.aktualSP is null THEN 'not_ready' ELSE 'ready' END) as status FROM Mystap.dbo.contracttracking left join Mystap.dbo.joblist_detail on joblist_detail.no_jasa = contracttracking.idPaket where contracttracking.projectID = {project_filter} and joblist_detail.id = a.id and contracttracking.deleted != '1') ELSE 'not_identify' END) as sts_kontrak, (CASE WHEN a.dikerjakan = 'tidak' then 'not_execute' WHEN a.material != '0' THEN (CASE WHEN a.status_material = 'COMPLETED' AND (SELECT (CASE WHEN joblist_detail.material != '0' THEN CASE WHEN count(DISTINCT case when procurement_.status_ != 'terpenuhi_stock' AND procurement_.status_ != 'onsite' then procurement_.[order] else NULL end) > '0' THEN 'not_ready' ELSE 'ready' END ELSE NULL END) as sts_material FROM (SELECT work_order.[order], (case when zpm01.pr is null or zpm01.pr = '' then (case when zpm01.reqmt_qty = zpm01.qty_res then 'terpenuhi_stock' else 'create_pr' end) else (case when (zpm01.pr is not null or zpm01.pr != '') and (p.po is null or p.po = '')then (case when (zpm01.status_pengadaan = 'tunggu_pr' or zpm01.status_pengadaan = 'evaluasi_dp3' or zpm01.status_pengadaan is null) then 'outstanding_pr' when zpm01.status_pengadaan = 'inquiry_harga' then 'inquiry_harga' when (zpm01.status_pengadaan = 'hps_oe' or zpm01.status_pengadaan = 'bidder_list' or zpm01.status_pengadaan = 'penilaian_kualifikasi' or zpm01.status_pengadaan = 'rfq') then 'hps_oe' when (zpm01.status_pengadaan = 'pemasukan_penawaran' or zpm01.status_pengadaan = 'pembukaan_penawaran' or zpm01.status_pengadaan = 'evaluasi_penawaran' or zpm01.status_pengadaan = 'klarifikasi_spesifikasi' or zpm01.status_pengadaan = 'evaluasi_teknis' or zpm01.status_pengadaan = 'evaluasi_tkdn' or zpm01.status_pengadaan = 'negisiasi'  or zpm01.status_pengadaan = 'lhp') then 'proses_tender' when (zpm01.status_pengadaan = 'pengumuman_pemenang' or zpm01.status_pengadaan = 'penunjuk_pemenang' or zpm01.status_pengadaan = 'purchase_order') then 'Penetapan Pemenang' else 'outstanding_pr' end) when (zpm01.pr is not null or zpm01.pr != '') and (p.po is not null or p.po != '') then (case when p.dci is null or p.dci = '' then 'tunggu_onsite' else 'onsite' end) end) end) as status_ FROM Mystap.dbo.zpm01 left join Mystap.dbo.work_order on work_order.[order] = zpm01.no_order left join Mystap.dbo.purch_order as p on p.material = zpm01.material AND p.pr = zpm01.pr AND p.item_pr = zpm01.itm_pr where work_order.revision = {project_rev} and ((del is null or del != 'X') and (zpm01.reqmt_qty is not null and zpm01.reqmt_qty != '0')) GROUP BY [work_order].[order],zpm01.material,zpm01.itm, zpm01.pr,zpm01.reqmt_qty, zpm01.qty_res, po, zpm01.status_pengadaan, dci) procurement_ join Mystap.dbo.joblist_detail_wo on joblist_detail_wo.[order] = procurement_.[order] join Mystap.dbo.joblist_detail on joblist_detail.id = joblist_detail_wo.jobListDetailID where joblist_detail.id = a.id GROUP by joblist_detail.material ) = 'ready' then 'ready' ELSE 'not_ready' END) ELSE 'not_identify' END) as sts_material FROM Mystap.dbo.joblist_detail a LEFT JOIN Mystap.dbo.joblist on joblist.id = a.joblist_id where joblist.projectID = {project_filter} and a.deleted != '1') b) c on c.joblist_id = joblist.id LEFT JOIN Mystap.dbo.project on project.projectNo = joblist.projectNo  where joblist.projectID = {project_filter} and joblist.deleted != '1' group by joblist.id, joblist.jobNo, joblist.eqTagNo, c.status) d GROUP by d.status_tagno;");
+                var customerData = _context.view_grafik_readiness.FromSql($"SELECT case when d.status_tagno = 'ready' then 'READY' else 'NOT READY' end as status_tagno,count(d.id) as total FROM ( select joblist.id, joblist.jobNo, joblist.eqTagNo, CASE WHEN count(case when  c.status = 'not_ready' then c.id else NULL end) > '0' THEN 'not_ready' WHEN c.status is null then 'not_ready' ELSE 'ready' END AS 'status_tagno' from Mystap.dbo.joblist  left join (SELECT  b.id, b.eqTagNo,  b.projectID,  b.joblist_id, (CASE WHEN b.dikerjakan = 'tidak' then 'ready' WHEN b.jasa != '0' AND b.material != '0' THEN CASE WHEN b.sts_material = 'ready' AND b.sts_kontrak = 'ready' THEN 'ready'  ELSE 'not_ready' END WHEN b.material != '0' THEN isnull(b.sts_material, 'not_ready') WHEN b.jasa != '0' THEN isnull(b.sts_kontrak, 'not_ready') END) as status FROM (SELECT a.id, a.joblist_id, joblist.eqTagNo, joblist.projectID, a.jobDesc, a.jasa, a.material, a.dikerjakan, (CASE WHEN a.dikerjakan = 'tidak' then 'not_execute' WHEN a.jasa != '0' THEN  (SELECT (CASE WHEN contracttracking.aktualSP is null THEN 'not_ready' ELSE 'ready' END) as status FROM Mystap.dbo.contracttracking left join Mystap.dbo.joblist_detail on joblist_detail.no_jasa = contracttracking.idPaket where contracttracking.projectID = {project_filter} and joblist_detail.id = a.id and contracttracking.deleted != '1') ELSE 'not_identify' END) as sts_kontrak, (CASE WHEN a.dikerjakan = 'tidak' then 'not_execute' WHEN a.material != '0' THEN (CASE WHEN a.status_material = 'COMPLETED' AND (SELECT (CASE WHEN joblist_detail.material != '0' THEN CASE WHEN count(DISTINCT case when procurement_.status_ != 'terpenuhi_stock' AND procurement_.status_ != 'onsite' then procurement_.[order] else NULL end) > '0' THEN 'not_ready' ELSE 'ready' END ELSE NULL END) as sts_material FROM (SELECT work_order.[order], (case when zpm01.pr is null or zpm01.pr = '' then (case when zpm01.reqmt_qty = zpm01.qty_res then 'terpenuhi_stock' else 'create_pr' end) else (case when (zpm01.pr is not null or zpm01.pr != '') and (p.po is null or p.po = '')then (case when (zpm01.status_pengadaan = 'tunggu_pr' or zpm01.status_pengadaan = 'evaluasi_dp3' or zpm01.status_pengadaan is null) then 'outstanding_pr' when zpm01.status_pengadaan = 'inquiry_harga' then 'inquiry_harga' when (zpm01.status_pengadaan = 'hps_oe' or zpm01.status_pengadaan = 'bidder_list' or zpm01.status_pengadaan = 'penilaian_kualifikasi' or zpm01.status_pengadaan = 'rfq') then 'hps_oe' when (zpm01.status_pengadaan = 'pemasukan_penawaran' or zpm01.status_pengadaan = 'pembukaan_penawaran' or zpm01.status_pengadaan = 'evaluasi_penawaran' or zpm01.status_pengadaan = 'klarifikasi_spesifikasi' or zpm01.status_pengadaan = 'evaluasi_teknis' or zpm01.status_pengadaan = 'evaluasi_tkdn' or zpm01.status_pengadaan = 'negosiasi'  or zpm01.status_pengadaan = 'lhp') then 'proses_tender' when (zpm01.status_pengadaan = 'pengumuman_pemenang' or zpm01.status_pengadaan = 'penunjuk_pemenang' or zpm01.status_pengadaan = 'purchase_order') then 'Penetapan Pemenang' else 'outstanding_pr' end) when (zpm01.pr is not null or zpm01.pr != '') and (p.po is not null or p.po != '') then (case when p.dci is null or p.dci = '' then 'tunggu_onsite' else 'onsite' end) end) end) as status_ FROM Mystap.dbo.zpm01 left join Mystap.dbo.work_order on work_order.[order] = zpm01.no_order left join Mystap.dbo.purch_order as p on p.material = zpm01.material AND p.pr = zpm01.pr AND p.item_pr = zpm01.itm_pr where work_order.revision = {project_rev} and ((del is null or del != 'X') and (zpm01.reqmt_qty is not null and zpm01.reqmt_qty != '0')) GROUP BY [work_order].[order],zpm01.material,zpm01.itm, zpm01.pr,zpm01.reqmt_qty, zpm01.qty_res, po, zpm01.status_pengadaan, dci) procurement_ join Mystap.dbo.joblist_detail_wo on joblist_detail_wo.[order] = procurement_.[order] join Mystap.dbo.joblist_detail on joblist_detail.id = joblist_detail_wo.jobListDetailID where joblist_detail.id = a.id GROUP by joblist_detail.material ) = 'ready' then 'ready' ELSE 'not_ready' END) ELSE 'not_identify' END) as sts_material FROM Mystap.dbo.joblist_detail a LEFT JOIN Mystap.dbo.joblist on joblist.id = a.joblist_id where joblist.projectID = {project_filter} and a.deleted != '1') b) c on c.joblist_id = joblist.id LEFT JOIN Mystap.dbo.project on project.projectNo = joblist.projectNo  where joblist.projectID = {project_filter} and joblist.deleted != '1' group by joblist.id, joblist.jobNo, joblist.eqTagNo, c.status) d GROUP by d.status_tagno;");
                 var data = await customerData.ToListAsync();
                 return Json(new {data = data});
             }
@@ -192,7 +197,7 @@ namespace mystap.Controllers
         {
             try
             {
-                var query = _context.view_readiness_detail.FromSql($"SELECT a.id, a.joblist_id, joblist.eqTagNo, STUFF((SELECT distinct  t2.[order] + ',' from joblist_detail_wo t2  where a.id= t2.jobListDetailID FOR XML PATH(''), TYPE ).value('.', 'NVARCHAR(MAX)')  ,1,0,'') wo,a.no_jasa, joblist.projectID, a.jobDesc, a.jasa, a.material, (CASE WHEN a.dikerjakan = 'tidak' then 'not_identify' WHEN a.jasa != '0' THEN  (SELECT (CASE WHEN contracttracking.aktualSP is null THEN 'not_ready' ELSE 'ready' END) as status FROM Mystap.dbo.contracttracking left join Mystap.dbo.joblist_detail on joblist_detail.no_jasa = contracttracking.idPaket where contracttracking.projectID = {projectId} and joblist_detail.id = a.id and contracttracking.deleted != '1') ELSE 'not_identify' END) as sts_kontrak, (CASE WHEN a.dikerjakan = 'tidak' then 'not_identify' WHEN a.material != '0' THEN (CASE WHEN a.status_material = 'COMPLETED' AND (SELECT (CASE WHEN joblist_detail.material != '0' THEN CASE WHEN count(DISTINCT case when procurement_.status_ != 'terpenuhi_stock' AND procurement_.status_ != 'onsite' then procurement_.[order] else NULL end) > '0' THEN 'not_ready' ELSE 'ready' END ELSE NULL END) as sts_material FROM (SELECT work_order.[order], (case when zpm01.pr is null or zpm01.pr = '' then (case when zpm01.reqmt_qty = zpm01.qty_res then 'terpenuhi_stock' else 'create_pr' end) else (case when (zpm01.pr is not null or zpm01.pr != '') and (p.po is null or p.po = '')then (case when (zpm01.status_pengadaan = 'tunggu_pr' or zpm01.status_pengadaan = 'evaluasi_dp3' or zpm01.status_pengadaan is null) then 'outstanding_pr' when zpm01.status_pengadaan = 'inquiry_harga' then 'inquiry_harga' when (zpm01.status_pengadaan = 'hps_oe' or zpm01.status_pengadaan = 'bidder_list' or zpm01.status_pengadaan = 'penilaian_kualifikasi' or zpm01.status_pengadaan = 'rfq') then 'hps_oe' when (zpm01.status_pengadaan = 'pemasukan_penawaran' or zpm01.status_pengadaan = 'pembukaan_penawaran' or zpm01.status_pengadaan = 'evaluasi_penawaran' or zpm01.status_pengadaan = 'klarifikasi_spesifikasi' or zpm01.status_pengadaan = 'evaluasi_teknis' or zpm01.status_pengadaan = 'evaluasi_tkdn' or zpm01.status_pengadaan = 'negisiasi'  or zpm01.status_pengadaan = 'lhp') then 'proses_tender' when (zpm01.status_pengadaan = 'pengumuman_pemenang' or zpm01.status_pengadaan = 'penunjuk_pemenang' or zpm01.status_pengadaan = 'purchase_order') then 'Penetapan Pemenang' else 'outstanding_pr' end) when (zpm01.pr is not null or zpm01.pr != '') and (p.po is not null or p.po != '') then (case when p.dci is null or p.dci = '' then 'tunggu_onsite' else 'onsite' end) end) end) as status_ FROM Mystap.dbo.zpm01 left join Mystap.dbo.work_order on work_order.[order] = zpm01.no_order left join Mystap.dbo.purch_order as p on p.material = zpm01.material AND p.pr = zpm01.pr AND p.item_pr = zpm01.itm_pr where work_order.revision = {rev} and ((del is null or del != 'X') and (zpm01.reqmt_qty is not null and zpm01.reqmt_qty != '0')) GROUP BY [work_order].[order],zpm01.material,zpm01.itm, zpm01.pr,zpm01.reqmt_qty, zpm01.qty_res, po, zpm01.status_pengadaan, dci) procurement_ join Mystap.dbo.joblist_detail_wo on joblist_detail_wo.[order] = procurement_.[order] join Mystap.dbo.joblist_detail on joblist_detail.id = joblist_detail_wo.jobListDetailID where joblist_detail.id = a.id GROUP by joblist_detail.material ) = 'ready' then 'ready' ELSE 'not_ready' END) ELSE 'not_identify' END) as sts_material FROM Mystap.dbo.joblist_detail a LEFT JOIN Mystap.dbo.joblist on joblist.id = a.joblist_id where joblist.projectID = {projectId} and joblist.id = {joblist}  and a.deleted != '1'");
+                var query = _context.view_readiness_detail.FromSql($"SELECT a.id, a.joblist_id, joblist.eqTagNo, STUFF((SELECT distinct  t2.[order] + ',' from joblist_detail_wo t2  where a.id= t2.jobListDetailID FOR XML PATH(''), TYPE ).value('.', 'NVARCHAR(MAX)')  ,1,0,'') wo,a.no_jasa, joblist.projectID, a.jobDesc, a.jasa, a.material, (CASE WHEN a.dikerjakan = 'tidak' then 'not_identify' WHEN a.jasa != '0' THEN  (SELECT (CASE WHEN contracttracking.aktualSP is null THEN 'not_ready' ELSE 'ready' END) as status FROM Mystap.dbo.contracttracking left join Mystap.dbo.joblist_detail on joblist_detail.no_jasa = contracttracking.idPaket where contracttracking.projectID = {projectId} and joblist_detail.id = a.id and contracttracking.deleted != '1') ELSE 'not_identify' END) as sts_kontrak, (CASE WHEN a.dikerjakan = 'tidak' then 'not_identify' WHEN a.material != '0' THEN (CASE WHEN a.status_material = 'COMPLETED' AND (SELECT (CASE WHEN joblist_detail.material != '0' THEN CASE WHEN count(DISTINCT case when procurement_.status_ != 'terpenuhi_stock' AND procurement_.status_ != 'onsite' then procurement_.[order] else NULL end) > '0' THEN 'not_ready' ELSE 'ready' END ELSE NULL END) as sts_material FROM (SELECT work_order.[order], (case when zpm01.pr is null or zpm01.pr = '' then (case when zpm01.reqmt_qty = zpm01.qty_res then 'terpenuhi_stock' else 'create_pr' end) else (case when (zpm01.pr is not null or zpm01.pr != '') and (p.po is null or p.po = '')then (case when (zpm01.status_pengadaan = 'tunggu_pr' or zpm01.status_pengadaan = 'evaluasi_dp3' or zpm01.status_pengadaan is null) then 'outstanding_pr' when zpm01.status_pengadaan = 'inquiry_harga' then 'inquiry_harga' when (zpm01.status_pengadaan = 'hps_oe' or zpm01.status_pengadaan = 'bidder_list' or zpm01.status_pengadaan = 'penilaian_kualifikasi' or zpm01.status_pengadaan = 'rfq') then 'hps_oe' when (zpm01.status_pengadaan = 'pemasukan_penawaran' or zpm01.status_pengadaan = 'pembukaan_penawaran' or zpm01.status_pengadaan = 'evaluasi_penawaran' or zpm01.status_pengadaan = 'klarifikasi_spesifikasi' or zpm01.status_pengadaan = 'evaluasi_teknis' or zpm01.status_pengadaan = 'evaluasi_tkdn' or zpm01.status_pengadaan = 'negosiasi'  or zpm01.status_pengadaan = 'lhp') then 'proses_tender' when (zpm01.status_pengadaan = 'pengumuman_pemenang' or zpm01.status_pengadaan = 'penunjuk_pemenang' or zpm01.status_pengadaan = 'purchase_order') then 'Penetapan Pemenang' else 'outstanding_pr' end) when (zpm01.pr is not null or zpm01.pr != '') and (p.po is not null or p.po != '') then (case when p.dci is null or p.dci = '' then 'tunggu_onsite' else 'onsite' end) end) end) as status_ FROM Mystap.dbo.zpm01 left join Mystap.dbo.work_order on work_order.[order] = zpm01.no_order left join Mystap.dbo.purch_order as p on p.material = zpm01.material AND p.pr = zpm01.pr AND p.item_pr = zpm01.itm_pr where work_order.revision = {rev} and ((del is null or del != 'X') and (zpm01.reqmt_qty is not null and zpm01.reqmt_qty != '0')) GROUP BY [work_order].[order],zpm01.material,zpm01.itm, zpm01.pr,zpm01.reqmt_qty, zpm01.qty_res, po, zpm01.status_pengadaan, dci) procurement_ join Mystap.dbo.joblist_detail_wo on joblist_detail_wo.[order] = procurement_.[order] join Mystap.dbo.joblist_detail on joblist_detail.id = joblist_detail_wo.jobListDetailID where joblist_detail.id = a.id GROUP by joblist_detail.material ) = 'ready' then 'ready' ELSE 'not_ready' END) ELSE 'not_identify' END) as sts_material FROM Mystap.dbo.joblist_detail a LEFT JOIN Mystap.dbo.joblist on joblist.id = a.joblist_id where joblist.projectID = {projectId} and joblist.id = {joblist}  and a.deleted != '1'");
                 var data = await query.ToListAsync();
 
                 var isi = "<table class='table'><tr><th>Desc</th><th>Jasa</th><th> Material </th></tr>";
@@ -259,7 +264,7 @@ namespace mystap.Controllers
                     int skip = start != null ? Convert.ToInt32(start) : 0;
                     int recordsTotal = 0;
 
-                    var query = _context.view_detail_order.FromSql($"select work_order.main_work_ctr,work_order.[order],work_order.[description],zpm01.material,zpm01.itm,zpm01.material_description,zpm01.del,zpm01.unloading_point,zpm01.bun,zpm01.reqmt_date,zpm01.reqmt_qty,zpm01.qty_res,zpm01.pr as pr,zpm01.itm_pr as pr_item,zpm01.qty_pr as pr_qty,zpm01.status_pengadaan,purch_order.po,purch_order.po_quantity as po_qty,purch_order.item_po as po_item, purch_order.deliv_date as deliv_date,purch_order.dci as dci, (case when purch_order.po is not null then purch_order.deliv_date else DATEADD(DAY, ((case when zpm01.dt_purch is not null or zpm01.dt_purch != '' then zpm01.dt_purch when zpm01.dt_iv is not null or zpm01.dt_iv != '' then zpm01.dt_iv else (case when zpm01.dt_ta is not null or zpm01.dt_ta != '' then zpm01.dt_ta else 0 end) end) + (case when zpm01.dt_status_pengadaan is not null or zpm01.dt_status_pengadaan != '' then zpm01.dt_status_pengadaan else 52 end)), CONVERT (DATE, GETDATE())) end)as prognosa_, (case when zpm01.unloading_point = 'XX' then 'LLD' else 'Non LLD' end) as lld, (case when zpm01.pr is null or zpm01.pr = '' then (case when zpm01.reqmt_qty = zpm01.qty_res then 'terpenuhi_stock' else 'create_pr' end) else (case when (zpm01.pr is not null or zpm01.pr != '') and (purch_order.po is null or purch_order.po = '') then (case when (zpm01.status_pengadaan = 'tunggu_pr' or zpm01.status_pengadaan = 'evaluasi_dp3' or zpm01.status_pengadaan is null) then 'outstanding_pr' when zpm01.status_pengadaan = 'inquiry_harga' then 'inquiry_harga' when (zpm01.status_pengadaan = 'hps_oe' or zpm01.status_pengadaan = 'bidder_list' or zpm01.status_pengadaan = 'penilaian_kualifikasi' or zpm01.status_pengadaan = 'rfq') then 'hps_oe' when (zpm01.status_pengadaan = 'pemasukan_penawaran' or zpm01.status_pengadaan = 'pembukaan_penawaran' or zpm01.status_pengadaan = 'evaluasi_penawaran' or zpm01.status_pengadaan = 'klarifikasi_spesifikasi' or zpm01.status_pengadaan = 'evaluasi_teknis' or zpm01.status_pengadaan = 'evaluasi_tkdn' or zpm01.status_pengadaan = 'negisiasi'  or zpm01.status_pengadaan = 'lhp') then 'proses_tender' when (zpm01.status_pengadaan = 'pengumuman_pemenang' or zpm01.status_pengadaan = 'penunjuk_pemenang' or zpm01.status_pengadaan = 'purchase_order') then 'Penetapan Pemenang' else 'outstanding_pr' end) when (zpm01.pr is not null or zpm01.pr != '') and (purch_order.po is not null or purch_order.po != '') then (case when purch_order.dci is null or purch_order.dci = '' then 'tunggu_onsite' else 'onsite' end) end) end) as status_ from zpm01 left join work_order on work_order.[order] = zpm01.no_order left join purch_order on purch_order.material = zpm01.material AND purch_order.pr = zpm01.pr AND purch_order.item_pr = zpm01.itm_pr where work_order.[order] in ('8202205958') and ((del is null or del != 'X') and (zpm01.reqmt_qty is not null and zpm01.reqmt_qty != 0)) group by work_order.[order],zpm01.material,zpm01.itm,work_order.main_work_ctr,work_order.[description],zpm01.material_description,zpm01.del,zpm01.unloading_point, zpm01.bun,zpm01.reqmt_date,zpm01.reqmt_qty,zpm01.qty_res,  zpm01.status_pengadaan,purch_order.po, zpm01.pr,zpm01.itm_pr, zpm01.qty_pr ,purch_order.po_quantity,purch_order.item_po ,purch_order.deliv_date ,purch_order.dci ,zpm01.dt_purch,zpm01.dt_iv,zpm01.dt_ta,zpm01.dt_status_pengadaan");
+                    var query = _context.view_detail_order.FromSql($"select work_order.main_work_ctr,work_order.[order],work_order.[description],zpm01.material,zpm01.itm,zpm01.material_description,zpm01.del,zpm01.unloading_point,zpm01.bun,zpm01.reqmt_date,zpm01.reqmt_qty,zpm01.qty_res,zpm01.pr as pr,zpm01.itm_pr as pr_item,zpm01.qty_pr as pr_qty,zpm01.status_pengadaan,purch_order.po,purch_order.po_quantity as po_qty,purch_order.item_po as po_item, purch_order.deliv_date as deliv_date,purch_order.dci as dci, (case when purch_order.po is not null then purch_order.deliv_date else DATEADD(DAY, ((case when zpm01.dt_purch is not null or zpm01.dt_purch != '' then zpm01.dt_purch when zpm01.dt_iv is not null or zpm01.dt_iv != '' then zpm01.dt_iv else (case when zpm01.dt_ta is not null or zpm01.dt_ta != '' then zpm01.dt_ta else 0 end) end) + (case when zpm01.dt_status_pengadaan is not null or zpm01.dt_status_pengadaan != '' then zpm01.dt_status_pengadaan else 52 end)), CONVERT (DATE, GETDATE())) end)as prognosa_, (case when zpm01.unloading_point = 'XX' then 'LLD' else 'Non LLD' end) as lld, (case when zpm01.pr is null or zpm01.pr = '' then (case when zpm01.reqmt_qty = zpm01.qty_res then 'terpenuhi_stock' else 'create_pr' end) else (case when (zpm01.pr is not null or zpm01.pr != '') and (purch_order.po is null or purch_order.po = '') then (case when (zpm01.status_pengadaan = 'tunggu_pr' or zpm01.status_pengadaan = 'evaluasi_dp3' or zpm01.status_pengadaan is null) then 'outstanding_pr' when zpm01.status_pengadaan = 'inquiry_harga' then 'inquiry_harga' when (zpm01.status_pengadaan = 'hps_oe' or zpm01.status_pengadaan = 'bidder_list' or zpm01.status_pengadaan = 'penilaian_kualifikasi' or zpm01.status_pengadaan = 'rfq') then 'hps_oe' when (zpm01.status_pengadaan = 'pemasukan_penawaran' or zpm01.status_pengadaan = 'pembukaan_penawaran' or zpm01.status_pengadaan = 'evaluasi_penawaran' or zpm01.status_pengadaan = 'klarifikasi_spesifikasi' or zpm01.status_pengadaan = 'evaluasi_teknis' or zpm01.status_pengadaan = 'evaluasi_tkdn' or zpm01.status_pengadaan = 'negosiasi'  or zpm01.status_pengadaan = 'lhp') then 'proses_tender' when (zpm01.status_pengadaan = 'pengumuman_pemenang' or zpm01.status_pengadaan = 'penunjuk_pemenang' or zpm01.status_pengadaan = 'purchase_order') then 'Penetapan Pemenang' else 'outstanding_pr' end) when (zpm01.pr is not null or zpm01.pr != '') and (purch_order.po is not null or purch_order.po != '') then (case when purch_order.dci is null or purch_order.dci = '' then 'tunggu_onsite' else 'onsite' end) end) end) as status_ from zpm01 left join work_order on work_order.[order] = zpm01.no_order left join purch_order on purch_order.material = zpm01.material AND purch_order.pr = zpm01.pr AND purch_order.item_pr = zpm01.itm_pr where work_order.[order] in ('8202205958') and ((del is null or del != 'X') and (zpm01.reqmt_qty is not null and zpm01.reqmt_qty != 0)) group by work_order.[order],zpm01.material,zpm01.itm,work_order.main_work_ctr,work_order.[description],zpm01.material_description,zpm01.del,zpm01.unloading_point, zpm01.bun,zpm01.reqmt_date,zpm01.reqmt_qty,zpm01.qty_res,  zpm01.status_pengadaan,purch_order.po, zpm01.pr,zpm01.itm_pr, zpm01.qty_pr ,purch_order.po_quantity,purch_order.item_po ,purch_order.deliv_date ,purch_order.dci ,zpm01.dt_purch,zpm01.dt_iv,zpm01.dt_ta,zpm01.dt_status_pengadaan");
                     query.AsEnumerable();
 
                     // Sorting
@@ -440,7 +445,7 @@ namespace mystap.Controllers
 
                 //var expirationTime = DateTimeOffset.Now.AddMinutes(5.0);
 
-                var customerData = _context.view_readiness_joblist.FromSql($"SELECT paket_joblist.id_paket, max(paket_joblist.tag_no) as tag_no, max(paket_joblist.created_date) as created_date, max(paket_joblist.disiplin) as disiplin, max(paket_joblist.no_memo) as no_memo, max(project.description) as description, max(project.revision) as revision, max(project.id) as projectID, concat((case when max(paket_joblist.additional) is not null then 'add - ' else '' end),max(paket_joblist.no_paket)) as no_add, (CASE WHEN  COUNT(distinct case when c.status != 'ready' then c.id else null end) > 0 THEN 'not_ready' WHEN max(c.status) is null then 'not_ready' ELSE 'ready' END) as 'status_tagno' FROM paket_joblist LEFT JOIN (SELECT b.id, b.id_paket, b.joblist_id, (CASE WHEN b.dikerjakan = 'tidak' then 'ready'  WHEN b.jasa != '0' AND b.material != '0' THEN CASE WHEN b.sts_material = 'ready' AND b.sts_kontrak = 'ready'  THEN 'ready' ELSE 'not_ready' END WHEN b.material != '0' THEN ISNULL(b.sts_material, 'not_ready') WHEN b.jasa != '0' THEN ISNULL(b.sts_kontrak, 'not_ready') END) as status FROM (SELECT a.id, a.joblist_id, a.id_paket, a.jobDesc, a.jasa, a.material, a.dikerjakan, (CASE WHEN a.dikerjakan = 'tidak' then 'not_identify' WHEN a.jasa != '0' THEN  (SELECT  (CASE  WHEN contracttracking.aktualSP is null THEN 'not_ready' ELSE 'ready'  END) as status  FROM contracttracking left join joblist_detail on joblist_detail.no_jasa = contracttracking.idPaket  where contracttracking.projectID = {project_filter} and joblist_detail.id = a.id and contracttracking.deleted != '1') ELSE 'not_identify' END) as sts_kontrak, (CASE WHEN a.dikerjakan = 'tidak' then 'not_identify' WHEN a.material != '0' THEN (CASE WHEN a.status_material = 'COMPLETED' AND (SELECT (CASE  WHEN joblist_detail.material != '0' THEN  CASE WHEN count(DISTINCT (case when procurement_.status_ != 'terpenuhi_stock' AND procurement_.status_ != 'onsite' then procurement_.[order] else NULL end)) > 0 THEN 'not_ready' ELSE 'ready' END ELSE NULL END) as sts_material FROM (SELECT work_order.[order], (case when zpm01.pr is null or zpm01.pr = '' then (case when zpm01.reqmt_qty = zpm01.qty_res then 'terpenuhi_stock' else 'create_pr' end) else (case  when (zpm01.pr is not null or zpm01.pr != '') and (p.po is null or p.po = '')then (case when (zpm01.status_pengadaan = 'tunggu_pr' or zpm01.status_pengadaan = 'evaluasi_dp3' or zpm01.status_pengadaan is null) then 'outstanding_pr' when zpm01.status_pengadaan = 'inquiry_harga' then 'inquiry_harga' when (zpm01.status_pengadaan = 'hps_oe' or zpm01.status_pengadaan = 'bidder_list' or zpm01.status_pengadaan = 'penilaian_kualifikasi' or zpm01.status_pengadaan = 'rfq') then 'hps_oe' when (zpm01.status_pengadaan = 'pemasukan_penawaran' or zpm01.status_pengadaan = 'pembukaan_penawaran' or zpm01.status_pengadaan = 'evaluasi_penawaran' or zpm01.status_pengadaan = 'klarifikasi_spesifikasi' or zpm01.status_pengadaan = 'evaluasi_teknis' or zpm01.status_pengadaan = 'evaluasi_tkdn' or zpm01.status_pengadaan = 'negisiasi'  or zpm01.status_pengadaan = 'lhp') then 'proses_tender' when (zpm01.status_pengadaan = 'pengumuman_pemenang' or zpm01.status_pengadaan = 'penunjuk_pemenang' or zpm01.status_pengadaan = 'purchase_order') then 'Penetapan Pemenang' else 'outstanding_pr' end) when (zpm01.pr is not null or zpm01.pr != '') and (p.po is not null or p.po != '') then (case when p.dci is null or p.dci = '' then 'tunggu_onsite' else 'onsite' end) end) end) as status_ FROM zpm01 left join work_order on work_order.[order] = zpm01.no_order  left join purch_order as p   on p.material = zpm01.material AND p.pr = zpm01.pr AND p.item_pr = zpm01.itm_pr  where work_order.revision = {project_rev} and ((del is null or del != 'X') and (zpm01.reqmt_qty is not null and zpm01.reqmt_qty != '0')) GROUP BY work_order.[order],zpm01.material,zpm01.itm, zpm01.pr,zpm01.reqmt_qty, zpm01.qty_res, po, zpm01.status_pengadaan, dci) procurement_ left join joblist_detail_wo on joblist_detail_wo.[order] = procurement_.[order] left join joblist_detail on joblist_detail.id = joblist_detail_wo.jobListDetailID left join joblist on joblist.id = joblist_detail.joblist_id where joblist.projectID = '7' and joblist_detail.id = a.id GROUP by joblist_detail.material  ) = 'ready' then 'ready' ELSE 'not_ready' END) ELSE 'not_identify' END) as sts_material FROM joblist_detail a LEFT JOIN paket_joblist on paket_joblist.id_paket = a.id_paket where paket_joblist.projectID = {project_filter} and a.deleted != '1') b) c on c.id_paket = paket_joblist.id_paket LEFT JOIN project on project.id = paket_joblist.projectID  where project.id = {project_filter} group by paket_joblist.id_paket having count(c.id) > 0 ");
+                var customerData = _context.view_readiness_joblist.FromSql($"SELECT paket_joblist.id_paket, max(paket_joblist.tag_no) as tag_no, max(paket_joblist.created_date) as created_date, max(paket_joblist.disiplin) as disiplin, max(paket_joblist.no_memo) as no_memo, max(project.description) as description, max(project.revision) as revision, max(project.id) as projectID, concat((case when max(paket_joblist.additional) is not null then 'add - ' else '' end),max(paket_joblist.no_paket)) as no_add, (CASE WHEN  COUNT(distinct case when c.status != 'ready' then c.id else null end) > 0 THEN 'not_ready' WHEN max(c.status) is null then 'not_ready' ELSE 'ready' END) as 'status_tagno' FROM paket_joblist LEFT JOIN (SELECT b.id, b.id_paket, b.joblist_id, (CASE WHEN b.dikerjakan = 'tidak' then 'ready'  WHEN b.jasa != '0' AND b.material != '0' THEN CASE WHEN b.sts_material = 'ready' AND b.sts_kontrak = 'ready'  THEN 'ready' ELSE 'not_ready' END WHEN b.material != '0' THEN ISNULL(b.sts_material, 'not_ready') WHEN b.jasa != '0' THEN ISNULL(b.sts_kontrak, 'not_ready') END) as status FROM (SELECT a.id, a.joblist_id, a.id_paket, a.jobDesc, a.jasa, a.material, a.dikerjakan, (CASE WHEN a.dikerjakan = 'tidak' then 'not_identify' WHEN a.jasa != '0' THEN  (SELECT  (CASE  WHEN contracttracking.aktualSP is null THEN 'not_ready' ELSE 'ready'  END) as status  FROM contracttracking left join joblist_detail on joblist_detail.no_jasa = contracttracking.idPaket  where contracttracking.projectID = {project_filter} and joblist_detail.id = a.id and contracttracking.deleted != '1') ELSE 'not_identify' END) as sts_kontrak, (CASE WHEN a.dikerjakan = 'tidak' then 'not_identify' WHEN a.material != '0' THEN (CASE WHEN a.status_material = 'COMPLETED' AND (SELECT (CASE  WHEN joblist_detail.material != '0' THEN  CASE WHEN count(DISTINCT (case when procurement_.status_ != 'terpenuhi_stock' AND procurement_.status_ != 'onsite' then procurement_.[order] else NULL end)) > 0 THEN 'not_ready' ELSE 'ready' END ELSE NULL END) as sts_material FROM (SELECT work_order.[order], (case when zpm01.pr is null or zpm01.pr = '' then (case when zpm01.reqmt_qty = zpm01.qty_res then 'terpenuhi_stock' else 'create_pr' end) else (case  when (zpm01.pr is not null or zpm01.pr != '') and (p.po is null or p.po = '')then (case when (zpm01.status_pengadaan = 'tunggu_pr' or zpm01.status_pengadaan = 'evaluasi_dp3' or zpm01.status_pengadaan is null) then 'outstanding_pr' when zpm01.status_pengadaan = 'inquiry_harga' then 'inquiry_harga' when (zpm01.status_pengadaan = 'hps_oe' or zpm01.status_pengadaan = 'bidder_list' or zpm01.status_pengadaan = 'penilaian_kualifikasi' or zpm01.status_pengadaan = 'rfq') then 'hps_oe' when (zpm01.status_pengadaan = 'pemasukan_penawaran' or zpm01.status_pengadaan = 'pembukaan_penawaran' or zpm01.status_pengadaan = 'evaluasi_penawaran' or zpm01.status_pengadaan = 'klarifikasi_spesifikasi' or zpm01.status_pengadaan = 'evaluasi_teknis' or zpm01.status_pengadaan = 'evaluasi_tkdn' or zpm01.status_pengadaan = 'negosiasi'  or zpm01.status_pengadaan = 'lhp') then 'proses_tender' when (zpm01.status_pengadaan = 'pengumuman_pemenang' or zpm01.status_pengadaan = 'penunjuk_pemenang' or zpm01.status_pengadaan = 'purchase_order') then 'Penetapan Pemenang' else 'outstanding_pr' end) when (zpm01.pr is not null or zpm01.pr != '') and (p.po is not null or p.po != '') then (case when p.dci is null or p.dci = '' then 'tunggu_onsite' else 'onsite' end) end) end) as status_ FROM zpm01 left join work_order on work_order.[order] = zpm01.no_order  left join purch_order as p   on p.material = zpm01.material AND p.pr = zpm01.pr AND p.item_pr = zpm01.itm_pr  where work_order.revision = {project_rev} and ((del is null or del != 'X') and (zpm01.reqmt_qty is not null and zpm01.reqmt_qty != '0')) GROUP BY work_order.[order],zpm01.material,zpm01.itm, zpm01.pr,zpm01.reqmt_qty, zpm01.qty_res, po, zpm01.status_pengadaan, dci) procurement_ left join joblist_detail_wo on joblist_detail_wo.[order] = procurement_.[order] left join joblist_detail on joblist_detail.id = joblist_detail_wo.jobListDetailID left join joblist on joblist.id = joblist_detail.joblist_id where joblist.projectID = '7' and joblist_detail.id = a.id GROUP by joblist_detail.material  ) = 'ready' then 'ready' ELSE 'not_ready' END) ELSE 'not_identify' END) as sts_material FROM joblist_detail a LEFT JOIN paket_joblist on paket_joblist.id_paket = a.id_paket where paket_joblist.projectID = {project_filter} and a.deleted != '1') b) c on c.id_paket = paket_joblist.id_paket LEFT JOIN project on project.id = paket_joblist.projectID  where project.id = {project_filter} group by paket_joblist.id_paket having count(c.id) > 0 ");
 
 
                 // Sorting
@@ -486,7 +491,7 @@ namespace mystap.Controllers
         {
             try
             {
-                var query = _context.view_readiness_detail.FromSql($"SELECT a.id, a.joblist_id, joblist.eqTagNo, STUFF((SELECT distinct  t2.[order] + ',' from joblist_detail_wo t2  where a.id= t2.jobListDetailID FOR XML PATH(''), TYPE ).value('.', 'NVARCHAR(MAX)')  ,1,0,'') wo,a.no_jasa, joblist.projectID, a.jobDesc, a.jasa, a.material, (CASE WHEN a.dikerjakan = 'tidak' then 'not_identify' WHEN a.jasa != '0' THEN  (SELECT (CASE WHEN contracttracking.aktualSP is null THEN 'not_ready' ELSE 'ready' END) as status FROM Mystap.dbo.contracttracking left join Mystap.dbo.joblist_detail on joblist_detail.no_jasa = contracttracking.idPaket where contracttracking.projectID = {projectId} and joblist_detail.id = a.id and contracttracking.deleted != '1') ELSE 'not_identify' END) as sts_kontrak, (CASE WHEN a.dikerjakan = 'tidak' then 'not_identify' WHEN a.material != '0' THEN (CASE WHEN a.status_material = 'COMPLETED' AND (SELECT (CASE WHEN joblist_detail.material != '0' THEN CASE WHEN count(DISTINCT case when procurement_.status_ != 'terpenuhi_stock' AND procurement_.status_ != 'onsite' then procurement_.[order] else NULL end) > '0' THEN 'not_ready' ELSE 'ready' END ELSE NULL END) as sts_material FROM (SELECT work_order.[order], (case when zpm01.pr is null or zpm01.pr = '' then (case when zpm01.reqmt_qty = zpm01.qty_res then 'terpenuhi_stock' else 'create_pr' end) else (case when (zpm01.pr is not null or zpm01.pr != '') and (p.po is null or p.po = '')then (case when (zpm01.status_pengadaan = 'tunggu_pr' or zpm01.status_pengadaan = 'evaluasi_dp3' or zpm01.status_pengadaan is null) then 'outstanding_pr' when zpm01.status_pengadaan = 'inquiry_harga' then 'inquiry_harga' when (zpm01.status_pengadaan = 'hps_oe' or zpm01.status_pengadaan = 'bidder_list' or zpm01.status_pengadaan = 'penilaian_kualifikasi' or zpm01.status_pengadaan = 'rfq') then 'hps_oe' when (zpm01.status_pengadaan = 'pemasukan_penawaran' or zpm01.status_pengadaan = 'pembukaan_penawaran' or zpm01.status_pengadaan = 'evaluasi_penawaran' or zpm01.status_pengadaan = 'klarifikasi_spesifikasi' or zpm01.status_pengadaan = 'evaluasi_teknis' or zpm01.status_pengadaan = 'evaluasi_tkdn' or zpm01.status_pengadaan = 'negisiasi'  or zpm01.status_pengadaan = 'lhp') then 'proses_tender' when (zpm01.status_pengadaan = 'pengumuman_pemenang' or zpm01.status_pengadaan = 'penunjuk_pemenang' or zpm01.status_pengadaan = 'purchase_order') then 'Penetapan Pemenang' else 'outstanding_pr' end) when (zpm01.pr is not null or zpm01.pr != '') and (p.po is not null or p.po != '') then (case when p.dci is null or p.dci = '' then 'tunggu_onsite' else 'onsite' end) end) end) as status_ FROM Mystap.dbo.zpm01 left join Mystap.dbo.work_order on work_order.[order] = zpm01.no_order left join Mystap.dbo.purch_order as p on p.material = zpm01.material AND p.pr = zpm01.pr AND p.item_pr = zpm01.itm_pr where work_order.revision = {rev} and ((del is null or del != 'X') and (zpm01.reqmt_qty is not null and zpm01.reqmt_qty != '0')) GROUP BY [work_order].[order],zpm01.material,zpm01.itm, zpm01.pr,zpm01.reqmt_qty, zpm01.qty_res, po, zpm01.status_pengadaan, dci) procurement_ join Mystap.dbo.joblist_detail_wo on joblist_detail_wo.[order] = procurement_.[order] join Mystap.dbo.joblist_detail on joblist_detail.id = joblist_detail_wo.jobListDetailID where joblist_detail.id = a.id GROUP by joblist_detail.material ) = 'ready' then 'ready' ELSE 'not_ready' END) ELSE 'not_identify' END) as sts_material FROM Mystap.dbo.joblist_detail a LEFT JOIN paket_joblist on paket_joblist.id_paket = a.id_paket LEFT JOIN Mystap.dbo.joblist on joblist.id = a.joblist_id where joblist.projectID = {projectId} and paket_joblist.id_paket = {paketJoblist}  and a.deleted != '1' ");
+                var query = _context.view_readiness_detail.FromSql($"SELECT a.id, a.joblist_id, joblist.eqTagNo, STUFF((SELECT distinct  t2.[order] + ',' from joblist_detail_wo t2  where a.id= t2.jobListDetailID FOR XML PATH(''), TYPE ).value('.', 'NVARCHAR(MAX)')  ,1,0,'') wo,a.no_jasa, joblist.projectID, a.jobDesc, a.jasa, a.material, (CASE WHEN a.dikerjakan = 'tidak' then 'not_identify' WHEN a.jasa != '0' THEN  (SELECT (CASE WHEN contracttracking.aktualSP is null THEN 'not_ready' ELSE 'ready' END) as status FROM Mystap.dbo.contracttracking left join Mystap.dbo.joblist_detail on joblist_detail.no_jasa = contracttracking.idPaket where contracttracking.projectID = {projectId} and joblist_detail.id = a.id and contracttracking.deleted != '1') ELSE 'not_identify' END) as sts_kontrak, (CASE WHEN a.dikerjakan = 'tidak' then 'not_identify' WHEN a.material != '0' THEN (CASE WHEN a.status_material = 'COMPLETED' AND (SELECT (CASE WHEN joblist_detail.material != '0' THEN CASE WHEN count(DISTINCT case when procurement_.status_ != 'terpenuhi_stock' AND procurement_.status_ != 'onsite' then procurement_.[order] else NULL end) > '0' THEN 'not_ready' ELSE 'ready' END ELSE NULL END) as sts_material FROM (SELECT work_order.[order], (case when zpm01.pr is null or zpm01.pr = '' then (case when zpm01.reqmt_qty = zpm01.qty_res then 'terpenuhi_stock' else 'create_pr' end) else (case when (zpm01.pr is not null or zpm01.pr != '') and (p.po is null or p.po = '')then (case when (zpm01.status_pengadaan = 'tunggu_pr' or zpm01.status_pengadaan = 'evaluasi_dp3' or zpm01.status_pengadaan is null) then 'outstanding_pr' when zpm01.status_pengadaan = 'inquiry_harga' then 'inquiry_harga' when (zpm01.status_pengadaan = 'hps_oe' or zpm01.status_pengadaan = 'bidder_list' or zpm01.status_pengadaan = 'penilaian_kualifikasi' or zpm01.status_pengadaan = 'rfq') then 'hps_oe' when (zpm01.status_pengadaan = 'pemasukan_penawaran' or zpm01.status_pengadaan = 'pembukaan_penawaran' or zpm01.status_pengadaan = 'evaluasi_penawaran' or zpm01.status_pengadaan = 'klarifikasi_spesifikasi' or zpm01.status_pengadaan = 'evaluasi_teknis' or zpm01.status_pengadaan = 'evaluasi_tkdn' or zpm01.status_pengadaan = 'negosiasi'  or zpm01.status_pengadaan = 'lhp') then 'proses_tender' when (zpm01.status_pengadaan = 'pengumuman_pemenang' or zpm01.status_pengadaan = 'penunjuk_pemenang' or zpm01.status_pengadaan = 'purchase_order') then 'Penetapan Pemenang' else 'outstanding_pr' end) when (zpm01.pr is not null or zpm01.pr != '') and (p.po is not null or p.po != '') then (case when p.dci is null or p.dci = '' then 'tunggu_onsite' else 'onsite' end) end) end) as status_ FROM Mystap.dbo.zpm01 left join Mystap.dbo.work_order on work_order.[order] = zpm01.no_order left join Mystap.dbo.purch_order as p on p.material = zpm01.material AND p.pr = zpm01.pr AND p.item_pr = zpm01.itm_pr where work_order.revision = {rev} and ((del is null or del != 'X') and (zpm01.reqmt_qty is not null and zpm01.reqmt_qty != '0')) GROUP BY [work_order].[order],zpm01.material,zpm01.itm, zpm01.pr,zpm01.reqmt_qty, zpm01.qty_res, po, zpm01.status_pengadaan, dci) procurement_ join Mystap.dbo.joblist_detail_wo on joblist_detail_wo.[order] = procurement_.[order] join Mystap.dbo.joblist_detail on joblist_detail.id = joblist_detail_wo.jobListDetailID where joblist_detail.id = a.id GROUP by joblist_detail.material ) = 'ready' then 'ready' ELSE 'not_ready' END) ELSE 'not_identify' END) as sts_material FROM Mystap.dbo.joblist_detail a LEFT JOIN paket_joblist on paket_joblist.id_paket = a.id_paket LEFT JOIN Mystap.dbo.joblist on joblist.id = a.joblist_id where joblist.projectID = {projectId} and paket_joblist.id_paket = {paketJoblist}  and a.deleted != '1' ");
                 var data = await query.ToListAsync();
 
                 var isi = "<table class='table'><tr><th>EqTagNo</th><th>Desc</th><th>Jasa</th><th> Material </th></tr>";
@@ -549,7 +554,7 @@ namespace mystap.Controllers
             {
                 var project_filter = Request.Form["project_filter"].FirstOrDefault();
                 var project_rev = Request.Form["project_rev"].FirstOrDefault();
-                var customerData = _context.view_grafik_readiness.FromSql($"SELECT (case when d.status_tagno = 'ready' then 'READY' else 'NOT READY' end) as status_tagno, count(distinct d.id_paket) as total FROM (SELECT paket_joblist.id_paket, CASE WHEN COUNT(DISTINCT (case when c.status != 'ready' then c.id else NULL end)) > 0 THEN 'not_ready' WHEN max(c.status) is null then 'not_ready' ELSE 'ready' END AS status_tagno FROM paket_joblist LEFT JOIN (SELECT  b.id, b.id_paket,  b.joblist_id, (CASE WHEN b.dikerjakan = 'tidak' then 'ready' WHEN b.jasa != 0 AND b.material != 0 THEN  CASE  WHEN b.sts_material = 'ready' AND b.sts_kontrak = 'ready'  THEN 'ready'   ELSE 'not_ready' END  WHEN b.material != 0 THEN isnull(b.sts_material, 'not_ready') WHEN b.jasa != 0 THEN isnull(b.sts_kontrak, 'not_ready') END) as status FROM (SELECT a.id, paket_joblist.id_paket ,a.joblist_id, joblist.eqTagNo, joblist.projectID, a.jobDesc, a.jasa, a.material, a.dikerjakan, (CASE WHEN a.dikerjakan = 'tidak' then 'not_execute' WHEN a.jasa != '0' THEN  (SELECT (CASE WHEN contracttracking.aktualSP is null THEN 'not_ready' ELSE 'ready' END) as status FROM Mystap.dbo.contracttracking left join Mystap.dbo.joblist_detail on joblist_detail.no_jasa = contracttracking.idPaket where contracttracking.projectID = {project_filter} and joblist_detail.id = a.id and contracttracking.deleted != '1') ELSE 'not_identify' END) as sts_kontrak, (CASE WHEN a.dikerjakan = 'tidak' then 'not_execute' WHEN a.material != '0' THEN (CASE WHEN a.status_material = 'COMPLETED' AND (SELECT (CASE WHEN joblist_detail.material != '0' THEN CASE WHEN count(DISTINCT case when procurement_.status_ != 'terpenuhi_stock' AND procurement_.status_ != 'onsite' then procurement_.[order] else NULL end) > '0' THEN 'not_ready' ELSE 'ready' END ELSE NULL END) as sts_material FROM (SELECT work_order.[order], (case when zpm01.pr is null or zpm01.pr = '' then (case when zpm01.reqmt_qty = zpm01.qty_res then 'terpenuhi_stock' else 'create_pr' end) else (case when (zpm01.pr is not null or zpm01.pr != '') and (p.po is null or p.po = '')then (case when (zpm01.status_pengadaan = 'tunggu_pr' or zpm01.status_pengadaan = 'evaluasi_dp3' or zpm01.status_pengadaan is null) then 'outstanding_pr' when zpm01.status_pengadaan = 'inquiry_harga' then 'inquiry_harga' when (zpm01.status_pengadaan = 'hps_oe' or zpm01.status_pengadaan = 'bidder_list' or zpm01.status_pengadaan = 'penilaian_kualifikasi' or zpm01.status_pengadaan = 'rfq') then 'hps_oe' when (zpm01.status_pengadaan = 'pemasukan_penawaran' or zpm01.status_pengadaan = 'pembukaan_penawaran' or zpm01.status_pengadaan = 'evaluasi_penawaran' or zpm01.status_pengadaan = 'klarifikasi_spesifikasi' or zpm01.status_pengadaan = 'evaluasi_teknis' or zpm01.status_pengadaan = 'evaluasi_tkdn' or zpm01.status_pengadaan = 'negisiasi'  or zpm01.status_pengadaan = 'lhp') then 'proses_tender' when (zpm01.status_pengadaan = 'pengumuman_pemenang' or zpm01.status_pengadaan = 'penunjuk_pemenang' or zpm01.status_pengadaan = 'purchase_order') then 'Penetapan Pemenang' else 'outstanding_pr' end) when (zpm01.pr is not null or zpm01.pr != '') and (p.po is not null or p.po != '') then (case when p.dci is null or p.dci = '' then 'tunggu_onsite' else 'onsite' end) end) end) as status_ FROM Mystap.dbo.zpm01 left join Mystap.dbo.work_order on work_order.[order] = zpm01.no_order left join Mystap.dbo.purch_order as p on p.material = zpm01.material AND p.pr = zpm01.pr AND p.item_pr = zpm01.itm_pr where work_order.revision = {project_rev} and ((del is null or del != 'X') and (zpm01.reqmt_qty is not null and zpm01.reqmt_qty != '0')) GROUP BY [work_order].[order],zpm01.material,zpm01.itm, zpm01.pr,zpm01.reqmt_qty, zpm01.qty_res, po, zpm01.status_pengadaan, dci) procurement_ join Mystap.dbo.joblist_detail_wo on joblist_detail_wo.[order] = procurement_.[order] join Mystap.dbo.joblist_detail on joblist_detail.id = joblist_detail_wo.jobListDetailID where joblist_detail.id = a.id GROUP by joblist_detail.material ) = 'ready' then 'ready' ELSE 'not_ready' END) ELSE 'not_identify' END) as sts_material FROM Mystap.dbo.joblist_detail a LEFT JOIN paket_joblist on paket_joblist.id_paket = a.id_paket LEFT JOIN joblist on joblist.id = a.joblist_id where paket_joblist.projectID = {project_filter} and a.deleted != 1) b) c on c.id_paket = paket_joblist.id_paket where paket_joblist.projectID = {project_filter} GROUP BY paket_joblist.id_paket having count(c.id) > 0) d GROUP by d.status_tagno;");
+                var customerData = _context.view_grafik_readiness.FromSql($"SELECT (case when d.status_tagno = 'ready' then 'READY' else 'NOT READY' end) as status_tagno, count(distinct d.id_paket) as total FROM (SELECT paket_joblist.id_paket, CASE WHEN COUNT(DISTINCT (case when c.status != 'ready' then c.id else NULL end)) > 0 THEN 'not_ready' WHEN max(c.status) is null then 'not_ready' ELSE 'ready' END AS status_tagno FROM paket_joblist LEFT JOIN (SELECT  b.id, b.id_paket,  b.joblist_id, (CASE WHEN b.dikerjakan = 'tidak' then 'ready' WHEN b.jasa != 0 AND b.material != 0 THEN  CASE  WHEN b.sts_material = 'ready' AND b.sts_kontrak = 'ready'  THEN 'ready'   ELSE 'not_ready' END  WHEN b.material != 0 THEN isnull(b.sts_material, 'not_ready') WHEN b.jasa != 0 THEN isnull(b.sts_kontrak, 'not_ready') END) as status FROM (SELECT a.id, paket_joblist.id_paket ,a.joblist_id, joblist.eqTagNo, joblist.projectID, a.jobDesc, a.jasa, a.material, a.dikerjakan, (CASE WHEN a.dikerjakan = 'tidak' then 'not_execute' WHEN a.jasa != '0' THEN  (SELECT (CASE WHEN contracttracking.aktualSP is null THEN 'not_ready' ELSE 'ready' END) as status FROM Mystap.dbo.contracttracking left join Mystap.dbo.joblist_detail on joblist_detail.no_jasa = contracttracking.idPaket where contracttracking.projectID = {project_filter} and joblist_detail.id = a.id and contracttracking.deleted != '1') ELSE 'not_identify' END) as sts_kontrak, (CASE WHEN a.dikerjakan = 'tidak' then 'not_execute' WHEN a.material != '0' THEN (CASE WHEN a.status_material = 'COMPLETED' AND (SELECT (CASE WHEN joblist_detail.material != '0' THEN CASE WHEN count(DISTINCT case when procurement_.status_ != 'terpenuhi_stock' AND procurement_.status_ != 'onsite' then procurement_.[order] else NULL end) > '0' THEN 'not_ready' ELSE 'ready' END ELSE NULL END) as sts_material FROM (SELECT work_order.[order], (case when zpm01.pr is null or zpm01.pr = '' then (case when zpm01.reqmt_qty = zpm01.qty_res then 'terpenuhi_stock' else 'create_pr' end) else (case when (zpm01.pr is not null or zpm01.pr != '') and (p.po is null or p.po = '')then (case when (zpm01.status_pengadaan = 'tunggu_pr' or zpm01.status_pengadaan = 'evaluasi_dp3' or zpm01.status_pengadaan is null) then 'outstanding_pr' when zpm01.status_pengadaan = 'inquiry_harga' then 'inquiry_harga' when (zpm01.status_pengadaan = 'hps_oe' or zpm01.status_pengadaan = 'bidder_list' or zpm01.status_pengadaan = 'penilaian_kualifikasi' or zpm01.status_pengadaan = 'rfq') then 'hps_oe' when (zpm01.status_pengadaan = 'pemasukan_penawaran' or zpm01.status_pengadaan = 'pembukaan_penawaran' or zpm01.status_pengadaan = 'evaluasi_penawaran' or zpm01.status_pengadaan = 'klarifikasi_spesifikasi' or zpm01.status_pengadaan = 'evaluasi_teknis' or zpm01.status_pengadaan = 'evaluasi_tkdn' or zpm01.status_pengadaan = 'negosiasi'  or zpm01.status_pengadaan = 'lhp') then 'proses_tender' when (zpm01.status_pengadaan = 'pengumuman_pemenang' or zpm01.status_pengadaan = 'penunjuk_pemenang' or zpm01.status_pengadaan = 'purchase_order') then 'Penetapan Pemenang' else 'outstanding_pr' end) when (zpm01.pr is not null or zpm01.pr != '') and (p.po is not null or p.po != '') then (case when p.dci is null or p.dci = '' then 'tunggu_onsite' else 'onsite' end) end) end) as status_ FROM Mystap.dbo.zpm01 left join Mystap.dbo.work_order on work_order.[order] = zpm01.no_order left join Mystap.dbo.purch_order as p on p.material = zpm01.material AND p.pr = zpm01.pr AND p.item_pr = zpm01.itm_pr where work_order.revision = {project_rev} and ((del is null or del != 'X') and (zpm01.reqmt_qty is not null and zpm01.reqmt_qty != '0')) GROUP BY [work_order].[order],zpm01.material,zpm01.itm, zpm01.pr,zpm01.reqmt_qty, zpm01.qty_res, po, zpm01.status_pengadaan, dci) procurement_ join Mystap.dbo.joblist_detail_wo on joblist_detail_wo.[order] = procurement_.[order] join Mystap.dbo.joblist_detail on joblist_detail.id = joblist_detail_wo.jobListDetailID where joblist_detail.id = a.id GROUP by joblist_detail.material ) = 'ready' then 'ready' ELSE 'not_ready' END) ELSE 'not_identify' END) as sts_material FROM Mystap.dbo.joblist_detail a LEFT JOIN paket_joblist on paket_joblist.id_paket = a.id_paket LEFT JOIN joblist on joblist.id = a.joblist_id where paket_joblist.projectID = {project_filter} and a.deleted != 1) b) c on c.id_paket = paket_joblist.id_paket where paket_joblist.projectID = {project_filter} GROUP BY paket_joblist.id_paket having count(c.id) > 0) d GROUP by d.status_tagno;");
                 var data = await customerData.ToListAsync();
                 return Json(new { data = data });
             }
@@ -1139,6 +1144,520 @@ namespace mystap.Controllers
                             }).FirstOrDefaultAsync();
 
                 return Json(new { data = data });
+            }
+            catch
+            {
+                throw;
+            }
+        }
+
+        public IActionResult DashboardMaterial()
+        {
+            ViewBag.project = _context.project.Where(p => p.deleted == 0).Where(p => p.active == "1").ToList();
+            return View();
+        }
+
+        public async Task<IActionResult> CountSummaryMaterial()
+        {
+            try
+            {
+                var project_id = Request.Form["project_id"].FirstOrDefault();
+                var lldi = Request.Form["lldi"].FirstOrDefault();
+
+                var w = "";
+                if(project_id != "")
+                {
+                    w += " and zpm01.revision = '"+project_id+"' ";
+                }
+
+                if(lldi != "all")
+                {
+                    if(lldi == "0")
+                    {
+                        w += " and ( zpm01.unloading_point is null or zpm01.unloading_point != 'xx') ";
+                    }
+                    else
+                    {
+                        w += " and zpm01.unloading_point = 'xx' ";
+                    }
+                }
+
+                var query = @"select " +
+                    "(case" +
+                    "   when b.status_ = 'terpenuhi_stock' or b.status_ = 'onsite' then 'Ready'" +
+                    " else (case " +
+                    " when CONVERT (DATE, GETDATE()) > b.finish_date then 'Delay'" +
+                    " when b.prognosa_ < b.md then 'On Track'" +
+                    " else 'Delay'" +
+                    " end)" +
+                    " end) as status_ready, " +
+                    "count(b.[order]) as total from " +
+                    "(select work_order.[order], max(project.tglSelesaiTA) as finish_date, (case when max(project.taoh) = 'OH' then DATEADD(DAY, (case when max(zpm01.prognosa_matl) is not null then max(zpm01.prognosa_matl) else 0 end),max(prognosa_oh.[start_date])) else max(project.tglTA) end) as md," +
+                    "(case when purch_order.po is not null then max(purch_order.deliv_date) else DATEADD(DAY, ((case when max(zpm01.dt_purch) is not null or max(zpm01.dt_purch) != '' then max(zpm01.dt_purch) when max(zpm01.dt_iv) is not null or max(zpm01.dt_iv) != '' then max(zpm01.dt_iv) else (case when max(zpm01.dt_ta) is not null or max(zpm01.dt_ta) != '' then max(zpm01.dt_ta) else 0 end) end) + (case when max(zpm01.dt_status_pengadaan) is not null or max(zpm01.dt_status_pengadaan) != '' then max(zpm01.dt_status_pengadaan) else 52 end)), CONVERT (DATE, GETDATE())) end)as prognosa_," +
+                    "(case when zpm01.pr is null or zpm01.pr = '' then (case when zpm01.reqmt_qty = zpm01.qty_res then 'terpenuhi_stock' else 'create_pr' end) else (case when (zpm01.pr is not null or zpm01.pr != '') and (purch_order.po is null or purch_order.po = '') then (case when (zpm01.status_pengadaan = 'tunggu_pr' or zpm01.status_pengadaan = 'evaluasi_dp3' or zpm01.status_pengadaan is null) then 'outstanding_pr' when zpm01.status_pengadaan = 'inquiry_harga' then 'inquiry_harga' when (zpm01.status_pengadaan = 'hps_oe' or zpm01.status_pengadaan = 'bidder_list' or zpm01.status_pengadaan = 'penilaian_kualifikasi' or zpm01.status_pengadaan = 'rfq') then 'hps_oe' when (zpm01.status_pengadaan = 'pemasukan_penawaran' or zpm01.status_pengadaan = 'pembukaan_penawaran' or zpm01.status_pengadaan = 'evaluasi_penawaran' or zpm01.status_pengadaan = 'klarifikasi_spesifikasi' or zpm01.status_pengadaan = 'evaluasi_teknis' or zpm01.status_pengadaan = 'evaluasi_tkdn' or zpm01.status_pengadaan = 'negosiasi'  or zpm01.status_pengadaan = 'lhp') then 'proses_tender' when (zpm01.status_pengadaan = 'pengumuman_pemenang' or zpm01.status_pengadaan = 'penunjuk_pemenang' or zpm01.status_pengadaan = 'purchase_order') then 'penetapan_pemenang' else 'outstanding_pr' end) when (zpm01.pr is not null or zpm01.pr != '') and (purch_order.po is not null or purch_order.po != '') then (case when purch_order.dci is null or purch_order.dci = '' then 'tunggu_onsite' else 'onsite' end) end) end) as status_ from zpm01 " +
+                    "left join work_order on work_order.[order] = zpm01.no_order  " +
+                    "left join Mystap.dbo.joblist_detail_wo on joblist_detail_wo.[order] = work_order.[order] left join Mystap.dbo.joblist_detail on joblist_detail.id = joblist_detail_wo.jobListDetailID left join Mystap.dbo.joblist on joblist.id = joblist_detail.joblist_id   left join Mystap.dbo.prognosa_oh on prognosa_oh.id_joblist = joblist.id  " +
+                    "left join project on project.revision = work_order.revision " +
+                    "left join purch_order on purch_order.material = zpm01.material AND purch_order.pr = zpm01.pr AND purch_order.item_pr = zpm01.itm_pr where ((del is null or del != 'X') and (zpm01.reqmt_qty is not null and zpm01.reqmt_qty != 0)) ";
+                query += w;
+                query += " group by work_order.[order],zpm01.material, zpm01.itm, zpm01.pr,zpm01.reqmt_qty,zpm01.qty_res,zpm01.status_pengadaan,purch_order.po, purch_order.dci)b group by " +
+                    "(case" +
+                    " when b.status_ = 'terpenuhi_stock' or b.status_ = 'onsite' then 'Ready'" +
+                    " else (case " +
+                    " when CONVERT (DATE, GETDATE()) > b.finish_date then 'Delay'" +
+                    " when b.prognosa_ < b.md then 'On Track' " +
+                    " else 'Delay'" +
+                    " end) " +
+                    "end)";
+
+                var c = FormattableStringFactory.Create(query);
+
+                var data = await  _context.view_count_summary_material.FromSql(c).ToListAsync();
+                return Json(new { datas = data});
+            }
+            catch
+            {
+                throw;
+            }
+        }
+
+        public IActionResult DetailSummaryMaterial(string? rev, string? filter, string? lldi)
+        {
+            ViewData["rev"] = rev;
+            ViewData["filter"] = filter;
+            ViewData["lldi"] = lldi;
+            return View();
+        }
+
+        public async Task<IActionResult> DetailSummaryMaterial_()
+        {
+            try
+            {
+                var draw = HttpContext.Request.Form["draw"].FirstOrDefault();
+                // Skipping number of Rows count
+                var start = Request.Form["start"].FirstOrDefault();
+                // Paging Length 10, 20
+                var length = Request.Form["length"].FirstOrDefault();
+                // Sort Column Name
+                var sortColumn = Request.Form["columns[" + Request.Form["order[0][column]"].FirstOrDefault() + "][name]"].FirstOrDefault();
+                // Sort Column Direction (asc, desc)
+                var sortColumnDirection = Request.Form["order[0][dir]"].FirstOrDefault();
+                // Search Value from (Search box)
+                var searchValue = Request.Form["search[value]"].FirstOrDefault();
+                // Paging Size (10, 20, 50, 100)
+                int pageSize = length != null ? Convert.ToInt32(length) : 0;
+                int skip = start != null ? Convert.ToInt32(start) : 0;
+                int recordsTotal = 0;
+
+                var rev = Request.Form["rev"].FirstOrDefault();
+                var filter = Request.Form["filter"].FirstOrDefault();
+                var lldi = Request.Form["lldi"].FirstOrDefault();
+
+                var w = "";
+                var ws = "";
+
+                if (rev != "")
+                {
+                    w += " and zpm01.revision = '" + rev + "' ";
+                }
+
+                if (lldi != "all")
+                {
+                    if (lldi == "0")
+                    {
+                        w += " and ( zpm01.unloading_point is null or zpm01.unloading_point != 'xx') ";
+                    }
+                    else
+                    {
+                        w += " and zpm01.unloading_point = 'xx' ";
+                    }
+                }
+
+                if(filter != "")
+                {
+                    ws += " where (case "+
+	                       "     when b.status_ = 'terpenuhi_stock' or b.status_ = 'onsite' then 'ready' "+
+	                       "     else (case "+
+		                   "         when CONVERT (DATE, GETDATE()) > b.finish_date then 'delay' "+
+		                   "         when b.prognosa_ < b.md then 'on_track' "+
+                           "         else 'delay' "+
+                           "     end) "+
+                           "  end) = '"+filter+"' ";
+                }
+
+                var query = @"select " +
+                           " b.*, " +
+                           " (case " +
+                           "     when b.status_ = 'terpenuhi_stock' or b.status_ = 'onsite' then 'ready' " +
+                           "     else (case  " +
+                           "         when CONVERT (DATE, GETDATE()) > b.finish_date then 'delay' " +
+                           "         when b.prognosa_ < b.md then 'on_track' " +
+                           "         else 'delay' " +
+                           "     end) " +
+                           "  end) as status_ready from (select work_order.[order],max(work_order.[description]) as wo_description,zpm01.material,max(zpm01.material_description) as [description],zpm01.itm,max(zpm01.bun)as bun,max(zpm01.reqmt_qty) as reqmt_qty, " +
+                           "  max(zpm01.pr) as pr,max(zpm01.itm_pr) as pr_item,max(zpm01.qty_pr) as pr_qty,max(zpm01.qty_res) as qty_res,max(purch_order.po) as po,max(purch_order.qty_delivered) as po_qty,max(purch_order.item_po) as po_item,max(purch_order.dci) as dci, " +
+                           " max(project.tglSelesaiTA) as finish_date, (case when max(project.taoh) = 'OH' then DATEADD(DAY, (case when max(zpm01.prognosa_matl) is not null then max(zpm01.prognosa_matl) else 0 end),max(prognosa_oh.[start_date])) else max(project.tglTA) end) as md, " +
+                           " (case when max(purch_order.po) is not null then DATEDIFF(day, max(purch_order.doc_date),max(purch_order.deliv_date))  else (case  when max(zpm01.dt_purch) is not null or max(zpm01.dt_purch) != '' then max(zpm01.dt_purch)  when max(zpm01.dt_iv) is not null or max(zpm01.dt_iv) != '' then max(zpm01.dt_iv) else ( case when max(zpm01.dt_ta) is not null or max(zpm01.dt_ta) != '' then max(zpm01.dt_ta) else 0 end)  end)  end) as dt_ , "+
+                           " (case                    when max(zpm01.unloading_point) = 'XX' then 'LLD'                   else 'Non LLD'                end) as lld, "+
+                           " (case when max(purch_order.po) is not null then max(purch_order.deliv_date) else DATEADD(DAY, ((case when max(zpm01.dt_purch) is not null or max(zpm01.dt_purch) != '' then max(zpm01.dt_purch) when max(zpm01.dt_iv) is not null or max(zpm01.dt_iv) != '' then max(zpm01.dt_iv) else (case when max(zpm01.dt_ta) is not null or max(zpm01.dt_ta) != '' then max(zpm01.dt_ta) else 0 end) end) + (case when max(zpm01.dt_status_pengadaan) is not null or max(zpm01.dt_status_pengadaan) != '' then max(zpm01.dt_status_pengadaan) else 52 end)), CONVERT (DATE, GETDATE())) end) as prognosa_, " +
+                           " (case when max(zpm01.pr) is null or max(zpm01.pr) = '' then (case when max(zpm01.reqmt_qty) = max(zpm01.qty_res) then 'terpenuhi_stock' else 'create_pr' end) else (case when (max(zpm01.pr) is not null or max(zpm01.pr) != '') and (max(purch_order.po) is not null or max(purch_order.po) != '') then (case when max(purch_order.dci) is null or max(purch_order.dci) = '' then 'tunggu_onsite' else 'onsite'  end) when (max(zpm01.status_pengadaan) is not null or max(zpm01.status_pengadaan) != '') then max(zpm01.status_pengadaan) else 'outstanding_pr' end) end) as status_ from Mystap.dbo.zpm01 " +
+                           " left join Mystap.dbo.work_order on work_order.[order] = zpm01.no_order " +
+                           " left join Mystap.dbo.joblist_detail_wo on joblist_detail_wo.[order] = work_order.[order] left join Mystap.dbo.joblist_detail on joblist_detail.id = joblist_detail_wo.jobListDetailID left join Mystap.dbo.joblist on joblist.id = joblist_detail.joblist_id   left join Mystap.dbo.prognosa_oh on prognosa_oh.id_joblist = joblist.id  " +
+                           " left join Mystap.dbo.project on project.revision = work_order.revision " +
+                           " left join Mystap.dbo.purch_order on purch_order.material = zpm01.material AND purch_order.pr = zpm01.pr AND purch_order.item_pr = zpm01.itm_pr where ((del is null or del != 'X') and (zpm01.reqmt_qty is not null and zpm01.reqmt_qty != 0)) " +
+                           w +
+                           " group by work_order.[order],zpm01.material, zpm01.itm) as b " + ws;
+
+                var c = FormattableStringFactory.Create(query);
+                var datas = _context.view_detail_summary_material.FromSql(c);
+
+                if (!(string.IsNullOrEmpty(sortColumn) && string.IsNullOrEmpty(sortColumnDirection)))
+                {
+                    datas = datas.OrderBy(sortColumn + " " + sortColumnDirection);
+                }
+
+                //search
+                if (!string.IsNullOrEmpty(searchValue))
+                {
+                    datas = datas.Where(m => m.description.StartsWith(searchValue));
+                }
+                // Total number of rows count
+                recordsTotal = datas.Count();
+                // Paging
+                var data = await datas.ToListAsync();
+                // Returning Json Data
+                return Json(new { draw = draw, recordsFiltered = recordsTotal, recordsTotal = recordsTotal, data = data });
+            }
+            catch
+            {
+                throw;
+            }
+        }
+
+        public async Task<IActionResult> GrafikMaterial()
+        {
+            try
+            {
+                var rev = Request.Form["project_id"].FirstOrDefault();
+                var lldi = Request.Form["lldi"].FirstOrDefault();
+                var w = "";
+                if (rev != "")
+                {
+                    w += " and zpm01.revision = '" + rev + "' ";
+                }
+
+                if (lldi != "all")
+                {
+                    if (lldi == "0")
+                    {
+                        w += " and ( zpm01.unloading_point is null or zpm01.unloading_point != 'xx') ";
+                    }
+                    else
+                    {
+                        w += " and zpm01.unloading_point = 'xx' ";
+                    }
+                }
+                var query = @"select b.status_, count(b.[order]) as total from (select work_order.[order],max(zpm01.revision) as revision,(case when max(zpm01.pr) is null or max(zpm01.pr) = '' then (case when max(zpm01.reqmt_qty) = max(zpm01.qty_res) then 'terpenuhi_stock' else 'create_pr' end) else (case when (max(zpm01.pr) is not null or max(zpm01.pr) != '') and (max(purch_order.po) is null or max(purch_order.po) = '') then (case when (max(zpm01.status_pengadaan) = 'tunggu_pr' or max(zpm01.status_pengadaan) = 'evaluasi_dp3' or max(zpm01.status_pengadaan) is null) then 'outstanding_pr' when max(zpm01.status_pengadaan) = 'inquiry_harga' then 'inquiry_harga' when (max(zpm01.status_pengadaan) = 'hps_oe' or max(zpm01.status_pengadaan) = 'bidder_list' or max(zpm01.status_pengadaan) = 'penilaian_kualifikasi' or max(zpm01.status_pengadaan) = 'rfq') then 'hps_oe' when (max(zpm01.status_pengadaan) = 'pemasukan_penawaran' or max(zpm01.status_pengadaan) = 'pembukaan_penawaran' or max(zpm01.status_pengadaan) = 'evaluasi_penawaran' or max(zpm01.status_pengadaan) = 'klarifikasi_spesifikasi' or max(zpm01.status_pengadaan) = 'evaluasi_teknis' or max(zpm01.status_pengadaan) = 'evaluasi_tkdn' or max(zpm01.status_pengadaan) = 'negosiasi'  or max(zpm01.status_pengadaan) = 'lhp') then 'proses_tender' when (max(zpm01.status_pengadaan) = 'pengumuman_pemenang' or max(zpm01.status_pengadaan) = 'penunjuk_pemenang' or max(zpm01.status_pengadaan) = 'purchase_order') then 'penetapan_pemenang' else 'outstanding_pr' end) when (max(zpm01.pr) is not null or max(zpm01.pr) != '') and (max(purch_order.po) is not null or max(purch_order.po) != '') then (case when max(purch_order.dci) is null or max(purch_order.dci) = '' then 'tunggu_onsite' else 'onsite' end) end) end) as status_ from Mystap.dbo.zpm01 
+                            left join Mystap.dbo.work_order on work_order.[order] = zpm01.no_order 
+                            left join Mystap.dbo.prognosa_oh on prognosa_oh.eqTagno = work_order.equipment
+                            left join Mystap.dbo.project on project.revision = work_order.revision
+                            left join Mystap.dbo.purch_order on purch_order.material = zpm01.material AND purch_order.pr = zpm01.pr AND purch_order.item_pr = zpm01.itm_pr 
+                            where ((del is null or del != 'X') and (zpm01.reqmt_qty is not null and zpm01.reqmt_qty != 0))" + w+
+                            "group by work_order.[order],zpm01.material, zpm01.itm) as b group by b.status_";
+                var c = FormattableStringFactory.Create(query);
+                var data = await _context.view_grafik_material.FromSql(c).ToListAsync();
+                return Json(new { datas = data });
+            }
+            catch
+            {
+                throw;
+            }
+        }
+
+        public async Task<IActionResult> GrafikProgresMaterial()
+        {
+            try
+            {
+                var rev = Request.Form["revision"].FirstOrDefault();
+
+                var data = await _context.historyReservasi.Where(p => p.revision == rev).Select(p => new { date = p.created_date.ToString("yyyy-MM-dd"), total_item = p.total_item, stock = p.stock, create_pr = p.create_pr, outstanding_pr = p.outstanding_pr, inquiry_harga = p.inquiry_harga, hps_oe = p.hps_oe, proses_tender = p.proses_tender, penetapan_pemenang = p.penetapan_pemenang, tunggu_onsite = p.tunggu_onsite, onsite = p.onsite }).ToListAsync();
+                return Json(new { datas = data });
+            }
+            catch
+            {
+                throw;
+            }
+        }
+
+        public async Task<IActionResult> SummaryMaterial_()
+        {
+            try
+            {
+                var project = Request.Form["project_id"].FirstOrDefault();
+                var lldi = Request.Form["lldi"].FirstOrDefault();
+                var project_name = Request.Form["project_name"].FirstOrDefault();
+                var count =  _context.zpm01.Where(p => p.revision == project).Where(p => ((p.del != null || p.del == "X") || (p.reqmt_qty == null || p.reqmt_qty == "0")))
+                .Select(p => new
+                {
+                    tot_del = p.id,
+                }).Count();
+                var w = "";
+                if (project != "")
+                {
+                    w += " and zpm01.revision = '" + project + "' ";
+                }
+
+                if (lldi != "all")
+                {
+                    if (lldi == "0")
+                    {
+                        w += " and (zpm01.unloading_point is null or zpm01.unloading_point != 'xx') ";
+                    }
+                    else
+                    {
+                        w += " and zpm01.unloading_point = 'xx' ";
+                    }
+                }
+                var query = "select b.revision," +
+                    " count(b.[order]) as total, " +
+                    " count( case when b.status_ = 'terpenuhi_stock' then b.[order] else null end) as stock," +
+                    " count( case when b.status_ = 'create_pr' then b.[order] else null end) as belum_pr," +
+                    " count( case when b.status_ = 'outstanding_pr' or b.status_ = 'inquiry_harga' or b.status_ = 'hps_oe' or b.status_ = 'proses_tender' or b.status_ = 'penetapan_pemenang' then b.[order] else null end) as sudah_pr,\r\ncount( case when b.status_ = 'outstanding_pr' then b.[order] else null end) as outstanding_pr, " +
+                    " count( case when b.status_ = 'inquiry_harga' then b.[order] else null end) as inquiry_harga, " +
+                    " count( case when b.status_ = 'hps_oe' then b.[order] else null end) as hps_oe, " +
+                    " count( case when b.status_ = 'proses_tender' then b.[order] else null end) as proses_tender, " +
+                    " count( case when b.status_ = 'penetapan_pemenang' then b.[order] else null end) as penetapan_pemenang, " +
+                    " count( case when b.status_ = 'tunggu_onsite' or b.status_ = 'onsite' then b.[order] else null end) as sudah_po, " +
+                    " count( case when b.status_ = 'tunggu_onsite' then b.[order] else null end) as belum_tiba, " +
+                    " count( case when b.status_ = 'onsite' then b.[order] else null end) as sudah_tiba from (select work_order.[order],max(zpm01.revision) as revision,(case when max(zpm01.pr) is null or max(zpm01.pr) = '' then (case when max(zpm01.reqmt_qty) = max(zpm01.qty_res) then 'terpenuhi_stock' else 'create_pr' end) else (case when (max(zpm01.pr) is not null or max(zpm01.pr) != '') and (max(purch_order.po) is null or max(purch_order.po) = '') then (case when (max(zpm01.status_pengadaan) = 'tunggu_pr' or max(zpm01.status_pengadaan) = 'evaluasi_dp3' or max(zpm01.status_pengadaan) is null) then 'outstanding_pr' when max(zpm01.status_pengadaan) = 'inquiry_harga' then 'inquiry_harga' when (max(zpm01.status_pengadaan) = 'hps_oe' or max(zpm01.status_pengadaan) = 'bidder_list' or max(zpm01.status_pengadaan) = 'penilaian_kualifikasi' or max(zpm01.status_pengadaan) = 'rfq') then 'hps_oe' when (max(zpm01.status_pengadaan) = 'pemasukan_penawaran' or max(zpm01.status_pengadaan) = 'pembukaan_penawaran' or max(zpm01.status_pengadaan) = 'evaluasi_penawaran' or max(zpm01.status_pengadaan) = 'klarifikasi_spesifikasi' or max(zpm01.status_pengadaan) = 'evaluasi_teknis' or max(zpm01.status_pengadaan) = 'evaluasi_tkdn' or max(zpm01.status_pengadaan) = 'negosiasi'  or max(zpm01.status_pengadaan) = 'lhp') then 'proses_tender' when (max(zpm01.status_pengadaan) = 'pengumuman_pemenang' or max(zpm01.status_pengadaan) = 'penunjuk_pemenang' or max(zpm01.status_pengadaan) = 'purchase_order') then 'penetapan_pemenang' else 'outstanding_pr' end) when (max(zpm01.pr) is not null or max(zpm01.pr) != '') and (max(purch_order.po) is not null or max(purch_order.po) != '') then (case when max(purch_order.dci) is null or max(purch_order.dci) = '' then 'tunggu_onsite' else 'onsite' end) end) end) as status_ from Mystap.dbo.zpm01 " +
+                    " left join Mystap.dbo.work_order on work_order.[order] = zpm01.no_order " +
+                    " left join Mystap.dbo.prognosa_oh on prognosa_oh.eqTagno = work_order.equipment " +
+                    " left join Mystap.dbo.project on project.revision = work_order.revision " +
+                    " left join Mystap.dbo.purch_order on purch_order.material = zpm01.material AND purch_order.pr = zpm01.pr AND purch_order.item_pr = zpm01.itm_pr where ((del is null or del != 'X') and (zpm01.reqmt_qty is not null and zpm01.reqmt_qty != 0)) " +
+                    w+
+                    " group by work_order.[order],zpm01.material, zpm01.itm) as b group by b.revision";
+                var c = FormattableStringFactory.Create(query);
+                var data = await _context.view_summary_material.FromSql(c).FirstOrDefaultAsync();
+
+
+                double stock = (data != null) ? (((float) data.stock * 100.0) / (float)data.total) : 0;
+                double blm_pr = (data != null) ? (((float)data.belum_pr / (float)data.total) * 100.0) : 0;
+                double sudah_pr = (data != null) ? (((float)data.sudah_pr / (float)data.total) * 100.0) : 0;
+                double outstanding_pr = (data != null) ? (((float)data.outstanding_pr / (float)data.sudah_pr) * (((float)data.sudah_pr / (float)data.total) * 100.0)) : 0;
+                double inquiry_harga = (data != null) ? (((float)data.inquiry_harga / (float)data.sudah_pr) * (((float)data.sudah_pr / (float)data.total) * 100.0)) : 0;
+                double hps_oe = (data != null) ? (((float)data.hps_oe / (float)data.sudah_pr) * (((float)data.sudah_pr / (float)data.total) * 100.0)) : 0;
+                double proses_tender = (data != null) ? (((float)data.proses_tender / (float)data.sudah_pr) * (((float)data.sudah_pr / (float)data.total) * 100.0)) : 0;
+                double penetapan_pemenang = (data != null) ? (((float)data.penetapan_pemenang / (float)data.sudah_pr) * (((float)data.sudah_pr / (float)data.total) * 100.0)) : 0;
+                double sudah_po = (data != null) ? (((float)data.sudah_po / (float)data.total) * 100.0) : 0;
+                double blm_tiba = (data != null) ? (((float)data.belum_tiba / (float)data.sudah_po) * (((float)data.sudah_po / (float)data.total) * 100.0)) : 0;
+                double sudah_tiba = (data != null) ? (((float)data.sudah_tiba / (float)data.sudah_po) * (((float)data.sudah_po / (float)data.total) * 100.0)) : 0;
+
+                var total = (data != null) ? data.total : 0;
+                var rev = (data != null) ? data.revision : "undefined";
+                var stok = (data != null) ? data.stock : 0;
+                var belum_pr = (data != null) ? data.belum_pr : 0;
+                var sdh_pr = (data != null) ? data.sudah_pr : 0;
+                var outs_pr = (data != null) ? data.outstanding_pr : 0;
+                var inq_harga = (data != null) ? data.inquiry_harga : 0;
+                var hpsoe = (data != null) ? data.hps_oe : 0;
+                var pros_tender = (data != null) ? data.proses_tender : 0;
+                var pemenang = (data != null) ? data.penetapan_pemenang : 0;
+                var sdh_po = (data != null) ? data.sudah_po : 0;
+                var belum_tiba = (data != null) ? data.belum_tiba : 0;
+                var sdh_tiba = (data != null) ? data.sudah_tiba : 0;
+
+
+                var isi = "<tr>" +
+                    "<td><b>1.</b></td>" +
+                    "<td><b>Total Item ( '" + project_name + "' )</b></td>" +
+                    "<td><a href='/detail_summary_material_pengadaan/" + rev + "/total/" + lldi + "' target='_blank' style='color:black;'>" + total + "</a></td>" +
+                    "<td></td>" +
+                "</tr>" +
+                "<tr>" +
+                    "<td><b> 2.</b></td>" +
+                    "<td><b> Dipenuhi dari Stock</b></td> " +
+                    "<td><a href = '/detail_summary_material_pengadaan/" + rev + "/terpenuhi_stock/" + lldi + "'  target='_blank' style='color:blue;' > " + stok + "</a></td>" +
+                    "<td>" + stock.ToString("0.00") + " %</td>" +
+                "</tr> " +
+                "<tr>" +
+                    "<td><b>3.</b></td>" +
+                    "<td><b>Reservasi Belum PR</b></td>" +
+                    "<td><a href='/detail_summary_material_pengadaan/" + rev + "/create_pr/" + lldi + "' target='_blank' style='color:red;'>" + belum_pr + "</a></td>" +
+                    "<td>" + blm_pr.ToString("0.00") + " %</td>" +
+                "</tr>" +
+                "<tr>" +
+                    "<td><b>4.</b></td>" +
+                    "<td><b>Reservasi Sudah PR Belum PO</b></td>" +
+                    "<td><a href='/detail_summary_material_pengadaan/" + rev + "/sudah_pr_belum_po/" + lldi + "' target='_blank' style='color:black;'>" + sdh_pr + "</a></td>" +
+                    "<td>" + sudah_pr.ToString("0.00") + " %</td>" +
+                "</tr>" +
+                "<tr>" +
+                    "<td></td>" +
+                    "<td>a. Outstanding PR</td>" +
+                    "<td><a href='/detail_summary_material_pengadaan/" + rev + "/outstanding_pr/" + lldi + "' target='_blank' style='color:darkorange;'>" + outs_pr + "</a></td>" +
+                    "<td>" + outstanding_pr.ToString("0.00") + " %</td>" +
+                "</tr>" +
+                "<tr>" +
+                    "<td></td>" +
+                    "<td>b. Inquiry Harga</td>" +
+                    "<td><a href='/detail_summary_material_pengadaan/" + rev + "/inquiry_harga/" + lldi + "' target='_blank' style='color:orange;'>" + inq_harga + "</a></td>" +
+                    "<td>" + inquiry_harga.ToString("0.00") + " %</td>" +
+                "</tr>" +
+                "<tr>" +
+                    "<td></td>" +
+                    "<td>c. Penyusunan HPS/OE</td>" +
+                    "<td><a href='/detail_summary_material_pengadaan/" + rev + "/hps_oe/" + lldi + "' target='_blank' style='color:slategrey;'>" + hpsoe + "</a></td>" +
+                    "<td>" + hps_oe.ToString("0.00") + " %</td>" +
+                "</tr>" +
+                "<tr>" +
+                    "<td></td>" +
+                    "<td>d. Proses Tender</td>" +
+                    "<td><a href='/detail_summary_material_pengadaan/" + rev + "/proses_tender/" + lldi + "' target='_blank' style='color:darkseagreen;'>" + pros_tender + "</a></td>" +
+                    "<td>" + proses_tender.ToString("0.00") + " %</td>" +
+                "</tr>" +
+                "<tr>" +
+                    "<td></td>" +
+                    "<td>e. Penetapan Pemenang</td>" +
+                    "<td><a href='/detail_summary_material_pengadaan/" + rev + "/penetapan_pemenang/" + lldi + "' target='_blank' style='color:green;'>" + pemenang + "</a></td>" +
+                    "<td>" + penetapan_pemenang.ToString("0.00") + " %</td>" +
+                "</tr>" +
+                "<tr>" +
+                    "<td><b>5.</b></td> " +
+                    "<td><b>Reservasi Sudah PO</b></td>" +
+                    "<td><a href='/detail_summary_material_pengadaan/" + rev + "/sudah_po/" + lldi + "' target='_blank' style='color:black;'>" + sdh_po + "</a></td>" +
+                    "<td>" + sudah_po.ToString("0.00") + " %</td>" +
+                "</tr>" +
+                "<tr>" +
+                    "<td ></td>" +
+                    "<td>a. Tunggu On Site</td>" +
+                    "<td><a href='/detail_summary_material_pengadaan/" + rev + "/tunggu_onsite/" + lldi + "' target='_blank' style='color:deepskyblue;'>" + belum_tiba + "</a></td>" +
+                    "<td>" + blm_tiba.ToString("0.00") + " %</td>" +
+                "</tr>" +
+                "<tr>" +
+                    "<td></td>" +
+                    "<td>b. Sudah On Site</td>" +
+                    "<td><a href='/detail_summary_material_pengadaan/" + rev + "/onsite/" + lldi + "' target='_blank' style='color:blue;'>" + sdh_tiba + "</a></td> " +
+                    "<td>" + sudah_tiba.ToString("0.00") + " %</td>" +
+                "</tr>";
+
+                return Json(new { datas = isi, count_del = count });
+
+            }
+            catch
+            {
+                throw;
+            }
+        }
+
+        public IActionResult DetailMaterial(string? rev, string? filter, string? lldi)
+        {
+            ViewData["rev"] = rev;
+            ViewData["filter"] = filter;
+            ViewData["lldi"] = lldi;
+            return View();
+        }
+
+        public async Task<IActionResult> DetailMaterialPengadaan()
+        {
+            try
+            {
+                var draw = HttpContext.Request.Form["draw"].FirstOrDefault();
+                // Skipping number of Rows count
+                var start = Request.Form["start"].FirstOrDefault();
+                // Paging Length 10, 20
+                var length = Request.Form["length"].FirstOrDefault();
+                // Sort Column Name
+                var sortColumn = Request.Form["columns[" + Request.Form["order[0][column]"].FirstOrDefault() + "][name]"].FirstOrDefault();
+                // Sort Column Direction (asc, desc)
+                var sortColumnDirection = Request.Form["order[0][dir]"].FirstOrDefault();
+                // Search Value from (Search box)
+                var searchValue = Request.Form["search[value]"].FirstOrDefault();
+                // Paging Size (10, 20, 50, 100)
+                int pageSize = length != null ? Convert.ToInt32(length) : 0;
+                int skip = start != null ? Convert.ToInt32(start) : 0;
+                int recordsTotal = 0;
+
+                var rev = Request.Form["rev"].FirstOrDefault();
+                var filter = Request.Form["filter"].FirstOrDefault();
+                var lldi = Request.Form["lldi"].FirstOrDefault();
+                var w = "";
+                var n = "";
+
+                if (filter != "deleted")
+                {
+                    w += " and (( zpm01.del is null or zpm01.del != 'X') and ( zpm01.reqmt_qty is not null and zpm01.reqmt_qty != 0)) ";
+                }
+                else
+                {
+                    w += " and (( zpm01.del is not null or zpm01.del = 'X') or ( zpm01.reqmt_qty is null or zpm01.reqmt_qty = 0)) ";
+                }
+
+                if (lldi != "all")
+                {
+                    if (lldi == "0")
+                    {
+                        w += " and ( zpm01.unloading_point is null or  zpm01.unloading_point != 'xx') ";
+                    }
+                    else
+                    {
+                        w += " and zpm01.unloading_point = 'xx' ";
+                    }
+                }
+
+                if( filter != "total" && filter != "deleted")
+                {
+                    if (filter == "sudah_pr_belum_po")
+                    {
+                        n =  "('outstanding_pr', 'inquiry_harga', 'hps_oe', 'proses_tender', 'penetapan_pemenang')";
+                    }
+                    else if (filter == "sudah_po")
+                    {
+                        n = "('tunggu_onsite','onsite')";
+                    }
+                    else
+                    {
+                        n = "('"+filter+"')";
+                    }
+
+
+                    w += " and (case when zpm01.pr is null or zpm01.pr = '' then (case when zpm01.reqmt_qty = zpm01.qty_res then 'terpenuhi_stock' else 'create_pr' end) else (case when (zpm01.pr is not null or zpm01.pr != '') and (purch_order.po is null or purch_order.po = '') then (case when (zpm01.status_pengadaan = 'tunggu_pr' or zpm01.status_pengadaan = 'evaluasi_dp3' or zpm01.status_pengadaan is null) then 'outstanding_pr' when zpm01.status_pengadaan = 'inquiry_harga' then 'inquiry_harga' when (zpm01.status_pengadaan = 'hps_oe' or zpm01.status_pengadaan = 'bidder_list' or zpm01.status_pengadaan = 'penilaian_kualifikasi' or zpm01.status_pengadaan = 'rfq') then 'hps_oe' when (zpm01.status_pengadaan = 'pemasukan_penawaran' or zpm01.status_pengadaan = 'pembukaan_penawaran' or zpm01.status_pengadaan = 'evaluasi_penawaran' or zpm01.status_pengadaan = 'klarifikasi_spesifikasi' or zpm01.status_pengadaan = 'evaluasi_teknis' or zpm01.status_pengadaan = 'evaluasi_tkdn' or zpm01.status_pengadaan = 'negosiasi'  or zpm01.status_pengadaan = 'lhp') then 'proses_tender' when (zpm01.status_pengadaan = 'pengumuman_pemenang' or zpm01.status_pengadaan = 'penunjuk_pemenang' or zpm01.status_pengadaan = 'purchase_order') then 'penetapan_pemenang' else 'outstanding_pr' end) when (zpm01.pr is not null or zpm01.pr != '') and (purch_order.po is not null or purch_order.po != '') then (case when purch_order.dci is null or purch_order.dci = '' then 'tunggu_onsite' else 'onsite' end) end) end) in " + n + " ";
+
+                }
+
+                var query = @"select " +
+                    " max(work_order.main_work_ctr) as main_work_ctr,work_order.[order],max(work_order.description) as description,zpm01.material,max(zpm01.material_description) as material_description,zpm01.itm,max(zpm01.bun) as bun,max(zpm01.reqmt_qty) as reqmt_qty, max(zpm01.pr) as pr,max(zpm01.itm_pr) as pr_item,max(zpm01.qty_pr) as pr_qty,max(zpm01.qty_res) as qty_res,max(purch_order.po) as po,max(purch_order.po_quantity) as po_qty,max(purch_order.item_po) as po_item,max(purch_order.dci) as dci,max(zpm01.del) as del, " +
+                    " (case when max(purch_order.po) is not null then DATEDIFF(day, max(purch_order.doc_date),max(purch_order.deliv_date))  else (case  when max(zpm01.dt_purch) is not null or max(zpm01.dt_purch) != '' then max(zpm01.dt_purch)  when max(zpm01.dt_iv) is not null or max(zpm01.dt_iv) != '' then max(zpm01.dt_iv) else ( case when max(zpm01.dt_ta) is not null or max(zpm01.dt_ta) != '' then max(zpm01.dt_ta) else 0 end)  end)  end) as dt_ , " +
+                    " (case                    when max(zpm01.unloading_point) = 'XX' then 'LLD'                   else 'Non LLD'                end) as lld, " +
+                    " (case when max(purch_order.po) is not null then max(purch_order.deliv_date) else DATEADD(DAY, ((case when max(zpm01.dt_purch) is not null or max(zpm01.dt_purch) != '' then max(zpm01.dt_purch) when max(zpm01.dt_iv) is not null or max(zpm01.dt_iv) != '' then max(zpm01.dt_iv) else (case when max(zpm01.dt_ta) is not null or max(zpm01.dt_ta) != '' then max(zpm01.dt_ta) else 0 end) end) + (case when max(zpm01.dt_status_pengadaan) is not null or max(zpm01.dt_status_pengadaan) != '' then max(zpm01.dt_status_pengadaan) else 52 end)), CONVERT (DATE, GETDATE())) end)as prognosa_, " +
+                    " (case when max(zpm01.pr) is null or max(zpm01.pr) = '' then (case when max(zpm01.reqmt_qty) = max(zpm01.qty_res) then 'terpenuhi_stock' else 'create_pr' end) else (case when (max(zpm01.pr) is not null or max(zpm01.pr) != '') and (max(purch_order.po) is not null or max(purch_order.po) != '') then (case when max(purch_order.dci) is null or max(purch_order.dci) = '' then 'tunggu_onsite' else 'onsite'  end) when (max(zpm01.status_pengadaan) is not null or max(zpm01.status_pengadaan) != '') then max(zpm01.status_pengadaan) else 'outstanding_pr' end) end) as status_ from Mystap.dbo.zpm01 " +
+                    " left join Mystap.dbo.work_order on work_order.[order] = zpm01.no_order " +
+                    " left join Mystap.dbo.prognosa_oh on prognosa_oh.eqTagno = work_order.equipment " +
+                    " left join Mystap.dbo.project on project.revision = work_order.revision " +
+                    " left join Mystap.dbo.purch_order on purch_order.material = zpm01.material AND purch_order.pr = zpm01.pr AND purch_order.item_pr = zpm01.itm_pr where  zpm01.revision = '" + rev + "' " +
+                    w +
+                    " group by work_order.[order],zpm01.material, zpm01.itm ";
+
+
+
+                var c = FormattableStringFactory.Create(query);
+                var datas = _context.view_detail_material.FromSql(c);
+
+                if (!(string.IsNullOrEmpty(sortColumn) && string.IsNullOrEmpty(sortColumnDirection)))
+                {
+                    datas = datas.OrderBy(sortColumn + " " + sortColumnDirection);
+                }
+
+                //search
+                if (!string.IsNullOrEmpty(searchValue))
+                {
+                    datas = datas.Where(m => m.material_description.StartsWith(searchValue));
+                }
+                // Total number of rows count
+                recordsTotal = datas.Count();
+                // Paging
+                var data = await datas.ToListAsync();
+                // Returning Json Data
+                return Json(new { draw = draw, recordsFiltered = recordsTotal, recordsTotal = recordsTotal, data = data });
             }
             catch
             {
