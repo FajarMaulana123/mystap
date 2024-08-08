@@ -52,7 +52,12 @@ function get_data_order(id) {
         ],
         columns: [
 
-            { data: 'DT_RowIndex', name: 'DT_RowIndex', orderable: false, searchable: false },
+           
+            {
+                "data": null, orderable: false, "render": function (data, type, full, meta) {
+                    return meta.row + 1;
+                }
+            },
             { data: 'order', name: 'order' },
             { data: 'itm', name: 'itm' },
             { data: 'material', name: 'material' },

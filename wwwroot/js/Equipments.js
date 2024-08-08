@@ -23,7 +23,13 @@
         },
 
         columns: [
-           /* { data: 'DT_RowIndex', name: 'DT_RowIndex', orderable: false, searchable: false },*/
+            /* { data: 'DT_RowIndex', name: 'DT_RowIndex', orderable: false, searchable: false },*/
+            { "data": 'DT_RowIndex', "name": 'DT_RowIndex', searchable: false },
+           /* {
+                "data": null, orderable: false, "render": function (data, type, full, meta) {
+                    return meta.row + 1;
+                }
+            },*/
             { data: 'eqTagNo', name: 'eqTagNo' },
             { data: 'eqDesc', name: 'eqDesc' },
             { data: 'funcLocID', name: 'funcLocID' },
@@ -40,6 +46,7 @@
             },
 
         ],
+
         //columnDefs: [
         //    (user_auth == 'user') ? { "visible": false, "targets": [8] } : {},
         //],
@@ -76,6 +83,31 @@
         }]*/
     });
 
+
+    // Here we create the index column in jquery datatable
+
+    const table = new DataTable('#table', {
+        columnDefs: [
+            {
+                searchable: false,
+                orderable: false,
+                targets: 0
+            }
+        ],
+        order: [[1, 'asc']]
+    });
+
+    table
+        .on('order.dt search.dt', function () {
+            let i = 1;
+
+            table
+                .cells(null, 0, { search: 'applied', order: 'applied' })
+                .every(function (cell) {
+                    this.data(i++);
+                });
+        })
+        .draw();
     $(document).on('click', '.edit', function () {
         $('#add-form')[0].reset();
         $('#Modal').modal('show');

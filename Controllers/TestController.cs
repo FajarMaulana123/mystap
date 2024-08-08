@@ -35,9 +35,9 @@ namespace mystap.Controllers
                 // Paging Length 10, 20
                 var length = Request.Form["length"].FirstOrDefault();
                 // Sort Column Name
-                var sortColumn = Request.Form["columns[" + Request.Form["order[0][column]"].FirstOrDefault() + "][name]"].FirstOrDefault();
+                var sortColumn = Request.Form["columns[" + Request.Form["order[1][column]"].FirstOrDefault() + "][name]"].FirstOrDefault();
                 // Sort Column Direction (asc, desc)
-                var sortColumnDirection = Request.Form["order[0][dir]"].FirstOrDefault();
+                var sortColumnDirection = Request.Form["order[1][dir]"].FirstOrDefault();
                 // Search Value from (Search box)
                 var searchValue = Request.Form["search[value]"].FirstOrDefault();
                 // Paging Size (10, 20, 50, 100)

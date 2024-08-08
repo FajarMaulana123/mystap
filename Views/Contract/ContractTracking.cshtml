@@ -1,0 +1,119 @@
+﻿@{
+    ViewData["Title"] = "Contract Tracking";
+}
+ <ol class="breadcrumb float-xl-end">
+        <li class="breadcrumb-item"><a href="javascript:void(0);">Paket Kontrak</a></li>
+        <li class="breadcrumb-item active" aria-current="page"><span>Manage Paket Jasa</span></li>
+    </ol>
+    <h1 class="page-header">Paket Jasa</h1>
+    <div class="panel panel-inverse">
+        <div class="accordion" id="accordion">
+            <div class="accordion-item border-0">
+                <div class="accordion-header" id="headingOne">
+                    <button class="accordion-button bg-gray-900 text-white px-3 py-10px pointer-cursor" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne">
+                        <i class="fa fa-circle fa-fw text-blue me-2 fs-8px"></i>Filter
+                    </button>
+                </div>
+                <div id="collapseOne" class="accordion-collapse collapse show" data-bs-parent="#accordion">
+                    <div class="accordion-body bg-gray-800 text-white">
+                        <div class="row">
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label for="" >Project</label>
+                                    <select name="project_filter" id="project_filter" class="form-control form-control-sm">
+                                    @foreach (var val in ViewBag.project)
+                                    {
+                                        <option value="@(val.projectNo)" data-id="@(val.id)" data-desc="@(val.description)" data-rev="@(val.revision)"> @(val.description)</option>
+                                    }
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label for="" >Unit</label>
+                                    <select name="unit_filter" id="unit_filter" class="form-control form-control-sm">
+                                        <option value="">All Unit</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label for="">PIC</label>
+                                    <select name="pic_filter" id="pic_filter" class="form-control form-control-sm">
+                                        <option value="">All PIC</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row mt-3 ">
+                            <div class="col-md-12">
+                                <button class="btn btn-primary" id="filter"> Filter</button>
+                                <button class="btn btn-warning" id="reset"> Reset</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="panel panel-inverse">
+        <div class="panel-heading">
+            <h4 class="panel-title">Data Paket jasa</h4>
+           
+            <div class="panel-heading-btn">
+                <a href="javascript:;" class="btn btn-xs btn-icon btn-default" data-toggle="panel-expand"><i class="fa fa-expand"></i></a>
+                <a href="javascript:;" class="btn btn-xs btn-icon btn-warning" data-toggle="panel-collapse"><i class="fa fa-minus"></i></a>
+                
+            </div>
+        </div> 
+        <div class="panel-body">
+            <div class="d-flex mb-2">
+            <span class="badge  text-dark px-2 pt-5px pb-5px rounded fs-12px d-inline-flex align-items-center"> T.Light :</span>
+                <span class="badge  text-green-600 px-2 pt-5px pb-5px rounded fs-12px d-inline-flex align-items-center"><i class="fa fa-circle fs-9px fa-fw me-5px"></i> On Track</span>
+                <span class="badge  border border-green text-green-600 px-2 pt-5px pb-5px rounded fs-12px d-inline-flex align-items-center on_track">0</span>
+                <span class="badge  text-warning px-2 pt-5px pb-5px rounded fs-12px d-inline-flex align-items-center"><i class="fa fa-circle fs-9px fa-fw me-5px"></i> Potensi Delay</span>
+                <span class="badge  border border-warning text-warning px-2 pt-5px pb-5px rounded fs-12px d-inline-flex align-items-center potensi_delay">0</span>
+                <span class="badge  text-danger px-2 pt-5px pb-5px rounded fs-12px d-inline-flex align-items-center"><i class="fa fa-circle fs-9px fa-fw me-5px"></i> Delay</span>
+                <span class="badge  border border-danger text-danger px-2 pt-5px pb-5px rounded fs-12px d-inline-flex align-items-center delay">0</span>
+                <span class="badge  text-primary px-2 pt-5px pb-5px rounded fs-12px d-inline-flex align-items-center"><i class="fa fa-circle fs-9px fa-fw me-5px"></i> Ready</span>
+                <span class="badge  border border-primary text-primary px-2 pt-5px pb-5px rounded fs-12px d-inline-flex align-items-center sp">0</span>
+            </div>
+            <div class="table-responsive mb-4">
+                <table id="table" class="table small table-striped table-bordered dataTables_wrapper">
+                    <thead>
+                        <tr>
+
+                        <th>No</th>
+                        <th>No.Paket</th>
+                            <th>No. WO,PR,PO,SPB</th>
+                            
+                            <th>judul Pekerjaan</th>
+                            <th>PIC</th>
+                            <th>Target ke CO</th>
+                            <th>Aktual ke CO</th>
+                            <th>Float Days CO</th>
+                            <th>Target Buka PH</th>
+                            <th>Aktual Buka PH</th>
+                            <th>FD Buka PH</th>
+                            <th>Target SP</th>
+                            <th>Aktual SP</th>
+                            <th>Float Days SP</th>
+                            <th>T.Light Curr</th>
+                            <th>Dead Line</th>
+                           
+                            <th>Current Status</th>
+                            <th>Ket.Current</th>
+                            <th>SPB/SP3MK</th>
+                            
+                            <th>Action</th>
+                        </tr>
+                    </thead> 
+                </table>
+            </div>
+        </div>
+    </div>
+
+@section Scripts
+                            {
+    <script src="~/js/Contract.js"></script>
+}

@@ -213,6 +213,31 @@ app.UseEndpoints(endpoints =>
        defaults: new { controller = "Data", action = "Delete_Rapat" });
 
     endpoints.MapControllerRoute(
+      name: "steerco",
+      pattern: "steerco",
+      defaults: new { controller = "Data", action = "Steerco" });
+
+    endpoints.MapControllerRoute(
+       name: "steerco_",
+       pattern: "steerco_",
+       defaults: new { controller = "Data", action = "Get_Steerco" });
+
+    endpoints.MapControllerRoute(
+       name: "create_steerco",
+       pattern: "create_steerco",
+       defaults: new { controller = "Data", action = "Create_Steerco" });
+
+    endpoints.MapControllerRoute(
+       name: "update_steerco",
+       pattern: "update_steerco",
+       defaults: new { controller = "Data", action = "Update_Steerco" });
+
+    endpoints.MapControllerRoute(
+       name: "delete_steerco",
+       pattern: "delete_steerco",
+       defaults: new { controller = "Data", action = "Delete_Steerco" });
+
+    endpoints.MapControllerRoute(
        name: "project",
        pattern: "project",
        defaults: new { controller = "Data", action = "Project" });
@@ -220,7 +245,7 @@ app.UseEndpoints(endpoints =>
     endpoints.MapControllerRoute(
        name: "project_",
        pattern: "project_",
-       defaults: new { controller = "Data", action = "Project" });
+       defaults: new { controller = "Data", action = "Get_Project" });
 
     endpoints.MapControllerRoute(
        name: "create_project",
@@ -391,6 +416,31 @@ app.UseEndpoints(endpoints =>
        name: "delete_sow",
        pattern: "delete_sow",
        defaults: new { controller = "Contract", action = "Delete_Sow" });
+
+    endpoints.MapControllerRoute(
+     name: "durasi_step",
+     pattern: "durasi_step",
+     defaults: new { controller = "Contract", action = "DurasiStep" });
+
+    endpoints.MapControllerRoute(
+       name: "durasi_step_",
+       pattern: "durasi_step_",
+       defaults: new { controller = "Contract", action = "Get_DurasiStep" });
+
+    endpoints.MapControllerRoute(
+       name: "create_durasi_step",
+       pattern: "create_durasi_step",
+       defaults: new { controller = "Contract", action = "Create_DurasiStep" });
+
+    endpoints.MapControllerRoute(
+       name: "update_durasi_step",
+       pattern: "update_durasi_step",
+       defaults: new { controller = "Contract", action = "Update_DurasiStep" });
+
+    endpoints.MapControllerRoute(
+       name: "delete_durasi_step",
+       pattern: "delete_durasi_step",
+       defaults: new { controller = "Contract", action = "Delete_DurasiStep" });
 
 
 });

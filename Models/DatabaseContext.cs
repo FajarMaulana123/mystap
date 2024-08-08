@@ -12,6 +12,7 @@ namespace mystap.Models
         public DbSet<Users> users { get; set; }
         public DbSet<Project> project { get; set; }
         public DbSet<Rapat> rapat { get; set; }
+        public DbSet<Steerco> steerco { get; set; }
         public DbSet<Unit> unit { get; set; }
         public DbSet<UnitProses> unitProses { get; set; }
         public DbSet<Equipments> equipments { get; set; }
@@ -19,6 +20,7 @@ namespace mystap.Models
         public DbSet<Joblist> joblist { get; set; }
         public DbSet<Joblist_Detail> joblist_Detail { get; set; }
         public DbSet<ContractTracking> contractTracking { get; set; }
+        public DbSet<Durasi> durasi { get; set; }
         public DbSet<Memo> memo { get; set; }
         public DbSet<Requestor> requestors { get; set; }
         public DbSet<Sow> sow { get; set; }

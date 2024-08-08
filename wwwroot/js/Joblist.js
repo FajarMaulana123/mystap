@@ -33,6 +33,11 @@
         },
         columns: [
             //{ data: 'DT_RowIndex', name: 'DT_RowIndex', orderable: false, searchable: false },
+            {
+                "data": null, orderable: false, "render": function (data, type, full, meta) {
+                    return meta.row + 1;
+                }
+            },
             { data: 'jobNo', name: 'jobNo' },
             { data: 'projectNo', name: 'projectNo' },
             { data: 'description', name: 'project.description' },

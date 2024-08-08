@@ -16,45 +16,61 @@ namespace mystap.Controllers
         }
         public IActionResult Rapat()
         {
-            ViewBag.project = _context.project.Where(p => p.deleted == 0).ToList();
+
+            ViewBag.project = _context.project.Where(p => p.deleted == 0).Where(p => p.active == "1").ToList();
+
             return View();
         }
-        public IActionResult Get_Rapat()
+        public async Task<IActionResult>  Get_Rapat()
         {
             try
             {
                 var draw = HttpContext.Request.Form["draw"].FirstOrDefault();
-
+                // Skipping number of Rows count
                 var start = Request.Form["start"].FirstOrDefault();
-
+                // Paging Length 10, 20
                 var length = Request.Form["length"].FirstOrDefault();
-
-                var sortColumn = Request.Form["columns[" + Request.Form["order[0][column]"].FirstOrDefault() + "][name]"].FirstOrDefault();
-
-                var sortColumnDirection = Request.Form["order[0][dir]"].FirstOrDefault();
-
+                // Sort Column Name
+                var sortColumn = Request.Form["columns[" + Request.Form["order[1][column]"].FirstOrDefault() + "][name]"].FirstOrDefault();
+                // Sort Column Direction (asc, desc)
+                var sortColumnDirection = Request.Form["order[1][dir]"].FirstOrDefault();
+                // Search Value from (Search box)
                 var searchValue = Request.Form["search[value]"].FirstOrDefault();
-
+                // Paging Size (10, 20, 50, 100)
                 int pageSize = length != null ? Convert.ToInt32(length) : 0;
                 int skip = start != null ? Convert.ToInt32(start) : 0;
                 int recordsTotal = 0;
 
 
-                var customerData = _context.rapat.Include("users").Where(s => s.deleted == 0).Select(a => new { id = a.id, id_project = a.id_project, tanggal = a.tanggal, judul = a.judul, materi = a.materi, notulen = a.notulen, name = a.users.name, created_date = a.created_date });
+                var project_filter = Request.Form["project"].FirstOrDefault();
+                var project_rev = Request.Form["project_rev"].FirstOrDefault();
 
+                var customerData = _context.rapat.Include("users").Where(s => s.id_project == Convert.ToInt64(project_filter)).Where(s => s.deleted == 0).Select(a => new { id = a.id, id_project = a.id_project, tanggal = a.tanggal, judul = a.judul, materi = a.materi, notulen = a.notulen, nama_ = a.users.alias, created_date = a.created_date });
+
+                // Sorting
                 if (!(string.IsNullOrEmpty(sortColumn) && string.IsNullOrEmpty(sortColumnDirection)))
                 {
                     customerData = customerData.OrderBy(sortColumn + " " + sortColumnDirection);
                 }
 
+                //search
                 if (!string.IsNullOrEmpty(searchValue))
                 {
-                    customerData = customerData.Where(b => b.judul.StartsWith(searchValue));
+                    customerData = customerData.Where(m => m.judul.StartsWith(searchValue) || m.notulen.StartsWith(searchValue) || m.nama_.StartsWith(searchValue));
                 }
+
+               
+
+
+                // Total number of rows count
                 //Console.WriteLine(customerData);
                 recordsTotal = customerData.Count();
-                var data = customerData.Skip(skip).Take(pageSize).ToList();
-                return Json(new { draw = draw, recordsFilter = recordsTotal, recordsTotal = recordsTotal, data = data });
+                // Paging
+                var datas = await customerData.Skip(skip).Take(pageSize).ToListAsync();
+                //var data = _memoryCache.Get("products");
+                //data = await _memoryCache.Set("products", datas, expirationTime);
+                // Returning Json Data
+                return Json(new { draw = draw, recordsFiltered = recordsTotal, recordsTotal = recordsTotal, data = datas });
             }
             catch (Exception)
             {
@@ -66,7 +82,7 @@ namespace mystap.Controllers
             try
             {
                 Rapat rapat = new Rapat();
-                rapat.id_project = "7";
+                rapat.id_project = Convert.ToInt64(formcollaction["id_project"]);
                 rapat.judul = formcollaction["judul"];
                 rapat.materi = formcollaction["materi"];
                 rapat.notulen = formcollaction["notulen"];
@@ -101,7 +117,7 @@ namespace mystap.Controllers
 
                 if (obj != null)
                 {
-                    obj.id_project = "7";
+                    obj.id_project = Convert.ToInt64(Request.Form["id_project"]);
                     obj.judul = Request.Form["judul"].FirstOrDefault();
                     obj.materi = Request.Form["materi"].FirstOrDefault();
                     obj.notulen = Request.Form["notulen"].FirstOrDefault();
@@ -117,6 +133,146 @@ namespace mystap.Controllers
         }
 
         public IActionResult Deleted_Rapat(Rapat rapat)
+        {
+            try
+            {
+                int id = Int32.Parse(Request.Form["id"].FirstOrDefault());
+                Rapat obj = _context.rapat.Where(p => p.id == id).FirstOrDefault();
+
+                if (obj == null)
+                {
+                    obj.deleted = 1;
+                    _context.SaveChanges();
+
+                    return Json(new { title = "Sukses!", icon = "success", status = "Berhasil Dihapus" });
+                }
+                return Json(new { title = "Maaf!", icon = "error", status = "Tidak Dapat di Hapus!, Silahkan Hubungi Administrator " });
+            }
+            catch
+            {
+                throw;
+            }
+        }
+
+        public IActionResult Steerco()
+        {
+
+            ViewBag.project = _context.project.Where(p => p.deleted == 0).Where(p => p.active == "1").ToList();
+
+            return View();
+        }
+        public async Task<IActionResult> Get_Steerco()
+        {
+            try
+            {
+                var draw = HttpContext.Request.Form["draw"].FirstOrDefault();
+                // Skipping number of Rows count
+                var start = Request.Form["start"].FirstOrDefault();
+                // Paging Length 10, 20
+                var length = Request.Form["length"].FirstOrDefault();
+                // Sort Column Name
+                var sortColumn = Request.Form["columns[" + Request.Form["order[1][column]"].FirstOrDefault() + "][name]"].FirstOrDefault();
+                // Sort Column Direction (asc, desc)
+                var sortColumnDirection = Request.Form["order[1][dir]"].FirstOrDefault();
+                // Search Value from (Search box)
+                var searchValue = Request.Form["search[value]"].FirstOrDefault();
+                // Paging Size (10, 20, 50, 100)
+                int pageSize = length != null ? Convert.ToInt32(length) : 0;
+                int skip = start != null ? Convert.ToInt32(start) : 0;
+                int recordsTotal = 0;
+
+
+                var project_filter = Request.Form["project"].FirstOrDefault();
+                var project_rev = Request.Form["project_rev"].FirstOrDefault();
+
+                var customerData = _context.steerco.Include("users").Where(s => s.id_project == Convert.ToInt64(project_filter)).Where(s => s.deleted == 0).Select(a => new { id = a.id, id_project = a.id_project, tanggal = a.tanggal, judul = a.judul, materi = a.materi, notulen = a.notulen, nama_ = a.users.alias, created_date = a.created_date });
+
+                // Sorting
+                if (!(string.IsNullOrEmpty(sortColumn) && string.IsNullOrEmpty(sortColumnDirection)))
+                {
+                    customerData = customerData.OrderBy(sortColumn + " " + sortColumnDirection);
+                }
+
+                //search
+                if (!string.IsNullOrEmpty(searchValue))
+                {
+                    customerData = customerData.Where(m => m.judul.StartsWith(searchValue) || m.notulen.StartsWith(searchValue) || m.nama_.StartsWith(searchValue));
+                }
+
+
+
+
+                // Total number of rows count
+                //Console.WriteLine(customerData);
+                recordsTotal = customerData.Count();
+                // Paging
+                var datas = await customerData.Skip(skip).Take(pageSize).ToListAsync();
+                //var data = _memoryCache.Get("products");
+                //data = await _memoryCache.Set("products", datas, expirationTime);
+                // Returning Json Data
+                return Json(new { draw = draw, recordsFiltered = recordsTotal, recordsTotal = recordsTotal, data = datas });
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+        public IActionResult Create_Steerco(IFormCollection formcollaction)
+        {
+            try
+            {
+                Steerco steerco = new Steerco();
+                steerco.id_project = Convert.ToInt64(formcollaction["id_project"]);
+                steerco.judul = formcollaction["judul"];
+                steerco.materi = formcollaction["materi"];
+                steerco.notulen = formcollaction["notulen"];
+                steerco.created_by = 1;
+                steerco.created_date = DateTime.Now;
+                steerco.deleted = 0;
+
+                Boolean t;
+                if (steerco != null)
+                {
+                    _context.steerco.Add(steerco);
+                    _context.SaveChanges();
+                    t = true;
+                }
+                else
+                {
+                    t = false;
+                }
+                return Json(new { result = t });
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+        public IActionResult Update_Steerco(Steerco steerco)
+        {
+            try
+            {
+                int id = Int32.Parse(Request.Form["hidden_id"].FirstOrDefault());
+                Steerco obj = _context.steerco.Where(p => p.id == id).FirstOrDefault();
+
+                if (obj != null)
+                {
+                    obj.id_project = Convert.ToInt64(Request.Form["id_project"]);
+                    obj.judul = Request.Form["judul"].FirstOrDefault();
+                    obj.materi = Request.Form["materi"].FirstOrDefault();
+                    obj.notulen = Request.Form["notulen"].FirstOrDefault();
+                    _context.SaveChanges();
+                    return Json(new { Results = true });
+                }
+                return Json(new { Results = false });
+            }
+            catch
+            {
+                throw;
+            }
+        }
+
+        public IActionResult Deleted_Steerco(Steerco steerco)
         {
             try
             {
@@ -162,7 +318,7 @@ namespace mystap.Controllers
                 int skip = start != null ? Convert.ToInt32(start) : 0;
                 int recordsTotal = 0;
 
-                var customerData = _context.project./*Include("users").*/Where(s => s.deleted == 0).Select(a => new { projectNo = a.projectNo, description = a.description, revision = a.revision, month = a.month, year = a.year, active = a.active, deleted = a.deleted, updated = a.updated, id = a.id, tglTA = a.tglTA, tglSelesaiTA = a.tglSelesaiTA, deletedBy = a.deletedBy, createdDate = a.createdDate, lastModify = a.lastModify, modifyBy = a.modifyBy, plansID = a.plansID, durasiTABrick = a.durasiTABrick, finalDate = a.finalDate, additional1Date = a.additional1Date, additional2Date = a.additional2Date, taoh = a.taoh });
+                var customerData = _context.project.Where(s => s.deleted == 0).Select(a => new { projectNo = a.projectNo, description = a.description, revision = a.revision, month = a.month, year = a.year, active = a.active, deleted = a.deleted, updated = a.updated, id = a.id, tglTA = a.tglTA, tglSelesaiTA = a.tglSelesaiTA, deletedBy = a.deletedBy, createdDate = a.createdDate, lastModify = a.lastModify, modifyBy = a.modifyBy, plansID = a.plansID, durasiTABrick = a.durasiTABrick, finalDate = a.finalDate, additional1Date = a.additional1Date, additional2Date = a.additional2Date, taoh = a.taoh });
 
                 if (!(string.IsNullOrEmpty(sortColumn) && string.IsNullOrEmpty(sortColumnDirection)))
                 {
@@ -316,9 +472,9 @@ namespace mystap.Controllers
 
                 var length = Request.Form["length"].FirstOrDefault();
 
-                var sortColumn = Request.Form["columns[" + Request.Form["order[0][column]"].FirstOrDefault() + "][name]"].FirstOrDefault();
+                var sortColumn = Request.Form["columns[" + Request.Form["order[1][column]"].FirstOrDefault() + "][name]"].FirstOrDefault();
 
-                var sortColumnDirection = Request.Form["order[0][dir]"].FirstOrDefault();
+                var sortColumnDirection = Request.Form["order[1][dir]"].FirstOrDefault();
 
                 var searchValue = Request.Form["search[value]"].FirstOrDefault();
 
@@ -348,37 +504,37 @@ namespace mystap.Controllers
                 throw;
             }
         }
-        public IActionResult Create_Equipments(IFormCollection formcollaction)
-        {
-            try
-            {
-                Rapat rapat = new Rapat();
-                rapat.id_project = "7";
-                rapat.judul = formcollaction["judul"];
-                rapat.materi = formcollaction["materi"];
-                rapat.notulen = formcollaction["notulen"];
-                rapat.created_by = 1;
-                rapat.created_date = DateTime.Now;
-                rapat.deleted = 0;
+        //public IActionResult Create_Equipments(IFormCollection formcollaction)
+        //{
+        //    try
+        //    {
+        //        Rapat rapat = new Rapat();
+        //        rapat.id_project = "7";
+        //        rapat.judul = formcollaction["judul"];
+        //        rapat.materi = formcollaction["materi"];
+        //        rapat.notulen = formcollaction["notulen"];
+        //        rapat.created_by = 1;
+        //        rapat.created_date = DateTime.Now;
+        //        rapat.deleted = 0;
 
-                Boolean t;
-                if (rapat != null)
-                {
-                    _context.rapat.Add(rapat);
-                    _context.SaveChanges();
-                    t = true;
-                }
-                else
-                {
-                    t = false;
-                }
-                return Json(new { result = t });
-            }
-            catch (Exception)
-            {
-                throw;
-            }
-        }
+        //        Boolean t;
+        //        if (rapat != null)
+        //        {
+        //            _context.rapat.Add(rapat);
+        //            _context.SaveChanges();
+        //            t = true;
+        //        }
+        //        else
+        //        {
+        //            t = false;
+        //        }
+        //        return Json(new { result = t });
+        //    }
+        //    catch (Exception)
+        //    {
+        //        throw;
+        //    }
+        //}
         /*public IActionResult Update_Equipments(Equipments equipments)
         {
             try
@@ -442,9 +598,9 @@ namespace mystap.Controllers
 
                 var length = Request.Form["length"].FirstOrDefault();
 
-                var sortColumn = Request.Form["columns[" + Request.Form["order[0][column]"].FirstOrDefault() + "][name]"].FirstOrDefault();
+                var sortColumn = Request.Form["columns[" + Request.Form["order[1][column]"].FirstOrDefault() + "][name]"].FirstOrDefault();
 
-                var sortColumnDirection = Request.Form["order[0][dir]"].FirstOrDefault();
+                var sortColumnDirection = Request.Form["order[1][dir]"].FirstOrDefault();
 
                 var searchValue = Request.Form["search[value]"].FirstOrDefault();
 
@@ -570,9 +726,9 @@ namespace mystap.Controllers
 
                 var length = Request.Form["length"].FirstOrDefault();
 
-                var sortColumn = Request.Form["columns[" + Request.Form["order[0][column]"].FirstOrDefault() + "][name]"].FirstOrDefault();
+                var sortColumn = Request.Form["columns[" + Request.Form["order[1][column]"].FirstOrDefault() + "][name]"].FirstOrDefault();
 
-                var sortColumnDirection = Request.Form["order[0][dir]"].FirstOrDefault();
+                var sortColumnDirection = Request.Form["order[1][dir]"].FirstOrDefault();
 
                 var searchValue = Request.Form["search[value]"].FirstOrDefault();
 
@@ -701,9 +857,9 @@ namespace mystap.Controllers
 
                 var length = Request.Form["length"].FirstOrDefault();
 
-                var sortColumn = Request.Form["columns[" + Request.Form["order[0][column]"].FirstOrDefault() + "][name]"].FirstOrDefault();
+                var sortColumn = Request.Form["columns[" + Request.Form["order[1][column]"].FirstOrDefault() + "][name]"].FirstOrDefault();
 
-                var sortColumnDirection = Request.Form["order[0][dir]"].FirstOrDefault();
+                var sortColumnDirection = Request.Form["order[1][dir]"].FirstOrDefault();
 
                 var searchValue = Request.Form["search[value]"].FirstOrDefault();
 
@@ -826,9 +982,9 @@ namespace mystap.Controllers
 
                 var length = Request.Form["length"].FirstOrDefault();
 
-                var sortColumn = Request.Form["columns[" + Request.Form["order[0][column]"].FirstOrDefault() + "][name]"].FirstOrDefault();
+                var sortColumn = Request.Form["columns[" + Request.Form["order[1][column]"].FirstOrDefault() + "][name]"].FirstOrDefault();
 
-                var sortColumnDirection = Request.Form["order[0][dir]"].FirstOrDefault();
+                var sortColumnDirection = Request.Form["order[1][dir]"].FirstOrDefault();
 
                 var searchValue = Request.Form["search[value]"].FirstOrDefault();
 

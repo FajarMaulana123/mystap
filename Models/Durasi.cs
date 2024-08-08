@@ -1,10 +1,12 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 namespace mystap.Models
 {
     public class Durasi
     {
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public long id { get; set; }
-        public string? id_project { get; set; }
+        public long? id_project { get; set; }
         public string? kat_tender { get; set; }
         public int? susun_kak { get; set; }
         public int? susun_oe { get; set; }
@@ -25,6 +27,9 @@ namespace mystap.Models
         public int? jawaban_sanggah { get; set; }
         public int? tunjuk_pemenang { get; set; }
         public int? proses_spb { get; set; }
+
+        [ForeignKey("id_project")]
+        public Project project { get; set; }
 
     }
 }

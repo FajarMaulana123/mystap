@@ -1,0 +1,334 @@
+﻿@{
+    ViewData["Title"] = "Durasi Step (SLA)";
+}
+    <ol class="breadcrumb float-xl-end">
+        <li class="breadcrumb-item"><a href="javascript:void(0);"> <i data-feather="package"></i></a></li>
+        <li class="breadcrumb-item active" aria-current="page"><span>kat.Tender</span></li>
+    </ol>
+    <h1 class="page-header">Durasi Step</h1>
+    <div class="panel panel-inverse">
+        <div class="accordion" id="accordion">
+            <div class="accordion-item border-0">
+                <div class="accordion-header" id="headingOne">
+                    <button class="accordion-button bg-gray-900 text-white px-3 py-10px pointer-cursor" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne">
+                        <i class="fa fa-circle fa-fw text-blue me-2 fs-8px"></i>Filter
+                    </button>
+                 </div>
+                <div id="collapseOne" class="accordion-collapse collapse show" data-bs-parent="#accordion">
+                    <div class="accordion-body bg-gray-800 text-white">
+                        <div class="row">
+                            <div class="col-md-4 mb-2">
+                                <label>Project</label>
+                                <select name="project_filter" id="project_filter" class="form-control form-control-sm">
+                                @foreach (var val in ViewBag.project)
+                                {
+                                    <option value="@(val.id)" data-desc="@(val.description)"> @(val.description)</option>
+                                }
+                                </select> 
+                            </div>
+                            <div class="col-md-4">
+                                <label>Kat Tender</label>
+                                <select name="kat_tender_filter" id="kat_tender_filter" class="form-control form-control-sm">
+                                    <option value="">All</option>
+                                    <option value="TULANG">TULANG</option>
+                                    <option value="PILANG">PILANG</option>
+                                    <option value="LELANG">LELANG</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="row mt-3">
+                            <div class="col-md-12">
+                                <button class="btn btn-primary" id="filter"> Filter</button>
+                                <button class="btn btn-warning" id="reset"> Reset</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>   
+        </div>
+        </div>
+<div class="panel panel-inverse">
+    <div class="panel-heading">
+        <h4 class="panel-title">Data Durasi Step</h4>
+        <div class="panel-heading-btn">
+            <a href="javascript:;" class="btn btn-xs btn-icon btn-default" data-toggle="panel-expand"><i class="fa fa-expand"></i></a>
+            <a href="javascript:;" class="btn btn-xs btn-icon btn-warning" data-toggle="panel-collapse"><i class="fa fa-minus"></i></a>
+        </div>
+    </div> 
+    <div class="panel-body">
+        <div class="table-responsive">
+            <table id="table" class="table  small table-striped table-bordered dataTables_wrapper">
+                <thead>
+                    <tr>
+                        <th>No</th>
+                        <th>Project</th>
+                        <th>Kat Tender</th>
+                        <th>Susun KAK</th>
+                        <th>Susun OE</th>
+                        <th>kirim Ke CO</th>
+                        <th>Pengumuman/ Mengundang & Pendaftaran</th>
+                        <th>Sertifikasi</th>
+                        <th>Prakualifikasi</th>
+                        <th>Undangan dan Pengambilan Dokumen Pengadaan</th>
+                        <th>Pemberian Penjelasan</th>
+                        <th>Penyampaian Dokumen Penawaran</th>
+                        <th>Pembukaan Dokumen Penawaran</th>
+                        <th>Evaluasi Penawaran</th>
+                        <th>Negosiasi</th>
+                        <th>usulan Penetapan Calon Pemenang</th>
+                        <th>Keputusan Penatapan Pemenang</th>
+                        <th>Pengumuman Pemenang</th>
+                        <th>Pengajuan Sanggahan</th>
+                        <th>Jawaban Sanggahan</th>
+                        <th>Penunjukan Pemenang</th>
+                        <th>Proses Kontrak/SPB</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+            </table>
+        </div>
+    </div>
+</div>
+
+
+<div class="modal fade" id="Modal" tabindex="-1" role="dialog" aria-labelledby="ModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-xl" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title judul-modal" id="Modal"></h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-hidden="true"  aria-label="Close">
+                   
+                </button>
+            </div>
+            <form id="add-form>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-12">
+                        <div class="card">
+                            <div class="card-body">
+                                <input type="hidden" name="hidden_status" id="hidden_status" value="add">
+                                <input type="hidden" name="hidden_id" id="hidden_id">
+                                <div class="row mb-2">
+                                    <div class="col-md-6">
+                                        <div class="row">
+                                            <label class="form-label col-form-label col-md-3">Project</label>
+                                            <div class="col-md-9">
+                                                <select name="id_project" id="id_project" class="form-control select2">
+                                                    <option value="">Pilih Project</option>
+                                                    @foreach (var val in ViewBag.project)
+                                                    {
+                                                        <option value="@(val.projectNo)" data-id="@(val.id)" data-desc="@(val.description)" data-rev="@(val.revision)"> @(val.description)</option>
+                                                    }
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="row">
+                                            <label class="form-label col-form-label col-md-3">Kategori Tender</label>
+                                            <div class="col-md-9">
+                                                <select name="kat_tender" id="kat_tender" class="form-control select2">
+                                                    <option value="">Pilih Kat.Tender</option>
+                                                    <option value="TULANG">TULANG</option>
+                                                    <option value="PILANG">PILANG</option>
+                                                    <option value="LELANG">LELANG</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="row mb-2">
+                                            <label class="form-label col-form-label col-md-6">Durasi Susun KAK</label>
+                                            <div class="col-md-6">
+                                                <div class="input-group">
+                                                    <input type="number" name="susun_kak" id="susun_kak" class="form-control" />
+                                                    <span class="input-group-text"> / Hari</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row mb-2">
+                                            <label class="form-label col-form-label col-md-6">Durasi Susun OE</label>
+                                            <div class="col-md-6">
+                                                <div class="input-group">
+                                                    <input type="number" name="susun_oe" id="susun_oe" class="form-control" />
+                                                    <span class="input-group-text"> / Hari</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row mb-2">
+                                            <label class="form-label col-form-label col-md-6">Durasi Kirim Paket ke CO</label>
+                                            <div class="col-md-6">
+                                                <div class="input-group">
+                                                    <input type="number" name="kirim_ke_co" id="kirim_ke_co" class="form-control" />
+                                                    <span class="input-group-text"> / Hari</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row mb-2">
+                                            <label class="form-label col-form-label col-md-6">Pengumuman/Mengundang & Pendaftaran</label>
+                                            <div class="col-md-6">
+                                                <div class="input-group">
+                                                    <input type="number" name="pengumuman_pendaftaran" id="pengumuman_pendaftaran" class="form-control" />
+                                                    <span class="input-group-text"> / Hari</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row mb-2">
+                                            <label class="form-label col-form-label col-md-6">Sertifikasi</label>
+                                            <div class="col-md-6">
+                                                <div class="input-group">
+                                                    <input type="number" name="sertifikasi" id="sertifikasi" class="form-control" />
+                                                    <span class="input-group-text"> / Hari</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row mb-2">
+                                            <label class="form-label col-form-label col-md-6">Prakualifikasi</label>
+                                            <div class="col-md-6">
+                                                <div class="input-group">
+                                                    <input type="number" name="prakualifikasi" id="prakualifikasi" class="form-control" />
+                                                    <span class="input-group-text"> / Hari</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row mb-2">
+                                            <label class="form-label col-form-label col-md-6">Undangan dan Pengambilan Dokumen</label>
+                                            <div class="col-md-6">
+                                                <div class="input-group">
+                                                    <input type="number" name="undangan" id="undangan" class="form-control" />
+                                                    <span class="input-group-text"> / Hari</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row mb-2">
+                                            <label class="form-label col-form-label col-md-6">Pemberian Penjelasan</label>
+                                            <div class="col-md-6">
+                                                <div class="input-group">
+                                                    <input type="number" name="pemberian" id="pemberian"  class="form-control" />
+                                                    <span class="input-group-text"> / Hari</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row mb-2">
+                                            <label class="form-label col-form-label col-md-6">Penyampaian Dokumen Penawaran</label>
+                                            <div class="col-md-6">
+                                                <div class="input-group">
+                                                    <input type="number" name="penyampaian" id="penyampaian" class="form-control" />
+                                                    <span class="input-group-text"> / Hari</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row mb-2">
+                                            <label class="form-label col-form-label col-md-6">Pembukaan Dokumen Penawaran</label>
+                                            <div class="col-md-6">
+                                                <div class="input-group">
+                                                    <input type="number" name="pembukaan" id="pembukaan"  class="form-control" />
+                                                    <span class="input-group-text"> / Hari</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="row mb-2">
+                                            <label class="form-label col-form-label col-md-6">Evaluasi Penawaran</label>
+                                            <div class="col-md-6">
+                                                <div class="input-group">
+                                                    <input type="number"  name="evaluasi" id="evaluasi"  class="form-control" />
+                                                    <span class="input-group-text"> / Hari</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row mb-2">
+                                            <label class="form-label col-form-label col-md-6">Negosiasi</label>
+                                            <div class="col-md-6">
+                                                <div class="input-group">
+                                                    <input type="number"  name="negosiasi" id="negosiasi"  class="form-control" />
+                                                    <span class="input-group-text"> / Hari</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row mb-2">
+                                            <label class="form-label col-form-label col-md-6">Usulan Penetapan Calon Pemenang</label>
+                                            <div class="col-md-6">
+                                                <div class="input-group">
+                                                    <input type="number" name="usulan" id="usulan"  class="form-control" />
+                                                    <span class="input-group-text"> / Hari</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row mb-2">
+                                            <label class="form-label col-form-label col-md-6">Keputusan Penetapan Pemenang</label>
+                                            <div class="col-md-6">
+                                                <div class="input-group">
+                                                    <input type="number" name="keputusan" id="keputusan" class="form-control" />
+                                                    <span class="input-group-text"> / Hari</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row mb-2">
+                                            <label class="form-label col-form-label col-md-6">Pengumuman Pemenang</label>
+                                            <div class="col-md-6">
+                                                <div class="input-group">
+                                                    <input type="number"  name="pengumuman_pemenang" id="pengumuman_pemenang" class="form-control" />
+                                                    <span class="input-group-text"> / Hari</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row mb-2">
+                                            <label class="form-label col-form-label col-md-6">Pengajuan Sanggahan</label>
+                                            <div class="col-md-6">
+                                                <div class="input-group">
+                                                    <input type="number" name="pengajuan_sanggah" id="pengajuan_sanggah" class="form-control" />
+                                                    <span class="input-group-text"> / Hari</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row mb-2">
+                                            <label class="form-label col-form-label col-md-6">Jawaban Sanggahan</label>
+                                            <div class="col-md-6">
+                                                <div class="input-group">
+                                                    <input type="number" name="jawaban_sanggah" id="jawaban_sanggah" class="form-control" />
+                                                    <span class="input-group-text"> / Hari</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row mb-2">
+                                            <label class="form-label col-form-label col-md-6">Penunjukan Pemenang</label>
+                                            <div class="col-md-6">
+                                                <div class="input-group">
+                                                    <input type="number" name="tunjuk_pemenang" id="tunjuk_pemenang" class="form-control" />
+                                                    <span class="input-group-text"> / Hari</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row mb-2">
+                                            <label class="form-label col-form-label col-md-6">Proses Kontrak / SPB</label>
+                                            <div class="col-md-6">
+                                                <div class="input-group">
+                                                    <input type="number" name="proses_spb" id="proses_spb" class="form-control" />
+                                                    <span class="input-group-text"> / Hari</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>  
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </form>
+            <div class="modal-footer">
+                    <a href="javascript:;" class="btn btn-white" data-bs-dismiss="modal">Close</a>
+                    <button type="reset" class="btn btn-dark">Reset</button>
+                    <button type="submit" class="btn btn-success">Submit</button>
+                </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts
+                                {
+    <script src="~/js/DurasiStep.js"></script>
+}

@@ -20,10 +20,10 @@
                                 <div class="col-md-6 mb-6">
                                     <label>Project</label>
                                         <select name="project_filter" id="project_filter" class="form-control form-control-sm">
-                                            @foreach (var val in ViewBag.project)
-                                            {
-                                                <option value="@(val.projectNo)" data-id="@(val.id)" data-desc="@(val.description)" data-rev="@(val.revision)"> @(val.description)</option>
-                                            }
+                                @foreach (var val in ViewBag.project)
+                                {
+                                    <option value="@(val.id)"> @(val.description)</option>
+                                }
                                         </select>
                                 </div>
                                 <div class="row mt-3">
@@ -51,7 +51,8 @@
                 <table id="table" class="table small table-striped table-bordered dataTables_wrapper" width="100%">
                     <thead>
                         <tr>
-                            <th>Judul</th>
+                        <th>No</th>
+                        <th>Judul</th>
                             <th>Tanggal</th>
                             <th>Created By</th>
                             <th>Created Date</th>
@@ -90,7 +91,10 @@
                                                 <div class="form-group">
                                                     <label>Project</label>
                                                     <select  class="form-control select2" name="id_project" id="id_project">
-                                                        <option value="">Select Project</option>
+                                                    <option value="">Select Project</option>  @foreach (var val in ViewBag.project)
+                                                    {
+                                                        <option value="@(val.id)"> @(val.description)</option>
+                                                    }
                                                            
                                                     </select>
                                                 </div>

@@ -1,36 +1,70 @@
 ﻿$(document).ready(function () {
 
+    $.ajaxSetup({
+        headers: {
+            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+        }
+    });
+
     var table = $('#table').DataTable({
         dom: '<"dataTables_wrapper dt-bootstrap"<"row"<"col-xl-7 d-block d-sm-flex d-xl-block justify-content-center"<"d-block d-lg-inline-flex me-0 me-md-3"l><"d-block d-lg-inline-flex"B>><"col-xl-5 d-flex d-xl-block justify-content-center"fr>>t<"row"<"col-md-5"i><"col-md-7"p>>>',
         processing: true,
         serverSide: true,
-        /*deferLoading: 0,
+        deferLoading: 0,
         language: {
             "emptyTable": "Data tidak ditemukan - Silahkan Filter data Rapat terlebih dahulu !"
-        },*/
+        },
         ajax: {
-            "url": "/rapat_",
-            "type": "POST",
-            "datatype": "json"
-             data: function (d) {
+            url: '/rapat_',
+            method: 'POST',
+            data: function (d) {
                 d.project = $('#project_filter').val();
             }
-           
         },
-       /* columnDefs: [
+        columnDefs: [
             { className: 'text-center', targets: [4, 5] },
-            (user_auth == 'user') ? { "visible": false, "targets": [6] } : {},
-        ],*/
+            /*(user_auth == 'user') ? { "visible": false, "targets": [6] } : {},*/
+        ],
         columns: [
+            {
+                "data": null, orderable: false, "render": function (data, type, full, meta) {
+                    return meta.row + 1;
+                }
+            },
             { data: 'judul', name: 'judul' },
-            { data: 'tanggal', name: 'tanggal' },
-            { data: 'name', name: 'name' },
-            { data: 'created_date', name: 'created_date' },
-            { data: 'materi', name: 'materi' },
-            { data: 'notulen', name: 'notulen' },
+            {
+                data: 'tanggal', name: 'tanggal', render: function (data, type, full, meta) {
+                    var date = new Date(full.created_date);
+                    var string = date.getDate() + "-" + date.getMonth() + "-" + date.getFullYear();
+                    return string;
+                }
+            },
+            { data: 'nama_', name: 'nama_' },
+            {
+                data: 'created_date', name: 'created_date',
+                render: function (data, type, full, meta) {
+                    var date = new Date(full.created_date);
+                    var string = date.getDate() + "-" + date.getMonth() + "-" + date.getFullYear();
+                    return string;
+                }
+            },
             {
                 "render": function (data, type, full, meta) {
-                    return '<div class="d-flex"><a href="javascript:void(0);" class="btn btn-warning  btn-xs edit mr-1" data-id="' + full.id + '" data-project="' + full.id_project + '" data-tanggal="' + full.tanggal + '" data-judul="' + full.judul + '" data-materi="' + full.materi + '" data-notulen="' + full.notulen + '" ><i class="fas fa-pen fa-xs"></i></a><a href = "javascript:void(0);" style = "margin-left:5px" class="btn btn-danger btn-xs delete " data-id="' + full.id + '" > <i class="fas fa-trash fa-xs"></i></a ></div > ';
+                    return '<a href="' + full.materi + '" class="badge bg-info" target="blank_"><i class="far fa-copy"></i> file</a>';
+                },
+                orderable: false,
+                searchable: false
+            },
+            {
+                "render": function (data, type, full, meta) {
+                    return '<a href="' + full.notulen + '" class="badge bg-info" target="blank_"><i class="far fa-copy"></i> file</a>';
+                },
+                orderable: false,
+                searchable: false
+            },
+            {
+                "render": function (data, type, full, meta) {
+                    return '<div class="d-flex"><a href="javascript:void(0);" class="btn btn-warning  btn-xs edit mr-1" data-id="'+ full.id + '"data-id_project="' + full.id_project + '" data-judul="' + full.judul + '" data-tanggal="' + full.tanggal + '" data-materi="' + full.materi + '" data-notulen="' + full.notulen + '" ><i class="fas fa-pen fa-xs"></i></a><a href = "javascript:void(0);" style = "margin-left:5px" class="btn btn-danger btn-xs delete " data-id="' + full.id + '" > <i class="fas fa-trash fa-xs"></i></a ></div > ';
                 },
                 orderable: false,
                 searchable: false
@@ -72,6 +106,7 @@
         }]*/
 
     });
+    
     // table.button( 0 ).nodes().css('height', '35px')
 
     $(document).on('click', '#filter', function () {
@@ -127,8 +162,8 @@
                             type: data.icon,
                             timer: 3000,
                             showCancelButton: false,
-                            showConfirmButton: true,
-                            /*buttons: false,*/
+                            showConfirmButton: false,
+                            buttons: false,
                         });
                     },
                     error: function (jqXHR, textStatus, errorThrown) {
@@ -191,16 +226,17 @@
                             icon: 'error',
                             timer: 3000,
                             showCancelButton: false,
-                            showConfirmButton: true,
-                            /*buttons: false,*/
+                            showConfirmButton: false,
+                            buttons: false,
                         });
                         table.ajax.reload();
                     } else {
                         Swal.fire({
                             title: 'Berhasil',
                             icon: 'success',
+                            timer: 3000,
                             showCancelButton: false,
-                            showConfirmButton: true
+                            showConfirmButton: false
                         });
                         $('#Modal').modal('hide');
                         table.ajax.reload();
@@ -212,7 +248,4 @@
             });
         }
     });
-    $(document).on('click', '#filter', function () {
-        table.ajax.reload();
-    })
 });

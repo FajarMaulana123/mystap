@@ -19,7 +19,7 @@
         },
 
         columns: [
-            /* { data: 'DT_RowIndex', name: 'DT_RowIndex', orderable: false, searchable: false },*/
+          
             { data: 'projectNo', name: 'projectNo' },
             { data: 'description', name: 'description' },
             { data: 'month', name: 'month' },
@@ -37,7 +37,7 @@
 
                     d = (full.active == 1) ? '<span class="badge bg-success">Active</span>' : '<span class="badge bg-danger">In Active</span>';
                     full.status = d;
-                    return full.status;
+                    return "<a href='#' class='status' data-id='" + full.id + "'>" + d + "</a>";
                 },
             },
             { data: 'durasiTABrick', name: 'durasiTABrick' },

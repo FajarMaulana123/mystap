@@ -1,4 +1,5 @@
 ﻿using Azure.Core;
+using Humanizer;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.CodeAnalysis.Options;
 using Microsoft.EntityFrameworkCore;
@@ -80,9 +81,9 @@ namespace mystap.Controllers
 
                 var length = Request.Form["length"].FirstOrDefault();
 
-                var sortColumn = Request.Form["columns[" + Request.Form["order[0][column]"].FirstOrDefault() + "][name]"].FirstOrDefault();
+                var sortColumn = Request.Form["columns[" + Request.Form["order[1][column]"].FirstOrDefault() + "][name]"].FirstOrDefault();
 
-                var sortColumnDirection = Request.Form["order[0][dir]"].FirstOrDefault();
+                var sortColumnDirection = Request.Form["order[1][dir]"].FirstOrDefault();
 
                 var searchValue = Request.Form["search[value]"].FirstOrDefault();
 
@@ -209,5 +210,180 @@ namespace mystap.Controllers
                 throw;
             }
         }
+
+        public IActionResult ContractTracking()
+        {
+            ViewBag.groups_ = _context.sowGroup
+               .Where(p => p.deleted == 0)
+               .GroupBy(x => new { x.inisial, x.groups_ })
+               .Select(z => new
+               {
+                   inisial = z.Key.inisial,
+                   groups_ = z.Key.groups_
+
+               })
+               .ToList();
+            ViewBag.sow_group = _context.sowGroup.Where(p => p.deleted != 1).ToList();
+            ViewBag.userAccount = _context.users.Where(p => p.locked != 1).Where(p => p.statPekerja == "PLANNER").Where(p => p.alias != null).Where(p => p.alias != "").Where(p => p.statPekerja == "PEKERJA").ToList();
+            ViewBag.project = _context.project.Where(p => p.deleted == 0).ToList();
+            ViewBag.unit = _context.unit
+               .Where(p => p.deleted == 0)
+               .GroupBy(x => new { x.unitCode, x.unitProses })
+               .Select(z => new
+               {
+                   unitCode = z.Key.unitCode,
+                   unitProses = z.Key.unitProses
+
+               })
+               .ToList();
+
+            return View();
+        }
+      
+       
+        public IActionResult DurasiStep()
+        {
+            ViewBag.project = _context.project.Where(p => p.deleted == 0).ToList();
+            return View();
+        }
+        public IActionResult Get_DurasiStep()
+        {
+            try
+            {
+                var draw = HttpContext.Request.Form["draw"].FirstOrDefault();
+
+                var start = Request.Form["start"].FirstOrDefault();
+
+                var length = Request.Form["length"].FirstOrDefault();
+
+                var sortColumn = Request.Form["columns[" + Request.Form["order[1][column]"].FirstOrDefault() + "][name]"].FirstOrDefault();
+
+                var sortColumnDirection = Request.Form["order[1][dir]"].FirstOrDefault();
+
+                var searchValue = Request.Form["search[value]"].FirstOrDefault();
+
+                int pageSize = length != null ? Convert.ToInt32(length) : 0;
+                int skip = start != null ? Convert.ToInt32(start) : 0;
+                int recordsTotal = 0;
+
+                var filter = Request.Form["columns[2][search][value]"].FirstOrDefault();
+
+                var project_filter = Convert.ToInt32(Request.Form["project_filter"].FirstOrDefault());
+                var project_rev = Request.Form["project_rev"].FirstOrDefault();
+                var kat_tender_filter = Request.Form["kat_tender_filter"].FirstOrDefault();
+
+                var customerData = _context.durasi.Include("project").Where(a => a.id_project == project_filter).Select(a => new { id = a.id, description = a.project.description, kat_tender = a.kat_tender, susun_kak = a.susun_kak, susun_oe = a.susun_oe, kirim_ke_co = a.kirim_ke_co, pengumuman_pendaftaran = a.pengumuman_pendaftaran, sertifikasi = a.sertifikasi, prakualifikasi = a.prakualifikasi, undangan = a.undangan, pemberian = a.pemberian, penyampaian = a.penyampaian, pembukaan = a.pembukaan, evaluasi = a.evaluasi, negosiasi = a.negosiasi, usulan = a.usulan, keputusan = a.keputusan, pengumuman_pemenang = a.pengumuman_pemenang, pengajuan_sanggah = a.pengajuan_sanggah, jawaban_sanggah = a.jawaban_sanggah, tunjuk_pemenang = a.tunjuk_pemenang, proses_spb = a.proses_spb });
+
+                if (!(string.IsNullOrEmpty(sortColumn) && string.IsNullOrEmpty(sortColumnDirection)))
+                {
+                    customerData = customerData.OrderBy(sortColumn + " " + sortColumnDirection);
+                }
+
+                if (!string.IsNullOrEmpty(searchValue))
+                {
+                    customerData = customerData.Where(b => b.kat_tender.StartsWith(searchValue));
+                }
+                //Console.WriteLine(customerData);
+                recordsTotal = customerData.Count();
+                var data = customerData.Skip(skip).Take(pageSize).ToList();
+                return Json(new { draw = draw, recordsFilter = recordsTotal, recordsTotal = recordsTotal, data = data });
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+        public IActionResult Create_DurasiStep(IFormCollection formcollaction)
+        {
+            try
+            {
+                Durasi durasi = new Durasi();
+                //durasi.id_project = Convert.ToInt64(formcollaction["id_project"]);
+                durasi.kat_tender = formcollaction["kat_tender"];
+                durasi.susun_kak = Convert.ToInt32(formcollaction["susun_kak"]);
+                durasi.susun_oe = Convert.ToInt32(formcollaction["susun_oe"]);
+                durasi.kirim_ke_co = Convert.ToInt32(formcollaction["kirim_ke_co"]);
+                durasi.pengumuman_pendaftaran = Convert.ToInt32(formcollaction["pengumuman_pendaftaran"]);
+                durasi.sertifikasi = Convert.ToInt32(formcollaction["sertifikasi"]);
+                durasi.prakualifikasi = Convert.ToInt32(formcollaction["prakualifikasi"]);
+                durasi.undangan = Convert.ToInt32(formcollaction["undangan"]);
+                durasi.pemberian = Convert.ToInt32(formcollaction["pemberian"]);
+                durasi.penyampaian = Convert.ToInt32(formcollaction["penyampaian"]);
+                durasi.pembukaan = Convert.ToInt32(formcollaction["pembukaan"]);
+                durasi.evaluasi = Convert.ToInt32(formcollaction["evaluasi"]);
+                durasi.negosiasi = Convert.ToInt32(formcollaction["negosiasi"]);
+                durasi.usulan = Convert.ToInt32(formcollaction["usulan"]);
+                durasi.keputusan = Convert.ToInt32(formcollaction["keputusan"]);
+                durasi.pengumuman_pemenang = Convert.ToInt32(formcollaction["pengumuman_pemenang"]);
+                durasi.pengajuan_sanggah = Convert.ToInt32(formcollaction["pengajuan_sanggah"]);
+                durasi.jawaban_sanggah = Convert.ToInt32(formcollaction["jawaban_sanggah"]);
+                durasi.tunjuk_pemenang = Convert.ToInt32(formcollaction["tunjuk_pemenang"]);
+                durasi.proses_spb = Convert.ToInt32(formcollaction["proses_spb"]);
+
+                Boolean t;
+                if (durasi != null)
+                {
+                    _context.durasi.Add(durasi);
+                    _context.SaveChanges();
+                    t = true;
+                }
+                else
+                {
+                    t = false;
+                }
+                return Json(new { result = t });
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+        public IActionResult Update_DurasiStep(Durasi durasi)
+        {
+            try
+            {
+                int id = Int32.Parse(Request.Form["hidden_id"].FirstOrDefault());
+                Durasi obj = _context.durasi.Where(p => p.id == id).FirstOrDefault();
+
+                if (obj != null)
+                {
+
+                    //obj.id_project = Convert.ToInt64(Request.Form["id_project"].FirstOrDefault());
+                    obj.kat_tender = Request.Form["kat_tender"].FirstOrDefault();
+                    obj.susun_kak = Convert.ToInt32(Request.Form["susun_kak"].FirstOrDefault());
+                    obj.susun_oe = Convert.ToInt32(Request.Form["susun_oe"].FirstOrDefault());
+                    obj.kirim_ke_co = Convert.ToInt32(Request.Form["kirim_ke_co"].FirstOrDefault());
+                    obj.pengumuman_pendaftaran = Convert.ToInt32(Request.Form["pengumuman_pendaftaran"].FirstOrDefault());
+                    obj.sertifikasi = Convert.ToInt32(Request.Form["sertifikasi"].FirstOrDefault());
+                    obj.prakualifikasi = Convert.ToInt32(Request.Form["prakualifikasi"].FirstOrDefault());
+                    obj.undangan = Convert.ToInt32(Request.Form["undangan"].FirstOrDefault());
+                    obj.pemberian = Convert.ToInt32(Request.Form["pemberian"].FirstOrDefault());
+                    obj.penyampaian = Convert.ToInt32(Request.Form["penyampaian"].FirstOrDefault());
+                    obj.pembukaan = Convert.ToInt32(Request.Form["pembukaan"].FirstOrDefault());
+                    obj.evaluasi = Convert.ToInt32(Request.Form["evaluasi"].FirstOrDefault());
+                    obj.negosiasi = Convert.ToInt32(Request.Form["negosiasi"].FirstOrDefault());
+                    obj.usulan = Convert.ToInt32(Request.Form["usulan"].FirstOrDefault());
+                    obj.keputusan = Convert.ToInt32(Request.Form["keputusan"].FirstOrDefault());
+                    obj.pengumuman_pemenang = Convert.ToInt32(Request.Form["pengumuman_pemenang"].FirstOrDefault());
+                    obj.pengajuan_sanggah = Convert.ToInt32(Request.Form["pengajuan_sanggah"].FirstOrDefault());
+                    obj.jawaban_sanggah = Convert.ToInt32(Request.Form["tunjuk_pemenang"].FirstOrDefault());
+                    obj.tunjuk_pemenang = Convert.ToInt32(Request.Form["tunjuk_pemenang"].FirstOrDefault());
+                    obj.proses_spb = Convert.ToInt32(Request.Form["proses_spb"].FirstOrDefault());
+
+
+
+
+                    _context.SaveChanges();
+                    return Json(new { Results = true });
+                }
+                return Json(new { Results = false });
+            }
+            catch
+            {
+                throw;
+            }
+        }
+
+       
     }
 }
