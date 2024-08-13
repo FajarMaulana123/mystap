@@ -61,7 +61,7 @@
                 <table id="table" class="table small table-striped table-bordered dataTables_wrapper" width="100%">
                     <thead>
                         <tr>
-                            <th>No</th>
+                            @* <th>No</th> *@
                             <th>eqTagNo</th>
                             <th>eqDesc</th>
                             <th>funcLocID</th>
@@ -106,6 +106,10 @@
                                             <label>Funtion Location</label>
                                             <select name="func_location" id="func_location" class="form-control form-control-sm search_dropdown">
                                                 <option value="">Select Function Location</option>
+                                                @foreach (var val in ViewBag.funcLocID)
+                                                {
+                                                    <option value="@(val.funcLocID)" > @(val.funcLocID)</option>
+                                                }
                                             </select>
                                         </div>
                                         <div class="form-group mb-2">
@@ -117,7 +121,10 @@
                                                 <div class="col-md-4">
                                                 <select name="jenis_weight" id="jenis_weight" class="form-select form-select-sm">
                                                     <option value="">- select weight -</option>
-                                                       
+                                                    @foreach (var val in ViewBag.weight)
+                                                    {
+                                                        <option value="@(val.weight_unit)"> @(val.weight_unit)</option>
+                                                    }
                                                 </select>
                                                 </div>
                                             </div>
@@ -156,7 +163,10 @@
                                                     <label>Planner Group</label>
                                                     <select name="planning_group" id="planning_group" class="form-control form-control-sm">
                                                         <option value="">- select planner group -</option>
-                                                      
+                                                        @foreach (var val in ViewBag.planner_group)
+                                                        {
+                                                            <option value="@(val.planner_group)"> @(val.planner_group)</option>
+                                                        }
                                                     </select>
                                                 </div>
                                             </div>
@@ -165,7 +175,10 @@
                                             <label>Main Work Center</label>
                                             <select name="main_work_center" id="main_work_center" class="form-control form-control-sm">
                                                 <option value="">- select main work center -</option>
-                                                                                          
+                                                @foreach (var val in ViewBag.main_work_center)
+                                                {
+                                                    <option value="@(val.main_work_center)"> @(val.main_work_center)</option>
+                                                }
                                             </select>
                                         </div>
                                         <div class="form-group mb-2">
@@ -182,6 +195,10 @@
                                             <label>Location</label>
                                             <select name="location" id="location" class="form-control form-control-sm">
                                                 <option value="">- select location -</option>
+                                                @foreach (var val in ViewBag.location)
+                                                {
+                                                    <option value="@(val.location)"> @(val.location)</option>
+                                                }
                                             </select>
                                         </div>
                                         <div class="form-group mb-2">
@@ -200,7 +217,10 @@
                                             <label>Cost Center</label>
                                             <select name="cost_center" id="cost_center" class="form-control form-control-sm">
                                                 <option value="">- select cost center -</option>
-
+                                                @foreach (var val in ViewBag.cost_center)
+                                                {
+                                                    <option value="@(val.cost_center)"> @(val.cost_center)</option>
+                                                }
                                             </select>
                                         </div>
                                     </div>
@@ -209,7 +229,10 @@
                                             <label>WBS Elements</label>
                                             <select name="wbsElement" id="wbsElement" class="form-control form-control-sm search_dropdown">
                                                  <option value="">- select wbs element -</option>
-                                             
+                                                @foreach (var val in ViewBag.wbs_element)
+                                                {
+                                                    <option value="@(val.WBS_element)"> @(val.WBS_element)</option>
+                                                }
                                             </select>
                                         </div>
                                         <div class="form-group mb-2">
@@ -224,7 +247,10 @@
                                             <label>Manufacture</label>
                                             <select name="manufacturer" id="manufacturer" class="form-control form-control-sm search_dropdown">
                                                  <option value="">- select manufacturer -</option>
-                                               
+                                                @foreach (var val in ViewBag.manufacturer)
+                                                {
+                                                    <option value="@(val.manufacturer)"> @(val.manufacturer)</option>
+                                                }
                                             </select>
                                         </div>
                                         <div class="form-group mb-2">
@@ -261,7 +287,10 @@
                                                     <label>Craft</label>
                                                     <select name="craft" id="craft" class="form-control form-control-sm">
                                                          <option value="">- select craft -</option>
-                                                     
+                                                        @foreach (var val in ViewBag.craft)
+                                                        {
+                                                            <option value="@(val.craft)"> @(val.craft)</option>
+                                                        }
                                                     </select>
                                                 </div>
                                             </div>
@@ -276,7 +305,10 @@
                                                     <label>Unit Proses</label>
                                                     <select name="unit_proses" id="unit_proses" class="form-control form-control-sm">
                                                         <option value="">Select unit proses </option>
-                                                       
+                                                        @foreach (var val in ViewBag.unit_proses)
+                                                        {
+                                                            <option value="@(val.inisial)"> @(val.inisial)</option>
+                                                        }
                                                     </select>
                                                 </div>
                                             </div>

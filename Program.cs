@@ -319,19 +319,24 @@ app.UseEndpoints(endpoints =>
        defaults: new { controller = "Data", action = "Get_Equipments" });
 
     endpoints.MapControllerRoute(
-       name: "create_equipments",
-       pattern: "create_equipments",
+       name: "create_equipment",
+       pattern: "create_equipment",
        defaults: new { controller = "Data", action = "Create_Equipments" });
 
     endpoints.MapControllerRoute(
-       name: "update_equipments",
-       pattern: "update_equipments",
+       name: "update_equipment",
+       pattern: "update_equipment",
        defaults: new { controller = "Data", action = "Update_Equipments" });
 
     endpoints.MapControllerRoute(
        name: "delete_equipments",
        pattern: "delete_equipments",
        defaults: new { controller = "Data", action = "Delete_Equipments" });
+
+    endpoints.MapControllerRoute(
+       name: "getUnitKilang",
+       pattern: "getUnitKilang",
+       defaults: new { controller = "Data", action = "getUnitKilang" });
 
     endpoints.MapControllerRoute(
        name: "catalog_profile",

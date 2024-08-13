@@ -86,6 +86,7 @@
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
+            <form id="add-form">
             <div class="modal-body">
                 <div class="row">
                     <div class="col-12">
@@ -99,7 +100,9 @@
                                             <label>Plants</label>
                                             <select name="plant" id="plant" class="form-control">
                                                 <option value="">Select Plant</option>
-                                                
+                                                @foreach (var val in ViewBag.plant){
+                                                    <option value="@(val.id)" data-plant="@(val.plans)" > @(val.planDesc)</option>
+                                                }
                                                     
                                                 
                                             </select>
@@ -178,6 +181,7 @@
                 <button type="reset" class="btn btn-dark">Reset</button>
                 <button type="submit" class="btn btn-success">Submit</button>
             </div>
+            </form>
         </div>        
     </div>
 </div>

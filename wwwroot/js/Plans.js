@@ -60,7 +60,7 @@
                 columns: ':not(:last-child)',
             }
         }] /*: [{
-            extend: 'excel',
+            extxend: 'excel',
             title: 'Plant',
             className: 'btn',
             text: '<i class="far fa-file-code"></i> Excel',

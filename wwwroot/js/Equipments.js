@@ -1,4 +1,19 @@
-﻿$(document).ready(function () {
+﻿function unit_(unit, kilang) {
+    $.ajax({
+        url: "/getUnitKilang",
+        method: "POST",
+        data: {
+            unitCode: unit,
+        },
+        success: function (res) {
+            $('#unit_kilang').html(res);
+            if (kilang != '') {
+                $('#unit_kilang').val(kilang);
+            }
+        }
+    })
+}
+$(document).ready(function () {
     $(".select2").select2({});
     $('#Modal').on('show.bs.modal', function (event) {
         $(document).ready(function () {
@@ -7,6 +22,7 @@
             });
         });
     });
+
     $.ajaxSetup({
         headers: {
             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -24,7 +40,6 @@
 
         columns: [
             /* { data: 'DT_RowIndex', name: 'DT_RowIndex', orderable: false, searchable: false },*/
-            { "data": 'DT_RowIndex', "name": 'DT_RowIndex', searchable: false },
            /* {
                 "data": null, orderable: false, "render": function (data, type, full, meta) {
                     return meta.row + 1;
@@ -39,7 +54,7 @@
             { data: 'craft', name: 'craft' },
              {
                 "render": function (data, type, full, meta) {
-                     return '<div class="d-flex"><a href="javascript:void(0);" class="btn btn-warning  btn-xs edit mr-1" data-id="' + full.id + '" data-eqtagno="' + full.eqTagNo + '" data-description="' + full.eqDesc + '" data-func_location="' + full.funcLocID + '" data-weight="' + full.weight + '" data-jenis_weight="' + full.weight_unit + '" data-size="' + full.size + '" data-start_up_date="' + full.start_up_date + '" data-acquisition_value="' + full.acquisition_value + '" data-date_acquisition="' + full.acquisition_date + '" data-currency_key="' + full.currency_key + '" data-planning_plant="' + full.planning_plant + '" data-planning_group="' + full.planner_group + '" data-main_work_center="' + full.main_work_center + '" data-catalog_profile="' + full.catalog_profile + '" data-main_plant="' + full.maint_plant + '" data-location="' + full.location + '" data-plant_section="' + full.plant_section + '" data-main_asset_no="' + full.main_asset_no + '" data-asset_sub_no="' + full.asset_sub_no + '" data-cost_center="' + full.cost_center + '" data-wbselement="' + full.WBS_element + '" data-position="' + full.Position + '" data-tin="' + full.tin + '" data-manufacturer="' + full.manufacturer + '" data-model="' + full.model + '" data-part_no="' + full.part_no + '" data-serial_no="' + full.serial_no + '" data-equipment_category="' + full.eqp_cat + '" data-date_validation="' + full.date_valid + '" data-object_type="' + full.object_type + '" data-craft="' + full.craft + '" data-country_of_manufacture="' + full.country_of_manuf + '" data-unit_proses="' + full.unitProses + '" data-year_const="' + full.year_of_const + '" data-unit_kilang="' + full.unitKilang + '" data-month_const="' + full.month_of_const + '" data-plant_main_work_center="' + full.plant_main_work_center + '" data-const_type="' + full.const_type + '" data-premit_assign="' + full.permit_assign + '" data-critical="' + full.Criticallity + '" data-remark="' + full.Remark + '" ><i class="fas fa-pen fa-xs"></i></a><a href = "javascript:void(0);" style = "margin-left:5px" class="btn btn-danger btn-xs delete " data-id="'+full.id+'" > <i class="fas fa-trash fa-xs"></i></a ></div > ';
+                     return '<div class="d-flex"><a href="javascript:void(0);" class="btn btn-warning  btn-xs edit mr-1" data-id="' + full.id + '" data-eqtagno="' + full.eqTagNo + '" data-description="' + full.eqDesc + '" data-func_location="' + full.funcLocID + '" data-weight="' + full.weight + '" data-jenis_weight="' + full.weight_unit + '" data-size="' + full.size + '" data-start_up_date="' + full.start_up_date + '" data-acquisition_value="' + full.acquisition_value + '" data-date_acquisition="' + full.acquisition_date + '" data-currency_key="' + full.currency_key + '" data-planning_plant="' + full.planning_plant + '" data-planning_group="' + full.planner_group + '" data-main_work_center="' + full.main_work_center + '" data-catalog_profile="' + full.catalog_profile + '" data-main_plant="' + full.maint_plant + '" data-location="' + full.location + '" data-plant_section="' + full.plant_section + '" data-main_asset_no="' + full.main_asset_no + '" data-asset_sub_no="' + full.asset_sub_no + '" data-cost_center="' + full.cost_center + '" data-wbselement="' + full.wbS_element + '" data-position="' + full.position + '" data-tin="' + full.tin + '" data-manufacturer="' + full.manufacturer + '" data-model="' + full.model + '" data-part_no="' + full.part_no + '" data-serial_no="' + full.serial_no + '" data-equipment_category="' + full.eqp_cat + '" data-date_validation="' + full.date_valid + '" data-object_type="' + full.object_type + '" data-craft="' + full.craft + '" data-country_of_manufacture="' + full.country_of_manuf + '" data-unit_proses="' + full.unitProses + '" data-year_const="' + full.year_of_const + '" data-unit_kilang="' + full.unitKilang + '" data-month_const="' + full.month_of_const + '" data-plant_main_work_center="' + full.plant_main_work_center + '" data-const_type="' + full.const_type + '" data-premit_assign="' + full.permit_assign + '" data-critical="' + full.criticallity + '" data-remark="' + full.remark + '" ><i class="fas fa-pen fa-xs"></i></a><a href = "javascript:void(0);" style = "margin-left:5px" class="btn btn-danger btn-xs delete " data-id="'+full.id+'" > <i class="fas fa-trash fa-xs"></i></a ></div > ';
                 },
                 orderable: false,
                 searchable: false
@@ -86,30 +101,32 @@
 
     // Here we create the index column in jquery datatable
 
-    const table = new DataTable('#table', {
-        columnDefs: [
-            {
-                searchable: false,
-                orderable: false,
-                targets: 0
-            }
-        ],
-        order: [[1, 'asc']]
-    });
+    //const table = new DataTable('#table', {
+    //    columnDefs: [
+    //        {
+    //            searchable: false,
+    //            orderable: false,
+    //            targets: 0
+    //        }
+    //    ],
+    //    order: [[1, 'asc']]
+    //});
 
-    table
-        .on('order.dt search.dt', function () {
-            let i = 1;
+    //table
+    //    .on('order.dt search.dt', function () {
+    //        let i = 1;
 
-            table
-                .cells(null, 0, { search: 'applied', order: 'applied' })
-                .every(function (cell) {
-                    this.data(i++);
-                });
-        })
-        .draw();
+    //        table
+    //            .cells(null, 0, { search: 'applied', order: 'applied' })
+    //            .every(function (cell) {
+    //                this.data(i++);
+    //            });
+    //    })
+    //    .draw();
     $(document).on('click', '.edit', function () {
+        unit_($(this).data('unit_proses'), $(this).data('unit_kilang'));
         $('#add-form')[0].reset();
+        //console.log($(this).data('wbselement'));
         $('#Modal').modal('show');
         $('.judul-modal').text('Edit Equipment');
         $('#hidden_status').val('edit');
@@ -134,7 +151,7 @@
         $('#main_asset_no').val($(this).data('main_asset_no'));
         $('#asset_sub_no').val($(this).data('asset_sub_no'));
         $('#cost_center').val($(this).data('cost_center'));
-        $('#wbselement').val($(this).data('wbsElement'));
+        $("#wbselement").val($(this).data('wbselement')).trigger("change");
         $('#position').val($(this).data('position'));
         $('#tin').val($(this).data('tin'));
         $('#manufacturer').val($(this).data('manufacturer'));
@@ -148,7 +165,6 @@
         $('#country_of_manufacture').val($(this).data('country_of_manufacture'));
         $('#unit_proses').val($(this).data('unit_proses'));
         $('#year_const').val($(this).data('year_const'));
-        $('#unit_kilang').val($(this).data('unit_kilang'));
         $('#month_const').val($(this).data('month_const'));
         $('#plant_main_work_center').val($(this).data('plant_main_work_center'));
         $('#const_type').val($(this).data('const_type'));
@@ -197,16 +213,7 @@
     });
 
     $(document).on('change', '#unit_proses', function () {
-        $.ajax({
-            url: "/getUnitKilang",
-            method: "POST",
-            data: {
-                unitCode: $(this).val(),
-            },
-            success: function (res) {
-                $('#unit_kilang').html(res);
-            }
-        })
+        unit_($(this).val(), '');
     })
 
     $("#add-form").validate({

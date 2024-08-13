@@ -7,7 +7,7 @@
         ajax: {
             "url": "/project_",
             "method": "POST",
-            "datatype": "json"
+            "datatype": "json",
             data: function (d) {
                 d.status = $('#status_filter').val();
                 d.taoh = $('#taoh_filter').val();
@@ -86,14 +86,6 @@
         }]*/
 
     });
-    // table.button( 0 ).nodes().css('height', '35px')
-
-    $(document).on('click', '#tambah', function () {
-        $('#add-form')[0].reset();
-        $('.judul-modal').html('Tambah');
-        $('#hidden_status').val('add');
-    })
-
     $(document).on('click', '.status', function () {
         var id = $(this).data('id');
         Swal.fire({
@@ -136,12 +128,15 @@
         $('#Modal').modal('show');
         $('.judul-modal').text('Update');
         var year = $(this).data('year') + '-' + $(this).data('month');
+        var exe_date = $(this).data('execution_date').split("T");
+        var fin_date = $(this).data('finish_date').split("T");
+        console.log(year);
         $('#hidden_status').val('edit');
         $('#hidden_id').val($(this).data('id'));
         $('#plant').val($(this).data('plant'));
         $('#year').val(year);
-        $('#execution_date').val($(this).data('execution_date'));
-        $('#finish_date').val($(this).data('finish_date'));
+        $('#execution_date').val(exe_date[0]);
+        $('#finish_date').val(fin_date[0]);
         $('#revision').val($(this).data('revision'));
         $('#description').val($(this).data('description'));
         $('#durasiTABrick').val($(this).data('durasitabrick'));

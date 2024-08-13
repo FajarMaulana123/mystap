@@ -14,7 +14,9 @@ namespace mystap.Models
         public string? active { get; set; }
         public int? deleted { get; set; }
         public int? updated { get; set; }
+        [Column(TypeName = "date")]
         public DateTime? tglTA { get; set; }
+        [Column(TypeName = "date")]
         public DateTime? tglSelesaiTA { get; set; }
         public long? deletedBy { get; set; }
         public long? createdBy { get; set; }
