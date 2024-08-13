@@ -71,7 +71,7 @@ namespace mystap.Controllers
                 throw;
             }
         }
-        public IActionResult Get_Sow()
+        public async Task<IActionResult> Get_Sow()
         {
             try
             {
@@ -103,10 +103,15 @@ namespace mystap.Controllers
                 {
                     customerData = customerData.Where(b => b.judulPekerjaan.StartsWith(searchValue));
                 }
+                // Total number of rows count
                 //Console.WriteLine(customerData);
                 recordsTotal = customerData.Count();
-                var data = customerData.Skip(skip).Take(pageSize).ToList();
-                return Json(new { draw = draw, recordsFilter = recordsTotal, recordsTotal = recordsTotal, data = data });
+                // Paging
+                var datas = await customerData.Skip(skip).Take(pageSize).ToListAsync();
+                //var data = _memoryCache.Get("products");
+                //data = await _memoryCache.Set("products", datas, expirationTime);
+                // Returning Json Data
+                return Json(new { draw = draw, recordsFiltered = recordsTotal, recordsTotal = recordsTotal, data = datas });
             }
             catch (Exception)
             {
@@ -243,50 +248,60 @@ namespace mystap.Controllers
        
         public IActionResult DurasiStep()
         {
-            ViewBag.project = _context.project.Where(p => p.deleted == 0).ToList();
+            ViewBag.project = _context.project.Where(p => p.deleted == 0).Where(p => p.active == "1").ToList();
             return View();
         }
-        public IActionResult Get_DurasiStep()
+        public async Task<IActionResult> Get_DurasiStep()
         {
             try
             {
                 var draw = HttpContext.Request.Form["draw"].FirstOrDefault();
-
+                // Skipping number of Rows count
                 var start = Request.Form["start"].FirstOrDefault();
-
+                // Paging Length 10, 20
                 var length = Request.Form["length"].FirstOrDefault();
-
+                // Sort Column Name
                 var sortColumn = Request.Form["columns[" + Request.Form["order[1][column]"].FirstOrDefault() + "][name]"].FirstOrDefault();
-
+                // Sort Column Direction (asc, desc)
                 var sortColumnDirection = Request.Form["order[1][dir]"].FirstOrDefault();
-
+                // Search Value from (Search box)
                 var searchValue = Request.Form["search[value]"].FirstOrDefault();
-
+                // Paging Size (10, 20, 50, 100)
                 int pageSize = length != null ? Convert.ToInt32(length) : 0;
                 int skip = start != null ? Convert.ToInt32(start) : 0;
                 int recordsTotal = 0;
 
                 var filter = Request.Form["columns[2][search][value]"].FirstOrDefault();
 
-                var project_filter = Convert.ToInt32(Request.Form["project_filter"].FirstOrDefault());
-                var project_rev = Request.Form["project_rev"].FirstOrDefault();
-                var kat_tender_filter = Request.Form["kat_tender_filter"].FirstOrDefault();
+                var project_filter = Request.Form["project"].FirstOrDefault();
+                var kat_tender_filter = Request.Form["kat_tender"].FirstOrDefault();
 
-                var customerData = _context.durasi.Include("project").Where(a => a.id_project == project_filter).Select(a => new { id = a.id, description = a.project.description, kat_tender = a.kat_tender, susun_kak = a.susun_kak, susun_oe = a.susun_oe, kirim_ke_co = a.kirim_ke_co, pengumuman_pendaftaran = a.pengumuman_pendaftaran, sertifikasi = a.sertifikasi, prakualifikasi = a.prakualifikasi, undangan = a.undangan, pemberian = a.pemberian, penyampaian = a.penyampaian, pembukaan = a.pembukaan, evaluasi = a.evaluasi, negosiasi = a.negosiasi, usulan = a.usulan, keputusan = a.keputusan, pengumuman_pemenang = a.pengumuman_pemenang, pengajuan_sanggah = a.pengajuan_sanggah, jawaban_sanggah = a.jawaban_sanggah, tunjuk_pemenang = a.tunjuk_pemenang, proses_spb = a.proses_spb });
+                var customerData = _context.durasi.Where(a => a.kat_tender == kat_tender_filter).Where(a => a.id_project == Convert.ToInt64(project_filter)).Select(a => new { id = a.id, description = a.project.description, kat_tender = a.kat_tender, susun_kak = a.susun_kak, susun_oe = a.susun_oe, kirim_ke_co = a.kirim_ke_co, pengumuman_pendaftaran = a.pengumuman_pendaftaran, sertifikasi = a.sertifikasi, prakualifikasi = a.prakualifikasi, undangan = a.undangan, pemberian = a.pemberian, penyampaian = a.penyampaian, pembukaan = a.pembukaan, evaluasi = a.evaluasi, negosiasi = a.negosiasi, usulan = a.usulan, keputusan = a.keputusan, pengumuman_pemenang = a.pengumuman_pemenang, pengajuan_sanggah = a.pengajuan_sanggah, jawaban_sanggah = a.jawaban_sanggah, tunjuk_pemenang = a.tunjuk_pemenang, proses_spb = a.proses_spb });
 
+                // Sorting
                 if (!(string.IsNullOrEmpty(sortColumn) && string.IsNullOrEmpty(sortColumnDirection)))
                 {
                     customerData = customerData.OrderBy(sortColumn + " " + sortColumnDirection);
                 }
 
+                //search
                 if (!string.IsNullOrEmpty(searchValue))
                 {
-                    customerData = customerData.Where(b => b.kat_tender.StartsWith(searchValue));
+                    customerData = customerData.Where(m => m.kat_tender.StartsWith(searchValue));
                 }
+
+                // Total number of rows count
                 //Console.WriteLine(customerData);
                 recordsTotal = customerData.Count();
-                var data = customerData.Skip(skip).Take(pageSize).ToList();
-                return Json(new { draw = draw, recordsFilter = recordsTotal, recordsTotal = recordsTotal, data = data });
+                // Paging
+                var datas = await customerData.Skip(skip).Take(pageSize).ToListAsync();
+                //var data = _memoryCache.Get("products");
+                //data = await _memoryCache.Set("products", datas, expirationTime);
+                // Returning Json Data
+                return Json(new { draw = draw, recordsFiltered = recordsTotal, recordsTotal = recordsTotal, data = datas });
+
+
+                
             }
             catch (Exception)
             {
@@ -298,7 +313,7 @@ namespace mystap.Controllers
             try
             {
                 Durasi durasi = new Durasi();
-                //durasi.id_project = Convert.ToInt64(formcollaction["id_project"]);
+                durasi.id_project = Convert.ToInt64(formcollaction["id_project"]);
                 durasi.kat_tender = formcollaction["kat_tender"];
                 durasi.susun_kak = Convert.ToInt32(formcollaction["susun_kak"]);
                 durasi.susun_oe = Convert.ToInt32(formcollaction["susun_oe"]);
@@ -348,7 +363,7 @@ namespace mystap.Controllers
                 if (obj != null)
                 {
 
-                    //obj.id_project = Convert.ToInt64(Request.Form["id_project"].FirstOrDefault());
+                    obj.id_project = Convert.ToInt64(Request.Form["id_project"].FirstOrDefault());
                     obj.kat_tender = Request.Form["kat_tender"].FirstOrDefault();
                     obj.susun_kak = Convert.ToInt32(Request.Form["susun_kak"].FirstOrDefault());
                     obj.susun_oe = Convert.ToInt32(Request.Form["susun_oe"].FirstOrDefault());

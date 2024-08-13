@@ -256,7 +256,7 @@ app.UseEndpoints(endpoints =>
     endpoints.MapControllerRoute(
        name: "delete_rapat",
        pattern: "delete_rapat",
-       defaults: new { controller = "Data", action = "Delete_Rapat" });
+       defaults: new { controller = "Data", action = "Deleted_Rapat" });
 
     endpoints.MapControllerRoute(
       name: "steerco",

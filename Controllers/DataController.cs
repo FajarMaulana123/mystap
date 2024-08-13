@@ -12,9 +12,12 @@ namespace mystap.Controllers
     public class DataController : Controller
     {
         private readonly DatabaseContext _context;
-        public DataController(DatabaseContext context)
+        private readonly IWebHostEnvironment environment;
+
+        public DataController(DatabaseContext context, IWebHostEnvironment environment)
         {
             _context = context;
+            this.environment = environment;
         }
         public IActionResult Rapat()
         {
@@ -79,18 +82,56 @@ namespace mystap.Controllers
                 throw;
             }
         }
-        public IActionResult Create_Rapat(IFormCollection formcollaction)
-        {
+
+        [HttpPost]
+        public IActionResult Create_Rapat(RapatViewModel rapatViewModel,IFormCollection formcollaction) {
+
+            if (rapatViewModel.materi == null)
+            {
+                ModelState.AddModelError("materi", "Materi is required");
+            }
+            if (!ModelState.IsValid)
+            {
+                return View(rapatViewModel);
+            }
+
+            string newFilename = DateTime.Now.ToString("yyyyMMddHHmmssfff");
+            newFilename += Path.GetExtension(rapatViewModel.materi!.FileName);
+
+            string imageFullPath = environment.WebRootPath + "/upload/rapat/materi" + newFilename;
+            using (var stream = System.IO.File.Create(imageFullPath))
+            {
+                rapatViewModel.materi.CopyTo(stream);
+            }
+
+            if (rapatViewModel.notulen == null)
+            {
+                ModelState.AddModelError("notulen", "Notulen is required");
+            }
+            if (!ModelState.IsValid)
+            {
+                return View(rapatViewModel);
+            }
+
+            string newFilename2 = DateTime.Now.ToString("yyyyMMddHHmmssfff") + rapatViewModel.judul;
+            newFilename2 += Path.GetExtension(rapatViewModel.notulen!.FileName);
+
+            string imageFullPath2 = environment.WebRootPath + "/upload/rapat/notulen" + newFilename2;
+            using (var stream = System.IO.File.Create(imageFullPath2))
+            {
+                rapatViewModel.notulen.CopyTo(stream);
+            }
+
             try
             {
                 Rapat rapat = new Rapat();
                 rapat.id_project = Convert.ToInt64(formcollaction["id_project"]);
                 rapat.judul = formcollaction["judul"];
-                rapat.materi = formcollaction["materi"];
-                rapat.notulen = formcollaction["notulen"];
                 rapat.created_by = 1;
                 rapat.created_date = DateTime.Now;
                 rapat.deleted = 0;
+                rapat.materi = newFilename;
+                rapat.notulen = newFilename2;
 
                 Boolean t;
                 if (rapat != null)
@@ -109,9 +150,45 @@ namespace mystap.Controllers
             {
                 throw;
             }
+
         }
-        public IActionResult Update_Rapat(Rapat rapat)
+        public IActionResult Update_Rapat(Rapat rapat, RapatViewModel rapatViewModel, IFormCollection formcollaction)
         {
+            if (rapatViewModel.materi == null)
+            {
+                ModelState.AddModelError("materi", "Materi is required");
+            }
+            if (!ModelState.IsValid)
+            {
+                return View(rapatViewModel);
+            }
+
+            string newFilename = DateTime.Now.ToString("yyyyMMddHHmmssfff");
+            newFilename += Path.GetExtension(rapatViewModel.materi!.FileName);
+
+            string imageFullPath = environment.WebRootPath + "/upload/rapat/materi" + newFilename;
+            using (var stream = System.IO.File.Create(imageFullPath))
+            {
+                rapatViewModel.materi.CopyTo(stream);
+            }
+
+            if (rapatViewModel.notulen == null)
+            {
+                ModelState.AddModelError("notulen", "Notulen is required");
+            }
+            if (!ModelState.IsValid)
+            {
+                return View(rapatViewModel);
+            }
+
+            string newFilename2 = DateTime.Now.ToString("yyyyMMddHHmmssfff") + rapatViewModel.judul;
+            newFilename2 += Path.GetExtension(rapatViewModel.notulen!.FileName);
+
+            string imageFullPath2 = environment.WebRootPath + "/upload/rapat/notulen" + newFilename2;
+            using (var stream = System.IO.File.Create(imageFullPath2))
+            {
+                rapatViewModel.notulen.CopyTo(stream);
+            }
             try
             {
                 int id = Int32.Parse(Request.Form["hidden_id"].FirstOrDefault());
@@ -121,8 +198,8 @@ namespace mystap.Controllers
                 {
                     obj.id_project = Convert.ToInt64(Request.Form["id_project"]);
                     obj.judul = Request.Form["judul"].FirstOrDefault();
-                    obj.materi = Request.Form["materi"].FirstOrDefault();
-                    obj.notulen = Request.Form["notulen"].FirstOrDefault();
+                    obj.materi = newFilename;
+                    obj.notulen = newFilename2;
                     _context.SaveChanges();
                     return Json(new { Results = true });
                 }
@@ -336,6 +413,7 @@ namespace mystap.Controllers
                     customerData = customerData.Where(b => b.description.StartsWith(searchValue));
                 }
 
+
                 if (!string.IsNullOrEmpty(status))
                 {
                     customerData = customerData.Where(b => b.active == status);
@@ -347,8 +425,14 @@ namespace mystap.Controllers
                 }
 
                 recordsTotal = customerData.Count();
-                var data = await customerData.Skip(skip).Take(pageSize).ToListAsync();
-                return Json(new { draw = draw, recordFiltered = recordsTotal, recordsTotal = recordsTotal, data = data });
+                // Paging
+                var datas = await customerData.Skip(skip).Take(pageSize).ToListAsync();
+                //var data = _memoryCache.Get("products");
+                //data = await _memoryCache.Set("products", datas, expirationTime);
+                // Returning Json Data
+                return Json(new { draw = draw, recordsFiltered = recordsTotal, recordsTotal = recordsTotal, data = datas });
+
+              
             }
             catch (Exception)
             {
@@ -549,10 +633,18 @@ namespace mystap.Controllers
                 {
                     customerData = customerData.Where(b => b.eqDesc.StartsWith(searchValue) || b.eqTagNo.StartsWith(searchValue));
                 }
+
+                //Console.WriteLine(customerData);
+                // Total number of rows count
                 //Console.WriteLine(customerData);
                 recordsTotal = customerData.Count();
-                var data = await customerData.Skip(skip).Take(pageSize).ToListAsync();
-                return Json(new { draw = draw, recordsFilter = recordsTotal, recordsTotal = recordsTotal, data = data });
+
+                var datas = await customerData.Skip(skip).Take(pageSize).ToListAsync();
+                //var data = _memoryCache.Get("products");
+                //data = await _memoryCache.Set("products", datas, expirationTime);
+                // Returning Json Data
+                return Json(new { draw = draw, recordsFiltered = recordsTotal, recordsTotal = recordsTotal, data = datas });
+
             }
             catch (Exception)
             {
@@ -737,7 +829,7 @@ namespace mystap.Controllers
            
             return View();
         }
-        public IActionResult Get_Catalog_Profile()
+        public async Task<IActionResult> Get_Catalog_Profile()
         {
             try
             {
@@ -769,10 +861,15 @@ namespace mystap.Controllers
                 {
                     customerData = customerData.Where(b => b.long_description.StartsWith(searchValue));
                 }
+                // Total number of rows count
                 //Console.WriteLine(customerData);
                 recordsTotal = customerData.Count();
-                var data = customerData.Skip(skip).Take(pageSize).ToList();
-                return Json(new { draw = draw, recordsFilter = recordsTotal, recordsTotal = recordsTotal, data = data });
+                // Paging
+                var datas = await customerData.Skip(skip).Take(pageSize).ToListAsync();
+                //var data = _memoryCache.Get("products");
+                //data = await _memoryCache.Set("products", datas, expirationTime);
+                // Returning Json Data
+                return Json(new { draw = draw, recordsFiltered = recordsTotal, recordsTotal = recordsTotal, data = datas });
             }
             catch (Exception)
             {
@@ -865,7 +962,7 @@ namespace mystap.Controllers
             ViewBag.requestors = _context.requestors.Where(p => p.deleted == 0).ToList();
             return View();
         }
-        public IActionResult Get_Memo()
+        public async Task<IActionResult> Get_Memo()
         {
             try
             {
@@ -897,10 +994,15 @@ namespace mystap.Controllers
                 {
                     customerData = customerData.Where(b => b.reqDesc.StartsWith(searchValue));
                 }
+                // Total number of rows count
                 //Console.WriteLine(customerData);
                 recordsTotal = customerData.Count();
-                var data = customerData.Skip(skip).Take(pageSize).ToList();
-                return Json(new { draw = draw, recordsFilter = recordsTotal, recordsTotal = recordsTotal, data = data });
+                // Paging
+                var datas = await customerData.Skip(skip).Take(pageSize).ToListAsync();
+                //var data = _memoryCache.Get("products");
+                //data = await _memoryCache.Set("products", datas, expirationTime);
+                // Returning Json Data
+                return Json(new { draw = draw, recordsFiltered = recordsTotal, recordsTotal = recordsTotal, data = datas });
             }
             catch (Exception)
             {
@@ -996,7 +1098,7 @@ namespace mystap.Controllers
 
             return View();
         }
-        public IActionResult Get_Requestor()
+        public async Task<IActionResult> Get_Requestor()
         {
             try
             {
@@ -1028,10 +1130,15 @@ namespace mystap.Controllers
                 {
                     customerData = customerData.Where(b => b.description.StartsWith(searchValue));
                 }
+                // Total number of rows count
                 //Console.WriteLine(customerData);
                 recordsTotal = customerData.Count();
-                var data = customerData.Skip(skip).Take(pageSize).ToList();
-                return Json(new { draw = draw, recordsFilter = recordsTotal, recordsTotal = recordsTotal, data = data });
+                // Paging
+                var datas = await customerData.Skip(skip).Take(pageSize).ToListAsync();
+                //var data = _memoryCache.Get("products");
+                //data = await _memoryCache.Set("products", datas, expirationTime);
+                // Returning Json Data
+                return Json(new { draw = draw, recordsFiltered = recordsTotal, recordsTotal = recordsTotal, data = datas });
             }
             catch (Exception)
             {
@@ -1121,7 +1228,7 @@ namespace mystap.Controllers
             ViewBag.unitProses = _context.unitProses.Where(p => p.deleted == 0).ToList();
             return View();
         }
-        public IActionResult Get_Unit()
+        public async Task<IActionResult> Get_Unit()
         {
             try
             {
@@ -1153,10 +1260,15 @@ namespace mystap.Controllers
                 {
                     customerData = customerData.Where(b => b.unitPlan.StartsWith(searchValue));
                 }
+                // Total number of rows count
                 //Console.WriteLine(customerData);
                 recordsTotal = customerData.Count();
-                var data = customerData.Skip(skip).Take(pageSize).ToList();
-                return Json(new { draw = draw, recordsFilter = recordsTotal, recordsTotal = recordsTotal, data = data });
+                // Paging
+                var datas = await customerData.Skip(skip).Take(pageSize).ToListAsync();
+                //var data = _memoryCache.Get("products");
+                //data = await _memoryCache.Set("products", datas, expirationTime);
+                // Returning Json Data
+                return Json(new { draw = draw, recordsFiltered = recordsTotal, recordsTotal = recordsTotal, data = datas });
             }
             catch (Exception)
             {

@@ -18,11 +18,10 @@
         ajax: {
             url: '/durasi_step_',
             method: 'POST',
-            data: {
-                project_filter: project,
-                project_rev: project_rev,
-                kat_tender_filter: kat_tender 
-            },
+            data: function (d) {
+                d.project = $('#project_filter').val();
+                d.kat_tender = $('#kat_tender_filter').val();
+            }
 
         },
 

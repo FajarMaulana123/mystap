@@ -96,11 +96,9 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title judul-modal" id="Modal"></h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-hidden="true"  aria-label="Close">
-                   
-                </button>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-hidden="true" aria-label="Close"></button>
             </div>
-            <form id="add-form>
+            <form id="add-form">
             <div class="modal-body">
                 <div class="row">
                     <div class="col-12">
@@ -114,11 +112,10 @@
                                             <label class="form-label col-form-label col-md-3">Project</label>
                                             <div class="col-md-9">
                                                 <select name="id_project" id="id_project" class="form-control select2">
-                                                    <option value="">Pilih Project</option>
-                                                    @foreach (var val in ViewBag.project)
-                                                    {
-                                                        <option value="@(val.projectNo)" data-id="@(val.id)" data-desc="@(val.description)" data-rev="@(val.revision)"> @(val.description)</option>
-                                                    }
+                                                    <option value="">Pilih Project</option> @foreach (var val in ViewBag.project)
+                                                {
+                                                        <option value="@(val.id)"> @(val.description)</option>
+                                                }
                                                 </select>
                                             </div>
                                         </div>
@@ -206,7 +203,7 @@
                                             <label class="form-label col-form-label col-md-6">Pemberian Penjelasan</label>
                                             <div class="col-md-6">
                                                 <div class="input-group">
-                                                    <input type="number" name="pemberian" id="pemberian"  class="form-control" />
+                                                    <input type="number" name="pemberian" id="pemberian" class="form-control" />
                                                     <span class="input-group-text"> / Hari</span>
                                                 </div>
                                             </div>
@@ -224,7 +221,7 @@
                                             <label class="form-label col-form-label col-md-6">Pembukaan Dokumen Penawaran</label>
                                             <div class="col-md-6">
                                                 <div class="input-group">
-                                                    <input type="number" name="pembukaan" id="pembukaan"  class="form-control" />
+                                                    <input type="number" name="pembukaan" id="pembukaan" class="form-control" />
                                                     <span class="input-group-text"> / Hari</span>
                                                 </div>
                                             </div>
@@ -235,7 +232,7 @@
                                             <label class="form-label col-form-label col-md-6">Evaluasi Penawaran</label>
                                             <div class="col-md-6">
                                                 <div class="input-group">
-                                                    <input type="number"  name="evaluasi" id="evaluasi"  class="form-control" />
+                                                    <input type="number" name="evaluasi" id="evaluasi" class="form-control" />
                                                     <span class="input-group-text"> / Hari</span>
                                                 </div>
                                             </div>
@@ -244,7 +241,7 @@
                                             <label class="form-label col-form-label col-md-6">Negosiasi</label>
                                             <div class="col-md-6">
                                                 <div class="input-group">
-                                                    <input type="number"  name="negosiasi" id="negosiasi"  class="form-control" />
+                                                    <input type="number" name="negosiasi" id="negosiasi" class="form-control" />
                                                     <span class="input-group-text"> / Hari</span>
                                                 </div>
                                             </div>
@@ -253,7 +250,7 @@
                                             <label class="form-label col-form-label col-md-6">Usulan Penetapan Calon Pemenang</label>
                                             <div class="col-md-6">
                                                 <div class="input-group">
-                                                    <input type="number" name="usulan" id="usulan"  class="form-control" />
+                                                    <input type="number" name="usulan" id="usulan" class="form-control" />
                                                     <span class="input-group-text"> / Hari</span>
                                                 </div>
                                             </div>
@@ -271,7 +268,7 @@
                                             <label class="form-label col-form-label col-md-6">Pengumuman Pemenang</label>
                                             <div class="col-md-6">
                                                 <div class="input-group">
-                                                    <input type="number"  name="pengumuman_pemenang" id="pengumuman_pemenang" class="form-control" />
+                                                    <input type="number" name="pengumuman_pemenang" id="pengumuman_pemenang" class="form-control" />
                                                     <span class="input-group-text"> / Hari</span>
                                                 </div>
                                             </div>
@@ -313,17 +310,18 @@
                                             </div>
                                         </div>
                                     </div>
-                                </div>  
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
-            </form>
+            </div>
             <div class="modal-footer">
-                    <a href="javascript:;" class="btn btn-white" data-bs-dismiss="modal">Close</a>
-                    <button type="reset" class="btn btn-dark">Reset</button>
-                    <button type="submit" class="btn btn-success">Submit</button>
-                </div>
+                <a href="javascript:;" class="btn btn-white" data-bs-dismiss="modal">Close</a>
+                <button type="reset" class="btn btn-dark">Reset</button>
+                <button type="submit" class="btn btn-success">Submit</button>
+            </div>
+            </form>
         </div>
     </div>
 </div>
