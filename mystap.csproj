@@ -20,6 +20,9 @@
 
   <ItemGroup>
     <Folder Include="wwwroot\lib\js\" />
+    <Folder Include="wwwroot\upload\bom\" />
+    <Folder Include="wwwroot\upload\rapat\materi\" />
+    <Folder Include="wwwroot\upload\rapat\notulen\" />
   </ItemGroup>
 
 </Project>
