@@ -560,9 +560,9 @@ namespace mystap.Controllers
                 // Paging Length 10, 20
                 var length = Request.Form["length"].FirstOrDefault();
                 // Sort Column Name
-                var sortColumn = Request.Form["columns[" + Request.Form["order[0][column]"].FirstOrDefault() + "][name]"].FirstOrDefault();
+                var sortColumn = Request.Form["columns[" + Request.Form["order[1][column]"].FirstOrDefault() + "][name]"].FirstOrDefault();
                 // Sort Column Direction (asc, desc)
-                var sortColumnDirection = Request.Form["order[0][dir]"].FirstOrDefault();
+                var sortColumnDirection = Request.Form["order[1][dir]"].FirstOrDefault();
                 // Search Value from (Search box)
                 var searchValue = Request.Form["search[value]"].FirstOrDefault();
                 // Paging Size (10, 20, 50, 100)
@@ -807,8 +807,9 @@ namespace mystap.Controllers
                 int id = Int32.Parse(Request.Form["id"].FirstOrDefault());
                 Equipments obj = _context.equipments.Where(p => p.id == id).FirstOrDefault();
 
-                if (obj == null)
+                if (obj != null)
                 {
+                    obj.deletedBy = 1;
                     obj.deleted = 1;
                     _context.SaveChanges();
 
@@ -823,9 +824,9 @@ namespace mystap.Controllers
         }
         public IActionResult CatalogProfile()
         {
-
-            
-            ViewBag.project = _context.project.Where(p => p.deleted == 0).ToList();
+            //ViewBag.project = _context.project.Where(p => p.deleted == 0).ToList();
+            ViewBag.disiplin_ = _context.disiplins.Where(p => p.deleted == 0).ToList();
+            ViewBag.catprof = _context.catalogProfile.Where(p => p.deleted == 0).GroupBy(p => new { p.equipment_class }).Select(p => new { equipment_class = p.Key.equipment_class }).ToList();
            
             return View();
         }
@@ -849,8 +850,21 @@ namespace mystap.Controllers
                 int skip = start != null ? Convert.ToInt32(start) : 0;
                 int recordsTotal = 0;
 
+                var customerData = (from c in _context.catalogProfile
+                                    join d in _context.disiplins on c.disiplin equals d.inisial
+                                    select new
+                                    {
+                                        id = c.id,
+                                        code = c.code,
+                                        equipment_class = c.equipment_class,
+                                        equipment_group = c.equipment_group,
+                                        disiplin = c.disiplin,
+                                        long_description = c.long_description,
+                                        disiplins = d.disiplins,
+                                        deleted = c.deleted
+                                    });
 
-                var customerData = _context.catalogProfile.Include("users").Where(s => s.deleted == 0).Select(a => new { id = a.id, code = a.code, equipment_class = a.equipment_class, equipment_group = a.equipment_group, disiplin = a.disiplin, long_description = a.long_description });
+                customerData = customerData.Where(s => s.deleted == 0);
 
                 if (!(string.IsNullOrEmpty(sortColumn) && string.IsNullOrEmpty(sortColumnDirection)))
                 {
@@ -886,8 +900,8 @@ namespace mystap.Controllers
                 catalogProfile.equipment_class = formcollaction["equipment_class"];
                 catalogProfile.equipment_group = formcollaction["equipment_group"];
                 catalogProfile.long_description = formcollaction["long_description"];
-                catalogProfile.created_date = formcollaction["created_date"];
-                catalogProfile.createdBy = formcollaction["disiplin"];
+                catalogProfile.created_date = DateTime.Now;
+                catalogProfile.createdBy = 1;
                 catalogProfile.deleted = 0;
 
                 Boolean t;
@@ -922,10 +936,13 @@ namespace mystap.Controllers
                     obj.equipment_class = Request.Form["equipment_class"].FirstOrDefault();
                     obj.equipment_group = Request.Form["equipment_group"].FirstOrDefault();
                     obj.long_description = Request.Form["long_description"].FirstOrDefault();
+                    obj.lastmodify = DateTime.Now;
+                    obj.modifyBy = 1;
+
                     _context.SaveChanges();
-                    return Json(new { Results = true });
+                    return Json(new { result = true });
                 }
-                return Json(new { Results = false });
+                return Json(new { result = false });
             }
             catch
             {
@@ -940,8 +957,9 @@ namespace mystap.Controllers
                 int id = Int32.Parse(Request.Form["id"].FirstOrDefault());
                 CatalogProfile obj = _context.catalogProfile.Where(p => p.id == id).FirstOrDefault();
 
-                if (obj == null)
+                if (obj != null)
                 {
+                    obj.deletedBy = 1;
                     obj.deleted = 1;
                     _context.SaveChanges();
 
@@ -1078,7 +1096,7 @@ namespace mystap.Controllers
                 int id = Int32.Parse(Request.Form["id"].FirstOrDefault());
                 Memo obj = _context.memo.Where(p => p.id == id).FirstOrDefault();
 
-                if (obj == null)
+                if (obj != null)
                 {
                     obj.deleted = 1;
                     _context.SaveChanges();
@@ -1119,7 +1137,7 @@ namespace mystap.Controllers
                 int recordsTotal = 0;
 
 
-                var customerData = _context.requestors.Include("users").Where(s => s.deleted == 0).Select(a => new { id = a.id, fungsi = a.fungsi, name = a.name, description = a.description,dateCreated = a.dateCreated });
+                var customerData = _context.requestors.Where(s => s.deleted == 0).Select(a => new { id = a.id, fungsi = a.fungsi, name = a.name, description = a.description,dateCreated = a.dateCreated });
 
                 if (!(string.IsNullOrEmpty(sortColumn) && string.IsNullOrEmpty(sortColumnDirection)))
                 {
@@ -1150,11 +1168,11 @@ namespace mystap.Controllers
             try
             {
                 Requestor requestor = new Requestor();
-                requestor.fungsi =formcollaction["fungsi"];
+                //requestor.fungsi =formcollaction["fungsi"];
                 requestor.name = formcollaction["name"];
                 requestor.description = formcollaction["description"];
                 requestor.deleted = 0;
-                requestor.updated = 0;
+                //requestor.updated = 0;
                 requestor.createdBy = 1;
                 requestor.dateCreated = DateTime.Now;
 
@@ -1185,14 +1203,16 @@ namespace mystap.Controllers
 
                 if (obj != null)
                 {
-                    obj.fungsi = Request.Form["fungsi"].FirstOrDefault();
+                    //obj.fungsi = Request.Form["fungsi"].FirstOrDefault();
                     obj.description = Request.Form["description"].FirstOrDefault();
                     obj.name = Request.Form["name"].FirstOrDefault();
                     obj.updated = 1;
+                    obj.updatedBy = 1;
+
                     _context.SaveChanges();
-                    return Json(new { Results = true });
+                    return Json(new { result = true });
                 }
-                return Json(new { Results = false });
+                return Json(new { result = false });
             }
             catch
             {
@@ -1207,9 +1227,10 @@ namespace mystap.Controllers
                 int id = Int32.Parse(Request.Form["id"].FirstOrDefault());
                 Requestor obj = _context.requestors.Where(p => p.id == id).FirstOrDefault();
 
-                if (obj == null)
+                if (obj != null)
                 {
                     obj.deleted = 1;
+                    obj.deletedBy = 1;
                     _context.SaveChanges();
 
                     return Json(new { title = "Sukses!", icon = "success", status = "Berhasil Dihapus" });
@@ -1330,9 +1351,9 @@ namespace mystap.Controllers
                     obj.updated = 1;
                     obj.updatedBy = 1;
                     _context.SaveChanges();
-                    return Json(new { Results = true });
+                    return Json(new { result = true });
                 }
-                return Json(new { Results = false });
+                return Json(new { result = false });
             }
             catch
             {
@@ -1347,7 +1368,7 @@ namespace mystap.Controllers
                 int id = Int32.Parse(Request.Form["id"].FirstOrDefault());
                 Unit obj = _context.unit.Where(p => p.id == id).FirstOrDefault();
 
-                if (obj == null)
+                if (obj != null)
                 {
                     obj.deleted = 1;
                     _context.SaveChanges();

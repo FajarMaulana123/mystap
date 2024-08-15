@@ -5,6 +5,8 @@ using Microsoft.CodeAnalysis.Options;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using mystap.Models;
+using System;
+using System.Globalization;
 using System.Linq.Dynamic.Core;
 using System.Reflection.Metadata;
 using System.Text.RegularExpressions;
@@ -14,10 +16,10 @@ namespace mystap.Controllers
 {
     public class ContractController : Controller
     {
-        public IActionResult Index()
-        {
-            return View();
-        }
+        //public IActionResult Index()
+        //{
+        //    return View();
+        //}
         private readonly DatabaseContext _context;
         public ContractController(DatabaseContext context)
         {
@@ -36,8 +38,8 @@ namespace mystap.Controllers
                })
                .ToList();
             ViewBag.sow_group = _context.sowGroup.Where(p => p.deleted != 1).ToList();
-            ViewBag.userAccount = _context.users.Where(p => p.locked != 1).Where(p => p.statPekerja == "PLANNER").Where(p => p.alias != null).Where(p => p.alias != "").Where(p => p.statPekerja == "PEKERJA").ToList();
-            ViewBag.project = _context.project.Where(p => p.deleted == 0).ToList();
+            ViewBag.userAccount = _context.users.Where(p => p.locked != 1).Where(p => p.statPekerja == "PLANNER").Where(p => p.status == "PEKERJA").Where(p => p.alias != null && p.alias != "").ToList();
+            ViewBag.project = _context.project.Where(p => p.deleted == 0 && p.active == "1").ToList();
             ViewBag.unit = _context.unit
                .Where(p => p.deleted == 0)
                .GroupBy(x => new { x.unitCode, x.unitProses })
@@ -61,7 +63,7 @@ namespace mystap.Controllers
                 var select = "<option value=''> Select Sub Group </option> ";
                 foreach (var val in data)
                 {
-                    select += "<option value='val.subGroup' data-urut='val.urut'>" + val.sub_group + "</ option >";
+                    select += "<option value='"+val.sub_group +"' data-urut='"+val.urut+"'>" + val.sub_group + "</ option >";
                 }
 
                 return base.Content(select, "text/html");
@@ -91,13 +93,79 @@ namespace mystap.Controllers
                 int skip = start != null ? Convert.ToInt32(start) : 0;
                 int recordsTotal = 0;
 
+                var project = Request.Form["project"].FirstOrDefault();
+                var events = Request.Form["events"].FirstOrDefault();
+                var groups = Request.Form["groups"].FirstOrDefault();
+                var area = Request.Form["area"].FirstOrDefault();
+                var kabo = Request.Form["kabo"].FirstOrDefault();
+                var tahun = Request.Form["tahun"].FirstOrDefault();
+                var no = Request.Form["no"].FirstOrDefault();
 
-                var customerData = _context.sow.Include("project").Where(s => s.deleted == 0).Select(a => new { id = a.id, noSOW = a.noSOW, jobCode = a.jobCode, judulPekerjaan = a.judulPekerjaan, planner = a.planner, kabo = a.kabo, events = a.events, groups = a.groups, subGroups = a.subGroups, area = a.area, tahun = a.tahun, description = a.project.description, createdBy = a.createdBy, modifyBy = a.modifyBy });
 
-               /* if (!(string.IsNullOrEmpty(sortColumn) && string.IsNullOrEmpty(sortColumnDirection)))
+                var customerData = (from a in _context.sow
+                                    join p in _context.project on a.projectID equals p.id
+                                    select new
+                                    {
+                                        id = a.id,
+                                        projectId = p.id,
+                                        noSOW = a.noSOW,
+                                        jobCode = a.jobCode,
+                                        judulPekerjaan = a.judulPekerjaan,
+                                        planner = a.planner,
+                                        kabo = a.kabo,
+                                        events = a.events,
+                                        groups = a.groups,
+                                        subGroups = a.subGroups,
+                                        area = a.area,
+                                        tahun = a.tahun,
+                                        description = p.description,
+                                        createdBy = a.createdBy,
+                                        modifyBy = a.modifyBy,
+                                        deleted = a.deleted
+                                    });
+
+                customerData = customerData.Where(p => p.deleted == 0);
+
+                if(project != "")
+                {
+                    customerData = customerData.Where(p => p.projectId == Convert.ToInt32(project));
+                }
+
+                if(events != "")
+                {
+                    customerData = customerData.Where(p => p.events == events);
+                }
+
+                if(groups != "")
+                {
+                    customerData = customerData.Where(p => p.groups == groups);
+                }
+
+                if(area != "")
+                {
+                    customerData = customerData.Where(p => p.area == area);
+                }
+
+                if(kabo != "")
+                {
+                    customerData = customerData.Where(p => p.kabo == kabo);
+                }
+
+                if(tahun != "")
+                {
+                    customerData = customerData.Where(p => p.tahun == tahun);
+                }
+
+                if(no != "")
+                {
+                    customerData = customerData.Where(p => p.noSOW.StartsWith(no));
+                }
+
+
+                if (!(string.IsNullOrEmpty(sortColumn) && string.IsNullOrEmpty(sortColumnDirection)))
                 {
                     customerData = customerData.OrderBy(sortColumn + " " + sortColumnDirection);
-                }*/
+                }
 
                 if (!string.IsNullOrEmpty(searchValue))
                 {
@@ -125,35 +193,53 @@ namespace mystap.Controllers
         {
             try
             {
+                string tahun = formcollaction["tahun"];
+                string inisial = formcollaction["inisial"];
+                var cek = _context.sow.Where(p => p.tahun == tahun).Where(w => w.tahun.Contains(tahun)).Select(p => new
+                            {
+                                tahun = p.tahun,
+                                kode = p.jobCode.Max()
+                            }).FirstOrDefault();
+                var no = 0;
+                if (cek.tahun != tahun )
+                {
+                    no = 1;
+                }
+                else
+                {
+                    var p = cek.kode;
+                    no = p + 1;
+                }
+
                 Sow sow = new Sow();
-                sow.projectID = 7;
-                sow.noSOW = formcollaction["noSOW"];
+                sow.jobCode = formcollaction["inisial"] + "-" + no.ToString("D3");
+                sow.noSOW = formcollaction["event"] + "-" + no.ToString("D3") + "-" + formcollaction["inisial"] + formcollaction["urut"] + "-" + formcollaction["area"] + "/" + formcollaction["codeKabo"] + "/" + tahun.Substring(tahun.Length - 2); ;
+                sow.projectID = Convert.ToInt32(formcollaction["project"]);
                 sow.events = formcollaction["events"];
-                sow.groups = formcollaction["groups"];
-                sow.subGroups = formcollaction["subGroups"];
+                sow.groups = formcollaction["groups_"];
+                sow.subGroups = formcollaction["subGroup"];
                 sow.area = formcollaction["area"];
                 sow.kabo = formcollaction["kabo"];
                 sow.tahun = formcollaction["tahun"];
                 sow.judulPekerjaan = formcollaction["judulPekerjaan"];
                 sow.planner = formcollaction["planner"];
-                sow.jobCode = formcollaction["jobCode"];
-                sow.file = formcollaction["file"];
+                //sow.file = formcollaction["file"];
                 sow.createdBy = "Rama";
                 sow.createdDate = DateTime.Now;
                 sow.deleted = 0;
-
-                Boolean t;
-                if (sow != null)
-                {
-                    _context.sow.Add(sow);
-                    _context.SaveChanges();
-                    t = true;
-                }
-                else
-                {
-                    t = false;
-                }
-                return Json(new { result = t });
+                return Json(new { data = sow });
+                //Boolean t;
+                //if (sow != null)
+                //{
+                //    _context.sow.Add(sow);
+                //    _context.SaveChanges();
+                //    t = true;
+                //}
+                //else
+                //{
+                //    t = false;
+                //}
+                //return Json(new { result = t });
             }
             catch (Exception)
             {
@@ -169,24 +255,24 @@ namespace mystap.Controllers
 
                 if (obj != null)
                 {
-                    obj.projectID = 7;
+                    //obj.jobCode = Request.Form["jobCode"].FirstOrDefault();
+                    obj.projectID = Convert.ToInt32(Request.Form["project"]);
                     obj.noSOW = Request.Form["noSOW"].FirstOrDefault();
                     obj.events = Request.Form["events"].FirstOrDefault();
                     obj.groups = Request.Form["groups"].FirstOrDefault();
-                    obj.subGroups = Request.Form["subGroups"].FirstOrDefault();
+                    obj.subGroups = Request.Form["subGroup"].FirstOrDefault();
                     obj.area = Request.Form["area"].FirstOrDefault();
                     obj.kabo = Request.Form["kabo"].FirstOrDefault();
                     obj.tahun = Request.Form["tahun"].FirstOrDefault();
                     obj.judulPekerjaan = Request.Form["judulPekerjaan"].FirstOrDefault();
                     obj.planner = Request.Form["planner"].FirstOrDefault();
-                    obj.jobCode = Request.Form["jobCode"].FirstOrDefault();
-                    obj.file = Request.Form["file"].FirstOrDefault();
-                    //obj.modifyBy = 'Rama';
+                    //obj.file = Request.Form["file"].FirstOrDefault();
+                    obj.modifyBy = "Rama";
                     obj.lastModify = DateTime.Now;
                     _context.SaveChanges();
-                    return Json(new { Results = true });
+                    return Json(new { result = true });
                 }
-                return Json(new { Results = false });
+                return Json(new { result = false });
             }
             catch
             {

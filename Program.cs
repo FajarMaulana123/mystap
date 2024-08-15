@@ -329,9 +329,9 @@ app.UseEndpoints(endpoints =>
        defaults: new { controller = "Data", action = "Update_Equipments" });
 
     endpoints.MapControllerRoute(
-       name: "delete_equipments",
-       pattern: "delete_equipments",
-       defaults: new { controller = "Data", action = "Delete_Equipments" });
+       name: "delete_equipment",
+       pattern: "delete_equipment",
+       defaults: new { controller = "Data", action = "Deleted_Equipments" });
 
     endpoints.MapControllerRoute(
        name: "getUnitKilang",
@@ -361,7 +361,7 @@ app.UseEndpoints(endpoints =>
     endpoints.MapControllerRoute(
        name: "delete_catalog_profile",
        pattern: "delete_catalog_profile",
-       defaults: new { controller = "Data", action = "Delete_Catalog_Profile" });
+       defaults: new { controller = "Data", action = "Deleted_Catalog_Profile" });
 
     endpoints.MapControllerRoute(
        name: "request_memo",
@@ -411,7 +411,7 @@ app.UseEndpoints(endpoints =>
     endpoints.MapControllerRoute(
        name: "delete_requestor",
        pattern: "delete_requestor",
-       defaults: new { controller = "Data", action = "Delete_Requestor" });
+       defaults: new { controller = "Data", action = "Deleted_Requestor" });
 
     endpoints.MapControllerRoute(
        name: "unit",
@@ -436,7 +436,7 @@ app.UseEndpoints(endpoints =>
     endpoints.MapControllerRoute(
        name: "delete_unit",
        pattern: "delete_unit",
-       defaults: new { controller = "Data", action = "Delete_Unit" });
+       defaults: new { controller = "Data", action = "Deleted_Unit" });
 
     endpoints.MapControllerRoute(
       name: "sow",
@@ -451,7 +451,7 @@ app.UseEndpoints(endpoints =>
     endpoints.MapControllerRoute(
       name: "get_sow_group",
       pattern: "get_sow_group",
-      defaults: new { controller = "Contract", action = "Get_SowGroup" });
+      defaults: new { controller = "Contract", action = "GetSowGroup" });
 
     endpoints.MapControllerRoute(
        name: "create_sow",
@@ -466,7 +466,7 @@ app.UseEndpoints(endpoints =>
     endpoints.MapControllerRoute(
        name: "delete_sow",
        pattern: "delete_sow",
-       defaults: new { controller = "Contract", action = "Delete_Sow" });
+       defaults: new { controller = "Contract", action = "Deleted_Sow" });
 
     endpoints.MapControllerRoute(
      name: "durasi_step",

@@ -25,9 +25,9 @@ namespace mystap.Models
         public DateTime? lastModify { get; set; }
         public int? deleted { get; set; }
 
-        //public Users users { get; set; }
-        [ForeignKey("projectID")]
-        public Project project { get; set; }
+        ////public Users users { get; set; }
+        //[ForeignKey("projectID")]
+        //public Project project { get; set; }
 
 
     }

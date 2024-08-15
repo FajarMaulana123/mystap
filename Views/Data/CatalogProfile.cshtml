@@ -56,6 +56,10 @@
                                     <label>Disiplin</label>
                                     <select name="disiplin" id="disiplin" class="form-select">
                                         <option value="">Select Disiplin</option>
+                                        @foreach (var val in ViewBag.disiplin_)
+                                        {
+                                            <option value="@(val.inisial)"> @(val.disiplins)</option>
+                                        }
                                     </select>
                                 </div>
                             </div>
@@ -75,6 +79,10 @@
                             <label>Equipment Class</label>
                             <select name="equipment_class" id="equipment_class" class="form-select">
                                 <option value="">Select Equipment Class</option>
+                                @foreach (var val in ViewBag.catprof)
+                                {
+                                        <option value="@(val.equipment_class)"> @(val.equipment_class)</option>
+                                }
                             </select>
                         </div>
                     </div>

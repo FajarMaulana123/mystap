@@ -17,7 +17,6 @@ namespace mystap.Models
         public long? createdBy { get; set; }
         public DateTime? dateCreated { get; set; }
 
-        public Users users { get; set; }
 
     }
 }

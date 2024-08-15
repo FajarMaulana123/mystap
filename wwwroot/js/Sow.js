@@ -1,4 +1,9 @@
 ﻿$(document).ready(function () {
+
+    $('.date-own').datepicker({
+        minViewMode: 2,
+        format: 'yyyy'
+    });
     function get_subGroup(groups_, selected) {
         // console.log(groups_)
         $.ajax({
@@ -63,11 +68,7 @@
             }
         },
         columns: [
-            {
-                "data": null, orderable: false, "render": function (data, type, full, meta) {
-                    return meta.row + 1;
-                }
-            },
+           
             {
                 data: 'noSOW',
                 name: 'noSOW'
@@ -110,7 +111,7 @@
             },
             {
                 data: 'description',
-                name: 'project.description'
+                name: 'description'
             },
             {
                 data: 'createdBy',
@@ -121,12 +122,12 @@
                 name: 'modifyBy'
             },
 
-            {
-                data: 'action',
-                name: 'action',
-                orderable: false,
-                searchable: false
-            },
+            //{
+            //    data: 'action',
+            //    name: 'action',
+            //    orderable: false,
+            //    searchable: false
+            //},
         ],
         //columnDefs: [
         //    (user_auth == 'user') ? { "visible": false, "targets": [13] } : {},

@@ -24,7 +24,7 @@
                                     <select name="project_filter" id="project_filter" class="form-control form-control-sm">
                                     @foreach (var val in ViewBag.project)
                                     {
-                                        <option value="@(val.projectNo)" data-id="@(val.id)" data-desc="@(val.description)" data-rev="@(val.revision)"> @(val.description)</option>
+                                        <option value="@(val.id)" data-desc="@(val.description)" data-rev="@(val.revision)"> @(val.description)</option>
                                     }
                                     </select> 
                                 </div>
@@ -70,7 +70,7 @@
                                         <option value="">Select Area</option>
                                     @foreach (var val in ViewBag.unit)
                                     {
-                                        <option value="@(val.unitCode)" > @(val.unitCode)</option>
+                                        <option value="@(val.unitCode)" > @(val.unitCode) (@(val.unitProses))</option>
                                     }
                                     </select>
                                 </div>
@@ -92,9 +92,7 @@
                         <div class="col-md-4">
                                 <div class="form-group">
                                     <label>Year</label>
-                                    <select name="tahun_filter" id="tahun_filter" class="form-control  form-control-sm">
-                                        <option value="">Select Tahun</option>
-                                    </select>
+                                    <input type="text" id="tahun_filter" name="tahun_filter" class="date-own form-control form-control-sm">
 
                                 </div>
                             </div>
@@ -130,8 +128,8 @@
                 <table id="table" class="table small table-striped table-bordered dataTables_wrapper" width="100%">
                     <thead>
                         <tr>
-                        <th>No</th>
-                        <th>No.SOW</th>
+                        @* <th>No</th> *@
+                            <th>No.SOW</th>
                             <th>Job Code</th>
                             <th>Judul Pekerjaan</th>
                             <th>Planner</th>
@@ -145,7 +143,7 @@
                             <th>Created By</th>
                             <th>Modified</th>
 
-                            <th>Action</th>
+                            @* <th>Action</th> *@
                         </tr>
                     </thead>
                 </table>
@@ -234,9 +232,8 @@
                                     <div class="col-md-6">
                                         <div class="form-group">
                                             <label>Year</label>
-                                            <select name="tahun" id="tahun" class="form-select  form-select-sm">
-                                                <option value="">Select Tahun</option>
-                                            </select>
+                                            <input type="text" name="tahun" id="tahun" class=" date-own form-select  form-select-sm" />
+                                       
                                         </div>
                                     </div>
                                 </div>
@@ -246,10 +243,10 @@
                                             <label>Project</label>
                                             <select name="projectID" id="projectID" class="form-select  form-select-sm">
                                                 <option value="">Select Project</option>
-                                            @foreach (var val in ViewBag.project)
-                                            {
-                                                <option value="@(val.projectNo)" data-id="@(val.id)" data-desc="@(val.description)" data-rev="@(val.revision)"> @(val.description)</option>
-                                            }
+                                                @foreach (var val in ViewBag.project)
+                                                {
+                                                    <option value="@(val.id)"  data-project="@(val.id)" > @(val.description)</option>
+                                                }
                                             </select>
                                         </div>
                                     </div>
@@ -258,10 +255,10 @@
                                             <label>Planner</label>
                                             <select name="planner" id="planner" class="form-select  form-select-sm">
                                                 <option value="">Select planner</option>
-                                            @foreach (var val in ViewBag.userAccount)
-                                            {
-                                                <option value="@(val.alias)"> @(val.alias)</option>
-                                            }
+                                                @foreach (var val in ViewBag.userAccount)
+                                                {
+                                                    <option value="@(val.alias)"> @(val.alias)</option>
+                                                }
                                             </select>
                                         </div>
                                     </div>

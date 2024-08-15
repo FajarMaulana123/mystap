@@ -18,6 +18,7 @@ namespace mystap.Models
         public DbSet<UnitProses> unitProses { get; set; }
         public DbSet<Equipments> equipments { get; set; }
         public DbSet<CatalogProfile> catalogProfile { get; set; }
+        public DbSet<Disiplin> disiplins { get; set; }
         public DbSet<Joblist> joblist { get; set; }
         public DbSet<Joblist_Detail> joblist_Detail { get; set; }
         public DbSet<ContractTracking> contractTracking { get; set; }
@@ -28,6 +29,7 @@ namespace mystap.Models
         public DbSet<SowGroup> sowGroup { get; set; }
         public DbSet<HistoryReservasi> historyReservasi { get; set; }
         public DbSet<Zpm01>zpm01 { get; set; }
+
 
         //View Model
         public DbSet<ViewReadinessEquipment> view_readiness_equipment { get; set; }
