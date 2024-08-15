@@ -20,12 +20,20 @@
                             <div class="col-md-4 mb-2">
                                 <label>Project</label>
                                 <select name="project_filter" id="project_filter" class="form-control form-control-sm">
+                                @foreach (var val in ViewBag.project)
+                                {
+                                    <option value="@(val.id)" data-rev="@(val.revision)"> @(val.description)</option>
+                                }
                                 </select> 
                                 </div> 
                                 <div class="col-md-4 mb-2">
                                         <label>Unit</label>
                                         <select name="unitCode_filter" id="unitCode_filter" class="form-control select2">
                                             <option value="">- Pilih Unit -</option>
+                                            @foreach (var val in ViewBag.unit)
+                                            {
+                                                <option value="@(val.unitCode)"> @(val.unitCode)  (@(val.unitProses))</option>
+                                            }
                                         </select>
                                 </div>
                                 <div class="col-md-4 mb-2">

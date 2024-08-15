@@ -68,7 +68,7 @@
             }
         },
         columns: [
-           
+
             {
                 data: 'noSOW',
                 name: 'noSOW'

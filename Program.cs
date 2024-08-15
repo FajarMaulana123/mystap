@@ -223,7 +223,13 @@ app.UseEndpoints(endpoints =>
        pattern: "joblist",
        defaults: new { controller = "Joblist", action = "Joblist" });
 
-    endpoints.MapControllerRoute(
+	endpoints.MapControllerRoute(
+
+	  name: "joblist_",
+	  pattern: "joblist_",
+	  defaults: new { controller = "Joblist", action = "Get_Joblist" });
+
+	endpoints.MapControllerRoute(
        name: "joblist_detail",
        pattern: "joblist_detail",
        defaults: new { controller = "Joblist", action = "Planning" });
@@ -493,6 +499,55 @@ app.UseEndpoints(endpoints =>
        pattern: "delete_durasi_step",
        defaults: new { controller = "Contract", action = "Delete_DurasiStep" });
 
+    endpoints.MapControllerRoute(
+      name: "user",
+      pattern: "user",
+      defaults: new { controller = "User", action = "Users" });
+
+    endpoints.MapControllerRoute(
+       name: "usermanagemant_",
+       pattern: "usermanagemant_",
+       defaults: new { controller = "User", action = "Get_User" });
+
+    endpoints.MapControllerRoute(
+       name: "create_usermanagement",
+       pattern: "create_usermanagement",
+       defaults: new { controller = "User", action = "Create_User" });
+
+    endpoints.MapControllerRoute(
+       name: "update_usermanagement",
+       pattern: "update_usermanagement",
+       defaults: new { controller = "User", action = "Update_User" });
+
+    endpoints.MapControllerRoute(
+       name: "delete_usermanagement",
+       pattern: "delete_usermanagement",
+       defaults: new { controller = "User", action = "Delete_User" });
+
+    endpoints.MapControllerRoute(
+      name: "bom",
+      pattern: "bom",
+      defaults: new { controller = "Data", action = "Bom" });
+
+    endpoints.MapControllerRoute(
+       name: "bom_",
+       pattern: "bom_",
+       defaults: new { controller = "Data", action = "Get_Boms" });
+
+    endpoints.MapControllerRoute(
+       name: "create_bom",
+       pattern: "create_bom",
+       defaults: new { controller = "Data", action = "Create_Bom" });
+
+    endpoints.MapControllerRoute(
+       name: "update_bom",
+       pattern: "update_bom",
+       defaults: new { controller = "Data", action = "Update_Bom" });
+
+    endpoints.MapControllerRoute(
+       name: "delete_bom",
+       pattern: "delete_bom",
+       defaults: new { controller = "Data", action = "Delete_Bom" });
 
 });
 

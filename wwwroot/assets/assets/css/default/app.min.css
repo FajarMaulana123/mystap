@@ -15417,16 +15417,16 @@ a:focus {
   width: auto;
   margin: 0 auto -12px;
 }
-.app-sidebar .menu .menu-profile .menu-profile-cover {
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background-image: url(images/cover-sidebar-user.jpg);
-  background-repeat: no-repeat;
-  background-size: cover;
-}
+    .app-sidebar .menu .menu-profile .menu-profile-cover {
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background-image: url(/assets/assets/img/login-bg/DJI_0044.JPG);
+        background-repeat: no-repeat;
+        background-size: cover;
+    }
 .app-sidebar .menu .menu-profile .menu-profile-cover.with-shadow:before {
   content: "";
   position: absolute;

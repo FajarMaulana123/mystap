@@ -28,7 +28,7 @@ namespace mystap.Models
         public long? modifyBy { get; set; }
 
 
-        [ForeignKey("createdBy")]
+        [ForeignKey("createBy")]
         public Users users { get; set; }
 
         public Project project { get; set; }

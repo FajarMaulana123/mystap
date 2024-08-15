@@ -26,7 +26,7 @@ namespace mystap.Controllers
 
             return View();
         }
-        public async Task<IActionResult>  Get_Rapat()
+        public async Task<IActionResult> Get_Rapat()
         {
             try
             {
@@ -64,7 +64,7 @@ namespace mystap.Controllers
                     customerData = customerData.Where(m => m.judul.StartsWith(searchValue) || m.notulen.StartsWith(searchValue) || m.nama_.StartsWith(searchValue));
                 }
 
-               
+
 
 
                 // Total number of rows count
@@ -84,7 +84,8 @@ namespace mystap.Controllers
         }
 
         [HttpPost]
-        public IActionResult Create_Rapat(RapatViewModel rapatViewModel,IFormCollection formcollaction) {
+        public IActionResult Create_Rapat(RapatViewModel rapatViewModel, IFormCollection formcollaction)
+        {
 
             if (rapatViewModel.materi == null)
             {
@@ -128,6 +129,7 @@ namespace mystap.Controllers
                 rapat.id_project = Convert.ToInt64(formcollaction["id_project"]);
                 rapat.judul = formcollaction["judul"];
                 rapat.created_by = 1;
+                rapat.tanggal = Convert.ToDateTime(formcollaction["tanggal"]);
                 rapat.created_date = DateTime.Now;
                 rapat.deleted = 0;
                 rapat.materi = newFilename;
@@ -198,6 +200,7 @@ namespace mystap.Controllers
                 {
                     obj.id_project = Convert.ToInt64(Request.Form["id_project"]);
                     obj.judul = Request.Form["judul"].FirstOrDefault();
+                    obj.tanggal = Convert.ToDateTime(Request.Form["tanggal"]);
                     obj.materi = newFilename;
                     obj.notulen = newFilename2;
                     _context.SaveChanges();
@@ -303,6 +306,7 @@ namespace mystap.Controllers
                 Steerco steerco = new Steerco();
                 steerco.id_project = Convert.ToInt64(formcollaction["id_project"]);
                 steerco.judul = formcollaction["judul"];
+                steerco.tanggal = Convert.ToDateTime(formcollaction["tanggal"]);
                 steerco.materi = formcollaction["materi"];
                 steerco.notulen = formcollaction["notulen"];
                 steerco.created_by = 1;
@@ -338,6 +342,7 @@ namespace mystap.Controllers
                 {
                     obj.id_project = Convert.ToInt64(Request.Form["id_project"]);
                     obj.judul = Request.Form["judul"].FirstOrDefault();
+                    obj.tanggal = Convert.ToDateTime(Request.Form["tanggal"]);
                     obj.materi = Request.Form["materi"].FirstOrDefault();
                     obj.notulen = Request.Form["notulen"].FirstOrDefault();
                     _context.SaveChanges();
@@ -432,7 +437,7 @@ namespace mystap.Controllers
                 // Returning Json Data
                 return Json(new { draw = draw, recordsFiltered = recordsTotal, recordsTotal = recordsTotal, data = datas });
 
-              
+
             }
             catch (Exception)
             {
@@ -572,57 +577,60 @@ namespace mystap.Controllers
 
 
                 var customerData = _context.equipments.Include("users").Where(s => s.deleted == 0)
-                    .Select(a => new { id = a.id, 
-                        eqTagNo = a.eqTagNo, 
-                        eqDesc = a.eqDesc, 
-                        funcLocID = a.funcLocID, 
-                        weight = a.weight, 
-                        weight_unit = a.weight_unit, 
-                        size = a.size, 
-                        start_up_date = a.start_up_date, 
-                        acquisition_value = a.acquisition_value, 
+                    .Select(a => new
+                    {
+                        id = a.id,
+                        eqTagNo = a.eqTagNo,
+                        eqDesc = a.eqDesc,
+                        funcLocID = a.funcLocID,
+                        weight = a.weight,
+                        weight_unit = a.weight_unit,
+                        size = a.size,
+                        start_up_date = a.start_up_date,
+                        acquisition_value = a.acquisition_value,
                         currency_key = a.currency_key,
                         acquisition_date = a.acquisition_date,
-                        planning_plant = a.planning_plant, 
-                        planner_group = a.planner_group, 
-                        main_work_center = a.main_work_center, 
-                        catalog_profile = a.catalog_profile, 
-                        maint_plant = a.maint_plant, 
-                        location = a.location, 
-                        plant_section = a.plant_section, 
-                        main_asset_no = a.main_asset_no, 
-                        asset_sub_no = a.asset_sub_no, 
-                        cost_center = a.cost_center, 
-                        WBS_element = a.WBS_element, 
-                        Position = a.Position, 
-                        tin = a.tin, 
-                        manufacturer = a.manufacturer, 
+                        planning_plant = a.planning_plant,
+                        planner_group = a.planner_group,
+                        main_work_center = a.main_work_center,
+                        catalog_profile = a.catalog_profile,
+                        maint_plant = a.maint_plant,
+                        location = a.location,
+                        plant_section = a.plant_section,
+                        main_asset_no = a.main_asset_no,
+                        asset_sub_no = a.asset_sub_no,
+                        cost_center = a.cost_center,
+                        WBS_element = a.WBS_element,
+                        Position = a.Position,
+                        tin = a.tin,
+                        manufacturer = a.manufacturer,
                         model = a.model,
-                        part_no = a.part_no, 
-                        serial_no = a.serial_no, 
-                        eqp_cat = a.eqp_cat, 
-                        date_valid = a.date_valid, 
-                        object_type = a.object_type, 
-                        country_of_manuf = a.country_of_manuf, 
-                        year_of_const = a.year_of_const, 
-                        month_of_const = a.month_of_const, 
-                        plant_main_work_center = a.plant_main_work_center, 
-                        const_type = a.const_type, 
-                        permit_assign = a.permit_assign, 
-                        Criticallity = a.Criticallity, 
-                        Remark = a.Remark, 
-                        unitProses = a.unitProses, 
-                        createdBy = a.users.name, 
-                        dateCreated = a.dateCreated, 
-                        updated = a.updated, 
-                        updatedBy = a.users.name, 
-                        deleted = a.deleted, 
-                        deletedBy = a.users.name, 
-                        responsibility = a.responsibility, 
-                        craft = a.craft, 
-                        eqGroupID = a.eqGroupID, 
-                        unitKilang = a.unitKilang, 
-                        catProf = a.catProf  });
+                        part_no = a.part_no,
+                        serial_no = a.serial_no,
+                        eqp_cat = a.eqp_cat,
+                        date_valid = a.date_valid,
+                        object_type = a.object_type,
+                        country_of_manuf = a.country_of_manuf,
+                        year_of_const = a.year_of_const,
+                        month_of_const = a.month_of_const,
+                        plant_main_work_center = a.plant_main_work_center,
+                        const_type = a.const_type,
+                        permit_assign = a.permit_assign,
+                        Criticallity = a.Criticallity,
+                        Remark = a.Remark,
+                        unitProses = a.unitProses,
+                        createdBy = a.users.name,
+                        dateCreated = a.dateCreated,
+                        updated = a.updated,
+                        updatedBy = a.users.name,
+                        deleted = a.deleted,
+                        deletedBy = a.users.name,
+                        responsibility = a.responsibility,
+                        craft = a.craft,
+                        eqGroupID = a.eqGroupID,
+                        unitKilang = a.unitKilang,
+                        catProf = a.catProf
+                    });
 
                 if (!(string.IsNullOrEmpty(sortColumn) && string.IsNullOrEmpty(sortColumnDirection)))
                 {
@@ -656,7 +664,7 @@ namespace mystap.Controllers
             try
             {
                 int cek = _context.equipments.Where(p => p.eqTagNo == Request.Form["eqtagno"].FirstOrDefault()).Count();
-               
+
                 Boolean c;
                 Boolean t;
                 if (cek == 0)
@@ -824,10 +832,12 @@ namespace mystap.Controllers
         }
         public IActionResult CatalogProfile()
         {
+
             //ViewBag.project = _context.project.Where(p => p.deleted == 0).ToList();
             ViewBag.disiplin_ = _context.disiplins.Where(p => p.deleted == 0).ToList();
             ViewBag.catprof = _context.catalogProfile.Where(p => p.deleted == 0).GroupBy(p => new { p.equipment_class }).Select(p => new { equipment_class = p.Key.equipment_class }).ToList();
            
+
             return View();
         }
         public async Task<IActionResult> Get_Catalog_Profile()
@@ -1001,7 +1011,7 @@ namespace mystap.Controllers
                 int recordsTotal = 0;
 
 
-                var customerData = _context.memo.Include("project").Include("requestors").Include("users").Where(s => s.deleted == 0).Select(a => new { id = a.id, projectName = a.project.description, reqNo = a.reqNo, reqDate = a.reqDate, reqDesc = a.reqDesc, reqYear = a.reqYear, attach = a.attach, requestorName = a.requestors.name , showing = a.showing, deleted = a.deleted, deletedBy = a.users.name, updated = a.updated, updatedBy = a.users.name, createBy = a.users.alias, dateCreated = a.dateCreated  });
+                var customerData = _context.memo.Include("project").Include("requestors").Include("users").Where(s => s.deleted == 0).Select(a => new { id = a.id, projectName = a.project.description, reqNo = a.reqNo, reqDate = a.reqDate, reqDesc = a.reqDesc, reqYear = a.reqYear, attach = a.attach, requestorName = a.requestors.name, showing = a.showing, deleted = a.deleted, deletedBy = a.users.name, updated = a.updated, updatedBy = a.users.name, createBy = a.users.alias, dateCreated = a.dateCreated });
 
                 if (!(string.IsNullOrEmpty(sortColumn) && string.IsNullOrEmpty(sortColumnDirection)))
                 {
@@ -1137,7 +1147,9 @@ namespace mystap.Controllers
                 int recordsTotal = 0;
 
 
+
                 var customerData = _context.requestors.Where(s => s.deleted == 0).Select(a => new { id = a.id, fungsi = a.fungsi, name = a.name, description = a.description,dateCreated = a.dateCreated });
+
 
                 if (!(string.IsNullOrEmpty(sortColumn) && string.IsNullOrEmpty(sortColumnDirection)))
                 {
@@ -1168,7 +1180,7 @@ namespace mystap.Controllers
             try
             {
                 Requestor requestor = new Requestor();
-                //requestor.fungsi =formcollaction["fungsi"];
+
                 requestor.name = formcollaction["name"];
                 requestor.description = formcollaction["description"];
                 requestor.deleted = 0;
@@ -1270,7 +1282,7 @@ namespace mystap.Controllers
                 int recordsTotal = 0;
 
 
-                var customerData = _context.unit.Where(s => s.deleted == 0).Select(a => new { id = a.id, unitPlan = a.unitPlan, codeJob = a.codeJob, unitCode = a.unitCode, unitProses = a.unitProses, unitKilang = a.unitKilang, unitGroup = a.unitGroup, groupName = a.groupName, unitName =a.unitName });
+                var customerData = _context.unit.Where(s => s.deleted == 0).Select(a => new { id = a.id, unitPlan = a.unitPlan, codeJob = a.codeJob, unitCode = a.unitCode, unitProses = a.unitProses, unitKilang = a.unitKilang, unitGroup = a.unitGroup, groupName = a.groupName, unitName = a.unitName });
 
                 if (!(string.IsNullOrEmpty(sortColumn) && string.IsNullOrEmpty(sortColumnDirection)))
                 {
@@ -1388,11 +1400,148 @@ namespace mystap.Controllers
             var unitCode = Request.Form["unitCode"].FirstOrDefault();
             var data = _context.unit.Where(p => p.unitCode == unitCode).Where(p => p.deleted == 0).OrderBy(p => p.unitKilang).ToList();
             var select = "<option value=''>Select Unit</option>";
-            foreach (var val in data) {
-                select += "<option value='" + val.unitKilang + "' data-id='" + val.id + "' data-codeJob='" + val.codeJob+ "'>"+ val.unitKilang+ "</option>";
+            foreach (var val in data)
+            {
+                select += "<option value='" + val.unitKilang + "' data-id='" + val.id + "' data-codeJob='" + val.codeJob + "'>" + val.unitKilang + "</option>";
             }
 
             return Ok(select);
+        }
+
+
+        public IActionResult Bom()
+        {
+            ViewBag.project = _context.project.Where(p => p.deleted == 0).Where(p => p.active == "1").ToList();
+            
+            return View();
+        }
+        public async Task<IActionResult> Get_Boms()
+        {
+            try
+            {
+                var draw = HttpContext.Request.Form["draw"].FirstOrDefault();
+
+                var start = Request.Form["start"].FirstOrDefault();
+
+                var length = Request.Form["length"].FirstOrDefault();
+
+                var sortColumn = Request.Form["columns[" + Request.Form["order[1][column]"].FirstOrDefault() + "][name]"].FirstOrDefault();
+
+                var sortColumnDirection = Request.Form["order[1][dir]"].FirstOrDefault();
+
+                var searchValue = Request.Form["search[value]"].FirstOrDefault();
+
+                int pageSize = length != null ? Convert.ToInt32(length) : 0;
+                int skip = start != null ? Convert.ToInt32(start) : 0;
+                int recordsTotal = 0;
+
+                var project_filter = Request.Form["project"].FirstOrDefault();
+               
+
+                var customerData = _context.bom.Include("users").Where(s => s.id_project == Convert.ToInt64(project_filter)).Where(s => s.deleted == 0).Select(a => new { id = a.id, no_wo = a.no_wo, tag_no = a.tag_no, id_project = a.id_project, disiplin = a.disiplin, created_date = a.created_date, created_by = a.users.alias, last_modify = a.last_modify, modify_by = a.users.alias });
+
+                if (!(string.IsNullOrEmpty(sortColumn) && string.IsNullOrEmpty(sortColumnDirection)))
+                {
+                    customerData = customerData.OrderBy(sortColumn + " " + sortColumnDirection);
+                }
+
+                if (!string.IsNullOrEmpty(searchValue))
+                {
+                    customerData = customerData.Where(b => b.tag_no.StartsWith(searchValue));
+                }
+                // Total number of rows count
+                //Console.WriteLine(customerData);
+                recordsTotal = customerData.Count();
+                // Paging
+                var datas = await customerData.Skip(skip).Take(pageSize).ToListAsync();
+                //var data = _memoryCache.Get("products");
+                //data = await _memoryCache.Set("products", datas, expirationTime);
+                // Returning Json Data
+                return Json(new { draw = draw, recordsFiltered = recordsTotal, recordsTotal = recordsTotal, data = datas });
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+        public IActionResult Create_Bom(IFormCollection formcollaction)
+        {
+
+            try
+            {
+                Bom bom = new Bom();
+                bom.id_project = Convert.ToInt32(formcollaction["id_project"]);
+                bom.tag_no = formcollaction["tag_no"];
+                bom.no_wo = formcollaction["no_wo"];
+                bom.disiplin = formcollaction["disiplin"];
+                bom.created_date = DateTime.Now;
+                bom.created_by = 1;
+                bom.deleted = 0;
+
+                Boolean t;
+                if (bom != null)
+                {
+                    _context.bom.Add(bom);
+                    _context.SaveChanges();
+                    t = true;
+                }
+                else
+                {
+                    t = false;
+                }
+                return Json(new { result = t });
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+        public IActionResult Update_Bom(Bom bom)
+        {
+            try
+            {
+                int id = Int32.Parse(Request.Form["hidden_id"].FirstOrDefault());
+                Bom obj = _context.bom.Where(p => p.id == id).FirstOrDefault();
+
+                if (obj != null)
+                {
+                    obj.id_project = Convert.ToInt32(Request.Form["id_project"].FirstOrDefault());
+                    obj.tag_no = Request.Form["tag_no"].FirstOrDefault();
+                    obj.no_wo = Request.Form["no_wo"].FirstOrDefault();
+                    obj.disiplin = Request.Form["disiplin"].FirstOrDefault();
+                    obj.last_modify = DateTime.Now;
+                    obj.modify_by = 1;
+                    _context.SaveChanges();
+                    return Json(new { Results = true });
+                }
+                return Json(new { Results = false });
+            }
+            catch
+            {
+                throw;
+            }
+        }
+
+        public IActionResult Deleted_Bom(Bom bom)
+        {
+            try
+            {
+                int id = Int32.Parse(Request.Form["id"].FirstOrDefault());
+                Bom obj = _context.bom.Where(p => p.id == id).FirstOrDefault();
+
+                if (obj == null)
+                {
+                    obj.deleted = 1;
+                    _context.SaveChanges();
+
+                    return Json(new { title = "Sukses!", icon = "success", status = "Berhasil Dihapus" });
+                }
+                return Json(new { title = "Maaf!", icon = "error", status = "Tidak Dapat di Hapus!, Silahkan Hubungi Administrator " });
+            }
+            catch
+            {
+                throw;
+            }
         }
     }
 

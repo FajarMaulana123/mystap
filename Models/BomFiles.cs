@@ -5,7 +5,7 @@ namespace mystap.Models
     {
         public long id { get; set; }
         public int id_bom {  get; set; }
-        public string ? files { get; set; }
+        public IFormFile ? files { get; set; }
 
     }
 }

@@ -1,11 +1,11 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Azure.Core;
+using MessagePack;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Storage;
 using mystap.Models;
 using System.Data;
-using System.Linq.Dynamic;
+using System.Globalization;
 using System.Linq.Dynamic.Core;
-
 
 namespace joblist.Controllers
 {
@@ -16,16 +16,18 @@ namespace joblist.Controllers
         {
             _context = context;
         }
-        public IActionResult Joblist()
-        {
-            return View();
-        }
         public IActionResult Planning()
         {
             return View();
         }
+        public IActionResult Joblist()
+        {
+			ViewBag.project = _context.project.Where(p => p.deleted == 0).Where(p => p.active == "1").ToList();
+            ViewBag.unit = _context.unit.Where(p => p.deleted != 1).ToList();
+            return View();
+        }
 
-        public IActionResult Get_Joblist()
+        public async Task<IActionResult> Get_Joblist()
         {
             try
             {
@@ -56,11 +58,16 @@ namespace joblist.Controllers
                 {
                     customerData = customerData.Where(b => b.keterangan.StartsWith(searchValue));
                 }
-                //Console.WriteLine(customerData);
-                recordsTotal = customerData.Count();
-                var data = customerData.Skip(skip).Take(pageSize).ToList();
-                return Json(new { draw = draw, recordsFilter = recordsTotal, recordsTotal = recordsTotal, data = data });
-            }
+				// Total number of rows count
+				//Console.WriteLine(customerData);
+				recordsTotal = customerData.Count();
+				// Paging
+				var datas = await customerData.Skip(skip).Take(pageSize).ToListAsync();
+				//var data = _memoryCache.Get("products");
+				//data = await _memoryCache.Set("products", datas, expirationTime);
+				// Returning Json Data
+				return Json(new { draw = draw, recordsFiltered = recordsTotal, recordsTotal = recordsTotal, data = datas });
+			}
             catch (Exception)
             {
                 throw;

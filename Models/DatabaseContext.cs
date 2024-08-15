@@ -29,6 +29,8 @@ namespace mystap.Models
         public DbSet<SowGroup> sowGroup { get; set; }
         public DbSet<HistoryReservasi> historyReservasi { get; set; }
         public DbSet<Zpm01>zpm01 { get; set; }
+        public DbSet<Bom>bom { get; set; }
+        
 
 
         //View Model

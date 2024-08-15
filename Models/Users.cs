@@ -1,7 +1,10 @@
-﻿namespace mystap.Models
+﻿using System.ComponentModel.DataAnnotations.Schema;
+
+namespace mystap.Models
 {
     public class Users
     {
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public long id { get; set; }
         public string? name { get; set; }
         public string? email { get; set; }

@@ -1,10 +1,10 @@
 ﻿$(document).ready(function () {
 
-    //$.ajaxSetup({
-    //    headers: {
-    //        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-    //    }
-    //});
+    $.ajaxSetup({
+        headers: {
+            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+        }
+    });
 
     var table = $('#table').DataTable({
         dom: '<"dataTables_wrapper dt-bootstrap"<"row"<"col-xl-7 d-block d-sm-flex d-xl-block justify-content-center"<"d-block d-lg-inline-flex me-0 me-md-3"l><"d-block d-lg-inline-flex"B>><"col-xl-5 d-flex d-xl-block justify-content-center"fr>>t<"row"<"col-md-5"i><"col-md-7"p>>>',
@@ -22,14 +22,14 @@
             "url": "joblist_",
             "method": "POST",
             "datatype": "json"
-            //data: function (d) {
-            //    d.project = $('#project_filter').val();
-            //    d.project_rev = $('#project_filter').find(':selected').data('rev');
-            //    d.jobNo = $('#jobNo_filter').val();
-            //    d.eqTagNo = $('#eqTagNo_filter').val();
-            //    d.unitCode = $('#unitCode_filter').val();
-            //    d.user_section = $('#user_section_filter').val();
-            //}
+            data: function (d) {
+                d.project = $('#project_filter').val();
+                d.project_rev = $('#project_filter').find(':selected').data('rev');
+                d.jobNo = $('#jobNo_filter').val();
+                d.eqTagNo = $('#eqTagNo_filter').val();
+                d.unitCode = $('#unitCode_filter').val();
+                d.user_section = $('#user_section_filter').val();
+            }
         },
         columns: [
             //{ data: 'DT_RowIndex', name: 'DT_RowIndex', orderable: false, searchable: false },
