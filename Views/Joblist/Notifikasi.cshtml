@@ -1,0 +1,107 @@
+﻿@{
+    ViewData["Title"] = "Notifikasi";
+}
+<ol class="breadcrumb float-xl-end">
+    <li class="breadcrumb-item"><a href="javascript:void(0);"> <i data-feather="map-pin"></i></a></li>
+    <li class="breadcrumb-item active" aria-current="page"><span>Notifikasi</span></li>
+</ol>
+<h1 class="page-header">Notifikasi</h1>
+<div class="panel panel-inverse">
+    <div class="panel-heading">
+        <h4 class="panel-title">Data Notifikasi</h4>
+        <div class="panel-heading-btn">
+            <a href="javascript:;" class="btn btn-xs btn-icon btn-default" data-toggle="panel-expand"><i class="fa fa-expand"></i></a>
+            <a href="javascript:;" class="btn btn-xs btn-icon btn-warning" data-toggle="panel-collapse"><i class="fa fa-minus"></i></a>
+        </div>
+    </div>
+    <div class="panel-body">
+        <div class="table-responsive mb-4 mt-4">
+            <table id="table" class="table small table-striped table-bordered dataTables_wrapper" width="100%">
+                <thead>
+                    <tr>
+                        <th>Notifikasi</th>
+                        <th>Order</th>
+                        <th>Description</th>
+                        <th>Created By</th>
+                        <th>User Status</th>
+                        <th>System Status</th>
+                        <th>Funct Loc</th>
+                        <th>Equipment</th>
+                        <th>Location</th>
+                        <th>Main Work</th>
+                        <th>Rekomendasi</th>
+                        {{--
+                        <th>Aksi</th> --}}
+                    </tr>
+                </thead>
+
+            </table>
+        </div>
+    </div>
+</div>
+
+
+<div class="modal fade" id="Modal" tabindex="-1" role="dialog" aria-labelledby="ModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title judul-modal" id="Modal"></h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-hidden="true" aria-label="Close">
+                </button>
+            </div>
+            <form id="add-form">
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="form-group">
+                                <label>Rekomendasi</label>
+                                <input type="file" name="rekomendasi" id="rekomendasi" class="form-control form-control-sm">
+                                <input type="hidden" name="hidden_id" id="hidden_id">
+                            </div>
+                            <div id="lihat_file"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <a href="javascript:;" class="btn btn-white" data-bs-dismiss="modal">Close</a>
+                    <button type="reset" class="btn btn-dark">Reset</button>
+                    <button type="submit" class="btn btn-success">Submit</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="import" tabindex="-1" role="dialog" aria-labelledby="ModalLabel" aria-hidden="true">
+    <div class="modal-dialog " role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title judul-modal" id="Modal"></h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
+                </button>
+            </div>
+            <form id="import-form">
+                <div class="modal-body">
+                    <input type="hidden" name="hidden_status" id="hidden_status" value="add">
+                    <div class="row">
+                        <div class="col-md-12 mb-2">
+                            <div class="form-group">
+                                <label>Import File</label>
+                                <input type="file" name="import" id="import" class="form-control form-control-sm">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <a href="javascript:;" class="btn btn-white" data-bs-dismiss="modal">Close</a>
+                    <button type="reset" class="btn btn-dark">Reset</button>
+                    <button type="submit" class="btn btn-success">Submit</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+@section Scripts
+{
+    <script src="~/js/Notifikasi.js"> </script>
+}

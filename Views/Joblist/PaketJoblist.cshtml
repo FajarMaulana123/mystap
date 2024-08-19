@@ -1,0 +1,87 @@
+﻿@{
+    ViewData["Title"] = "Manage Paket Joblist";
+}
+<ol class="breadcrumb float-xl-end">
+        <li class="breadcrumb-item"><a href="javascript:void(0);">  <i data-feather="hard-drive"></i></a></li>
+        <li class="breadcrumb-item"><a href="javascript:void(0);">Joblist</a></li>
+        <li class="breadcrumb-item active" aria-current="page"><span>Paket Joblist</span></li>
+    </ol>
+    <h1 class="page-header">Paket Joblist</h1>
+    <div class="panel panel-inverse">
+    <div class="accordion" id="accordion">
+            <div class="accordion-item border-0">
+                <div class="accordion-header" id="headingOne">
+                    <button class="accordion-button bg-gray-900 text-white px-3 py-10px pointer-cursor" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne">
+                        <i class="fa fa-circle fa-fw text-blue me-2 fs-8px"></i>Filter
+                    </button>
+                </div>
+                <div id="collapseOne" class="accordion-collapse collapse" data-bs-parent="#accordion">
+                    <div class="accordion-body bg-gray-800 text-white">
+                        <div class="row">
+                            <div class="col-md-4 mb-2">
+                                <label>Project</label>
+                                <select name="project_filter" id="project_filter" class="form-control form-control-sm">
+       
+                                </select> 
+                            </div>
+                            <div class="col-md-4 mb-2">
+                                <label>Disiplin</label>
+                                <select name="disiplin_" id="disiplin_" class="form-control form-control-sm">
+                                    <option value="">- Disiplin -</option>
+                                    <option value="STA">STATIONARY</option>
+                                    <option value="ROT">ROTATING</option>
+                                    <option value="CIV">CIVIL</option>
+                                    <option value="INS">INSTRUMENT</option>
+                                    <option value="ELEC">ELECTRICAL</option>
+                                </select>
+                            </div>
+                            <div class="col-md-4 mb-2">
+                                <label>Tag. No</label>
+                                <input type="text" name="tag_no_" id="tag_no_" class="form-control form-control-sm">
+                            </div>
+                
+                               
+                            </div>
+                            <div class="row mt-3">
+                                <div class="col-md-12">
+                                    <button class="btn btn-primary" id="filter"> Filter</button>
+                                    <button class="btn btn-warning" id="reset"> Reset</button>
+                                </div>
+                            </div>
+                        </div>   
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="panel panel-inverse">
+            <div class="panel-heading">
+                <h4 class="panel-title" id="title-planning">Data Paket Joblist</h4>
+                <div class="panel-heading-btn">
+                    <a href="javascript:;" class="btn btn-xs btn-icon btn-default" data-toggle="panel-expand"><i class="fa fa-expand"></i></a>
+                    <a href="javascript:;" class="btn btn-xs btn-icon btn-warning" data-toggle="panel-collapse"><i class="fa fa-minus"></i></a>
+                </div>
+            </div> 
+            <div class="panel-body">
+                <div class="table-responsive">
+                    <table id="table" class="table small table-striped table-bordered dataTables_wrapper" width="100%">
+                        <thead>
+                            <tr>
+                                <th width="20px"></th>
+                                <th width="80px">No. Joblist</th>
+                                <th>TagNo</th>
+                                <th>No. Memo</th>
+                                <th>Disiplin</th>
+                                <th>Total</th>
+                                <th>Status</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead> 
+                    </table>
+                </div>
+            </div>
+        </div>
+
+@section Scripts
+                                {
+    <script src="~/js/PaketJoblist.js"> </script>
+}

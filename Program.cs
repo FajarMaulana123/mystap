@@ -235,8 +235,8 @@ app.UseEndpoints(endpoints =>
        defaults: new { controller = "Joblist", action = "Planning" });
 
     endpoints.MapControllerRoute(
-      name: "joblist_detail_",
-      pattern: "joblist_detail_",
+      name: "jobplan_",
+      pattern: "jobplan_",
       defaults: new { controller = "Joblist", action = "Get_Joblist_Detail" });
 
     endpoints.MapControllerRoute(

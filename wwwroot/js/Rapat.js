@@ -50,7 +50,7 @@
             },
             {
                 "render": function (data, type, full, meta) {
-                    return '<a href="' + full.materi + '" class="badge bg-info" target="blank_"><i class="far fa-copy"></i> file</a>';
+                    return '<a href="~' + full.materi + '" class="badge bg-info" target="blank_"><i class="far fa-copy"></i> file</a>';
                 },
                 orderable: false,
                 searchable: false
