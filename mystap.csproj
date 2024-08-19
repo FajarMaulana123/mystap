@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk.Web">
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 
   <PropertyGroup>
     <TargetFramework>net6.0</TargetFramework>
@@ -21,8 +21,7 @@
   <ItemGroup>
     <Folder Include="wwwroot\lib\js\" />
     <Folder Include="wwwroot\upload\bom\" />
-    <Folder Include="wwwroot\upload\rapat\materi\" />
-    <Folder Include="wwwroot\upload\rapat\notulen\" />
+    <Folder Include="wwwroot\upload\sow\" />
   </ItemGroup>
 
 </Project>

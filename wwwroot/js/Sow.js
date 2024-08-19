@@ -121,13 +121,15 @@
                 data: 'modifyBy',
                 name: 'modifyBy'
             },
-
-            //{
-            //    data: 'action',
-            //    name: 'action',
-            //    orderable: false,
-            //    searchable: false
-            //},
+            {
+                "render": function (data, type, full, meta) {
+                    return '<div class="d-flex"><a href="javascript:void(0);" class="btn btn-xs waves-effect waves-light btn-outline-warning edit mr-1" data-id="' + full.id + '" data-events="' + full.events + '" data-groups="' + full.groups + '" data-subGroups="' + full.subGroups + '" data-area="' + full.area + '" data-tahun="' + full.tahun + '" data-projectid="' + full.projectId + '" data-planner="' + full.planner + '" data-judulPekerjaan="' + full.judulPekerjaan + '" data-file="' + full.file + '" data-kabo="' + full.kabo + '"><i class="fas fa-pen fa-xs"></i></a>' + 
+                        '<a href="javascript:void(0);" style="margin-left:5px" class="btn btn-danger btn-xs delete " data-id="'+ full.id +'"><i class="fas fa-trash fa-xs"></i></a></div>';
+                },
+                orderable: false,
+                searchable: false
+            },
+        
         ],
         //columnDefs: [
         //    (user_auth == 'user') ? { "visible": false, "targets": [13] } : {},

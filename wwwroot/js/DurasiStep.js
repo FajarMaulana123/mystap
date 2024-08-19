@@ -82,6 +82,8 @@
                 $('#add-form')[0].reset();
                 $('#Modal').modal('show');
                 $('#btn-sb').text('Tambah');
+                $("#id_project").prop("disabled", false);
+                $("#kat_tender").prop("disabled", false);
                 $('.judul-modal').text('Tambah Durasi Step');
                 $('#hidden_status').val('add');
             }
@@ -109,11 +111,11 @@
     });
     // table.button( 0 ).nodes().css('height', '35px')
 
-    $(document).on('click', '#tambah', function () {
-        $('#add-form')[0].reset();
-        $('.judul-modal').html('Tambah');
-        $('#hidden_status').val('add');
-    })
+    //$(document).on('click', '#tambah', function () {
+    //    $('#add-form')[0].reset();
+    //    $('.judul-modal').html('Tambah');
+    //    $('#hidden_status').val('add');
+    //})
 
     $(document).on('click', '.edit', function () {
         $('#add-form')[0].reset();

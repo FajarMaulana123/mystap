@@ -1512,9 +1512,9 @@ namespace mystap.Controllers
                     obj.last_modify = DateTime.Now;
                     obj.modify_by = 1;
                     _context.SaveChanges();
-                    return Json(new { Results = true });
+                    return Json(new { result = true });
                 }
-                return Json(new { Results = false });
+                return Json(new { result = false });
             }
             catch
             {

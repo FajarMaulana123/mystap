@@ -1,5 +1,6 @@
 ﻿using Azure.Core;
 using Humanizer;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.CodeAnalysis.Options;
 using Microsoft.EntityFrameworkCore;
@@ -7,6 +8,7 @@ using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using mystap.Models;
 using System;
 using System.Globalization;
+using System.IO;
 using System.Linq.Dynamic.Core;
 using System.Reflection.Metadata;
 using System.Text.RegularExpressions;
@@ -21,9 +23,11 @@ namespace mystap.Controllers
         //    return View();
         //}
         private readonly DatabaseContext _context;
-        public ContractController(DatabaseContext context)
+        private readonly IWebHostEnvironment environment;
+        public ContractController(DatabaseContext context, IWebHostEnvironment environment)
         {
             _context = context;
+            this.environment = environment;
         }
         public IActionResult Sow()
         {
@@ -117,6 +121,7 @@ namespace mystap.Controllers
                                         groups = a.groups,
                                         subGroups = a.subGroups,
                                         area = a.area,
+                                        file = a.file,
                                         tahun = a.tahun,
                                         description = p.description,
                                         createdBy = a.createdBy,
@@ -187,12 +192,16 @@ namespace mystap.Controllers
             }
         }
 
-      
 
         public IActionResult Create_Sow(IFormCollection formcollaction)
         {
             try
             {
+                
+
+                //Fetch the File Name.
+              
+
                 string tahun = formcollaction["tahun"];
                 string inisial = formcollaction["inisial"];
                 var cek = _context.sow.Where(p => p.tahun == tahun).Where(w => w.tahun.Contains(tahun)).Select(p => new
@@ -223,23 +232,35 @@ namespace mystap.Controllers
                 sow.tahun = formcollaction["tahun"];
                 sow.judulPekerjaan = formcollaction["judulPekerjaan"];
                 sow.planner = formcollaction["planner"];
-                //sow.file = formcollaction["file"];
+
+                if(Request.Form.Files.Count() != 0)
+                {
+                    IFormFile postedFile = Request.Form.Files[0];
+                    string fileName = DateTime.Now.ToString("yyyyMMddHHmmssfff") + "_" + postedFile.FileName;
+                    string path = environment.WebRootPath + "/upload/sow/" + fileName;
+                    using (var stream = System.IO.File.Create(path))
+                    {
+                        postedFile.CopyTo(stream);
+                        sow.file = "upload/bom/" + fileName;
+                    }
+
+                }
+
                 sow.createdBy = "Rama";
                 sow.createdDate = DateTime.Now;
                 sow.deleted = 0;
-                return Json(new { data = sow });
-                //Boolean t;
-                //if (sow != null)
-                //{
-                //    _context.sow.Add(sow);
-                //    _context.SaveChanges();
-                //    t = true;
-                //}
-                //else
-                //{
-                //    t = false;
-                //}
-                //return Json(new { result = t });
+                Boolean t;
+                if (sow != null)
+                {
+                    _context.sow.Add(sow);
+                    _context.SaveChanges();
+                    t = true;
+                }
+                else
+                {
+                    t = false;
+                }
+                return Json(new { result = t });
             }
             catch (Exception)
             {
@@ -255,18 +276,61 @@ namespace mystap.Controllers
 
                 if (obj != null)
                 {
-                    //obj.jobCode = Request.Form["jobCode"].FirstOrDefault();
-                    obj.projectID = Convert.ToInt32(Request.Form["project"]);
-                    obj.noSOW = Request.Form["noSOW"].FirstOrDefault();
+
+                    string tahun = Request.Form["tahun"].FirstOrDefault();
+                    string inisial = Request.Form["inisial"].FirstOrDefault();
+                    var cek = _context.sow.Where(p => p.tahun == tahun).Where(w => w.tahun.Contains(tahun)).Select(p => new
+                    {
+                        tahun = p.tahun,
+                        kode = p.jobCode.Max()
+                    }).FirstOrDefault();
+                    var no = 0;
+                    if (cek.tahun != tahun)
+                    {
+                        no = 1;
+                    }
+                    else
+                    {
+                        var p = cek.kode;
+                        no = p + 1;
+                    }
+
+                    obj.jobCode = Request.Form["inisial"].FirstOrDefault() + "-" + no.ToString("D3");
+                    obj.noSOW = Request.Form["event"].FirstOrDefault() + "-" + no.ToString("D3") + "-" + Request.Form["inisial"].FirstOrDefault() + Request.Form["urut"].FirstOrDefault() + "-" + Request.Form["area"].FirstOrDefault() + "/" + Request.Form["codeKabo"].FirstOrDefault() + "/" + tahun.Substring(tahun.Length - 2); ;
+                    obj.projectID = Convert.ToInt32(Request.Form["project"].FirstOrDefault());
                     obj.events = Request.Form["events"].FirstOrDefault();
-                    obj.groups = Request.Form["groups"].FirstOrDefault();
+                    obj.groups = Request.Form["groups_"].FirstOrDefault();
                     obj.subGroups = Request.Form["subGroup"].FirstOrDefault();
                     obj.area = Request.Form["area"].FirstOrDefault();
                     obj.kabo = Request.Form["kabo"].FirstOrDefault();
                     obj.tahun = Request.Form["tahun"].FirstOrDefault();
                     obj.judulPekerjaan = Request.Form["judulPekerjaan"].FirstOrDefault();
                     obj.planner = Request.Form["planner"].FirstOrDefault();
-                    //obj.file = Request.Form["file"].FirstOrDefault();
+
+                    if (Request.Form.Files.Count() != 0)
+                    {
+                        if(obj.file != null)
+                        {
+                            string ExitingFile = environment.WebRootPath+ "/" + obj.file;
+                            System.IO.File.Delete(ExitingFile);
+                        }
+
+                        IFormFile postedFile = Request.Form.Files[0];
+                        string fileName = DateTime.Now.ToString("yyyyMMddHHmmssfff") + "_" + postedFile.FileName;
+                        string path = environment.WebRootPath + "/upload/sow/" + fileName;
+                        
+                        using (var stream = System.IO.File.Create(path))
+                        {
+                            postedFile.CopyTo(stream);
+                            obj.file = "upload/bom/" + fileName;
+                        }
+
+                    }
+                    else
+                    {
+                        obj.file = Request.Form["file_"].FirstOrDefault();
+                    }
+                  
                     obj.modifyBy = "Rama";
                     obj.lastModify = DateTime.Now;
                     _context.SaveChanges();
@@ -287,7 +351,7 @@ namespace mystap.Controllers
                 int id = Int32.Parse(Request.Form["id"].FirstOrDefault());
                 Sow obj = _context.sow.Where(p => p.id == id).FirstOrDefault();
 
-                if (obj == null)
+                if (obj != null)
                 {
                     obj.deleted = 1;
                     _context.SaveChanges();
@@ -362,8 +426,46 @@ namespace mystap.Controllers
                 var project_filter = Request.Form["project"].FirstOrDefault();
                 var kat_tender_filter = Request.Form["kat_tender"].FirstOrDefault();
 
-                var customerData = _context.durasi.Where(a => a.kat_tender == kat_tender_filter).Where(a => a.id_project == Convert.ToInt64(project_filter)).Select(a => new { id = a.id, description = a.project.description, kat_tender = a.kat_tender, susun_kak = a.susun_kak, susun_oe = a.susun_oe, kirim_ke_co = a.kirim_ke_co, pengumuman_pendaftaran = a.pengumuman_pendaftaran, sertifikasi = a.sertifikasi, prakualifikasi = a.prakualifikasi, undangan = a.undangan, pemberian = a.pemberian, penyampaian = a.penyampaian, pembukaan = a.pembukaan, evaluasi = a.evaluasi, negosiasi = a.negosiasi, usulan = a.usulan, keputusan = a.keputusan, pengumuman_pemenang = a.pengumuman_pemenang, pengajuan_sanggah = a.pengajuan_sanggah, jawaban_sanggah = a.jawaban_sanggah, tunjuk_pemenang = a.tunjuk_pemenang, proses_spb = a.proses_spb });
+                var customerData = (from a in _context.durasi
+                                    join p in _context.project on a.id_project equals p.id
+                                    select new
+                                    {
+                                        id = a.id,
+                                        id_project = p.id,
+                                        description = a.project.description,
+                                        kat_tender = a.kat_tender,
+                                        susun_kak = a.susun_kak,
+                                        susun_oe = a.susun_oe,
+                                        kirim_ke_co = a.kirim_ke_co,
+                                        pengumuman_pendaftaran = a.pengumuman_pendaftaran,
+                                        sertifikasi = a.sertifikasi,
+                                        prakualifikasi = a.prakualifikasi,
+                                        undangan = a.undangan,
+                                        pemberian = a.pemberian,
+                                        penyampaian = a.penyampaian,
+                                        pembukaan = a.pembukaan,
+                                        evaluasi = a.evaluasi,
+                                        negosiasi = a.negosiasi,
+                                        usulan = a.usulan,
+                                        keputusan = a.keputusan,
+                                        pengumuman_pemenang = a.pengumuman_pemenang,
+                                        pengajuan_sanggah = a.pengajuan_sanggah,
+                                        jawaban_sanggah = a.jawaban_sanggah,
+                                        tunjuk_pemenang = a.tunjuk_pemenang,
+                                        proses_spb = a.proses_spb
+                                    });
+                    
 
+                if(project_filter != "")
+                {
+                    customerData = customerData.Where(a => a.id_project == Convert.ToInt64(project_filter));
+                }
+
+                if(kat_tender_filter != "")
+                {
+                    customerData = customerData.Where(a => a.kat_tender == kat_tender_filter);
+                }
+                    
                 // Sorting
                 if (!(string.IsNullOrEmpty(sortColumn) && string.IsNullOrEmpty(sortColumnDirection)))
                 {
