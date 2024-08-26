@@ -21,7 +21,11 @@
   <ItemGroup>
     <Folder Include="wwwroot\lib\js\" />
     <Folder Include="wwwroot\upload\bom\" />
+    <Folder Include="wwwroot\upload\rapat\materi\" />
+    <Folder Include="wwwroot\upload\rapat\notulen\" />
     <Folder Include="wwwroot\upload\sow\" />
+    <Folder Include="wwwroot\upload\steerco\materi\" />
+    <Folder Include="wwwroot\upload\steerco\notulen\" />
   </ItemGroup>
 
 </Project>

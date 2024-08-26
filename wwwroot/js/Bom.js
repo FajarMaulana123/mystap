@@ -32,7 +32,14 @@
             { data: 'disiplin', name: 'disiplin' },
             { data: 'created_by', name: 'users.alias' },
             { data: 'created_date', name: 'created_date' },
-            /*{ data: 'file', name: 'file' },*/
+            {
+
+                "render": function (data, type, full, meta) {
+                    return '<a href="' + full.files + '" class="badge bg-info" target="blank_"><i class="far fa-copy"></i> file</a>';
+                },
+                orderable: false,
+                searchable: false
+            },
             {
                 "render": function (data, type, full, meta) {
                     return '<div class="d-flex"><a href="javascript:void(0);" class="btn btn-warning  btn-xs edit mr-1" data-id="' + full.id + '"data-id_project="' + full.id_project + '" data-tag_no="' + full.tag_no + '" data-no_wo="' + full.no_wo + '" data-disiplin="' + full.disiplin + '" ><i class="fas fa-pen fa-xs"></i></a><a href = "javascript:void(0);" style = "margin-left:5px" class="btn btn-danger btn-xs delete " data-id="' + full.id + '" > <i class="fas fa-trash fa-xs"></i></a ></div > ';

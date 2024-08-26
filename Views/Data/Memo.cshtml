@@ -24,7 +24,7 @@
                                     <option value="">All</option>
                                 @foreach (var val in ViewBag.project)
                                 {
-                                    <option value="@(val.projectNo)" data-id="@(val.id)" data-desc="@(val.description)" data-rev="@(val.revision)"> @(val.description)</option>
+                                    <option value="@(val.id)"> @(val.description)</option>
                                 }
                                 </select>
                             </div>

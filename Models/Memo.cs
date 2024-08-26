@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
+﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace mystap.Models
 {
@@ -7,9 +8,9 @@ namespace mystap.Models
     {
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public long id {  get; set; }
-        public int? projectID { get; set; }
-        public string? reqNo { get; set; }
-        public string? reqDate { get; set; }
+        public long? projectID { get; set; }
+        public string reqNo { get; set; }
+        public DateTime? reqDate { get; set; }
         public string? reqDesc { get; set; }
         public string? reqYear { get; set; }
         public string? attach { get; set; }
@@ -18,12 +19,14 @@ namespace mystap.Models
         public int? deleted { get; set; }
         public int? deletedBy { get; set; }
         public int? updated { get; set; }
-        public int? updatedBy { get; set; }
+        public long? updatedBy { get; set; }
         public long? createdBy { get; set; }
         public DateTime? dateCreated { get; set; }
 
         [ForeignKey("createdBy")]
         public Users users { get; set; }
+
+        [ForeignKey("projectID")]
         public Project project { get; set; }
 
         [ForeignKey("requestor")]

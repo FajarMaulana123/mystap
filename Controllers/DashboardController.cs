@@ -344,8 +344,15 @@ namespace mystap.Controllers
                                 isi = "-";
                             }
                         }
+                        var file = "";
+                        if (d.file_sp != null) {
+                        file = "<a href='" + d.file_sp + "' class='btn btn-info btn-sm' target='_blank'>File</a>";
+                            } else
+                            {
+                        file = "";
+                            }
 
-                        table += "<tr><td rowspan = '2'>" + d.WO + "<br>" + d.po + "<br>" + d.PR + "<br>" + d.noSP + "</td>" +
+                        table += "<tr><td rowspan = '2'>" + d.WO + "<br>" + d.po + "<br>" + d.PR + "<br>" + d.noSP + "<br>" + file + "</td>" +
                             "<td rowspan = '2'>" + d.judulPekerjaan + "</td>"+
                             "<td rowspan = '2' style = 'text-align: center;'>" + isi + "<br>" + d.pic + "</td>" +
                             "<td> P </td>" +

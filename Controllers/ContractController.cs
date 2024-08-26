@@ -241,7 +241,7 @@ namespace mystap.Controllers
                     using (var stream = System.IO.File.Create(path))
                     {
                         postedFile.CopyTo(stream);
-                        sow.file = "upload/bom/" + fileName;
+                        sow.file = "upload/sow/" + fileName;
                     }
 
                 }

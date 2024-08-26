@@ -13,10 +13,6 @@ namespace mystap.Models
         public string? materi {  get; set; }
         public string? notulen {  get; set; }
         public long? created_by {  get; set; }
-
-        [Required]
-        [DataType(DataType.Date)]
-        [Display(Name = "Date")]
         public DateTime? created_date {  get; set; }
         public int? deleted {  get; set; }
 

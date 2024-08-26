@@ -22,7 +22,7 @@
             }
         },
         columnDefs: [
-            { className: 'text-center', targets: [4, 5] },
+            { className: 'text-center', targets: [5, 6] },
             /*(user_auth == 'user') ? { "visible": false, "targets": [6] } : {},*/
         ],
         columns: [
@@ -50,7 +50,7 @@
             },
             {
                 "render": function (data, type, full, meta) {
-                    return '<a href="~' + full.materi + '" class="badge bg-info" target="blank_"><i class="far fa-copy"></i> file</a>';
+                    return '<a href="' + full.materi + '" class="badge bg-info" target="blank_"><i class="far fa-copy"></i> file</a>';
                 },
                 orderable: false,
                 searchable: false
@@ -125,12 +125,13 @@
         $('#add-form')[0].reset();
         $('#Modal').modal('show');
         $('#btn-sb').text('Update');
-        $('.judul-modal').text('Edit Steerco');
+        $('.judul-modal').text('Edit Rapat Koordinasi');
+        var tgl = $(this).data('tanggal').split("T");
         $('#hidden_status').val('edit');
         $('#hidden_id').val($(this).data('id'));
         $('#judul').val($(this).data('judul'));
         $('#id_project').val($(this).data('id_project'));
-        $('#tanggal').val($(this).data('tanggal'));
+        $('#tanggal').val(tgl[0]);
         $('#materi_').val($(this).data('materi'));
         $('#notulen_').val($(this).data('notulen'));
     });

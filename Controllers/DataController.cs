@@ -1,7 +1,9 @@
 ﻿using Azure.Core;
 using MessagePack;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.CodeAnalysis;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Migrations.Operations;
 using mystap.Models;
 using System.Data;
 using System.Globalization;
@@ -84,57 +86,49 @@ namespace mystap.Controllers
         }
 
         [HttpPost]
-        public IActionResult Create_Rapat(RapatViewModel rapatViewModel, IFormCollection formcollaction)
+        public IActionResult Create_Rapat(IFormCollection formcollaction)
         {
-
-            if (rapatViewModel.materi == null)
-            {
-                ModelState.AddModelError("materi", "Materi is required");
-            }
-            if (!ModelState.IsValid)
-            {
-                return View(rapatViewModel);
-            }
-
-            string newFilename = DateTime.Now.ToString("yyyyMMddHHmmssfff");
-            newFilename += Path.GetExtension(rapatViewModel.materi!.FileName);
-
-            string imageFullPath = environment.WebRootPath + "/upload/rapat/materi" + newFilename;
-            using (var stream = System.IO.File.Create(imageFullPath))
-            {
-                rapatViewModel.materi.CopyTo(stream);
-            }
-
-            if (rapatViewModel.notulen == null)
-            {
-                ModelState.AddModelError("notulen", "Notulen is required");
-            }
-            if (!ModelState.IsValid)
-            {
-                return View(rapatViewModel);
-            }
-
-            string newFilename2 = DateTime.Now.ToString("yyyyMMddHHmmssfff") + rapatViewModel.judul;
-            newFilename2 += Path.GetExtension(rapatViewModel.notulen!.FileName);
-
-            string imageFullPath2 = environment.WebRootPath + "/upload/rapat/notulen" + newFilename2;
-            using (var stream = System.IO.File.Create(imageFullPath2))
-            {
-                rapatViewModel.notulen.CopyTo(stream);
-            }
 
             try
             {
                 Rapat rapat = new Rapat();
-                rapat.id_project = Convert.ToInt64(formcollaction["id_project"]);
+                rapat.id_project = Convert.ToInt32(formcollaction["id_project"]);
                 rapat.judul = formcollaction["judul"];
                 rapat.created_by = 1;
                 rapat.tanggal = Convert.ToDateTime(formcollaction["tanggal"]);
                 rapat.created_date = DateTime.Now;
                 rapat.deleted = 0;
-                rapat.materi = newFilename;
-                rapat.notulen = newFilename2;
 
+                if (Request.Form.Files.Count() != 0)
+                {
+                    
+                    if (rapat.materi == null)
+                    {
+                        IFormFile postedFile = Request.Form.Files[0];
+                        string fileName = DateTime.Now.ToString("yyyyMMddHHmmssfff") + "_" + postedFile.FileName;
+                        string path = environment.WebRootPath + "/upload/rapat/materi/" + fileName;
+                        using (var stream = System.IO.File.Create(path))
+                        {
+                            postedFile.CopyTo(stream);
+                            rapat.materi = "upload/rapat/materi/" + fileName;
+                        }
+                    }
+                    if(rapat.notulen == null)
+                    {
+                        IFormFile postedFile2 = Request.Form.Files[1];
+                        string fileName2 = DateTime.Now.ToString("yyyyMMddHHmmssfff") + "_" + postedFile2.FileName;
+                        string path = environment.WebRootPath + "/upload/rapat/notulen/" + fileName2;
+                        using (var stream = System.IO.File.Create(path))
+                        {
+                            postedFile2.CopyTo(stream);
+                            rapat.notulen = "upload/rapat/notulen/" + fileName2;
+                        }
+                    }
+                   
+
+                }
+                
+                
                 Boolean t;
                 if (rapat != null)
                 {
@@ -154,43 +148,9 @@ namespace mystap.Controllers
             }
 
         }
-        public IActionResult Update_Rapat(Rapat rapat, RapatViewModel rapatViewModel, IFormCollection formcollaction)
+        public IActionResult Update_Rapat(Rapat rapat)
         {
-            if (rapatViewModel.materi == null)
-            {
-                ModelState.AddModelError("materi", "Materi is required");
-            }
-            if (!ModelState.IsValid)
-            {
-                return View(rapatViewModel);
-            }
 
-            string newFilename = DateTime.Now.ToString("yyyyMMddHHmmssfff");
-            newFilename += Path.GetExtension(rapatViewModel.materi!.FileName);
-
-            string imageFullPath = environment.WebRootPath + "/upload/rapat/materi" + newFilename;
-            using (var stream = System.IO.File.Create(imageFullPath))
-            {
-                rapatViewModel.materi.CopyTo(stream);
-            }
-
-            if (rapatViewModel.notulen == null)
-            {
-                ModelState.AddModelError("notulen", "Notulen is required");
-            }
-            if (!ModelState.IsValid)
-            {
-                return View(rapatViewModel);
-            }
-
-            string newFilename2 = DateTime.Now.ToString("yyyyMMddHHmmssfff") + rapatViewModel.judul;
-            newFilename2 += Path.GetExtension(rapatViewModel.notulen!.FileName);
-
-            string imageFullPath2 = environment.WebRootPath + "/upload/rapat/notulen" + newFilename2;
-            using (var stream = System.IO.File.Create(imageFullPath2))
-            {
-                rapatViewModel.notulen.CopyTo(stream);
-            }
             try
             {
                 int id = Int32.Parse(Request.Form["hidden_id"].FirstOrDefault());
@@ -200,13 +160,47 @@ namespace mystap.Controllers
                 {
                     obj.id_project = Convert.ToInt64(Request.Form["id_project"]);
                     obj.judul = Request.Form["judul"].FirstOrDefault();
-                    obj.tanggal = Convert.ToDateTime(Request.Form["tanggal"]);
-                    obj.materi = newFilename;
-                    obj.notulen = newFilename2;
+                    obj.tanggal = Convert.ToDateTime(Request.Form["tanggal"].FirstOrDefault()).Date;
+
+                    if (Request.Form.Files.Count() != 0)
+                    {
+                        if (obj.materi != null)
+                        {
+                            string ExitingFile = environment.WebRootPath + "/" + obj.materi;
+                            System.IO.File.Delete(ExitingFile);
+
+                            IFormFile postedFile = Request.Form.Files[0];
+                            string fileName = DateTime.Now.ToString("yyyyMMddHHmmssfff") + "_" + postedFile.FileName;
+                            string path = environment.WebRootPath + "/upload/rapat/materi/" + fileName;
+
+                            using (var stream = System.IO.File.Create(path))
+                            {
+                                postedFile.CopyTo(stream);
+                                obj.materi = "upload/rapat/materi/" + fileName;
+                            }
+                        }
+                        if (obj.notulen != null)
+                        {
+                            string ExitingFile = environment.WebRootPath + "/" + obj.notulen;
+                            System.IO.File.Delete(ExitingFile);
+
+                            IFormFile postedFile = Request.Form.Files[1];
+                            string fileName2 = DateTime.Now.ToString("yyyyMMddHHmmssfff") + "_" + postedFile.FileName;
+                            string path = environment.WebRootPath + "/upload/rapat/notulen/" + fileName2;
+
+                            using (var stream = System.IO.File.Create(path))
+                            {
+                                postedFile.CopyTo(stream);
+                                obj.notulen = "upload/rapat/notulen/" + fileName2;
+                            }
+                        }
+
+
+                    }
                     _context.SaveChanges();
-                    return Json(new { Results = true });
+                    return Json(new { result = true });
                 }
-                return Json(new { Results = false });
+                return Json(new { result = false });
             }
             catch
             {
@@ -221,7 +215,7 @@ namespace mystap.Controllers
                 int id = Int32.Parse(Request.Form["id"].FirstOrDefault());
                 Rapat obj = _context.rapat.Where(p => p.id == id).FirstOrDefault();
 
-                if (obj == null)
+                if (obj != null)
                 {
                     obj.deleted = 1;
                     _context.SaveChanges();
@@ -304,14 +298,42 @@ namespace mystap.Controllers
             try
             {
                 Steerco steerco = new Steerco();
-                steerco.id_project = Convert.ToInt64(formcollaction["id_project"]);
+                steerco.id_project = Convert.ToInt32(formcollaction["id_project"]);
                 steerco.judul = formcollaction["judul"];
-                steerco.tanggal = Convert.ToDateTime(formcollaction["tanggal"]);
-                steerco.materi = formcollaction["materi"];
-                steerco.notulen = formcollaction["notulen"];
                 steerco.created_by = 1;
+                steerco.tanggal = Convert.ToDateTime(formcollaction["tanggal"]);
                 steerco.created_date = DateTime.Now;
                 steerco.deleted = 0;
+
+                if (Request.Form.Files.Count() != 0)
+                {
+
+                    if (steerco.materi == null)
+                    {
+                        IFormFile postFile = Request.Form.Files[0];
+                        string fileName = DateTime.Now.ToString("yyyyMMddHHmmssfff") + "_" + postFile.FileName;
+                        string path = environment.WebRootPath + "/upload/steerco/materi/" + fileName;
+                        using (var stream = System.IO.File.Create(path))
+                        {
+                            postFile.CopyTo(stream);
+                            steerco.materi = "upload/steerco/materi/" + fileName;
+                        }
+                    }
+                    if (steerco.notulen == null)
+                    {
+                        IFormFile postFile2 = Request.Form.Files[1];
+                        string fileName2 = DateTime.Now.ToString("yyyyMMddHHmmssfff") + "_" + postFile2.FileName;
+                        string path = environment.WebRootPath + "/upload/steerco/notulen/" + fileName2;
+                        using (var stream = System.IO.File.Create(path))
+                        {
+                            postFile2.CopyTo(stream);
+                            steerco.notulen = "upload/steerco/notulen/" + fileName2;
+                        }
+                    }
+
+
+                }
+
 
                 Boolean t;
                 if (steerco != null)
@@ -342,13 +364,47 @@ namespace mystap.Controllers
                 {
                     obj.id_project = Convert.ToInt64(Request.Form["id_project"]);
                     obj.judul = Request.Form["judul"].FirstOrDefault();
-                    obj.tanggal = Convert.ToDateTime(Request.Form["tanggal"]);
-                    obj.materi = Request.Form["materi"].FirstOrDefault();
-                    obj.notulen = Request.Form["notulen"].FirstOrDefault();
+                    obj.tanggal = Convert.ToDateTime(Request.Form["tanggal"].FirstOrDefault()).Date;
+
+                    if (Request.Form.Files.Count() != 0)
+                    {
+                        if (obj.materi != null)
+                        {
+                            string ExitingFile = environment.WebRootPath + "/" + obj.materi;
+                            System.IO.File.Delete(ExitingFile);
+
+                            IFormFile postedFile = Request.Form.Files[0];
+                            string fileName = DateTime.Now.ToString("yyyyMMddHHmmssfff") + "_" + postedFile.FileName;
+                            string path = environment.WebRootPath + "/upload/steerco/materi/" + fileName;
+
+                            using (var stream = System.IO.File.Create(path))
+                            {
+                                postedFile.CopyTo(stream);
+                                obj.materi = "upload/steerco/materi/" + fileName;
+                            }
+                        }
+                        if (obj.notulen != null)
+                        {
+                            string ExitingFile = environment.WebRootPath + "/" + obj.notulen;
+                            System.IO.File.Delete(ExitingFile);
+
+                            IFormFile postedFile = Request.Form.Files[1];
+                            string fileName2 = DateTime.Now.ToString("yyyyMMddHHmmssfff") + "_" + postedFile.FileName;
+                            string path = environment.WebRootPath + "/upload/steerco/notulen/" + fileName2;
+
+                            using (var stream = System.IO.File.Create(path))
+                            {
+                                postedFile.CopyTo(stream);
+                                obj.notulen = "upload/steerco/notulen/" + fileName2;
+                            }
+                        }
+
+
+                    }
                     _context.SaveChanges();
-                    return Json(new { Results = true });
+                    return Json(new { result = true });
                 }
-                return Json(new { Results = false });
+                return Json(new { result = false });
             }
             catch
             {
@@ -361,9 +417,9 @@ namespace mystap.Controllers
             try
             {
                 int id = Int32.Parse(Request.Form["id"].FirstOrDefault());
-                Rapat obj = _context.rapat.Where(p => p.id == id).FirstOrDefault();
+                Steerco obj = _context.steerco.Where(p => p.id == id).FirstOrDefault();
 
-                if (obj == null)
+                if (obj != null)
                 {
                     obj.deleted = 1;
                     _context.SaveChanges();
@@ -986,7 +1042,7 @@ namespace mystap.Controllers
         public IActionResult Memo()
         {
 
-            ViewBag.project = _context.project.Where(p => p.deleted == 0).ToList();
+            ViewBag.project = _context.project.Where(p => p.deleted == 0).Where(p => p.active == "1").ToList();
             ViewBag.requestors = _context.requestors.Where(p => p.deleted == 0).ToList();
             return View();
         }
@@ -995,33 +1051,50 @@ namespace mystap.Controllers
             try
             {
                 var draw = HttpContext.Request.Form["draw"].FirstOrDefault();
-
+                // Skipping number of Rows count
                 var start = Request.Form["start"].FirstOrDefault();
-
+                // Paging Length 10, 20
                 var length = Request.Form["length"].FirstOrDefault();
-
+                // Sort Column Name
                 var sortColumn = Request.Form["columns[" + Request.Form["order[1][column]"].FirstOrDefault() + "][name]"].FirstOrDefault();
-
+                // Sort Column Direction (asc, desc)
                 var sortColumnDirection = Request.Form["order[1][dir]"].FirstOrDefault();
-
+                // Search Value from (Search box)
                 var searchValue = Request.Form["search[value]"].FirstOrDefault();
-
+                // Paging Size (10, 20, 50, 100)
                 int pageSize = length != null ? Convert.ToInt32(length) : 0;
                 int skip = start != null ? Convert.ToInt32(start) : 0;
                 int recordsTotal = 0;
 
+                var project_filter = Request.Form["project"].FirstOrDefault();
+                var memo_filter = Request.Form["memo"].FirstOrDefault();
 
-                var customerData = _context.memo.Include("project").Include("requestors").Include("users").Where(s => s.deleted == 0).Select(a => new { id = a.id, projectName = a.project.description, reqNo = a.reqNo, reqDate = a.reqDate, reqDesc = a.reqDesc, reqYear = a.reqYear, attach = a.attach, requestorName = a.requestors.name, showing = a.showing, deleted = a.deleted, deletedBy = a.users.name, updated = a.updated, updatedBy = a.users.name, createBy = a.users.alias, dateCreated = a.dateCreated });
+                var customerData = _context.memo.Include("project").Include("users").Where(s => s.deleted == 0).Select(a => new { id = a.id, projectID = a.projectID, projectName = a.project.description, reqNo = a.reqNo, reqDate = a.reqDate, reqDesc = a.reqDesc, reqYear = a.reqYear, attach = a.attach, requestorName = a.requestors.name, showing = a.showing, deleted = a.deleted, deletedBy = a.users.name, updated = a.updated, updatedBy = a.users.name, createBy = a.users.alias, dateCreated = a.dateCreated });
 
+                if (project_filter != "")
+                {
+                    customerData = customerData.Where(p => p.projectID == Convert.ToInt32(project_filter));
+                }
+
+                if (memo_filter != "")
+                {
+                    customerData = customerData.Where(p => p.reqNo.StartsWith(memo_filter));
+                }
+                // Sorting
                 if (!(string.IsNullOrEmpty(sortColumn) && string.IsNullOrEmpty(sortColumnDirection)))
                 {
                     customerData = customerData.OrderBy(sortColumn + " " + sortColumnDirection);
                 }
 
+                //search
                 if (!string.IsNullOrEmpty(searchValue))
                 {
-                    customerData = customerData.Where(b => b.reqDesc.StartsWith(searchValue));
+                    customerData = customerData.Where(m => m.reqNo.StartsWith(searchValue) || m.reqDesc.StartsWith(searchValue) || m.createBy.StartsWith(searchValue));
                 }
+
+
+
+
                 // Total number of rows count
                 //Console.WriteLine(customerData);
                 recordsTotal = customerData.Count();
@@ -1045,7 +1118,7 @@ namespace mystap.Controllers
                 memo.projectID = Convert.ToInt32(formcollaction["projectID"]);
                 memo.reqNo = formcollaction["reqNo"];
                 memo.reqDesc = formcollaction["reqDesc"];
-                memo.reqDate = formcollaction["reqDate"];
+                memo.reqDate = Convert.ToDateTime(formcollaction["reqDate"]);
                 memo.requestor = Convert.ToInt32(formcollaction["requestor"]);
                 memo.attach = formcollaction["attach"];
                 memo.showing = Convert.ToInt32(formcollaction["showing"]);
@@ -1082,7 +1155,7 @@ namespace mystap.Controllers
                     obj.projectID = Convert.ToInt32(Request.Form["projectID"].FirstOrDefault());
                     obj.reqNo = Request.Form["reqNo"].FirstOrDefault();
                     obj.reqDesc = Request.Form["reqDesc"].FirstOrDefault();
-                    obj.reqDate = Request.Form["reqDate"].FirstOrDefault();
+                    obj.reqDate = Convert.ToDateTime(Request.Form["reqDate"].FirstOrDefault());
                     obj.requestor = Convert.ToInt32(Request.Form["requestor"].FirstOrDefault());
                     obj.attach = Request.Form["attach"].FirstOrDefault();
                     obj.showing = Convert.ToInt32(Request.Form["showing"].FirstOrDefault());
@@ -1412,7 +1485,9 @@ namespace mystap.Controllers
         public IActionResult Bom()
         {
             ViewBag.project = _context.project.Where(p => p.deleted == 0).Where(p => p.active == "1").ToList();
-            
+            ViewBag.disiplin = _context.disiplins.Where(p => p.deleted != 1).ToList();
+            ViewBag.equipment = _context.equipments.Where(p => p.deleted != 1).ToList();
+
             return View();
         }
         public async Task<IActionResult> Get_Boms()
@@ -1436,10 +1511,12 @@ namespace mystap.Controllers
                 int recordsTotal = 0;
 
                 var project_filter = Request.Form["project"].FirstOrDefault();
+                var disiplin_filter = Request.Form["disiplin"].FirstOrDefault();
+
                
 
-                var customerData = _context.bom.Include("users").Where(s => s.id_project == Convert.ToInt64(project_filter)).Where(s => s.deleted == 0).Select(a => new { id = a.id, no_wo = a.no_wo, tag_no = a.tag_no, id_project = a.id_project, disiplin = a.disiplin, created_date = a.created_date, created_by = a.users.alias, last_modify = a.last_modify, modify_by = a.users.alias });
-
+                var customerData = _context.bom.Include("users").Where(s => s.disiplin == disiplin_filter).Where(s => s.id_project == Convert.ToInt64(project_filter)).Where(s => s.deleted == 0).Select(a => new { id = a.id, no_wo = a.no_wo, tag_no = a.tag_no, id_project = a.id_project, disiplin = a.disiplin, created_date = a.created_date, created_by = a.users.alias, last_modify = a.last_modify, modify_by = a.users.alias });
+                var files = _context.bomFiles.Include("bom").Select(a => new { id = a.id, files = a.files});
                 if (!(string.IsNullOrEmpty(sortColumn) && string.IsNullOrEmpty(sortColumnDirection)))
                 {
                     customerData = customerData.OrderBy(sortColumn + " " + sortColumnDirection);
@@ -1464,11 +1541,10 @@ namespace mystap.Controllers
                 throw;
             }
         }
-        public IActionResult Create_Bom(IFormCollection formcollaction)
+        public IActionResult Create_Bom(BomFiles bomFiles,IFormCollection formcollaction)
         {
 
-            try
-            {
+           
                 Bom bom = new Bom();
                 bom.id_project = Convert.ToInt32(formcollaction["id_project"]);
                 bom.tag_no = formcollaction["tag_no"];
@@ -1477,24 +1553,53 @@ namespace mystap.Controllers
                 bom.created_date = DateTime.Now;
                 bom.created_by = 1;
                 bom.deleted = 0;
+                using var transaction = _context.Database.BeginTransaction();
+                try
+                {
+                    var id_bom = bom.id;
+                    var files = formcollaction["attach"];
+                    if (Request.Form.Files.Count() != 0)
+                    {
+                        if (files.Count > 0)
+                        {
+                            var cek = _context.bomFiles.Where(p => p.id_bom == bom.id).FirstOrDefault();
+                            if (cek != null)
+                            {
+                                _context.bomFiles.Where(p => p.id_bom == bom.id).ExecuteDelete();
+                            }
+                            foreach (var val in files)
+                            {
+                                IFormFile postedFile = Request.Form.Files[0];
+                                string fileName = DateTime.Now.ToString("yyyyMMddHHmmssfff") + "_" + postedFile.FileName;
+                                string path = environment.WebRootPath + "/upload/bom/" + fileName;
+                                using (var stream = System.IO.File.Create(path))
+                                {
+                                    postedFile.CopyTo(stream);
+                                    bomFiles.files = "upload/bom/" + fileName;
+                                    bomFiles.id_bom = (int)id_bom;
+                                }
+                            }
+                        }
+                    }
+                    transaction.Commit();
 
-                Boolean t;
-                if (bom != null)
-                {
-                    _context.bom.Add(bom);
-                    _context.SaveChanges();
-                    t = true;
+                    Boolean t;
+                    if (bom != null)
+                    {
+                        _context.bom.Add(bom);
+                        _context.SaveChanges();
+                        t = true;
+                    }
+                    else
+                    {
+                        t = false;
+                    }
+                    return Json(new { result = t });
                 }
-                else
+                catch (Exception)
                 {
-                    t = false;
+                    throw;
                 }
-                return Json(new { result = t });
-            }
-            catch (Exception)
-            {
-                throw;
-            }
         }
         public IActionResult Update_Bom(Bom bom)
         {

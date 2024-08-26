@@ -349,8 +349,4 @@
         }
     });
 
-    $(document).on('click', '#filter', function () {
-        table.ajax.reload();
-    })
-
 });

@@ -30,7 +30,8 @@ namespace mystap.Models
         public DbSet<HistoryReservasi> historyReservasi { get; set; }
         public DbSet<Zpm01>zpm01 { get; set; }
         public DbSet<Bom>bom { get; set; }
-        
+        public DbSet<BomFiles> bomFiles { get; set; }
+
 
 
         //View Model

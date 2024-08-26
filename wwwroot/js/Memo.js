@@ -14,7 +14,7 @@
             url: '/request_memo_',
             method: 'POST',
             data: function (d) {
-                d.project_filter = $('#project_filter').val();
+                d.project = $('#project_filter').val();
                 d.memo = $('#memo_filter').val();
             }
         },
@@ -30,10 +30,22 @@
             },
             { data: 'reqNo', name: 'reqNo' },
             { data: 'reqDesc', name: 'reqDesc' },
-            { data: 'reqDate', name: 'reqDate' },
+            {
+                data: 'reqDate', name: 'reqDate', render: function (data, type, full, meta) {
+                    var date = new Date(full.created_date);
+                    var string = date.getDate() + "-" + date.getMonth() + "-" + date.getFullYear();
+                    return string;
+                }
+            },
             { data: 'projectName', name: 'project.description' },
             { data: 'requestorName', name: 'requestor.name', },
-            { data: 'file', name: 'file' },
+            {
+                "render": function (data, type, full, meta) {
+                    return '<a href="' + full.file + '" class="badge bg-info" target="blank_"><i class="far fa-copy"></i> file</a>';
+                },
+                orderable: false,
+                searchable: false
+            },
             {
                 data: 'show', name: 'show',
                 render: function (data, type, full, meta) {
@@ -92,12 +104,13 @@
         $('#Modal').modal('show');
         $('#btn-sb').text('Update');
         $('.judul-modal').text('Edit Request Memo');
+        var tanggal = $(this).data('reqDate').split("T");
         $('#hidden_status').val('edit');
         $('#hidden_id').val($(this).data('id'));
         $('#projectID').val($(this).data('projectid'));
         $('#reqNo').val($(this).data('reqno'));
         $('#reqDesc').val($(this).data('reqdesc'));
-        $('#reqDate').val($(this).data('reqdate'));
+        $('#reqDate').val(tanggal[0]);
         $('#requestor').val($(this).data('requestor'));
         $('#showing').val($(this).data('showing'));
         $('#attach_').val($(this).data('attach'));
