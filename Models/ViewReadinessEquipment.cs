@@ -9,8 +9,8 @@ namespace mystap.Models
         public long id { get; set; }
         public long? projectID { get; set; }
         public string? revision { get; set; }
-        public string jobNo { get; set; }
-        public string eqTagNo { get; set; }
-        public string status_tagno { get; set; }
+        public string? jobNo { get; set; }
+        public string? eqTagNo { get; set; }
+        public string? status_tagno { get; set; }
     }
 }

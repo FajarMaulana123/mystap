@@ -50,21 +50,21 @@ namespace mystap.Models
         public string? pekerjaan { get; set; }
         public string? ket_status_material { get; set; }
         public string? status_job { get; set; }
-        public string? notif { get; set; }
+        public long? notif { get; set; }
         public string? dikerjakan { get; set; }
         public string? mitigasi { get; set; }
         public string? keterangan { get; set; }
 
-        [ForeignKey("createBy")]
-        public Users users { get; set; }
+        //[ForeignKey("createBy")]
+        //public Users users { get; set; }
 
-        [ForeignKey("joblist_id")]
-        public Joblist joblist { get; set; }
+        //[ForeignKey("joblist_id")]
+        //public Joblist joblist { get; set; }
 
-        [ForeignKey("unitCode")]
-        public Unit unit { get; set; }
-        public Equipments equipments { get; set; }
-        public ContractTracking contracttracking { get; set; }
+        //[ForeignKey("unitCode")]
+        //public Unit unit { get; set; }
+        //public Equipments equipments { get; set; }
+        //public ContractTracking contracttracking { get; set; }
 
 
     }

@@ -279,20 +279,15 @@ namespace mystap.Controllers
 
                     string tahun = Request.Form["tahun"].FirstOrDefault();
                     string inisial = Request.Form["inisial"].FirstOrDefault();
-                    var cek = _context.sow.Where(p => p.tahun == tahun).Where(w => w.tahun.Contains(tahun)).Select(p => new
-                    {
-                        tahun = p.tahun,
-                        kode = p.jobCode.Max()
-                    }).FirstOrDefault();
-                    var no = 0;
-                    if (cek.tahun != tahun)
+                    var cek = _context.sow.Where(p => p.tahun == tahun).Where(w => w.tahun.Contains(tahun)).Max(p => new { kode = p.jobCode, tahun = p.tahun });
+                    int no = 0;
+                    if (cek.kode != tahun)
                     {
                         no = 1;
                     }
                     else
                     {
-                        var p = cek.kode;
-                        no = p + 1;
+                        no = Convert.ToInt32(cek.kode) + 1;
                     }
 
                     obj.jobCode = Request.Form["inisial"].FirstOrDefault() + "-" + no.ToString("D3");

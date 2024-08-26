@@ -1,0 +1,447 @@
+﻿@{
+    ViewData["Title"] = "Update Joblist";
+}
+<ol class="breadcrumb float-xl-end">
+        <li class="breadcrumb-item"><a href="javascript:void(0);">   <i data-feather="file"></i></a></li>
+        <li class="breadcrumb-item"><a href="/joblist">JobList</a></li>
+        <li class="breadcrumb-item active" aria-current="page"><span>Update Joblist</span></li>
+    </ol>
+    <h1 class="page-header">Update Joblist</h1>  
+    <div class="row">
+        <div class="col-xl-3">
+            <div class="panel panel-inverse">
+                <div class="panel-heading">
+                    <h4 class="panel-title">Joblist</h4>
+                    <div class="panel-heading-btn">
+                        <a href="javascript:;" class="btn btn-xs btn-icon btn-default" data-toggle="panel-expand"><i class="fa fa-expand"></i></a>
+                        <a href="javascript:;" class="btn btn-xs btn-icon btn-warning" data-toggle="panel-collapse"><i class="fa fa-minus"></i></a>
+                    </div>
+                </div> 
+                <div class="panel-body">  
+                    <form id="joblist-form">
+                        <div class="row">
+                            <div class="col-md-12 mb-2">
+                                <div class="form-group">
+                                    <label>Project</label>
+                                    <input type="hidden" name="id_joblist" id="id_joblist" value="@(ViewBag.data.id)">
+                                    <input type="hidden" name="id_project" id="id_project" value="@(ViewBag.data.projectID)">
+                                    <select name="projectNo" id="projectNo" class="form-control ">
+                                        <option value="">Select Project</option>
+                                        @foreach (var val in ViewBag.project)
+                                        {
+                                            <option value="@(val.projectNo)" data-id="@(val.id)" data-month="@(val.month)" data-year="@(val.year)" data-taoh="@(val.taoh)" data-revision="@(val.revision)">@(val.description)</option>
+                                        }
+                                    </select>
+                                </div>
+                            </div> 
+                        </div>
+                        <div class="row">
+                            <div class="col-md-12 mb-2">
+                                <div class="form-group">
+                                    <label>Unit</label>
+                                    <input name="unitCode" id="unitCode" class="form-control" value="" readonly>
+                                    <input type="hidden" name="codejob" id="codejob" value="">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-12 mb-2">
+                                <div class="form-group">
+                                    <label>Kilang</label>
+                                    <input name="unitKilang" id="unitKilang" class="form-control " value="{{$data['datas']->unitKilang}}" readonly>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-12 mb-2">
+                                <div class="form-group">
+                                    <label>Tag No</label>
+                                    <input name="eqTagNo" id="eqTagNo" class="form-control " value="{{$data['datas']->eqTagNo}}" readonly>
+                                    <input type="hidden" name="catprof" id="catprof" value="{{$data['datas']->catalog_profile}}">
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="row" id="oh" style="display:">
+                            <div class="col-md-12 mb-2">
+                                <div class="form-group">
+                                    <label>Start Date</label>
+                                    <input type="date" name="start_date" id="start_date" class="form-control" value="">
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="row">
+                            <div class="col-md-12 mb-2">
+                                <label>Job Criteria</label>
+                                <div class="col-md-12 mb-2">
+                                    <div class="form-check form-check-inline me-2">
+                                        <input class="form-check-input" type="checkbox" value="1" name="criteriaMI" id="criteriaMI"/>
+                                        <label class="form-check-label" for="criteriaMI">Mechanical Integrity</label>
+                                    </div>
+                                    <div class="form-check form-check-inline me-2">
+                                        <input class="form-check-input" type="checkbox" value="1" name="criteriaPI" id="criteriaPI"/>
+                                        <label class="form-check-label" for="criteriaPI">Process Integrity</label>
+                                    </div>
+                                    <div class="form-check form-check-inline me-2">
+                                        <input class="form-check-input" type="checkbox" value="1" name="criteriaOPT" id="criteriaOPT"/>
+                                        <label class="form-check-label" for="criteriaOPT">Optimization</label>
+                                    </div>
+                                    
+                                </div>
+                               
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-12 mb-2">
+                                <div class="form-group">
+                                    <label>Remarks</label>
+                                    <textarea name="remarks" id="remarks" rows="5" class="form-control"></textarea>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div style="align-items: right">
+                                <a href="/joblist" class="btn btn-warning">Kembali</a>
+                                <button type="submit" class="btn btn-info">Submit</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <div class="col-xl-9">
+            <div class="panel panel-inverse">
+                <div class="panel-heading">
+                    <h4 class="panel-title">Joblist Detail</h4>
+                    <div class="panel-heading-btn">
+                        <a href="javascript:;" class="btn btn-xs btn-icon btn-default" data-toggle="panel-expand"><i class="fa fa-expand"></i></a>
+                        <a href="javascript:;" class="btn btn-xs btn-icon btn-warning" data-toggle="panel-collapse"><i class="fa fa-minus"></i></a>
+                    </div>
+                </div> 
+                <div class="panel-body">
+                    <div class="table-responsive">
+                        <table id="table" class="table small table-striped table-bordered dataTables_wrapper" width="100%">
+                            <thead>
+                                <tr>
+                                <th>JobNo</th>
+                                    <th>Job Desc</th>
+                                    <th>Dicipline</th>
+                                    <th>Status</th>
+                                    <th>Reason</th>
+                                    <th>cln</th>
+                                    <th>ins</th>
+                                    <th>rpr</th>
+                                    <th>rpl</th>
+                                    <th>ndt</th>
+                                    <th>tein</th>
+                                    <th>msr</th>
+                                    <th>dwg</th>
+                                    <th>mod</th>
+                                    <th>coc</th>
+                                    <th>hsse</th>
+                                    <th>rel</th>
+                                    <th>los</th>
+                                    <th>eng</th>
+
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+<div class="modal fade" id="Modal" tabindex="-1"  role="dialog" aria-labelledby="ModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title judul-modal" id="Modal"></h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-hidden="true"  aria-label="Close">
+                    
+                </button>
+            </div>
+            
+            <form id="detail-form">            
+            <div class="modal-body">
+                <input type="hidden" name="joblist_id" id="joblist_id" value="">
+                <input type="hidden" id="jobno_detail" name="jobno_detail" class="form-control" value="">
+                <input type="hidden" id="eqtagno_detail" name="eqtagno_detail" class="form-control" value="">
+                    <input type="hidden" name="hidden_status" id="hidden_status"  value="add">
+                    <input type="hidden" name="hidden_id" id="hidden_id" >
+                    
+                    <div class="row mb-2">
+                        <div class="col-md-12">
+                            <div class="form-check form-check-inline me-2">
+                                <input class="form-check-input" type="checkbox" name="project"/>
+                                <label class="form-check-label" for="project">Project</label>
+                            </div>
+                            <div class="form-check form-check-inline me-2">
+                                <input class="form-check-input" type="checkbox" name="freezing"/>
+                                <label class="form-check-label" for="freezing">Freezing</label>
+                            </div>
+                            <div class="form-check form-check-inline me-2">
+                                <input class="form-check-input" type="checkbox" name="critical_job"/>
+                                <label class="form-check-label" for="critical_job">Critical Job</label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row mb-2">
+                        <div class="col-md-12">
+                            <div class="form-group">
+                                <label>Uraian Pekerjaan Utama</label>
+                                <textarea name="jobDesc" id="jobDesc" cols="5" rows="5" class="form-control"></textarea>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row mb-2">
+                        <div class="col-md-12">
+                            <div class="form-group"> 
+                                <label>Alasan Masuk Joblist</label>
+                                <select name="alasan"  id="alasan" class="form-select">
+                                    <option value="">Pilih Alasan</option>
+                                    <option value="BAD_ACTOR">BAD_ACTOR</option>
+                                    <option value="OVERHOUL">OVERHOUL</option>
+                                    <option value="PERATURAN_PEMERINTAH">PERATURAN_PEMERINTAH</option>
+                                    <option value="OVERDUE">OVERDUE</option>
+                                    <option value="OBSELETE">OBSELETE</option>
+                                    <option value="MASTER_PLAN">MASTER_PLAN</option>
+                                    <option value="JADWAL_INPEKSI">JADWAL_INPEKSI</option>
+                                    <option value="HASIL_PIR/A/B/C">HASIL_PIR/A/B/C</option>
+                                    <option value="HASIL_ONCI/CONMON">HASIL_ONCI/CONMON</option>
+                                    <option value="MOC/UPGRADE">MOC/UPGRADE</option>
+                                    <option value="PROCESS_INTEGRITY">PROCESS_INTEGRITY</option>
+                                
+                                </select>
+                            </div>
+                        </div>
+                    </div>                                
+                    <div class="row mb-2">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label>Revision</label>
+                                <select name="revision" id="revision" class="form-select">
+                                    <option value="">- pilih revision -</option>
+                                    <option value="revision0">Revision 0</option>
+                                    <option value="revision1">Revision 1</option>
+                                    <option value="revision2">Revision 2</option>
+                                    <option value="revision3">Revision 3</option>
+                                    <option value="additional1">Additional 1</option>
+                                    <option value="additional2">Additional 2</option>
+                                    <option value="additional3">Additional 3</option>
+                                    <option value="additional_execution">Additional Execution</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label>Inspector/Engineer</label>
+                                <select name="insepector"  id="insepector" class="form-select">
+                                    <option value="">- Pilih Inspector -</option>
+                                    <option value="SSIE">SSIE</option>
+                                    <option value="REIE">REIE</option>
+                                    <option value="EIIE">EIIE</option>
+                                    <option value="PE">PE</option>
+                                    <option value="PROJ.ENG">PROJ.ENG</option>
+                                    <option value="ECLC">ECLC</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row mb-2">
+                        
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label>Ekseskusi</label>
+                                <select name="eksekusi"  id="eksekusi" class="form-select">
+                                    <option value="">-Pilih eksekusi-</option>
+                                    <option value="TA">TA</option>
+                                    <option value="ROUTINE">ROUTINE</option>
+                                    <option value="RDMP">RDMP</option>
+                                    <option value="REVIT">REVIT</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label>Responbility</label>
+                                <select name="responbility"  id="responbility" class="form-select">
+                                <option value="">-pilih reponbility-</option>
+                                <option value="TA">TA</option>
+                                <option value="RPS">RPS</option>
+                                <option value="PE">PE</option>
+                                <option value="PROJECT_ENG">PROJECT ENG</option>
+                                <option value="PS">PS</option>
+                                <option value="ENG_DEV">ENG DEV</option>
+                                <option value="REVIT">REVIT</option>
+                                <option value="RDMP">RDMP</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row mb-2">
+                        
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                <label>Risk Assessment Matrix ( RAM ) </label>
+                                <select name="ram"  id="ram" class="form-select">
+                                <option value="">-pilih RAM-</option>
+                                <option value="EXTREME">EXTREME</option>
+                                <option value="HIGH">HIGH</option>
+                                <option value="MEDIUM_HIGH">MEDIUM HIGH</option>
+                                <option value="MEDIUM">MEDIUM</option>
+                                <option value="LOW">LOW</option>
+                                <option value="NEGLIBLE">NEGLIBLE</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                <label for="notifikasi">No Notifikasi</label>
+                                <select name="notifikasi"  id="notifikasi" class="form-control select3">
+                                    <option value="">Select Notifikasi</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row mb-2">
+                        <div class="col-md-12">
+                            <div class="form-group">
+                                <label>Memo</label>
+                                <select name="memo[]"  id="memo" class="multiple-select2 form-control" multiple>
+                                  
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row mb-2">
+                        <div class="col-md-12">
+                            <div class="card">
+                                <div class="card-header" style="
+                                        color: white;
+                                        background-color: cornflowerblue;
+                                    ">
+                                Scope of Work
+                                </div>
+                                <div class="card-body">
+                                    <div class="form-check form-check-inline me-2">
+                                        <input class="form-check-input" type="checkbox" name="cleaning"/>
+                                        <label class="form-check-label" for="cleaning">CLEANING</label>
+                                    </div>
+                                    <div class="form-check form-check-inline me-2">
+                                        <input class="form-check-input" type="checkbox" name="inspection"/>
+                                        <label class="form-check-label" for="inspection">INSPECTION</label>
+                                    </div>
+                                    <div class="form-check form-check-inline me-2">
+                                        <input class="form-check-input" type="checkbox" name="repair"/>
+                                        <label class="form-check-label" for="repair">REPAIR</label>
+                                    </div>
+                                    <div class="form-check form-check-inline me-2">
+                                        <input class="form-check-input" type="checkbox" name="replace"/>
+                                        <label class="form-check-label" for="replace">REPLACE</label>
+                                    </div>
+                                    <div class="form-check form-check-inline me-2">
+                                        <input class="form-check-input" type="checkbox" name="ndt"/>
+                                        <label class="form-check-label" for="ndt">NDT</label>
+                                    </div>
+                                    <div class="form-check form-check-inline me-2">
+                                        <input class="form-check-input" type="checkbox" name="modif"/>
+                                        <label class="form-check-label" for="modif">MODIFICATION</label>
+                                    </div>
+                                    <div class="form-check form-check-inline me-2">
+                                        <input class="form-check-input" type="checkbox" name="tiein"/>
+                                        <label class="form-check-label" for="tiein">TIE IN</label>
+                                    </div>
+                                    <div class="form-check form-check-inline me-2">
+                                        <input class="form-check-input" type="checkbox" name="coc"/>
+                                        <label class="form-check-label" for="coc">COC</label>
+                                    </div>
+                                    <div class="form-check form-check-inline me-2">
+                                        <input class="form-check-input" type="checkbox" name="drawing"/>
+                                        <label class="form-check-label" for="drawing">DRAWING</label>
+                                    </div>
+                                    <div class="form-check form-check-inline me-2">
+                                        <input class="form-check-input" type="checkbox" name="measurement"/>
+                                        <label class="form-check-label" for="measurement">MEASUREMENT</label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row mb-2">
+                        <div class="col-md-12">
+                            <div class="card">
+                                <div class="card-header" style="
+                                                color: white;
+                                                background-color: cornflowerblue;
+                                            ">
+                                Job Category
+                                </div>
+                                <div class="card-body">
+                                    <div class="form-check form-check-inline me-2">
+                                        <input class="form-check-input" type="checkbox" name="hsse"/>
+                                        <label class="form-check-label" for="hsse">HSSE</label>
+                                    </div>
+                                    <div class="form-check form-check-inline me-2">
+                                        <input class="form-check-input" type="checkbox" name="reliability"/>
+                                        <label class="form-check-label" for="reliability">RELIABILITY</label>
+                                    </div>
+                                    <div class="form-check form-check-inline me-2">
+                                        <input class="form-check-input" type="checkbox" name="losses"/>
+                                        <label class="form-check-label" for="losses">LOSSES</label>
+                                    </div>
+                                    <div class="form-check form-check-inline me-2">
+                                        <input class="form-check-input" type="checkbox"  name="energi"/>
+                                        <label class="form-check-label" for="energi">ENERGI</label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row mb-2">
+                        <div class="col-md-12">
+                            <div class="card">
+                                <div class="card-header" style="
+                                        color: white;
+                                        background-color: cornflowerblue;
+                                    ">
+                                Job Dicipline
+                                </div>
+                                <div class="card-body">
+                                    <div class="form-check form-check-inline me-2">
+                                        <input class="form-check-input" type="radio" name="dicipline" id="stat" value="STA"/>
+                                        <label class="form-check-label" for="stat">STATIONARY</label>
+                                    </div>
+                                    <div class="form-check form-check-inline me-2">
+                                        <input class="form-check-input" type="radio" name="dicipline" id="rotat" value="ROT"/>
+                                        <label class="form-check-label" for="rotat">ROTATING</label>
+                                    </div>
+                                    <div class="form-check form-check-inline me-2">
+                                        <input class="form-check-input" type="radio" name="dicipline" id="civil" value="CIV"/>
+                                        <label class="form-check-label" for="civil">CIVIL</label>
+                                    </div>
+                                    <div class="form-check form-check-inline me-2">
+                                        <input class="form-check-input" type="radio" name="dicipline" id="instrument" value="INS"/>
+                                        <label class="form-check-label" for="instrument">INSTRUMENT</label>
+                                    </div>
+                                    <div class="form-check form-check-inline me-2">
+                                        <input class="form-check-input" type="radio" name="dicipline" id="electric" value="ELEC"/>
+                                        <label class="form-check-label" for="electric">ELECTRICAL</label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            <div class="modal-footer">
+                <a href="javascript:;" class="btn btn-white" data-bs-dismiss="modal">Close</a>
+                <button type="reset" class="btn btn-dark">Reset</button>
+                <button type="submit" class="btn btn-success">Submit</button>
+            </div>
+            </form>
+        </div>     
+    </div>
+</div>

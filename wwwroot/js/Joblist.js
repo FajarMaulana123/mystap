@@ -10,10 +10,10 @@
         dom: '<"dataTables_wrapper dt-bootstrap"<"row"<"col-xl-7 d-block d-sm-flex d-xl-block justify-content-center"<"d-block d-lg-inline-flex me-0 me-md-3"l><"d-block d-lg-inline-flex"B>><"col-xl-5 d-flex d-xl-block justify-content-center"fr>>t<"row"<"col-md-5"i><"col-md-7"p>>>',
         processing: true,
         serverSide: true,
-        //deferLoading: 0,
-        //language: {
-        //    "emptyTable": "Data tidak ditemukan - Silahkan Filter data Job List terlebih dahulu !"
-        //},
+        deferLoading: 0,
+        language: {
+            "emptyTable": "Data tidak ditemukan - Silahkan Filter data Job List terlebih dahulu !"
+        },
         "lengthMenu": [
             [30, 60, 100, 200, -1],
             [30, 60, 100, 200, "All"]
@@ -21,8 +21,8 @@
         ajax: {
             "url": "joblist_",
             "method": "POST",
-            "datatype": "json"
-            data: function (d) {
+            "datatype": "json",
+            "data": function (d) {
                 d.project = $('#project_filter').val();
                 d.project_rev = $('#project_filter').find(':selected').data('rev');
                 d.jobNo = $('#jobNo_filter').val();
@@ -33,11 +33,11 @@
         },
         columns: [
             //{ data: 'DT_RowIndex', name: 'DT_RowIndex', orderable: false, searchable: false },
-            {
-                "data": null, orderable: false, "render": function (data, type, full, meta) {
-                    return meta.row + 1;
-                }
-            },
+            //{
+            //    "data": null, orderable: false, "render": function (data, type, full, meta) {
+            //        return meta.row + 1;
+            //    }
+            //},
             { data: 'jobNo', name: 'jobNo' },
             { data: 'projectNo', name: 'projectNo' },
             { data: 'description', name: 'project.description' },
@@ -62,11 +62,14 @@
             { data: 'keterangan', name: 'keterangan' },
             { data: 'name', name: 'users.name' },
             {
-                "render": function (data, type, full, meta) {
-                    return '<div class="d-flex"><a href="javascript:void(0);" class="btn btn-warning  btn-xs edit mr-1"  data-id="' + full.id + '" data-alasan="' + full.alasan + '" data-jobdesc="' + full.jobDesc + '" data-engineer="' + full.engineer + '" data-revision="' + full.revision + '" data-execution="' + full.execution + '" data-responsibility="' + full.responsibility + '" data-ram="' + full.ram + '" data-notif="' + full.notif + '" data-cleaning="' + full.cleaning + '" data-inspection="' + full.inspection + '" data-repair="' + full.repair + '" data-replace="' + full.replace + '" data-ndt="' + full.ndt + '" data-modif="' + full.modif + '" data-tein="' + full.tein + '" data-coc="' + full.coc + '" data-drawing="' + full.drawing + '" data-measurement="' + full.measurement + '" data-hsse="' + full.hsse + '" data-reliability="' + full.reliability + '" data-losses="' + full.losses + '" data-energi="' + full.energi + '" data-disiplin="' + full.disiplin + '" data-project="' + full.project + '" data-critical_job="'+ full.critical_job + '" data-freezing="' + full.freezing + '" ><i class="fas fa-pen fa-xs"></i></a><a href = "javascript:void(0);" style = "margin-left:5px" class="btn btn-danger btn-xs delete " data-id="' + full.id + '" > <i class="fas fa-trash fa-xs"></i></a ></div > ';
-                },
                 orderable: false,
-                searchable: false
+                searchable: false,
+                "render": function (data, type, full, meta) {
+                    var actionBtn = '<div class="d-flex"><a href="javascript:void(0);" class="btn btn-xs waves-effect waves-light btn-outline-primary carry_offer mr-1" data-id="' + full.id + '" data-eqtagno="' + full.eqTagNo'"><i class="fas fa-dolly fa-xs"></i></a>' +
+                        '<a href="update_joblist/' + full.id + '" style = "margin-left:5px" class="btn btn-xs waves-effect waves-light btn-outline-warning edit "> <i class="fas fa-pen fa-xs"></i></a>';
+                    return actionBtn;
+                },
+                
             },
         ],
         //columnDefs: [
@@ -101,6 +104,148 @@
         }]*/
 
     });
+
+    $(document).on('click', '.carry_offer', function () {
+        $('#carry-form')[0].reset();
+        $('#carry').modal('show');
+        $('#hidden_id').val($(this).data('id'));
+        $('#eqTagNo').val($(this).data('eqtagno'));
+        $('#hidden_status').val('add');
+    })
+
+    $(document).on('click', '.delete', function () {
+        var id = $(this).data('id');
+        Swal.fire({
+            title: 'Apakah Anda Yakin?',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            confirmButtonText: 'Ya',
+            cancelButtonText: 'Tidak',
+        }).then((result) => {
+            if (result.value) {
+                $.ajax({
+                    url: "delete_joblist",
+                    type: "POST",
+                    data: {
+                        id: id
+                    },
+                    dataType: "JSON",
+                    success: function (data) {
+                        table.ajax.reload();
+                        Swal.fire({
+                            title: data.title,
+                            text: data.status,
+                            icon: data.icon,
+                            // timer: 3000,
+                            showCancelButton: false,
+                            showConfirmButton: true,
+                            // buttons: false,
+                        });
+                    },
+                    error: function (jqXHR, textStatus, errorThrown) {
+                        alert('Error');
+                    }
+                });
+            }
+        })
+    });
+
+    $(document).on('change', '#unitCode', function () {
+        var unitCode = $(this).val();
+        $.ajax({
+            url: 'getUnitKilang',
+            method: 'POST',
+            data: {
+                unitCode: unitCode,
+            },
+            success: function (res) {
+                $('#unitKilang').html(res);
+            }
+
+        })
+    })
+
+    $("#carry-form").validate({
+        errorClass: "is-invalid",
+        // validClass: "is-valid",
+        rules: {
+            project: {
+                required: true
+            },
+            keterangan: {
+                required: true
+            }
+        },
+        submitHandler: function (form) {
+
+            var form_data = new FormData(document.getElementById("carry-form"));
+            $.ajax({
+                url: "/carry_offer_joblist",
+                type: "POST",
+                data: form_data,
+                dataType: "JSON",
+                contentType: false,
+                cache: false,
+                processData: false,
+                beforeSend: function () {
+                    swal.fire({
+                        title: 'Harap Tunggu!',
+                        allowEscapeKey: false,
+                        allowOutsideClick: false,
+                        showCancelButton: false,
+                        showConfirmButton: false,
+                        buttons: false,
+                        didOpen: () => {
+                            Swal.showLoading()
+                        }
+                    })
+                },
+                success: function (data) {
+                    if (data.result == false) {
+                        Swal.fire({
+                            title: 'Gagal',
+                            text: "Silahkan Hubungi Administrator !",
+                            icon: 'error',
+                            // timer: 3000,
+                            showCancelButton: false,
+                            showConfirmButton: true,
+                            // buttons: false,
+                        });
+                    }
+                    if (data.result == true) {
+                        Swal.fire({
+                            title: 'Berhasil',
+                            icon: 'success',
+                            // timer: 3000,
+                            showCancelButton: false,
+                            showConfirmButton: true,
+                            // buttons: false,
+                        });
+                        $('#carry').modal('hide');
+                        table.ajax.reload();
+                    }
+                    if (data.result == 'ada') {
+                        Swal.fire({
+                            title: 'EqTagNo Sudah Ada !',
+                            icon: 'warning',
+                            // timer: 3000,
+                            showCancelButton: false,
+                            showConfirmButton: true,
+                            // buttons: false,
+                        });
+                    }
+                },
+                error: function (jqXHR, textStatus, errorThrown) {
+                    alert('Error adding / update data');
+                }
+            });
+        }
+    });
+
+    $(document).on('click', '#filter', function () {
+        table.ajax.reload();
+    })
 
 
 });

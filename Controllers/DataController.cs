@@ -1,7 +1,6 @@
 ﻿using Azure.Core;
 using MessagePack;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.CodeAnalysis;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Migrations.Operations;
 using mystap.Models;
@@ -1069,7 +1068,7 @@ namespace mystap.Controllers
                 var project_filter = Request.Form["project"].FirstOrDefault();
                 var memo_filter = Request.Form["memo"].FirstOrDefault();
 
-                var customerData = _context.memo.Include("project").Include("users").Where(s => s.deleted == 0).Select(a => new { id = a.id, projectID = a.projectID, projectName = a.project.description, reqNo = a.reqNo, reqDate = a.reqDate, reqDesc = a.reqDesc, reqYear = a.reqYear, attach = a.attach, requestorName = a.requestors.name, showing = a.showing, deleted = a.deleted, deletedBy = a.users.name, updated = a.updated, updatedBy = a.users.name, createBy = a.users.alias, dateCreated = a.dateCreated });
+                var customerData = _context.memo.Include("project").Include("users").Include("requestors").Where(s => s.deleted == 0).Select(a => new { id = a.id, projectID = a.projectID, projectName = a.project.description, reqNo = a.reqNo, reqDate = a.reqDate, reqDesc = a.reqDesc, reqYear = a.reqYear, attach = a.attach, requestorName = a.requestors.name, showing = a.showing, deleted = a.deleted, deletedBy = a.users.name, updated = a.updated, updatedBy = a.users.name, createBy = a.users.alias, dateCreated = a.dateCreated });
 
                 if (project_filter != "")
                 {
@@ -1091,8 +1090,6 @@ namespace mystap.Controllers
                 {
                     customerData = customerData.Where(m => m.reqNo.StartsWith(searchValue) || m.reqDesc.StartsWith(searchValue) || m.createBy.StartsWith(searchValue));
                 }
-
-
 
 
                 // Total number of rows count

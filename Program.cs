@@ -188,6 +188,7 @@ app.UseEndpoints(endpoints =>
        pattern: "detail_summary_material_pengadaan_",
        defaults: new { controller = "Dashboard", action = "DetailMaterialPengadaan" });
 
+    //PLANT
     endpoints.MapControllerRoute(
         name: "plant",
         pattern: "plant",
@@ -217,19 +218,83 @@ app.UseEndpoints(endpoints =>
         name: "default",
         pattern: "{controller=Awal}/{action=Awal}/{id?}");
 
+    //JOBLIST   
     endpoints.MapControllerRoute(
-
-       name: "joblist",
-       pattern: "joblist",
-       defaults: new { controller = "Joblist", action = "Joblist" });
-
-	endpoints.MapControllerRoute(
-
-	  name: "joblist_",
-	  pattern: "joblist_",
-	  defaults: new { controller = "Joblist", action = "Get_Joblist" });
+        name: "joblist",
+        pattern: "joblist",
+        defaults: new { controller = "Joblist", action = "Joblist" });
 
 	endpoints.MapControllerRoute(
+	    name: "joblist_",
+	    pattern: "joblist_",
+	    defaults: new { controller = "Joblist", action = "Get_Joblist" });
+
+    endpoints.MapControllerRoute(
+        name: "create_joblist",
+        pattern: "create_joblist",
+        defaults: new { controller = "Joblist", action = "CreateJoblist" });
+
+    endpoints.MapControllerRoute(
+      name: "update_joblist",
+      pattern: "update_joblist/{id?}",
+      defaults: new { controller = "joblist", action = "UpdateJoblist" });
+
+    endpoints.MapControllerRoute(
+        name: "create_joblist_",
+        pattern: "create_joblist_",
+        defaults: new { controller = "Joblist", action = "CreateJoblist_" });
+
+    endpoints.MapControllerRoute(
+       name: "update_joblist_",
+       pattern: "update_joblist_",
+       defaults: new { controller = "Joblist", action = "updateJoblist_" });
+
+    endpoints.MapControllerRoute(
+        name: "get_eqtagno",
+        pattern: "get_eqtagno",
+        defaults: new { controller = "Joblist", action = "getEqtagno" });
+
+    endpoints.MapControllerRoute(
+        name: "cek_eqtagno",
+        pattern: "cek_eqtagno",
+        defaults: new { controller = "Joblist", action = "cekEqtagno" });
+
+    endpoints.MapControllerRoute(
+        name: "get_memo",
+        pattern: "get_memo",
+        defaults: new { controller = "Joblist", action = "getMemo" });
+
+    endpoints.MapControllerRoute(
+       name: "get_memo_selected",
+       pattern: "get_memo_selected",
+       defaults: new { controller = "Joblist", action = "getMemoSelected" });
+
+    endpoints.MapControllerRoute(
+        name: "get_notifikasi",
+        pattern: "get_notifikasi",
+        defaults: new { controller = "Joblist", action = "getNotifikasi" });
+
+    endpoints.MapControllerRoute(
+        name: "joblistdetail_",
+        pattern: "joblistdetail_",
+        defaults: new { controller = "Joblist", action = "JoblistDetail_" });
+
+    endpoints.MapControllerRoute(
+        name: "create_joblistdetail_",
+        pattern: "create_joblistdetail_",
+        defaults: new { controller = "Joblist", action = "createJoblistDetail" });
+
+    endpoints.MapControllerRoute(
+        name: "update_joblistdetail_",
+        pattern: "update_joblistdetail_",
+        defaults: new { controller = "Joblist", action = "updateJoblistDetail" });
+
+    endpoints.MapControllerRoute(
+        name: "delete_joblist_detail",
+        pattern: "delete_joblist_detail",
+        defaults: new { controller = "Joblist", action = "deleteJoblistDetail" });
+
+    endpoints.MapControllerRoute(
        name: "joblist_detail",
        pattern: "joblist_detail",
        defaults: new { controller = "Joblist", action = "Planning" });

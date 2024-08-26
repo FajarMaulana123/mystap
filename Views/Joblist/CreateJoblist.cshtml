@@ -25,7 +25,9 @@
                                     <label>Project</label>
                                     <select name="projectNo" id="projectNo" class="form-control select2">
                                         <option value="">Select Project</option>
-                                       
+                                       @foreach(var val in ViewBag.project){
+                                            <option value="@(val.projectNo)" data-id="@(val.id)" data-month="@(val.month)" data-year="@(val.year)" data-taoh="@(val.taoh)" data-revision="@(val.revision)">@(val.description)</option>
+                                        }
                                     </select>
                                 </div>
                             </div>
@@ -36,8 +38,11 @@
                                     <label>Unit</label>
                                     <select name="unitCode" id="unitCode" class="form-control select2">
                                         <option value="">Select Unit</option>
-                                       
-                                    </select>
+                                        @foreach(var val in ViewBag.unitCode)
+                                        {
+                                        <option value="@(val.unitCode)">@(val.unitCode) ( @(val.unitProses) )</option>
+                                        }
+                                </select>
                                 </div>
                             </div>
                         </div>
@@ -100,7 +105,7 @@
                             <div style="align-items: right">
                                 <a href="/joblist" class="btn btn-warning">Kembali</a>
                                 <a href="/create_joblist" class="btn btn-primary"><i class="far fa-edit"></i> New</a>
-                                <button type="submit" class="btn btn-info">Submit</button>
+                                <button type="submit" id="sb" class="sb btn btn-info">Submit</button>
                             </div>
                         </div>
                     </form>      
@@ -135,7 +140,7 @@
                                     <th>msr</th>
                                     <th>dwg</th>
                                     <th>mod</th>
-                                    {{-- <th>pnt</th> --}}
+                                    @* <th>pnt</th> *@
                                     <th>coc</th>
                                     <th>hsse</th>
                                     <th>rel</th>

@@ -131,28 +131,126 @@ $(document).ready(function () {
             { data: 'jobNo', name: 'jobNo' },
             { data: 'jobDesc', name: 'jobDesc' },
             { data: 'disiplin', name: 'disiplin' },
-            { data: 'status', name: 'status' },
+            {
+                data: 'status', name: 'status',
+                "render": function (data, type, full, meta) {
+                    var project = (full.project != 0) ? '<span class="badge bg-primary"> Project </span>' : '';
+                    var freezing = (full.freezing != 0) ? '<span class="badge bg-info"> Freezing </span>' : '';
+                    var critical_job = (full.critical_job != 0) ? '<span class="badge bg-danger"> Critical </span>' : '';
+                    var row = project + ' '+freezing+ ' '+critical_job;
+                    return row;
+                },
+            },
             { data: 'alasan', name: 'alasan' },
-            { data: 'cln', name: 'cln' },
-            { data: 'ins', name: 'ins' },
-            { data: 'rpr', name: 'rpr' },
-            { data: 'rpl', name: 'rpl' },
-            { data: 'ndt', name: 'ndt' },
-            { data: 'tein', name: 'tein' },
-            { data: 'msr', name: 'msr' },
-            { data: 'dwg', name: 'dwg' },
-            { data: 'mod', name: 'mod' },
+            {
+                data: 'cln', name: 'cln',
+                "render": function (data, type, full, meta) {
+                    var cln = (full.cleaning != 0) ? '<i class="fas fa-check-square text-primary"></i>' : '';
+                    return cln;
+                }
+            },
+            {
+                data: 'ins', name: 'ins',
+                "render": function (data, type, full, meta) {
+                    var ins = (full.inspection != 0) ? '<i class="fas fa-check-square text-primary"></i>' : '';
+                    return ins;
+                }
+            },
+            {
+                data: 'rpr', name: 'rpr',
+                "render": function (data, type, full, meta) {
+                    var rpr = (full.repair != 0) ? '<i class="fas fa-check-square text-primary"></i>' : '';
+                    return rpr;
+                }
+            },
+            {
+                data: 'rpl', name: 'rpl',
+                "render": function (data, type, full, meta) {
+                    var rpl = (full.replace != 0) ? '<i class="fas fa-check-square text-primary"></i>' : '';
+                    return rpl;
+                }
+            },
+            {
+                data: 'ndt', name: 'ndt',
+                "render": function (data, type, full, meta) {
+                    var ndt = (full.ndt != 0) ? '<i class="fas fa-check-square text-primary"></i>' : '';
+                    return ndt;
+                }
+            },
+            {
+                data: 'tein', name: 'tein',
+                "render": function (data, type, full, meta) {
+                    var tein = (full.tein != 0) ? '<i class="fas fa-check-square text-primary"></i>' : '';
+                    return tein;
+                }
+            },
+            {
+                data: 'msr', name: 'msr',
+                "render": function (data, type, full, meta) {
+                    var msr = (full.measurement != 0) ? '<i class="fas fa-check-square text-primary"></i>' : '';
+                    return msr;
+                }
+            },
+            {
+                data: 'dwg', name: 'dwg',
+                "render": function (data, type, full, meta) {
+                    var dwg = (full.drawing != 0) ? '<i class="fas fa-check-square text-primary"></i>' : '';
+                    return dwg;
+                }
+            },
+            {
+                data: 'mod', name: 'mod',
+                "render": function (data, type, full, meta) {
+                    var mod = (full.modif != 0) ? '<i class="fas fa-check-square text-primary"></i>' : '';
+                    return mod;
+                }
+            },
             // {data: 'pnt', name: 'pnt'},
-            { data: 'coc', name: 'coc' },
-            { data: 'hsse', name: 'hsse' },
-            { data: 'rel', name: 'rel' },
-            { data: 'los', name: 'los' },
-            { data: 'eng', name: 'eng' },
+            {
+                data: 'coc', name: 'coc',
+                "render": function (data, type, full, meta) {
+                    var coc = (full.coc != 0) ? '<i class="fas fa-check-square text-primary"></i>' : '';
+                    return coc;
+                }
+            },
+            {
+                data: 'hsse', name: 'hsse',
+                "render": function (data, type, full, meta) {
+                    var hsse = (full.hsse != 0) ? '<i class="fas fa-check-square text-primary"></i>' : '';
+                    return hsse;
+                }
+            },
+            {
+                data: 'rel', name: 'rel',
+                "render": function (data, type, full, meta) {
+                    var rel = (full.reliability != 0) ? '<i class="fas fa-check-square text-primary"></i>' : '';
+                    return rel;
+                }
+            },
+            {
+                data: 'los', name: 'los',
+                "render": function (data, type, full, meta) {
+                    var los = (full.losses != 0) ? '<i class="fas fa-check-square text-primary"></i>' : '';
+                    return los;
+                }
+            },
+            {
+                data: 'eng', name: 'eng',
+                "render": function (data, type, full, meta) {
+                    var eng = (full.energi != 0) ? '<i class="fas fa-check-square text-primary"></i>' : '';
+                    return eng;
+                }
+            },
             {
                 data: 'action',
                 name: 'action',
                 orderable: false,
-                searchable: false
+                searchable: false,
+                "render": function (data, type, full, meta) {
+                    var actionBtn = '<div class="d-flex"><a href="javascript:void(0);" class="btn btn-xs waves-effect waves-light btn-outline-warning edit mr-1" data-id="'+ full.id + '" data-alasan="'+full.alasan+ '" data-jobdesc="'+full.jobDesc+'" data-engineer="'+full.engineer+ '" data-revision="'+full.revision+ '" data-execution="'+full.execution+ '" data-responsibility="'+full.responsibility+ '" data-ram="'+full.ram+ '" data-notif="'+full.notif+ '" data-cleaning="'+full.cleaning+ '" data-inspection="'+full.inspection+ '" data-repair="'+full.repair+ '" data-replace="'+full.replace+ '" data-ndt="'+full.ndt+ '" data-modif="'+full.modif+ '" data-tein="'+full.tein+ '" data-coc="'+full.coc+ '" data-drawing="'+full.drawing+ '" data-measurement="'+full.measurement+ '" data-hsse="'+full.hsse+ '" data-reliability="'+full.reliability+ '" data-losses="'+full.losses+ '" data-energi="'+full.energi+ '" data-disiplin="'+full.disiplin+ '" data-project="'+full.project+ '" data-critical_job="'+full.critical_job+ '" data-freezing="'+full.freezing+ '"><i class="fas fa-pen fa-xs"></i></a>'+
+                        '<a href = "javascript:void(0);" style = "margin-left:5px" class="btn btn-xs waves-effect waves-light btn-outline-danger delete " data-id="'+ full.id + '" > <i class="fas fa-trash fa-xs"></i></a></div>';
+                    return actionBtn;
+                }
             },
         ],
         columnDefs: [
@@ -212,7 +310,7 @@ $(document).ready(function () {
         $('#responbility').val($(this).data('responsibility'));
         $('#ram').val($(this).data('ram'));
 
-        $("#notifikasi option[data-notifikasi='" + $(this).data('notif') + "']").attr("selected", "selected");
+        $("#notifikasi").val($(this).data('notif')).trigger('change');
 
         ($(this).data('cleaning') != 0) ? $("input[name='cleaning']").prop('checked', true) : $("input[name='cleaning']").prop('checked', false);
         ($(this).data('inspection') != 0) ? $("input[name='inspection']").prop('checked', true) : $("input[name='inspection']").prop('checked', false);
@@ -223,12 +321,11 @@ $(document).ready(function () {
         ($(this).data('tein') != 0) ? $("input[name='tiein']").prop('checked', true) : $("input[name='tiein']").prop('checked', false);
         ($(this).data('coc') != 0) ? $("input[name='coc']").prop('checked', true) : $("input[name='coc']").prop('checked', false);
         ($(this).data('drawing') != 0) ? $("input[name='drawing']").prop('checked', true) : $("input[name='drawing']").prop('checked', false);
-        ($(this).data('measurement') != 0) ? $("input[name='measurement']").prop('checked', true) : $("input[name='drawing']").prop('checked', false);
-        ($(this).data('hsse') != 0) ? $("input[name='hsse']").prop('checked', true) : $("input[name='drawing']").prop('checked', false);
-        ($(this).data('reliability') != 0) ? $("input[name='reliability']").prop('checked', true) : $("input[name='drawing']").prop('checked', false);
-        ($(this).data('losses') != 0) ? $("input[name='losses']").prop('checked', true) : $("input[name='drawing']").prop('checked', false);
-        ($(this).data('energi') != 0) ? $("input[name='energi']").prop('checked', true) : $("input[name='drawing']").prop('checked', false);
-        ($(this).data('energi') != 0) ? $("input[name='energi']").prop('checked', true) : $("input[name='drawing']").prop('checked', false);
+        ($(this).data('measurement') != 0) ? $("input[name='measurement']").prop('checked', true) : $("input[name='measurement']").prop('checked', false);
+        ($(this).data('hsse') != 0) ? $("input[name='hsse']").prop('checked', true) : $("input[name='hsse']").prop('checked', false);
+        ($(this).data('reliability') != 0) ? $("input[name='reliability']").prop('checked', true) : $("input[name='reliability']").prop('checked', false);
+        ($(this).data('losses') != 0) ? $("input[name='losses']").prop('checked', true) : $("input[name='losses']").prop('checked', false);
+        ($(this).data('energi') != 0) ? $("input[name='energi']").prop('checked', true) : $("input[name='energi']").prop('checked', false);
 
         ($(this).data('project') != 0) ? $("input[name='project']").prop('checked', true) : $("input[name='project']").prop('checked', false);
         ($(this).data('freezing') != 0) ? $("input[name='freezing']").prop('checked', true) : $("input[name='freezing']").prop('checked', false);
@@ -286,7 +383,7 @@ $(document).ready(function () {
             url: "/cek_eqtagno",
             type: "POST",
             data: {
-                eqtagno: $(this).val(),
+                eqtagno: $(this).find(':selected').attr('data-id'),
                 project: $('#projectNo').find(':selected').attr('data-id'),
             },
             success: function (data) {
@@ -301,7 +398,7 @@ $(document).ready(function () {
                         cancelButtonText: 'Tidak',
                     }).then((result) => {
                         if (result.isConfirmed) {
-                            console.log(result.value)
+                            //console.log(result.value)
                             $('#joblist_id').val(data.joblist_id);
                             $('#jobno_detail').val(data.jobNo);
                             $('#eqtagno_detail').val(data.eqTagNo);
@@ -310,6 +407,8 @@ $(document).ready(function () {
                             $('#projectNo').prop('disabled', 'disabled');
                             $('#unitCode').prop('disabled', 'disabled');
                             $('#unitKilang').prop('disabled', 'disabled');
+
+                            document.getElementById("sb").disabled = true;
 
                             (data.criteriaMI != 0) ? $("input[name='criteriaMI']").prop('checked', true) : $("input[name='criteriaMI']").prop('checked', false);
                             (data.criteriaPI != 0) ? $("input[name='criteriaPI']").prop('checked', true) : $("input[name='criteriaPI']").prop('checked', false);
@@ -395,9 +494,11 @@ $(document).ready(function () {
             }
             var form_data = new FormData(document.getElementById("joblist-form"));
             // form_data.append('disiplin',$('#disiplin').find(':selected').attr('data-disiplin'))
+            form_data.append('id_joblist', $('#joblist_id').val());
             form_data.append('unitId', $('#unitKilang').find(':selected').attr('data-id'));
-            form_data.append('codeJob', $('#unitKilang').find(':selected').attr('data-codeJob'));
+            form_data.append('codeJob', $('#unitKilang').find(':selected').attr('data-codejob'));
             form_data.append('catprof', $('#eqTagNo').find(':selected').attr('data-catprof'));
+            form_data.append('id_eqtagno', $('#eqTagNo').find(':selected').attr('data-id'));
             form_data.append('projectID', $('#projectNo').find(':selected').attr('data-id'));
             form_data.append('month', $('#projectNo').find(':selected').attr('data-month'));
             form_data.append('year', $('#projectNo').find(':selected').attr('data-year'));
@@ -540,11 +641,10 @@ $(document).ready(function () {
 
             }
             var form_data = new FormData(document.getElementById("detail-form"));
-            form_data.append('joblist_id', $('#joblist_id').val());
-            form_data.append('hidden_job', $('#hidden_job').val());
-            form_data.append('jobno_detail', $('#jobno_detail').val());
-            form_data.append('eqtagno_detail', $('#eqtagno_detail').val());
-            form_data.append('no_notif', $('#notifikasi').find(':selected').attr('data-notifikasi'));
+            //form_data.append('joblist_id', $('#joblist_id').val());
+            //form_data.append('hidden_job', $('#hidden_job').val());
+            //form_data.append('eqtagno_detail', $('#eqtagno_detail').val());
+            //form_data.append('no_notif', $('#notifikasi').val());
 
             $.ajax({
                 url: url,

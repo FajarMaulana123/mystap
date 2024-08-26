@@ -30,7 +30,7 @@
                                         <label>Unit</label>
                                         <select name="unitCode_filter" id="unitCode_filter" class="form-control select2">
                                             <option value="">- Pilih Unit -</option>
-                                            @foreach (var val in ViewBag.unit)
+                                            @foreach (var val in ViewBag.unitCode)
                                             {
                                                 <option value="@(val.unitCode)"> @(val.unitCode)  (@(val.unitProses))</option>
                                             }
@@ -82,7 +82,7 @@
                     <table id="table" class="table small table-striped table-bordered dataTables_wrapper" width="100%">
                         <thead>
                             <tr>
-                                <th>No</th>
+                                @* <th>No</th> *@
                                 <th>Job No</th>
                                 <th>Project No</th>
                                 <th>Project</th>
