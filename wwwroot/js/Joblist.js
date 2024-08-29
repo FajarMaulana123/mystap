@@ -65,7 +65,7 @@
                 orderable: false,
                 searchable: false,
                 "render": function (data, type, full, meta) {
-                    var actionBtn = '<div class="d-flex"><a href="javascript:void(0);" class="btn btn-xs waves-effect waves-light btn-outline-primary carry_offer mr-1" data-id="' + full.id + '" data-eqtagno="' + full.eqTagNo'"><i class="fas fa-dolly fa-xs"></i></a>' +
+                    var actionBtn = '<div class="d-flex"><a href="javascript:void(0);" class="btn btn-xs waves-effect waves-light btn-outline-primary carry_offer mr-1" data-id="' + full.id + '" data-eqtagno="' + full.id_eqtagno +'"><i class="fas fa-dolly fa-xs"></i></a>' +
                         '<a href="update_joblist/' + full.id + '" style = "margin-left:5px" class="btn btn-xs waves-effect waves-light btn-outline-warning edit "> <i class="fas fa-pen fa-xs"></i></a>';
                     return actionBtn;
                 },
@@ -109,7 +109,7 @@
         $('#carry-form')[0].reset();
         $('#carry').modal('show');
         $('#hidden_id').val($(this).data('id'));
-        $('#eqTagNo').val($(this).data('eqtagno'));
+        $('#eqtagno').val($(this).data('eqtagno'));
         $('#hidden_status').val('add');
     })
 

@@ -6,6 +6,7 @@ namespace mystap.Models
     public class ViewJoblist
     {
         public long id { get; set; }
+        public long? id_eqtagno { get; set; }
         public string? jobNo { get; set; }
         public string? projectNo { get; set; }
         public string? description { get; set; }

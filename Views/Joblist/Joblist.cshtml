@@ -104,12 +104,12 @@
 
 
 
-@* <div class="modal fade" id="carry" tabindex="-1" role="dialog" aria-labelledby="ModalLabel" aria-hidden="true">
+<div class="modal fade" id="carry" tabindex="-1" role="dialog" aria-labelledby="modallabel" aria-hidden="true">
     <div class="modal-dialog modal-sm" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title " id="Modal">Carry Over</h5>
-                <button type="button" class="btn-close"  data-bs-dismiss="modal" aria-label="Close">
+                <h5 class="modal-title " id="modal">carry over</h5>
+                <button type="button" class="btn-close"  data-bs-dismiss="modal" aria-label="close">
                 </button>
             </div>
             <form id="carry-form">
@@ -117,34 +117,35 @@
                 <div class="row">
                     <div class="col-md-12 mb-2">
                         <div class="form-group">
-                            <label>Project</label>
+                            <label>project</label>
                             <input type="hidden" name="hidden_id" id="hidden_id" value="">
-                            <input type="hidden" name="eqTagNo" id="eqTagNo" value="">
+                            <input type="hidden" name="eqtagno" id="eqtagno" value="">
                             <select name="project" id="project" class="form-control form-control-sm">
-                                <option value="">- Pilih Project -</option>
-                                @foreach($data['project'] as $val)
-                                    <option value="{{$val->id}}" data-rev="{{$val->revision}}">{{$val->description}}</option>
-                                @endforeach
+                                <option value="">- pilih project -</option>
+                                    @foreach (var val in ViewBag.project)
+                                    {
+                                        <option value="@(val.id)" data-rev="@(val.revision)"> @(val.description)</option>
+                                    }
                             </select>
                         </div>
                     </div>
                     <div class="col-md-12 mb-2">
                         <div class="form-group">
-                            <label>Keterangan</label>
+                            <label>keterangan</label>
                             <textarea class="form-control form-control-sm" name="keterangan" id="keterangan" cols="10" rows="5"></textarea>
                         </div>
                     </div>
                 </div>
             </div>
             <div class="modal-footer">
-                <a href="javascript:;" class="btn btn-white" data-bs-dismiss="modal">Close</a>
-                <button type="submit" class="btn btn-success">Submit</button>
+                <a href="javascript:;" class="btn btn-white" data-bs-dismiss="modal">close</a>
+                <button type="submit" class="btn btn-success">submit</button>
             </div>
             </form>
         </div>
     </div>
 </div>
- *@
+
 
 @section Scripts
 {

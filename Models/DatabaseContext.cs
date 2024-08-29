@@ -48,6 +48,7 @@ namespace mystap.Models
         public DbSet<ViewSummaryMaterial> view_summary_material { get; set; }
         public DbSet<ViewDetailMaterial> view_detail_material { get; set;}
         public DbSet<ViewJoblist> view_joblist { get; set; }
+        public DbSet<ViewPlanningJoblist> viewPlanningJoblist { get; set; }
     }
 }
 

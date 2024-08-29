@@ -222,7 +222,7 @@ $(document).ready(function () {
                     return data;
                 }
             },
-            /*(user_auth == 'user') ? */{ "visible": false, "targets": [21] } : {},
+            /*(user_auth == 'user') ? */{ "visible": false, "targets": [21] } ,
         ],
         columns: [
             // {data: 'check', name: 'check', orderable: false,},
@@ -236,31 +236,141 @@ $(document).ready(function () {
             { data: 'eqTagNo', name: 'eqTagNo' },
             { data: 'jobDesc', name: 'jobDesc' },
             { data: 'jobDesc', name: 'jobDesc' },
-            { data: 'alias', name: 'users.alias' },
-            { data: 'status', name: 'status' },
+            { data: 'alias', name: 'alias' },
+            {
+                data: 'status', name: 'status',
+                render: function (data, type, full, meta) {
+
+                    var p = (full.project == 1) ? '<span class="badge bg-primary">Project</span>' : '';
+                    var cp = (full.critical_job == 1) ? '<span class="badge bg-danger">Critical Job</span>' : '';
+                    var f = (full.freezing == 1) ? '<span class="badge bg-info">Freezing</span>' : '';
+                    var status = p+' '+cp+' '+f;
+                    return status;
+
+                },
+            },
             // {data: 'no_memo', name: 'no_memo', orderable: false, searchable: false},
             {
                 data: 'isjasa',
                 name: 'isjasa',
+                render: function (data, type, full, meta) {
+
+                    var d = (full.jasa == 1) ? '<i class="fas fa-check-square text-primary"></i>' : '-';
+                    return d;
+
+                },
             },
             { data: 'noPaket', name: 'noPaket', orderable: false, searchable: false },
             { data: 'judul_paket', name: 'judul_paket', orderable: false, searchable: false },
             { data: 'wo_jasa', name: 'wo_jasa', orderable: false, searchable: false },
             { data: 'no_po', name: 'no_po', orderable: false, searchable: false },
             { data: 'no_sp', name: 'no_sp', orderable: false, searchable: false },
-            { data: 'status_jasa', name: 'status_jasa' },
+            {
+                data: 'status_jasa', name: 'status_jasa',
+                render: function (data, type, full, meta) {
+                    var s = "";
+                    if (full.status_jasa == 'COMPLETED') {
+                        s = '<span class="badge bg-success shadow-none">Completed</span>';
+                    } else if (full.status_jasa == 'NOT_COMPLETED') {
+                        s = '<span class="badge bg-warning shadow-none">Not Completed</span>';
+                    } else if (full.status_jasa == 'NOT_PLANNED') {
+                        s = '<span class="badge bg-dark shadow-none">Not Planned</span>';
+                    } else {
+                        s = '<span class="badge bg-danger shadow-none">'+full.status_jasa+'</span>';
+                    }
+                    return s;
+
+                },
+            },
             {
                 data: 'ismaterial',
                 name: 'ismaterial',
+                render: function (data, type, full, meta) {
+
+                    var d = (full.material == 1) ? '<i class="fas fa-check-square text-primary"></i>' : '-';
+                    return d;
+
+                },
             },
             { data: 'order', name: 'order', orderable: false, searchable: false },
-            { data: 'status_material', name: 'status_material' },
+            {
+                data: 'status_material', name: 'status_material',
+                render: function (data, type, full, meta) {
+                    var s = "";
+                    if (full.status_material != null) {
+                        if (full.status_material == 'COMPLETED') {
+                            s = '<span class="badge bg-success shadow-none">Completed</span>';
+                        } else if (full.status_material == 'NOT_COMPLETED') {
+                            s = '<span class="badge bg-warning shadow-none">Not Completed</span>';
+                        } else if (full.status_material == 'NOT_PLANNED') {
+                            s = '<span class="badge bg-dark shadow-none">Not Planned</span>';
+                        } else {
+                            s = '<span class="badge bg-danger shadow-none">Not Identify</span>';
+                        }
+                    }
+                    return s;
+
+                },
+            },
             { data: 'ket_status_material', name: 'ket_status_material' },
-            { data: 'all_in_kontrak', name: 'all_in_kontrak' },
-            { data: 'lldi', name: 'lldi' },
+            {
+                data: 'all_in_kontrak', name: 'all_in_kontrak',
+                render: function (data, type, full, meta) {
+
+                    var d = (full.all_in_kontrak == 1) ? '<i class="fas fa-check-square text-primary"></i>' : '-';
+                    return d;
+
+                },
+            },
+            {
+                data: 'lldi', name: 'lldi',
+                render: function (data, type, full, meta) {
+
+                    var d = (full.lldi == 1) ? '<i class="fas fa-check-square text-primary"></i>' : '-';
+                    return d;
+
+                },
+            },
             // {data: 'alasan', name: 'alasan'},
-            { data: 'status_job', name: 'status_job' },
-            { data: 'sts_ready', name: 'sts_ready' },
+            {
+                data: 'status_job', name: 'status_job',
+                render: function (data, type, full, meta) {
+                    var s = "";
+                    if (full.status_job == 'COMPLETED') {
+                        s = '<span class="badge bg-success shadow-none">Completed</span>';
+                    } else if (full.status_job == 'NOT_COMPLETED') {
+                        s = '<span class="badge bg-warning shadow-none">Not Completed</span>';
+                    } else if (full.status_job == 'NOT_PLANNED') {
+                        s = '<span class="badge bg-dark shadow-none">Not Planned</span>';
+                    } else {
+                        s = '<span class="badge bg-danger shadow-none">Not Identify</span>';
+                    }
+                    return s;
+
+                },
+
+            },
+            {
+                data: 'sts_ready', name: 'sts_ready',
+                render: function (data, type, full, meta) {
+                    var s = "";
+                    if (full.status == 'ready') {
+                        s = '<span class="badge bg-success">Ready</span>';
+                    } else if (full.status == 'not_ready') {
+                        s = '<span class="badge bg-danger">Not Ready</span>';
+                    } else if (full.status == 'not_identify') {
+                        s = 'N/R';
+                    } else if (full.status == 'not_execute') {
+                        s = '<span class="badge bg-black">Not Execute</span>';
+                    } else {
+                        s = '<span class="badge bg-secondary">Undefined</span>';
+                    }
+                    
+                    return s;
+
+                },
+
+            },
             { data: 'disiplin', name: 'disiplin' },
             {
                 data: 'action',
@@ -288,68 +398,69 @@ $(document).ready(function () {
 
     });
 
-    /*function format(d) {
-        let memo_ = '';
-        if (d.no_memo != null) {
-            var memo = d.no_memo;
-            var arr_memo = memo.split(",");
-            var file = d.file_memo;
-            var arr_file = file.split(",");
-            arr_memo.forEach((val, index) => {
-                memo_ += '<a href="' + arr_file[index] + '" target="_blank">' + val + '</a><br>';
-            });
-        }
-        let notif = '';
-        if (d.notif != 'undefined') {
-            notif += '<a href="' + d.link_rekomendasi + '" target="_blank">' + d.no_notif + '</a>';
-        } else {
-            notif += '-';
-        }
-        return '<table class="table text-nowrap" style="width:100%; background-color: lightblue; --bs-table-accent-bg: #ffffff00;">' +
-            '<tr>' +
-            '<td colspan="2">' +
-            '<h5>Detail Planning JobList :</h5>' +
-            '<table class="table table-bordered table-sm text-nowrap" style="--bs-table-accent-bg: #ffffff00;">' +
-            '<tr><td width="9.5%"><b>Description </b></td><td style=" white-space: normal !important;">: <b> ' + d.jobDesc + '</b></td></tr>' +
-            '<tr><td width="9.5%"><b>Memo </b></td><td>:' + memo_ + '</td></tr>' +
-            '<tr><td width="9.5%"><b>Revision </b></td><td>: ' + d.revisi + '</td></tr>' +
-            '<tr><td width="9.5%"><b>Notifikasi </b></td><td>:' + notif + '</td></tr>' +
-            '</table>' +
-            '</td></tr><tr><td width="50%">' +
-            '<h6>Detail Jasa :</h6>' +
-            d.table_jasa +
-            '</td><td>' +
-            '<h6>Detail Material :</h6>' +
-            d.table_material +
-            '</td></tr></table>';
-    }
+    //function format(d) {
+    //    let memo_ = '';
+    //    if (d.no_memo != null) {
+    //        var memo = d.no_memo;
+    //        var arr_memo = memo.split(",");
+    //        var file = d.file_memo;
+    //        var arr_file = file.split(",");
+    //        arr_memo.forEach((val, index) => {
+    //            memo_ += '<a href="' + arr_file[index] + '" target="_blank">' + val + '</a><br>';
+    //        });
+    //    }
+    //    let notif = '';
+    //    if (d.notif != 'undefined') {
+    //        notif += '<a href="' + d.link_rekomendasi + '" target="_blank">' + d.no_notif + '</a>';
+    //    } else {
+    //        notif += '-';
+    //    }
+    //    return '<table class="table text-nowrap" style="width:100%; background-color: lightblue; --bs-table-accent-bg: #ffffff00;">' +
+    //        '<tr>' +
+    //        '<td colspan="2">' +
+    //        '<h5>Detail Planning JobList :</h5>' +
+    //        '<table class="table table-bordered table-sm text-nowrap" style="--bs-table-accent-bg: #ffffff00;">' +
+    //        '<tr><td width="9.5%"><b>Description </b></td><td style=" white-space: normal !important;">: <b> ' + d.jobDesc + '</b></td></tr>' +
+    //        '<tr><td width="9.5%"><b>Memo </b></td><td>:' + memo_ + '</td></tr>' +
+    //        '<tr><td width="9.5%"><b>Revision </b></td><td>: ' + d.revisi + '</td></tr>' +
+    //        '<tr><td width="9.5%"><b>Notifikasi </b></td><td>:' + notif + '</td></tr>' +
+    //        '</table>' +
+    //        '</td></tr><tr><td width="50%">' +
+    //        '<h6>Detail Jasa :</h6>' +
+    //        d.table_jasa +
+    //        '</td><td>' +
+    //        '<h6>Detail Material :</h6>' +
+    //        d.table_material +
+    //        '</td></tr></table>';
+    //}
 
-    function detail_jasa(wo) {
-        $.ajax({
-            url: '/detail_jasa',
-            method: 'POST',
-            data: {
-                order_: wo
-            },
-            success: function (res) {
-                // console.log(res
-                $('#isi_table').html(res);
-            }
-        })
-    }
+    //function detail_jasa(wo) {
+    //    $.ajax({
+    //        url: '/detail_jasa',
+    //        method: 'POST',
+    //        data: {
+    //            order_: wo
+    //        },
+    //        success: function (res) {
+    //            // console.log(res
+    //            $('#isi_table').html(res);
+    //        }
+    //    })
+    //}
 
-    $('#table tbody').on('click', 'td.dt-control', function () {
-        var tr = $(this).closest('tr');
-        var row = table.row(tr);
+    //$('#table tbody').on('click', 'td.dt-control', function () {
+    //    var tr = $(this).closest('tr');
+    //    var row = table.row(tr);
 
-        if (row.child.isShown()) {
-            row.child.hide();
-            tr.removeClass('shown');
-        } else {
-            row.child(format(row.data())).show();
-            tr.addClass('shown');
-        }
-    });
+    //    if (row.child.isShown()) {
+    //        row.child.hide();
+    //        tr.removeClass('shown');
+    //    } else {
+    //        row.child(format(row.data())).show();
+    //        tr.addClass('shown');
+    //    }
+    //});
+
     // var ss = $(".basic").select2({
     //         tags: true,
     // });
@@ -373,200 +484,200 @@ $(document).ready(function () {
         table.ajax.reload();
     })
 
-    $(document).on('click', '.order', function () {
-        $('#table_order').DataTable().destroy();
-        get_data_order($(this).data('id'));
-        $('#MySecondmodal').modal('show');
-    })
+    //$(document).on('click', '.order', function () {
+    //    $('#table_order').DataTable().destroy();
+    //    get_data_order($(this).data('id'));
+    //    $('#MySecondmodal').modal('show');
+    //})
 
-    $(document).on('click', '.edit', function () {
-        $('#add-form')[0].reset();
-        // $('.remove').parent('div').remove();
-        // x = 0;
-        get_kontrak($(this).data('id_project'), $(this).data('no_jasa'));
-        get_wo($(this).data('id'));
-        // console.log($(this).data('eqtagno'))
-        $("#eqTagNo").val($(this).data('eqtagno'));
-        $("#jobNo").val($(this).data('jobno'));
-        $('#hidden_id').val($(this).data('id'));
-        $('#pic').val($(this).data('pic'));
-        $('#jobDesc').val($(this).data('jobdesc'));
-        $('#alasan').val($(this).data('alasan'));
+    //$(document).on('click', '.edit', function () {
+    //    $('#add-form')[0].reset();
+    //    // $('.remove').parent('div').remove();
+    //    // x = 0;
+    //    get_kontrak($(this).data('id_project'), $(this).data('no_jasa'));
+    //    get_wo($(this).data('id'));
+    //    // console.log($(this).data('eqtagno'))
+    //    $("#eqTagNo").val($(this).data('eqtagno'));
+    //    $("#jobNo").val($(this).data('jobno'));
+    //    $('#hidden_id').val($(this).data('id'));
+    //    $('#pic').val($(this).data('pic'));
+    //    $('#jobDesc').val($(this).data('jobdesc'));
+    //    $('#alasan').val($(this).data('alasan'));
 
-        $('#order_jasa').val($(this).data('order_jasa'));
-        $('#pekerjaan').val($(this).data('pekerjaan'));
-        $('#status_material').val($(this).data('status_material'));
-        $('#no_order').val($(this).data('no_order'));
-        $('#ket_status_material').val($(this).data('ket_status_material'));
-
-
-        if ($(this).data('jasa') != 0) {
-            $("input[name='jasa']").prop('checked', true);
-            document.getElementById('jasa_').style.display = 'block';
-        } else {
-            $("input[name='jasa']").prop('checked', false);
-            document.getElementById('jasa_').style.display = 'none';
-        }
-
-        if ($(this).data('all_in_kontrak') != 0) {
-            $("input[name='all_in_kontrak']").prop('checked', true);
-            if (!$('#jasa').is(':checked')) {
-                if ($("#all_in_kontrak").is(':checked')) {
-                    document.getElementById('jasa_').style.display = 'block';
-                } else {
-                    document.getElementById('jasa_').style.display = 'none';
-                }
-            }
-        }
-
-        if ($(this).data('material') != 0) {
-            $("input[name='material']").prop('checked', true);
-            document.getElementById('material_').style.display = 'block';
-        } else {
-            $("input[name='material']").prop('checked', false);
-            document.getElementById('material_').style.display = 'none';
-        }
-
-        ($(this).data('lldi') != 0) ? $("input[name='lldi']").prop('checked', true) : $("input[name='lldi']").prop('checked', false);
-
-        if ($(this).data('freezing') != 1) {
-            Swal.fire({
-                title: 'Gagal',
-                text: 'Status Joblist Belum Freezing',
-                icon: 'error',
-                // timer: 3000,
-                showCancelButton: false,
-                showConfirmButton: true,
-                // buttons: false,
-            });
-        } else {
-            $('#Modal').modal('show');
-            $('#btn-sb').text('Edit');
-            $('.judul-modal').text('Update Joblist Detail');
-            $('#hidden_status').val('edit');
-        }
-
-    })
+    //    $('#order_jasa').val($(this).data('order_jasa'));
+    //    $('#pekerjaan').val($(this).data('pekerjaan'));
+    //    $('#status_material').val($(this).data('status_material'));
+    //    $('#no_order').val($(this).data('no_order'));
+    //    $('#ket_status_material').val($(this).data('ket_status_material'));
 
 
+    //    if ($(this).data('jasa') != 0) {
+    //        $("input[name='jasa']").prop('checked', true);
+    //        document.getElementById('jasa_').style.display = 'block';
+    //    } else {
+    //        $("input[name='jasa']").prop('checked', false);
+    //        document.getElementById('jasa_').style.display = 'none';
+    //    }
 
-    $(document).on('change', '#no_jasa', function () {
-        var desc = $(this).find(':selected').attr('data-desc');
-        var order = $(this).find(':selected').attr('data-order');
-        $('#pekerjaan').val(desc)
-        $('#order_jasa').val(order)
-    })
+    //    if ($(this).data('all_in_kontrak') != 0) {
+    //        $("input[name='all_in_kontrak']").prop('checked', true);
+    //        if (!$('#jasa').is(':checked')) {
+    //            if ($("#all_in_kontrak").is(':checked')) {
+    //                document.getElementById('jasa_').style.display = 'block';
+    //            } else {
+    //                document.getElementById('jasa_').style.display = 'none';
+    //            }
+    //        }
+    //    }
+
+    //    if ($(this).data('material') != 0) {
+    //        $("input[name='material']").prop('checked', true);
+    //        document.getElementById('material_').style.display = 'block';
+    //    } else {
+    //        $("input[name='material']").prop('checked', false);
+    //        document.getElementById('material_').style.display = 'none';
+    //    }
+
+    //    ($(this).data('lldi') != 0) ? $("input[name='lldi']").prop('checked', true) : $("input[name='lldi']").prop('checked', false);
+
+    //    if ($(this).data('freezing') != 1) {
+    //        Swal.fire({
+    //            title: 'Gagal',
+    //            text: 'Status Joblist Belum Freezing',
+    //            icon: 'error',
+    //            // timer: 3000,
+    //            showCancelButton: false,
+    //            showConfirmButton: true,
+    //            // buttons: false,
+    //        });
+    //    } else {
+    //        $('#Modal').modal('show');
+    //        $('#btn-sb').text('Edit');
+    //        $('.judul-modal').text('Update Joblist Detail');
+    //        $('#hidden_status').val('edit');
+    //    }
+
+    //})
 
 
-    $(document).on('click', '.delete', function () {
-        var id = $(this).data('id');
-        Swal.fire({
-            title: 'Apakah Anda Yakin?',
-            icon: 'warning',
-            showCancelButton: true,
-            confirmButtonColor: '#3085d6',
-            confirmButtonText: 'Ya, Hapus!',
-            cancelButtonText: 'Tidak',
-        }).then((result) => {
-            if (result.value) {
-                $.ajax({
-                    url: "delete_jobplan",
-                    type: "POST",
-                    data: {
-                        id: id
-                    },
-                    dataType: "JSON",
-                    success: function (data) {
-                        table.ajax.reload();
-                        Swal.fire({
-                            title: data.title,
-                            html: '<b>' + data.status + "</b>",
-                            icon: data.icon,
-                            // timer: 3000,
-                            showCancelButton: false,
-                            showConfirmButton: true,
-                            // buttons: false,
-                        });
-                    },
-                    error: function (jqXHR, textStatus, errorThrown) {
-                        alert('Error');
-                    }
-                });
-            }
-        })
-    });
 
-    $("#add-form").validate({
-        errorClass: "is-invalid",
-        // validClass: "is-valid",
-        rules: {
-            pic: {
-                required: true,
-            },
-        },
-        submitHandler: function (form) {
-            let url;
-            url = 'update_jobplan';
-            var form_data = new FormData(document.getElementById("add-form"));
-            form_data.append('no_paket', $('#no_jasa').find(':selected').attr('data-no_paket'));
-            $.ajax({
-                url: url,
-                type: "POST",
-                data: form_data,
-                dataType: "JSON",
-                contentType: false,
-                cache: false,
-                processData: false,
-                beforeSend: function () {
-                    swal.fire({
-                        title: 'Harap Tunggu!',
-                        allowEscapeKey: false,
-                        allowOutsideClick: false,
-                        showCancelButton: false,
-                        showConfirmButton: false,
-                        buttons: false,
-                        timer: 2000,
-                        didOpen: () => {
-                            Swal.showLoading()
-                        }
-                    })
-                },
-                success: function (data) {
-                    if (data.result != true) {
-                        Swal.fire({
-                            title: 'Gagal',
-                            text: "Gagal Tambah / Update User",
-                            icon: 'error',
-                            // timer: 3000,
-                            showCancelButton: false,
-                            showConfirmButton: true,
-                            // buttons: false,
-                        });
-                        table.ajax.reload();
-                    } else {
-                        Swal.fire({
-                            title: 'Berhasil',
-                            icon: 'success',
-                            // timer: 3000,
-                            showCancelButton: false,
-                            showConfirmButton: true,
-                            // buttons: false,
-                        });
-                        $('#Modal').modal('hide');
-                        table.ajax.reload();
-                    }
-                },
-                error: function (jqXHR, textStatus, errorThrown) {
-                    alert('Error adding / update data');
-                }
-            });
-        }
-    });
+    //$(document).on('change', '#no_jasa', function () {
+    //    var desc = $(this).find(':selected').attr('data-desc');
+    //    var order = $(this).find(':selected').attr('data-order');
+    //    $('#pekerjaan').val(desc)
+    //    $('#order_jasa').val(order)
+    //})
 
-    $(document).on('click', '.detail_kontrak', function () {
-        detail_jasa($(this).data('jasa'));
-        $('#Modal_kontrak').modal('show');
-    })*/
+
+    //$(document).on('click', '.delete', function () {
+    //    var id = $(this).data('id');
+    //    Swal.fire({
+    //        title: 'Apakah Anda Yakin?',
+    //        icon: 'warning',
+    //        showCancelButton: true,
+    //        confirmButtonColor: '#3085d6',
+    //        confirmButtonText: 'Ya, Hapus!',
+    //        cancelButtonText: 'Tidak',
+    //    }).then((result) => {
+    //        if (result.value) {
+    //            $.ajax({
+    //                url: "delete_jobplan",
+    //                type: "POST",
+    //                data: {
+    //                    id: id
+    //                },
+    //                dataType: "JSON",
+    //                success: function (data) {
+    //                    table.ajax.reload();
+    //                    Swal.fire({
+    //                        title: data.title,
+    //                        html: '<b>' + data.status + "</b>",
+    //                        icon: data.icon,
+    //                        // timer: 3000,
+    //                        showCancelButton: false,
+    //                        showConfirmButton: true,
+    //                        // buttons: false,
+    //                    });
+    //                },
+    //                error: function (jqXHR, textStatus, errorThrown) {
+    //                    alert('Error');
+    //                }
+    //            });
+    //        }
+    //    })
+    //});
+
+    //$("#add-form").validate({
+    //    errorClass: "is-invalid",
+    //    // validClass: "is-valid",
+    //    rules: {
+    //        pic: {
+    //            required: true,
+    //        },
+    //    },
+    //    submitHandler: function (form) {
+    //        let url;
+    //        url = 'update_jobplan';
+    //        var form_data = new FormData(document.getElementById("add-form"));
+    //        form_data.append('no_paket', $('#no_jasa').find(':selected').attr('data-no_paket'));
+    //        $.ajax({
+    //            url: url,
+    //            type: "POST",
+    //            data: form_data,
+    //            dataType: "JSON",
+    //            contentType: false,
+    //            cache: false,
+    //            processData: false,
+    //            beforeSend: function () {
+    //                swal.fire({
+    //                    title: 'Harap Tunggu!',
+    //                    allowEscapeKey: false,
+    //                    allowOutsideClick: false,
+    //                    showCancelButton: false,
+    //                    showConfirmButton: false,
+    //                    buttons: false,
+    //                    timer: 2000,
+    //                    didOpen: () => {
+    //                        Swal.showLoading()
+    //                    }
+    //                })
+    //            },
+    //            success: function (data) {
+    //                if (data.result != true) {
+    //                    Swal.fire({
+    //                        title: 'Gagal',
+    //                        text: "Gagal Tambah / Update User",
+    //                        icon: 'error',
+    //                        // timer: 3000,
+    //                        showCancelButton: false,
+    //                        showConfirmButton: true,
+    //                        // buttons: false,
+    //                    });
+    //                    table.ajax.reload();
+    //                } else {
+    //                    Swal.fire({
+    //                        title: 'Berhasil',
+    //                        icon: 'success',
+    //                        // timer: 3000,
+    //                        showCancelButton: false,
+    //                        showConfirmButton: true,
+    //                        // buttons: false,
+    //                    });
+    //                    $('#Modal').modal('hide');
+    //                    table.ajax.reload();
+    //                }
+    //            },
+    //            error: function (jqXHR, textStatus, errorThrown) {
+    //                alert('Error adding / update data');
+    //            }
+    //        });
+    //    }
+    //});
+
+    //$(document).on('click', '.detail_kontrak', function () {
+    //    detail_jasa($(this).data('jasa'));
+    //    $('#Modal_kontrak').modal('show');
+    //})
 
 
 });

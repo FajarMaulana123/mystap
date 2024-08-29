@@ -235,9 +235,9 @@ app.UseEndpoints(endpoints =>
         defaults: new { controller = "Joblist", action = "CreateJoblist" });
 
     endpoints.MapControllerRoute(
-      name: "update_joblist",
-      pattern: "update_joblist/{id?}",
-      defaults: new { controller = "joblist", action = "UpdateJoblist" });
+        name: "update_joblist",
+        pattern: "update_joblist/{id?}",
+        defaults: new { controller = "joblist", action = "UpdateJoblist" });
 
     endpoints.MapControllerRoute(
         name: "create_joblist_",
@@ -245,9 +245,14 @@ app.UseEndpoints(endpoints =>
         defaults: new { controller = "Joblist", action = "CreateJoblist_" });
 
     endpoints.MapControllerRoute(
-       name: "update_joblist_",
-       pattern: "update_joblist_",
-       defaults: new { controller = "Joblist", action = "updateJoblist_" });
+        name: "update_joblist_",
+        pattern: "update_joblist_",
+        defaults: new { controller = "Joblist", action = "updateJoblist_" });
+
+    endpoints.MapControllerRoute(
+        name: "carry_offer_joblist",
+        pattern: "carry_offer_joblist",
+        defaults: new { controller = "Joblist", action = "CarryOffer" });
 
     endpoints.MapControllerRoute(
         name: "get_eqtagno",

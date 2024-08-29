@@ -1,5 +1,8 @@
-﻿@{
+﻿@removeTagHelper Microsoft.AspNetCore.Mvc.TagHelpers.OptionTagHelper, Microsoft.AspNetCore.Mvc.TagHelpers
+@{
     ViewData["Title"] = "Update Joblist";
+    var selected_project = "";
+    var s = "";
 }
 <ol class="breadcrumb float-xl-end">
         <li class="breadcrumb-item"><a href="javascript:void(0);">   <i data-feather="file"></i></a></li>
@@ -29,7 +32,12 @@
                                         <option value="">Select Project</option>
                                         @foreach (var val in ViewBag.project)
                                         {
-                                            <option value="@(val.projectNo)" data-id="@(val.id)" data-month="@(val.month)" data-year="@(val.year)" data-taoh="@(val.taoh)" data-revision="@(val.revision)">@(val.description)</option>
+                                            @if(ViewBag.data.projectID == val.id){
+                                                selected_project = "selected";
+                                            }else{
+                                                selected_project = "";
+                                            }
+                                            <option value="@(val.projectNo)" data-id="@(val.id)" data-month="@(val.month)" data-year="@(val.year)" data-taoh="@(val.taoh)" data-revision="@(val.revision)" @(selected_project)>@(val.description)</option>
                                         }
                                     </select>
                                 </div>
@@ -39,8 +47,8 @@
                             <div class="col-md-12 mb-2">
                                 <div class="form-group">
                                     <label>Unit</label>
-                                    <input name="unitCode" id="unitCode" class="form-control" value="" readonly>
-                                    <input type="hidden" name="codejob" id="codejob" value="">
+                                    <input type="text" name="unitCode" id="unitCode" class="form-control" value="@(ViewBag.data.unitCode)" readonly>
+                                    <input type="hidden" name="codejob" id="codejob" value="@(ViewBag.data.codeJob)">
                                 </div>
                             </div>
                         </div>
@@ -48,7 +56,7 @@
                             <div class="col-md-12 mb-2">
                                 <div class="form-group">
                                     <label>Kilang</label>
-                                    <input name="unitKilang" id="unitKilang" class="form-control " value="{{$data['datas']->unitKilang}}" readonly>
+                                <input type="text" name="unitKilang" id="unitKilang" class="form-control " value="@(ViewBag.data.unitKilang)" readonly>
                                 </div>
                             </div>
                         </div>
@@ -56,17 +64,22 @@
                             <div class="col-md-12 mb-2">
                                 <div class="form-group">
                                     <label>Tag No</label>
-                                    <input name="eqTagNo" id="eqTagNo" class="form-control " value="{{$data['datas']->eqTagNo}}" readonly>
-                                    <input type="hidden" name="catprof" id="catprof" value="{{$data['datas']->catalog_profile}}">
+                                <input type="text" name="eqTagNo" id="eqTagNo" class="form-control " value="@(ViewBag.data.eqTagNo)" readonly>
+                                    <input type="hidden" name="catprof" id="catprof" value="@(ViewBag.data.catalog_profile)">
                                 </div>
                             </div>
                         </div>
-                        
-                        <div class="row" id="oh" style="display:">
+                        @if(ViewBag.data.taoh == "OH"){
+                            s = "block";
+                        }else{
+                            s = "none";
+                        }
+
+                        <div class="row" id="oh" style="display:@(s)">
                             <div class="col-md-12 mb-2">
                                 <div class="form-group">
                                     <label>Start Date</label>
-                                    <input type="date" name="start_date" id="start_date" class="form-control" value="">
+                                    <input type="date" name="start_date" id="start_date" class="form-control" value="@(ViewBag.data.start_date)">
                                 </div>
                             </div>
                         </div>
@@ -76,15 +89,15 @@
                                 <label>Job Criteria</label>
                                 <div class="col-md-12 mb-2">
                                     <div class="form-check form-check-inline me-2">
-                                        <input class="form-check-input" type="checkbox" value="1" name="criteriaMI" id="criteriaMI"/>
+                                        <input class="form-check-input" type="checkbox" value="1" name="criteriaMI" id="criteriaMI" @((ViewBag.data.criteriaMI == 1) ? "checked" : "")/>
                                         <label class="form-check-label" for="criteriaMI">Mechanical Integrity</label>
                                     </div>
                                     <div class="form-check form-check-inline me-2">
-                                        <input class="form-check-input" type="checkbox" value="1" name="criteriaPI" id="criteriaPI"/>
+                                        <input class="form-check-input" type="checkbox" value="1" name="criteriaPI" id="criteriaPI" @((ViewBag.data.criteriaPI == 1) ? "checked" : "")/>
                                         <label class="form-check-label" for="criteriaPI">Process Integrity</label>
                                     </div>
                                     <div class="form-check form-check-inline me-2">
-                                        <input class="form-check-input" type="checkbox" value="1" name="criteriaOPT" id="criteriaOPT"/>
+                                        <input class="form-check-input" type="checkbox" value="1" name="criteriaOPT" id="criteriaOPT" @((ViewBag.data.criteriaOPT == 1) ? "checked" : "")/>
                                         <label class="form-check-label" for="criteriaOPT">Optimization</label>
                                     </div>
                                     
@@ -96,7 +109,7 @@
                             <div class="col-md-12 mb-2">
                                 <div class="form-group">
                                     <label>Remarks</label>
-                                    <textarea name="remarks" id="remarks" rows="5" class="form-control"></textarea>
+                                    <textarea name="remarks" id="remarks" rows="5" class="form-control">@(ViewBag.data.remarks)</textarea>
                                 </div>
                             </div>
                         </div>
@@ -167,9 +180,9 @@
             
             <form id="detail-form">            
             <div class="modal-body">
-                <input type="hidden" name="joblist_id" id="joblist_id" value="">
-                <input type="hidden" id="jobno_detail" name="jobno_detail" class="form-control" value="">
-                <input type="hidden" id="eqtagno_detail" name="eqtagno_detail" class="form-control" value="">
+                <input type="hidden" name="joblist_id" id="joblist_id" value="@(ViewBag.data.id)">
+                <input type="hidden" id="jobno_detail" name="jobno_detail" class="form-control" value="@(ViewBag.data.jobNo)">
+                <input type="hidden" id="eqtagno_detail" name="eqtagno_detail" class="form-control" value="@(ViewBag.data.eqTagNo)">
                     <input type="hidden" name="hidden_status" id="hidden_status"  value="add">
                     <input type="hidden" name="hidden_id" id="hidden_id" >
                     
@@ -445,3 +458,7 @@
         </div>     
     </div>
 </div>
+@section Scripts
+{
+    <script src="~/js/UpdateJoblist.js"> </script>
+}
