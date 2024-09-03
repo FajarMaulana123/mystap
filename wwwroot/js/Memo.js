@@ -32,7 +32,7 @@
             { data: 'reqDesc', name: 'reqDesc' },
             {
                 data: 'reqDate', name: 'reqDate', render: function (data, type, full, meta) {
-                    var date = new Date(full.created_date);
+                    var date = new Date(full.reqDate);
                     var string = date.getDate() + "-" + date.getMonth() + "-" + date.getFullYear();
                     return string;
                 }
@@ -41,24 +41,24 @@
             { data: 'requestorName', name: 'requestor.name', },
             {
                 "render": function (data, type, full, meta) {
-                    return '<a href="' + full.file + '" class="badge bg-info" target="blank_"><i class="far fa-copy"></i> file</a>';
+                    return '<a href="' + full.attach + '" class="badge bg-info" target="blank_"><i class="far fa-copy"></i> file</a>';
                 },
                 orderable: false,
                 searchable: false
             },
             {
-                data: 'show', name: 'show',
+                data: 'showing', name: 'showing',
                 render: function (data, type, full, meta) {
 
-                    d = (full.show == 1) ? '<span class="badge bg-success">Active</span>' : '<span class="badge bg-danger">In Active</span>';
-                    full.show = d;
-                    return full.show;
+                    d = (full.showing == 1) ? '<span class="badge bg-success">Active</span>' : '<span class="badge bg-danger">In Active</span>';
+                    full.showing = d;
+                    return full.showing;
                 },
             },
             { data: 'createBy', name: 'users.alias' },
             {
                 "render": function (data, type, full, meta) {
-                    return '<div class="d-flex"><a href="javascript:void(0);" class="btn btn-warning  btn-xs edit mr-1" data-id="' + full.id + '" data-projectID="' + full.projectID + '" data-reqNo="' + full.reqNo + '" data-reqDate="' + full.reqDate + '" data-reqDesc="' + full.reqDesc + '" data-attach="' + full.attach + '" data-requestor="' + full.requestors + '" data-showing="' + full.showing + '"><i class="fas fa-pen fa-xs"></i></a><a href = "javascript:void(0);" style = "margin-left:5px" class="btn btn-danger btn-xs delete " data-id="' + full.id + '" > <i class="fas fa-trash fa-xs"></i></a ></div > ';
+                    return '<div class="d-flex"><a href="javascript:void(0);" class="btn btn-warning  btn-xs edit mr-1" data-id="' + full.id + '" data-projectID="' + full.projectID + '" data-reqNo="' + full.reqNo + '" data-reqDate="' + full.reqDate + '" data-reqDesc="' + full.reqDesc + '" data-attach="' + full.attach + '" data-requestor="' + full.requestors + '"><i class="fas fa-pen fa-xs"></i></a><a href = "javascript:void(0);" style = "margin-left:5px" class="btn btn-danger btn-xs delete " data-id="' + full.id + '" > <i class="fas fa-trash fa-xs"></i></a ></div > ';
                 },
                 orderable: false,
                 searchable: false
@@ -78,7 +78,7 @@
 
         {
             extend: 'excel',
-            title: 'Requestor',
+            title: 'Memo',
             className: 'btn',
             text: '<i class="far fa-file-code"></i> Excel',
             titleAttr: 'Excel',
@@ -104,13 +104,12 @@
         $('#Modal').modal('show');
         $('#btn-sb').text('Update');
         $('.judul-modal').text('Edit Request Memo');
-        var tanggal = $(this).data('reqDate').split("T");
         $('#hidden_status').val('edit');
         $('#hidden_id').val($(this).data('id'));
         $('#projectID').val($(this).data('projectid'));
         $('#reqNo').val($(this).data('reqno'));
         $('#reqDesc').val($(this).data('reqdesc'));
-        $('#reqDate').val(tanggal[0]);
+        $('#reqDate').val($(this).data('reqdate'));
         $('#requestor').val($(this).data('requestor'));
         $('#showing').val($(this).data('showing'));
         $('#attach_').val($(this).data('attach'));
@@ -239,8 +238,10 @@
             });
         }
     });
-
+   
     $(document).on('click', '#filter', function () {
+        var project = $('#project_filter').find(':selected').data('desc');
+        $('#title-memo').html('Data Memo ( ' + project + ' )');
         table.ajax.reload();
     })
 

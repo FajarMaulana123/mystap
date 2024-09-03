@@ -465,19 +465,19 @@ app.UseEndpoints(endpoints =>
        defaults: new { controller = "Data", action = "Get_Memo" });
 
     endpoints.MapControllerRoute(
-       name: "create_memo",
-       pattern: "create_memo",
+       name: "create_request_memo",
+       pattern: "create_request_memo",
        defaults: new { controller = "Data", action = "Create_Memo" });
 
     endpoints.MapControllerRoute(
-       name: "update_memo",
-       pattern: "update_memo",
+       name: "update_request_memo",
+       pattern: "update_request_memo",
        defaults: new { controller = "Data", action = "Update_Memo" });
 
     endpoints.MapControllerRoute(
-       name: "delete_memo",
-       pattern: "delete_memo",
-       defaults: new { controller = "Data", action = "Delete_Memo" });
+       name: "delete_request_memo",
+       pattern: "delete_request_memo",
+       defaults: new { controller = "Data", action = "Deleted_Memo" });
 
     endpoints.MapControllerRoute(
        name: "requestor",
@@ -633,6 +633,26 @@ app.UseEndpoints(endpoints =>
        name: "delete_bom",
        pattern: "delete_bom",
        defaults: new { controller = "Data", action = "Delete_Bom" });
+
+    endpoints.MapControllerRoute(
+     name: "material",
+     pattern: "material",
+     defaults: new { controller = "Material", action = "Material" });
+
+    endpoints.MapControllerRoute(
+       name: "material_",
+       pattern: "material_",
+       defaults: new { controller = "Material", action = "Get_Material" });
+
+    endpoints.MapControllerRoute(
+    name: "outstanding_reservasi",
+    pattern: "outstanding_reservasi",
+    defaults: new { controller = "Material", action = "Outstanding_Reservasi" });
+
+    endpoints.MapControllerRoute(
+       name: "outstanding_reservasi_",
+       pattern: "outstanding_reservasi_",
+       defaults: new { controller = "Material", action = "Get_Outstanding_Reservasi" });
 
 });
 

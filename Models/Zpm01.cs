@@ -42,5 +42,7 @@
         public string? status_pengadaan { get; set; }
         public string? keterangan { get; set; }
         public int? prognosa_matl { get; set; }
+
+        public Project project{ get; set; }
     }
 }

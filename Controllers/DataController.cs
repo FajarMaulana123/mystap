@@ -1049,35 +1049,60 @@ namespace mystap.Controllers
         {
             try
             {
-                var draw = HttpContext.Request.Form["draw"].FirstOrDefault();
-                // Skipping number of Rows count
+                 var draw = HttpContext.Request.Form["draw"].FirstOrDefault();
+
                 var start = Request.Form["start"].FirstOrDefault();
-                // Paging Length 10, 20
+
                 var length = Request.Form["length"].FirstOrDefault();
-                // Sort Column Name
+
                 var sortColumn = Request.Form["columns[" + Request.Form["order[1][column]"].FirstOrDefault() + "][name]"].FirstOrDefault();
-                // Sort Column Direction (asc, desc)
+
                 var sortColumnDirection = Request.Form["order[1][dir]"].FirstOrDefault();
-                // Search Value from (Search box)
+
                 var searchValue = Request.Form["search[value]"].FirstOrDefault();
-                // Paging Size (10, 20, 50, 100)
+
                 int pageSize = length != null ? Convert.ToInt32(length) : 0;
                 int skip = start != null ? Convert.ToInt32(start) : 0;
                 int recordsTotal = 0;
 
-                var project_filter = Request.Form["project"].FirstOrDefault();
-                var memo_filter = Request.Form["memo"].FirstOrDefault();
+                var project = Request.Form["project"].FirstOrDefault();
+                var memo = Request.Form["memo"].FirstOrDefault();
 
-                var customerData = _context.memo.Include("project").Include("users").Include("requestors").Where(s => s.deleted == 0).Select(a => new { id = a.id, projectID = a.projectID, projectName = a.project.description, reqNo = a.reqNo, reqDate = a.reqDate, reqDesc = a.reqDesc, reqYear = a.reqYear, attach = a.attach, requestorName = a.requestors.name, showing = a.showing, deleted = a.deleted, deletedBy = a.users.name, updated = a.updated, updatedBy = a.users.name, createBy = a.users.alias, dateCreated = a.dateCreated });
+                var customerData = (from a in _context.memo
+                                    join p in _context.project on a.projectID equals p.id
+                                    join s in _context.users on a.createdBy equals s.id
+                                    join q in _context.requestors on a.requestor equals q.id
+                                    select new
+                                    {
+                                        id = a.id,
+                                        projectID = a.projectID,
+                                        projectName = a.project.description,
+                                        reqNo = a.reqNo,
+                                        reqDate = a.reqDate,
+                                        reqDesc = a.reqDesc,
+                                        reqYear = a.reqYear,
+                                        attach = a.attach,
+                                        requestorName = a.requestors.name,
+                                        showing = a.showing,
+                                        deleted = a.deleted,
+                                        deletedBy = a.users.name,
+                                        updated = a.updated,
+                                        updatedBy = a.users.name,
+                                        createBy = a.users.alias,
+                                        dateCreated = a.dateCreated
+                                    });
 
-                if (project_filter != "")
+
+                customerData = customerData.Where(p => p.deleted == 0);
+
+                if (project != "")
                 {
-                    customerData = customerData.Where(p => p.projectID == Convert.ToInt32(project_filter));
+                    customerData = customerData.Where(p => p.projectID == Convert.ToInt32(project));
                 }
 
-                if (memo_filter != "")
+                if (memo != "")
                 {
-                    customerData = customerData.Where(p => p.reqNo.StartsWith(memo_filter));
+                    customerData = customerData.Where(p => p.reqNo.StartsWith(memo));
                 }
                 // Sorting
                 if (!(string.IsNullOrEmpty(sortColumn) && string.IsNullOrEmpty(sortColumnDirection)))
@@ -1088,7 +1113,7 @@ namespace mystap.Controllers
                 //search
                 if (!string.IsNullOrEmpty(searchValue))
                 {
-                    customerData = customerData.Where(m => m.reqNo.StartsWith(searchValue) || m.reqDesc.StartsWith(searchValue) || m.createBy.StartsWith(searchValue));
+                    customerData = customerData.Where(m => m.reqNo.StartsWith(searchValue) || m.reqDesc.StartsWith(searchValue) || m.createBy.StartsWith(searchValue) || m.requestorName.StartsWith(searchValue));
                 }
 
 
@@ -1116,11 +1141,25 @@ namespace mystap.Controllers
                 memo.reqNo = formcollaction["reqNo"];
                 memo.reqDesc = formcollaction["reqDesc"];
                 memo.reqDate = Convert.ToDateTime(formcollaction["reqDate"]);
+                memo.reqYear = DateTime.Parse(Request.Form["reqDate"].ToString()).Year.ToString();
                 memo.requestor = Convert.ToInt32(formcollaction["requestor"]);
-                memo.attach = formcollaction["attach"];
                 memo.showing = Convert.ToInt32(formcollaction["showing"]);
                 memo.createdBy = 1;
                 memo.deleted = 0;
+                memo.dateCreated = DateTime.Now;
+
+                if (Request.Form.Files.Count() != 0)
+                {
+                    IFormFile postedFile = Request.Form.Files[0];
+                    string fileName = DateTime.Now.ToString("yyyyMMddHHmmssfff") + "_" + postedFile.FileName;
+                    string path = environment.WebRootPath + "/upload/memo/" + fileName;
+                    using (var stream = System.IO.File.Create(path))
+                    {
+                        postedFile.CopyTo(stream);
+                        memo.attach = "upload/memo/" + fileName;
+                    }
+
+                }
 
                 Boolean t;
                 if (memo != null)
@@ -1154,7 +1193,30 @@ namespace mystap.Controllers
                     obj.reqDesc = Request.Form["reqDesc"].FirstOrDefault();
                     obj.reqDate = Convert.ToDateTime(Request.Form["reqDate"].FirstOrDefault());
                     obj.requestor = Convert.ToInt32(Request.Form["requestor"].FirstOrDefault());
-                    obj.attach = Request.Form["attach"].FirstOrDefault();
+                   
+                    if (Request.Form.Files.Count() != 0)
+                    {
+                        if (obj.attach != null)
+                        {
+                            string ExitingFile = environment.WebRootPath + "/" + obj.attach;
+                            System.IO.File.Delete(ExitingFile);
+                        }
+
+                        IFormFile postedFile = Request.Form.Files[0];
+                        string fileName = DateTime.Now.ToString("yyyyMMddHHmmssfff") + "_" + postedFile.FileName;
+                        string path = environment.WebRootPath + "/upload/memo/" + fileName;
+
+                        using (var stream = System.IO.File.Create(path))
+                        {
+                            postedFile.CopyTo(stream);
+                            obj.attach = "upload/memo/" + fileName;
+                        }
+
+                    }
+                    else
+                    {
+                        obj.attach = Request.Form["file_"].FirstOrDefault();
+                    }
                     obj.showing = Convert.ToInt32(Request.Form["showing"].FirstOrDefault());
                     obj.updated = 1;
                     obj.updatedBy = 1;
