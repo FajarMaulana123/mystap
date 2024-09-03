@@ -22,15 +22,19 @@
                             <div class="col-md-2 mb-2">
                                 <label>Project</label>
                                 <select name="project_filter" id="project_filter" class="form-control form-control-sm">
+                                    @foreach (var val in ViewBag.project)
+                                    {
+                                        <option value="@(val.id)" data-desc="@(val.description)" data-rev="@(val.revision)"> @(val.description)</option>
+                                    }
                                 </select> 
                             </div>
                             <div class="col-md-2 mb-2">
-                                        <label>eqTagNo</label>
-                                        <input type="text" name="eqTagNo_filter" id="eqTagNo_filter" class="form-control">
+                                <label>eqTagNo</label>
+                                <input type="text" name="eqTagNo_filter" id="eqTagNo_filter" class="form-control">
                             </div> 
                             <div class="col-md-2 mb-2">
-                                    <label>JobNo</label>
-                                    <input type="text" name="jobNo_filter" id="jobNo_filter" class="form-control">
+                                <label>JobNo</label>
+                                <input type="text" name="jobNo_filter" id="jobNo_filter" class="form-control">
                             </div>
                             <div class="col-md-2 mb-2">
                                 <label>Freezing</label>
@@ -53,7 +57,11 @@
                                 <label>PIC</label>
                                 <select name="pic_filter" id="pic_filter" class="form-control select2">
                                     <option value="">- Pilih PIC -</option>
-                                </select>
+                                    @foreach(var val in ViewBag.user)
+                                    {
+                                        <option value="@(val.id)" data-alias="@(val.alias)"> @(val.alias)</option>
+                                    }
+                            </select>
                             </div>
                             
                         </div>
@@ -200,7 +208,7 @@
                             <table id="table_order" class="table small table-striped table-bordered dataTables_wrapper " --bs-table-accent-bg: transparant; width="100%">
                                 <thead>
                                     <tr>
-                                         <th>No</th> 
+                                         @* <th>No</th>  *@
                                         <th>Order</th>
                                         <th>Item</th>
                                         <th>Kimap</th>
@@ -261,7 +269,11 @@
                                 <div class="form-group">
                                     <label>PIC</label>
                                     <select name="pic" id="pic" class="form-select form-select-sm">
-                                            <option value="">Pilih PIC</option>
+                                        <option value="">Pilih PIC</option>
+                                            @foreach (var val in ViewBag.user)
+                                            {
+                                                <option value="@(val.id)" data-alias="@(val.alias)"> @(val.alias)</option>
+                                            }
                                     </select>
                                 </div>
                             </div>

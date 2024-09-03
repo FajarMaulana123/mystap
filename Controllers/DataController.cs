@@ -1578,7 +1578,6 @@ namespace mystap.Controllers
                             }
                         }
                     }
-                    transaction.Commit();
 
                     Boolean t;
                     if (bom != null)
@@ -1591,6 +1590,7 @@ namespace mystap.Controllers
                     {
                         t = false;
                     }
+                    transaction.Commit();
                     return Json(new { result = t });
                 }
                 catch (Exception)

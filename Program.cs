@@ -300,14 +300,29 @@ app.UseEndpoints(endpoints =>
         defaults: new { controller = "Joblist", action = "deleteJoblistDetail" });
 
     endpoints.MapControllerRoute(
-       name: "joblist_detail",
-       pattern: "joblist_detail",
-       defaults: new { controller = "Joblist", action = "Planning" });
+        name: "joblist_detail",
+        pattern: "joblist_detail",
+        defaults: new { controller = "Joblist", action = "Planning" });
 
     endpoints.MapControllerRoute(
-      name: "jobplan_",
-      pattern: "jobplan_",
-      defaults: new { controller = "Joblist", action = "Get_Joblist_Detail" });
+        name: "jobplan_",
+        pattern: "jobplan_",
+        defaults: new { controller = "Joblist", action = "Get_Joblist_Detail" });
+
+    endpoints.MapControllerRoute(
+        name: "update_jobplan",
+        pattern: "update_jobplan",
+        defaults: new { controller = "Joblist", action = "UpdateJobplan" });
+
+    endpoints.MapControllerRoute(
+        name: "get_paket_kontark",
+        pattern: "get_paket_kontrak",
+        defaults: new { controller = "Joblist", action = "GetPaketKontrak" });
+
+    endpoints.MapControllerRoute(
+        name: "get_joblist_wo",
+        pattern: "get_joblist_wo",
+        defaults: new { controller = "Joblist", action = "GetJoblistWo" });
 
     endpoints.MapControllerRoute(
        name: "rapat",

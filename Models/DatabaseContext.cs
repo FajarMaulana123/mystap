@@ -22,6 +22,7 @@ namespace mystap.Models
         public DbSet<Joblist> joblist { get; set; }
         public DbSet<Joblist_Detail> joblist_Detail { get; set; }
         public DbSet<JoblistDetailMemo> joblistDetailMemo { get; set; }
+        public DbSet<JoblistDetailWo> joblistDetailWo { get; set; }
         public DbSet<ContractTracking> contractTracking { get; set; }
         public DbSet<Durasi> durasi { get; set; }
         public DbSet<Memo> memo { get; set; }

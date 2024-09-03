@@ -6,6 +6,7 @@ namespace mystap.Models
     public class ViewPlanningJoblist
     {
         public long id { get; set; }
+        public long? id_project { get; set; }
         public long? joblist_id { get; set; }
         public long? id_paket { get; set; }
         public string? eqTagNo { get; set; }
@@ -13,6 +14,15 @@ namespace mystap.Models
         public string? jobDetailNo { get; set; }
         public string? jobDesc { get; set; }
         public string? alasan { get; set; }
+        public string? wo { get; set; }
+        public string? no_memo { get; set; }
+        public string? file_memo { get; set; }
+        public string? file_bom { get; set; }
+        public string? noPaket { get; set; }
+        public string? wo_jasa { get; set; }
+        public string? judul_paket { get; set; }
+        public string? no_po { get; set; }
+        public string? no_sp { get; set; }
         public string? engineer { get; set; }
         public string? revision { get; set; }
         public string? execution { get; set; }
@@ -56,5 +66,7 @@ namespace mystap.Models
         public string? mitigasi { get; set; }
         public string? keterangan { get; set; }
         public string? status { get; set; }
+        public string? no_notif { get; set; }
+        public string? link_rekomendasi { get; set; }
     }
 }

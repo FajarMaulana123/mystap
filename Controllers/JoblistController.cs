@@ -739,6 +739,11 @@ namespace joblist.Controllers
 
         public IActionResult Planning()
         {
+            ViewBag.project = _context.project.Where(p => p.deleted == 0).Where(p => p.active == "1").ToList();
+            ViewBag.equipment = _context.equipments.Where(p => p.deleted == 0).ToList();
+            ViewBag.unitCode = _context.unit.Where(p => p.deleted != 1).GroupBy(p => new { p.unitCode, p.unitProses }).Select(p => new { unitCode = p.Key.unitCode, unitProses = p.Key.unitProses }).ToList();
+            ViewBag.unit = _context.unit.Where(p => p.deleted == 0).ToList();
+            ViewBag.user = _context.users.Where(p => p.locked != 1).Where(p => p.statPekerja == "PLANNER").Where(p => p.alias != null && p.alias != "").Where(p => p.status == "PEKERJA").ToList();
             return View();
         }
 
@@ -762,29 +767,117 @@ namespace joblist.Controllers
                 int skip = start != null ? Convert.ToInt32(start) : 0;
                 int recordsTotal = 0;
                 // Getting all Customer data
+                var project = Request.Form["project"].FirstOrDefault();
+                var rev = Request.Form["project_rev"].FirstOrDefault();
+                var eqtagno = Request.Form["eqTagNo"].FirstOrDefault();
+                var jobno = Request.Form["jobNo"].FirstOrDefault();
+                var freezing = Request.Form["freezing"].FirstOrDefault();
+                var status_job = Request.Form["status_job"].FirstOrDefault();
+                var pic = Request.Form["pic"].FirstOrDefault();
+                var lldi = Request.Form["lldi"].FirstOrDefault();
+                var disiplin = Request.Form["disiplin"].FirstOrDefault();
+                var status_jasa = Request.Form["jasa"].FirstOrDefault();
+                var status_material = Request.Form["material"].FirstOrDefault();
+                var all_in_kontrak = Request.Form["all_in_kontrak"].FirstOrDefault();
+                var table = Request.Form["table"].FirstOrDefault();
+                var planning = Request.Form["planning"].FirstOrDefault();
 
-                var query = @"SELECT b.id, max(equipments.eqTagNo) as eqTagNo, max(users.alias) as alias,max(b.jobDesc) as jobDesc, max(b.alasan) as alasan, max(b.all_in_kontrak) as all_in_kontrak, max(b.cleaning) as cleaning, max(b.coc) as coc, max(b.critical_job) as critical_job, max(b.deleted) as deleted, max(b.dikerjakan) as dikerjakan, max(b.drawing) as drawing, max(b.energi) as energi, max(b.engineer) as engineer, max(b.execution) as execution, max(b.freezing) as freezing, max(b.hsse) as hsse, max(b.id_paket) as id_paket,max(b.inspection) as inspection, max(b.jasa) as jasa, max(b.jobDetailNo) as jobDetailNo, max(joblist.jobNo) as jobNo, max(joblist.id) as joblist_id, max(b.ket_status_material) as ket_status_material, max(b.keterangan) as keterangan, max(b.lldi) as lldi, max(b.losses) as losses, max(b.material) as material, max(b.measurement) as measurement, max(b.mitigasi) as mitigasi, max(b.modif) as modif, max(b.ndt) as ndt,max(b.no_jasa) as no_jasa, max(b.no_order) as no_order, max(notifikasi.id) as notif,max(b.order_jasa) as order_jasa, max(b.pekerjaan) as pekerjaan, max(b.pic) as pic, max(b.project) as project, max(b.ram) as ram, max(b.reliability) as reliability, max(b.repair) as repair, max(b.replace) as replace, max(b.responsibility) as responsibility, max(b.revision) as revision, max(b.status_jasa) as status_jasa, max(b.status_material) as status_material, max(b.tein) as tein, max(b.disiplin) as disiplin, max(b.status_job) as status_job,(CASE WHEN max(b.dikerjakan) = 'tidak' then 'ready' WHEN max(b.jasa) != '0' AND max(b.material) != '0' THEN CASE WHEN max(b.sts_material) = 'ready' AND max(b.sts_kontrak) = 'ready' THEN 'ready'  ELSE 'not_ready' END WHEN max(b.material) != '0' THEN isnull(max(b.sts_material), 'not_ready') WHEN max(b.jasa) != '0' THEN isnull(max(b.sts_kontrak), 'not_ready') END) as status FROM (SELECT a.*,
-                    (CASE WHEN a.dikerjakan = 'tidak' then 'not_execute' WHEN a.jasa != '0' THEN  (SELECT (CASE WHEN contracttracking.aktualSP is null THEN 'not_ready' ELSE 'ready' END) as status FROM Mystap.dbo.contracttracking left join Mystap.dbo.joblist_detail on joblist_detail.no_jasa = contracttracking.idPaket where contracttracking.projectID = 7 and joblist_detail.id = a.id and contracttracking.deleted != '1') ELSE 'not_identify' END) as sts_kontrak,
-                    (CASE WHEN a.dikerjakan = 'tidak' then 'not_execute' WHEN a.material != '0' THEN (CASE WHEN a.status_material = 'COMPLETED' AND (SELECT (CASE WHEN joblist_detail.material != '0' THEN CASE WHEN count(DISTINCT case when procurement_.status_ != 'terpenuhi_stock' AND procurement_.status_ != 'onsite' then procurement_.[order] else NULL end) > '0' THEN 'not_ready' ELSE 'ready' END ELSE NULL END) as sts_material  
-                    FROM (SELECT work_order.[order], (case when zpm01.pr is null or zpm01.pr = '' then (case when zpm01.reqmt_qty = zpm01.qty_res then 'terpenuhi_stock' else 'create_pr' end) else (case when (zpm01.pr is not null or zpm01.pr != '') and (p.po is null or p.po = '')then (case when (zpm01.status_pengadaan = 'tunggu_pr' or zpm01.status_pengadaan = 'evaluasi_dp3' or zpm01.status_pengadaan is null) 
-                    then 'outstanding_pr' when zpm01.status_pengadaan = 'inquiry_harga' then 'inquiry_harga' when (zpm01.status_pengadaan = 'hps_oe' or zpm01.status_pengadaan = 'bidder_list' or zpm01.status_pengadaan = 'penilaian_kualifikasi' or zpm01.status_pengadaan = 'rfq') then 'hps_oe' when (zpm01.status_pengadaan = 'pemasukan_penawaran' or zpm01.status_pengadaan = 'pembukaan_penawaran' or zpm01.status_pengadaan = 'evaluasi_penawaran' or zpm01.status_pengadaan = 'klarifikasi_spesifikasi' or zpm01.status_pengadaan = 'evaluasi_teknis' or zpm01.status_pengadaan = 'evaluasi_tkdn' or zpm01.status_pengadaan = 'negosiasi'  or zpm01.status_pengadaan = 'lhp') then 'proses_tender' when (zpm01.status_pengadaan = 'pengumuman_pemenang' or zpm01.status_pengadaan = 'penunjuk_pemenang' or zpm01.status_pengadaan = 'purchase_order') then 'Penetapan Pemenang' else 'outstanding_pr' end) 
-                    when (zpm01.pr is not null or zpm01.pr != '') and (p.po is not null or p.po != '') then (case when p.dci is null or p.dci = '' then 'tunggu_onsite' else 'onsite' end) end) end) as status_ 
-                    FROM Mystap.dbo.zpm01 left join Mystap.dbo.work_order on work_order.[order] = zpm01.no_order left join Mystap.dbo.purch_order as p on p.material = zpm01.material AND p.pr = zpm01.pr AND p.item_pr = zpm01.itm_pr where work_order.revision = '"" + project_rev + ""' and ((del is null or del != 'X') and (zpm01.reqmt_qty is not null and zpm01.reqmt_qty != '0')) GROUP BY [work_order].[order],zpm01.material,zpm01.itm, zpm01.pr,zpm01.reqmt_qty, zpm01.qty_res, po, zpm01.status_pengadaan, dci) procurement_ 
-                    join Mystap.dbo.joblist_detail_wo on joblist_detail_wo.[order] = procurement_.[order] join Mystap.dbo.joblist_detail on joblist_detail.id = joblist_detail_wo.jobListDetailID where joblist_detail.id = a.id GROUP by joblist_detail.material ) = 'ready' then 'ready' ELSE 'not_ready' END) ELSE 'not_identify' END) as sts_material 
-                    FROM Mystap.dbo.joblist_detail a ) b 
-                    LEFT JOIN Mystap.dbo.joblist on joblist.id = b.joblist_id  
-                    LEFT JOIN Mystap.dbo.project on project.id = joblist.projectID
-                    LEFT JOIN Mystap.dbo.contracttracking on contracttracking.idPaket = b.no_jasa
-                    LEFT JOIN Mystap.dbo.equipments on equipments.id = joblist.id_eqTagNo
-                    LEFT JOIN Mystap.dbo.joblist_detail_memo on joblist_detail_memo.jobListDetailID = b.id
-                    LEFT join Mystap.dbo.joblist_detail_wo on joblist_detail_wo.jobListDetailID = b.id
-                    LEFT JOIN Mystap.dbo.bom on bom.no_wo = joblist_detail_wo.[order]
-                    LEFT JOIN Mystap.dbo.bom_files on bom_files.id_bom = bom.id
-                    LEFT JOIN Mystap.dbo.request on request.id = joblist_detail_memo.id_memo
-                    LEFT JOIN Mystap.dbo.users on users.id = b.pic
-                    LEFT JOIN Mystap.dbo.notifikasi on notifikasi.id = b.notif
-                    where joblist.projectID = 7 and b.deleted = 0
-                    group by b.id";
+                var v = "";
+                if (!string.IsNullOrEmpty(eqtagno))
+                {
+                    v += " AND joblist.eqTagNo like '%"+eqtagno+"%' ";
+                }
+
+                if (!string.IsNullOrEmpty(jobno))
+                {
+                    v += " AND joblist.jobNo like '%" + jobno + "%' ";
+                }
+
+                if (!string.IsNullOrEmpty(freezing))
+                {
+                    v += " AND b.freezing = "+freezing+" ";
+                }
+
+
+                if (!string.IsNullOrEmpty(status_job))
+                {
+                    v += " AND b.status_job = '" + status_job + "' ";
+                }
+
+                if (!string.IsNullOrEmpty(pic))
+                {
+                    v += " AND b.pic = " + pic + " ";
+                }
+
+                if (!string.IsNullOrEmpty(lldi))
+                {
+                    v += " AND b.lldi = " + lldi + " ";
+                }
+
+                if (!string.IsNullOrEmpty(disiplin))
+                {
+                    v += " AND b.disiplin = '" + disiplin + "' ";
+                }
+
+                if (!string.IsNullOrEmpty(status_jasa))
+                {
+                    v += " AND b.status_jasa = '" + status_jasa + "' ";
+                }
+
+                if (!string.IsNullOrEmpty(status_material))
+                {
+                    v += " AND b.status_material = '" + status_material + "' ";
+                }
+
+                if (!string.IsNullOrEmpty(all_in_kontrak))
+                {
+                    v += " AND b.all_in_kontrak = " + all_in_kontrak + " ";
+                }
+
+                if(table == "paket")
+                {
+                    v += " AND b.id_paket is null ";
+                }
+
+                if(planning != ""){
+                    if (planning == "jasa") {
+                        v += " AND b.jasa = 1 AND b.material = 0 AND b.all_in_kontrak = 0 ";
+                    } else if (planning == "jasa_all_in") {
+                        v += " AND b.jasa = 1 AND b.material = 0 AND b.all_in_kontrak = 1 ";
+                    } else if (planning == "material") {
+                        v += " AND b.jasa = 0 AND b.material = 1 AND b.all_in_kontrak = 0 ";
+                    } else if (planning == "material_jasa") {
+                        v += " AND b.jasa = 1 AND b.material = 1 AND b.all_in_kontrak = 0 ";
+                    } else if (planning == "not_identify") {
+                        v += " AND b.jasa = 0 AND b.material = 0 AND b.all_in_kontrak = 0 ";
+                    }
+                }
+
+                var query = @"SELECT b.id, max(equipments.eqTagNo) as eqTagNo, max(users.alias) as alias,max(b.jobDesc) as jobDesc, max(b.alasan) as alasan, max(b.all_in_kontrak) as all_in_kontrak, max(b.cleaning) as cleaning, max(b.coc) as coc, max(b.critical_job) as critical_job, max(b.deleted) as deleted, max(b.dikerjakan) as dikerjakan, max(b.drawing) as drawing, max(b.energi) as energi, max(b.engineer) as engineer, max(b.execution) as execution, max(b.freezing) as freezing, max(b.hsse) as hsse, max(b.id_paket) as id_paket,max(b.inspection) as inspection, max(b.jasa) as jasa, max(b.jobDetailNo) as jobDetailNo, max(joblist.jobNo) as jobNo, max(joblist.id) as joblist_id, max(b.ket_status_material) as ket_status_material, max(b.keterangan) as keterangan, max(b.lldi) as lldi, max(b.losses) as losses, max(b.material) as material, max(b.measurement) as measurement, max(b.mitigasi) as mitigasi, max(b.modif) as modif, max(b.ndt) as ndt,max(b.no_jasa) as no_jasa, max(b.no_order) as no_order, max(notifikasi.id) as notif,max(notifikasi.notifikasi) as no_notif ,max(notifikasi.rekomendasi) as link_rekomendasi,max(b.order_jasa) as order_jasa, max(b.pekerjaan) as pekerjaan, max(b.pic) as pic, max(b.project) as project, max(b.ram) as ram, max(b.reliability) as reliability, max(b.repair) as repair, max(b.replace) as replace, max(b.responsibility) as responsibility, max(b.revision) as revision, max(b.status_jasa) as status_jasa, max(b.status_material) as status_material, max(b.tein) as tein, max(b.disiplin) as disiplin, max(b.status_job) as status_job, "+
+                    "max(project.id) as id_project, string_agg(joblist_detail_wo.[order], ',') as wo, string_agg(request.reqNo, ',') as no_memo, string_agg(request.attach, ',') as file_memo, max(contracttracking.noPaket) as noPaket, max(contracttracking.WO) as wo_jasa, max(contracttracking.judulPekerjaan) as judul_paket, max(contracttracking.po) as no_po, max(contracttracking.noSP) as no_sp, string_agg(bom_files.files, ';') as file_bom, "+
+                    "(CASE WHEN max(b.dikerjakan) = 'tidak' then 'ready' WHEN max(b.jasa) != '0' AND max(b.material) != '0' THEN CASE WHEN max(b.sts_material) = 'ready' AND max(b.sts_kontrak) = 'ready' THEN 'ready'  ELSE 'not_ready' END WHEN max(b.material) != '0' THEN isnull(max(b.sts_material), 'not_ready') WHEN max(b.jasa) != '0' THEN isnull(max(b.sts_kontrak), 'not_ready') END) as status "+ 
+                    "FROM (SELECT a.*, (CASE WHEN a.dikerjakan = 'tidak' then 'not_execute' WHEN a.jasa != '0' THEN  (SELECT (CASE WHEN contracttracking.aktualSP is null THEN 'not_ready' ELSE 'ready' END) as status FROM Mystap.dbo.contracttracking left join Mystap.dbo.joblist_detail on joblist_detail.no_jasa = contracttracking.idPaket where contracttracking.projectID ="+Convert.ToInt64(project)+" and joblist_detail.id = a.id and contracttracking.deleted != '1') ELSE 'not_identify' END) as sts_kontrak, "+
+                    "(CASE WHEN a.dikerjakan = 'tidak' then 'not_execute' WHEN a.material != '0' THEN (CASE WHEN a.status_material = 'COMPLETED' AND (SELECT (CASE WHEN joblist_detail.material != '0' THEN CASE WHEN count(DISTINCT case when procurement_.status_ != 'terpenuhi_stock' AND procurement_.status_ != 'onsite' then procurement_.[order] else NULL end) > '0' THEN 'not_ready' ELSE 'ready' END ELSE NULL END) as sts_material  "+
+                    "FROM (SELECT work_order.[order], (case when zpm01.pr is null or zpm01.pr = '' then (case when zpm01.reqmt_qty = zpm01.qty_res then 'terpenuhi_stock' else 'create_pr' end) else (case when (zpm01.pr is not null or zpm01.pr != '') and (p.po is null or p.po = '')then (case when (zpm01.status_pengadaan = 'tunggu_pr' or zpm01.status_pengadaan = 'evaluasi_dp3' or zpm01.status_pengadaan is null) "+
+                    "then 'outstanding_pr' when zpm01.status_pengadaan = 'inquiry_harga' then 'inquiry_harga' when (zpm01.status_pengadaan = 'hps_oe' or zpm01.status_pengadaan = 'bidder_list' or zpm01.status_pengadaan = 'penilaian_kualifikasi' or zpm01.status_pengadaan = 'rfq') then 'hps_oe' when (zpm01.status_pengadaan = 'pemasukan_penawaran' or zpm01.status_pengadaan = 'pembukaan_penawaran' or zpm01.status_pengadaan = 'evaluasi_penawaran' or zpm01.status_pengadaan = 'klarifikasi_spesifikasi' or zpm01.status_pengadaan = 'evaluasi_teknis' or zpm01.status_pengadaan = 'evaluasi_tkdn' or zpm01.status_pengadaan = 'negosiasi'  or zpm01.status_pengadaan = 'lhp') then 'proses_tender' when (zpm01.status_pengadaan = 'pengumuman_pemenang' or zpm01.status_pengadaan = 'penunjuk_pemenang' or zpm01.status_pengadaan = 'purchase_order') then 'Penetapan Pemenang' else 'outstanding_pr' end) "+
+                    "when (zpm01.pr is not null or zpm01.pr != '') and (p.po is not null or p.po != '') then (case when p.dci is null or p.dci = '' then 'tunggu_onsite' else 'onsite' end) end) end) as status_  "+
+                    "FROM Mystap.dbo.zpm01 left join Mystap.dbo.work_order on work_order.[order] = zpm01.no_order left join Mystap.dbo.purch_order as p on p.material = zpm01.material AND p.pr = zpm01.pr AND p.item_pr = zpm01.itm_pr where work_order.revision ='"+ rev +"' and ((del is null or del != 'X') and (zpm01.reqmt_qty is not null and zpm01.reqmt_qty != '0')) GROUP BY [work_order].[order],zpm01.material,zpm01.itm, zpm01.pr,zpm01.reqmt_qty, zpm01.qty_res, po, zpm01.status_pengadaan, dci) procurement_  "+
+                    "join Mystap.dbo.joblist_detail_wo on joblist_detail_wo.[order] = procurement_.[order] join Mystap.dbo.joblist_detail on joblist_detail.id = joblist_detail_wo.jobListDetailID where joblist_detail.id = a.id GROUP by joblist_detail.material ) = 'ready' then 'ready' ELSE 'not_ready' END) ELSE 'not_identify' END) as sts_material "+
+                    "FROM Mystap.dbo.joblist_detail a ) b "+
+                    "LEFT JOIN Mystap.dbo.joblist on joblist.id = b.joblist_id  "+
+                    "LEFT JOIN Mystap.dbo.project on project.id = joblist.projectID "+
+                    "LEFT JOIN Mystap.dbo.contracttracking on contracttracking.idPaket = b.no_jasa "+
+                    "LEFT JOIN Mystap.dbo.equipments on equipments.id = joblist.id_eqTagNo "+
+                    "LEFT JOIN Mystap.dbo.joblist_detail_memo on joblist_detail_memo.jobListDetailID = b.id "+
+                    "LEFT join Mystap.dbo.joblist_detail_wo on joblist_detail_wo.jobListDetailID = b.id "+
+                    "LEFT JOIN Mystap.dbo.bom on bom.no_wo = joblist_detail_wo.[order] "+
+                    "LEFT JOIN Mystap.dbo.bom_files on bom_files.id_bom = bom.id "+
+                    "LEFT JOIN Mystap.dbo.request on request.id = joblist_detail_memo.id_memo "+
+                    "LEFT JOIN Mystap.dbo.users on users.id = b.pic "+
+                    "LEFT JOIN Mystap.dbo.notifikasi on notifikasi.id = b.notif "+
+                    "where joblist.projectID = "+project+" and b.deleted = 0 "+
+                    v +
+                    "group by b.id";
 
                 var c = FormattableStringFactory.Create(query);
                 var customerData = _context.viewPlanningJoblist.FromSql(c);
@@ -808,6 +901,191 @@ namespace joblist.Controllers
                 return Json(new { draw = draw, recordsFiltered = recordsTotal, recordsTotal = recordsTotal, data = datas });
             }
             catch (Exception)
+            {
+                throw;
+            }
+        }
+
+        public IActionResult UpdateJobplan()
+        {
+            try
+            {
+                int id_ = Int32.Parse(Request.Form["hidden_id"].FirstOrDefault());
+                Joblist_Detail job = _context.joblist_Detail.Where(p => p.id == id_).FirstOrDefault();
+
+                if(job != null)
+                {
+                    job.pic = Convert.ToInt64(Request.Form["pic"].FirstOrDefault());
+                    job.jobDesc = Request.Form["jobDesc"].FirstOrDefault();
+                    job.alasan = Request.Form["alasan"].FirstOrDefault();
+                    job.no_jasa = (Request.Form["no_jasa"].FirstOrDefault() != "") ? Convert.ToInt32(Request.Form["no_jasa"].FirstOrDefault()) : null;
+                    job.order_jasa = Request.Form["order_jasa"].FirstOrDefault();
+                    job.pekerjaan = Request.Form["pekerjaan"].FirstOrDefault();
+                    job.ket_status_material = Request.Form["ket_status_material"].FirstOrDefault();
+                    job.jasa = (Request.Form["jasa"].FirstOrDefault() == null) ? 0 : 1;
+                    job.all_in_kontrak = (Request.Form["all_in_kontrak"].FirstOrDefault() == null) ? 0 : 1;
+                    job.material = (Request.Form["material"].FirstOrDefault() == null) ? 0 : 1;
+                    job.lldi = (Request.Form["lldi"].FirstOrDefault() == null) ? 0 : 1;
+                    job.lldi = (Request.Form["lldi"].FirstOrDefault() == null) ? 0 : 1;
+                    job.status_jasa = "";
+                    job.status_material = "";
+
+                    if (job.jasa != 0)
+                    {
+                        job.status_jasa = "NOT_PLANNED";
+                        if (Request.Form["no_jasa"].FirstOrDefault() != "")
+                        {
+                            var cek = _context.contractTracking.Where(p => p.aktualCO != null).Where(p => p.idPaket == Convert.ToInt64(Request.Form["no_jasa"].FirstOrDefault())).FirstOrDefault();
+                            if (cek != null)
+                            {
+                                job.status_jasa = "COMPLETED";
+                            }
+                            else
+                            {
+                                job.status_jasa = "NOT_COMPLETED";
+                            }
+                        }
+                    }
+
+                    if (job.material != 0)
+                    {
+                        job.status_material = "NOT_PLANNED";
+                        if (Request.Form["status_material"].FirstOrDefault() != "")
+                        {
+                            job.status_material = Request.Form["status_material"].FirstOrDefault();
+                        }
+
+                    }
+
+                    if (job.jasa != 0 || job.all_in_kontrak != 0 || job.material != 0)
+                    {
+                        if (job.status_material != "")
+                        {
+                            job.status_job = job.status_material;
+                        }
+
+                        if (job.status_jasa != "")
+                        {
+                            job.status_job = job.status_jasa;
+                        }
+
+                        if (job.jasa != 0 || job.material != 0)
+                        {
+                            if (job.status_material == "COMPLETED" && job.status_jasa != "COMPLETED")
+                            {
+                                job.status_job = "NOT_COMPLETED";
+                            }
+
+                            if (job.status_jasa == "COMPLETED" && job.status_material != "COMPLETED")
+                            {
+                                job.status_job = "NOT_COMPLETED";
+                            }
+
+                            if (job.status_jasa != "COMPLETED" && job.status_material != "COMPLETED")
+                            {
+                                job.status_job = "NOT_COMPLETED";
+                            }
+
+                            if (job.status_jasa == "NOT_PLANNED" && job.status_material == "NOT_PLANNED")
+                            {
+                                job.status_job = "NOT_COMPLETED";
+                            }
+
+                            if (job.status_jasa == "COMPLETED" && job.status_material == "COMPLETED")
+                            {
+                                job.status_job = "COMPLETED";
+                            }
+                        }
+                    }
+                    else
+                    {
+                        job.status_job = "NOT_IDENTIFY";
+                    }
+
+
+                    Boolean t;
+
+                    using var transaction = _context.Database.BeginTransaction();
+                    try
+                    {                    
+                        _context.SaveChanges();
+
+                        var wo = Request.Form["no_order[]"];
+                        if (!wo.IsNullOrEmpty())
+                        {
+                            var cek = _context.joblistDetailWo.Where(p => p.JobListDetailID == Convert.ToInt64(id_)).ToList();
+                            if (!cek.IsNullOrEmpty())
+                            {
+                                _context.joblistDetailWo.Where(p => p.JobListDetailID == Convert.ToInt64(id_)).ExecuteDelete();
+                            }
+                            foreach(var val in wo)
+                            {
+                                JoblistDetailWo jobwo = new JoblistDetailWo();
+                                jobwo.JobListDetailID = id_;
+                                jobwo.order = val;
+
+                           
+                                _context.joblistDetailWo.Add(jobwo);
+                                _context.SaveChanges();
+                            }
+                        }
+
+                        transaction.Commit();
+                        t = true;
+
+                    }
+                    catch (Exception)
+                    {
+                        transaction.Rollback();
+                        t = false;
+                    }
+                    return Json(new {result = t});
+
+                }
+
+                return Json(new { result = false });
+            }
+            catch
+            {
+                throw;
+            }
+        }
+
+        public IActionResult GetPaketKontrak()
+        {
+            try
+            {
+                var id_project = Request.Form["id"].FirstOrDefault();
+                var data = _context.contractTracking.Where(p => p.projectID == Convert.ToInt32(id_project)).Where(p => p.deleted == 0).ToList();
+                var isi = "<option value=''>- Pilih Paket Jasa -</option>";
+                foreach(var val in data)
+                {
+                    isi += "<option value='" + val.idPaket + "' data-no_paket='" + val.noPaket + "' data-desc='" + val.judulPekerjaan + "' data-order='" + val.WO + "' >" + val.noPaket + "-" + val.judulPekerjaan + "</option>";
+                }
+                return Ok(isi);
+            }
+            catch
+            {
+                throw;
+            }
+        }
+
+        public IActionResult GetJoblistWo()
+        {
+            try
+            {
+                var id = Request.Form["id"].FirstOrDefault();
+                var data = _context.joblistDetailWo.Where(p => p.JobListDetailID == Convert.ToInt32(id)).ToList();
+
+                var isi = "";
+                foreach (var val in data)
+                {
+                    isi += "<div class='row row-cols-lg-auto g-3 align-items-center mb-2'><div class='col-12'><div class='form-group'><input type='number' id='no_order' name='no_order[]' class='form-control form-control-sm' value='"+val.order+"'></div></div><a class='btn btn-sm btn-danger remove'>-</a></div>";
+                }
+
+                return Json(new { isi = isi, total = data.Count() });
+            }
+            catch
             {
                 throw;
             }
