@@ -1,0 +1,155 @@
+﻿@{
+    ViewData["Title"] = "Edit PR";
+}
+<ol class="breadcrumb float-xl-end">
+    <li class="breadcrumb-item active" aria-current="page"><span>Edit Reservasi PR</span></li>
+</ol>
+<h1 class="page-header">Edit Reservasi PR</h1>
+<div class="row">
+    <div class="col-xl-4 col-lg-4 col-md-4 col-sm-12 col-12">
+        @if(ViewBag.wo == ""){
+        <div class="card mb-2">
+            <div class="card-body">
+                <div class="row d-flex g-3 align-items-center">
+                    <div class="col-8">
+                        <input type="text" class="form-control" id="txt_order" placeholder="Masukan No Order" />
+                    </div>
+                    <button class="btn btn-primary w-100px me-5px" id="cari">Cari Order</button>
+                </div>
+            </div>
+        </div>
+        }
+        <div class="card mb-2">
+            <div class="card-header">
+                <b>Info Reservasi</b>
+            </div>
+            <div class="card-body">
+                <table width="100%">
+                    @if (ViewBag.wo != "")
+                    {
+                        <tr>
+                            <td width="30%">Order</td>
+                            <td>:</td>
+                            <td>@(ViewBag.wo)</td>
+                        </tr>
+                    }
+                    <tr>
+                        <td width="30%">Equipment</td>
+                        <td>:</td>
+                        <td id="info_equipment"></td>
+                    </tr>
+                    <tr>
+                        <td width="30%">Description</td>
+                        <td>:</td>
+                        <td id="info_desc"></td>
+                    </tr>
+                    <tr>
+                        <td width="30%">Revision</td>
+                        <td>:</td>
+                        <td id="info_revision"></td>
+                    </tr>
+                    <tr>
+                        <td width="30%">System Status</td>
+                        <td>:</td>
+                        <td id="info_sys_stat"></td>
+                    </tr>
+                    <tr>
+                        <td width="30%">User Status</td>
+                        <td>:</td>
+                        <td id="info_user_stat"></td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+    </div>
+    <div class="col-xl-8 col-lg-8 col-md-8 col-sm-12 col-12">
+        <div class="card mb-2">
+            <div class="card-header"><b>Detail Reservasi</b></div>
+            <div class="card-body">
+                <div class="table-responsive mb-2">
+                    <table id="table" class="table small table-striped table-bordered dataTables_wrapper" width="100%">
+                        <thead>
+                            <tr>
+                                @* {{--
+                                <th>No</th> --}} *@
+                                <th></th>
+                                <th>Material</th>
+                                <th>Description</th>
+                                <th>Itm</th>
+                                <th>Qty Req</th>
+                                <th>Stock</th>
+                                @* {{--
+                                <th>Diff Qty</th> --}} *@
+                                <th>BUn</th>
+                                <th>Req Date</th>
+                                <th>PR</th>
+                                <th>Item PR</th>
+                                <th>Qty PR</th>
+@*                                 {{--
+                                <th>Qty Stock</th> --}} *@
+                                <th>PGr</th>
+                                <th>Balance</th>
+                            </tr>
+                        </thead>
+
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="edit-reservasi" tabindex="-1" role="dialog" aria-labelledby="ModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-sm" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title judul-modal" id="Modal"></h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
+                </button>
+            </div>
+            <form id="edit-reservasi-form">
+                <div class="modal-body">
+                    <input type="hidden" name="hidden_order" id="hidden_order" value="">
+                    <input type="hidden" name="hidden_material" id="hidden_material" value="">
+                    <input type="hidden" name="hidden_itm" id="hidden_itm" value="">
+                    <input type="hidden" name="hidden_id" id="hidden_id" value="">
+                    <div class="row">
+                        <div class="row mb-2">
+                            <label class="form-label col-form-label col-md-3">PR</label>
+                            <div class="col-md-9">
+                                <input type="text" name="pr" id="pr" class="form-control form-control-sm">
+                            </div>
+                        </div>
+                        <div class="row mb-2">
+                            <label class="form-label col-form-label col-md-3">PR Item</label>
+                            <div class="col-md-9">
+                                <input type="text" name="pr_item" id="pr_item" class="form-control form-control-sm">
+                            </div>
+                        </div>
+                        <div class="row mb-2">
+                            <label class="form-label col-form-label col-md-3">Qty PR</label>
+                            <div class="col-md-9">
+                                <input type="text" name="qty_pr" id="qty_pr" class="form-control form-control-sm">
+                            </div>
+                        </div>
+                        <div class="row mb-1">
+                            <label class="form-label col-form-label col-md-3">Stock</label>
+                            <div class="col-md-9">
+                                <input type="text" name="stock" id="stock" class="form-control form-control-sm">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <a href="javascript:;" class="btn btn-white" data-bs-dismiss="modal">Close</a>
+                    <button type="reset" class="btn btn-dark">Reset</button>
+                    <button type="submit" class="btn btn-success">Submit</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+@section Scripts
+{
+    <script src="~/js/EditPR.js"></script>
+}

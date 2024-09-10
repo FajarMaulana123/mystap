@@ -30,11 +30,11 @@
         ],
 
         columns: [
-            { data: 'order', name: 'work_order.order' },
+            { data: 'order', name: 'order' },
             { data: 'reserv_no', name: 'reserv_no' },
             { data: 'revision', name: 'revision' },
             { data: 'material', name: 'material' },
-            { data: 'material_description', name: 'material_description' },
+            { data: 'material_desc', name: 'material_desc' },
             { data: 'itm', name: 'itm' },
             { data: 'reqmt_qty', name: 'reqmt_qty', searchable: false },
             { data: 'bun', name: 'bun' },
@@ -44,6 +44,7 @@
             { data: 'pr_qty', name: 'pr_qty', searchable: false },
             { data: 'pg', name: 'pg' },
         ],
+        "order": [],
         buttons: /*(user_auth == 'superadmin' || user_auth == 'admin') ?*/ [
             {
                 text: '<i class="far fa-edit"></i>Upload PR',

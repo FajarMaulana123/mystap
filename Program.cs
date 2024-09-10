@@ -325,6 +325,26 @@ app.UseEndpoints(endpoints =>
         defaults: new { controller = "Joblist", action = "GetJoblistWo" });
 
     endpoints.MapControllerRoute(
+        name: "eksekusi_joblist",
+        pattern: "eksekusi_joblist",
+        defaults: new { controller = "Joblist", action = "EksekusiJoblist" });
+
+    endpoints.MapControllerRoute(
+        name: "paket_eksekusi_",
+        pattern: "paket_eksekusi_",
+        defaults: new { controller = "Joblist", action = "PaketEksekusi" });
+
+    endpoints.MapControllerRoute(
+        name: "status_eksekusi",
+        pattern: "status_eksekusi",
+        defaults: new { controller = "Joblist", action = "StatusEksekusi" });
+
+    endpoints.MapControllerRoute(
+        name: "count_eksekusi",
+        pattern: "count_eksekusi",
+        defaults: new { controller = "Joblist", action = "CountEksekusi" });
+
+    endpoints.MapControllerRoute(
        name: "rapat",
        pattern: "rapat",
        defaults: new { controller = "Data", action = "Rapat" });
@@ -645,15 +665,77 @@ app.UseEndpoints(endpoints =>
        defaults: new { controller = "Material", action = "Get_Material" });
 
     endpoints.MapControllerRoute(
-    name: "outstanding_reservasi",
-    pattern: "outstanding_reservasi",
-    defaults: new { controller = "Material", action = "Outstanding_Reservasi" });
+        name: "outstanding_reservasi",
+        pattern: "outstanding_reservasi",
+        defaults: new { controller = "Material", action = "OutstandingReservasi" });
 
     endpoints.MapControllerRoute(
        name: "outstanding_reservasi_",
        pattern: "outstanding_reservasi_",
-       defaults: new { controller = "Material", action = "Get_Outstanding_Reservasi" });
+       defaults: new { controller = "Material", action = "OutstandingReservasi_" });
 
+    endpoints.MapControllerRoute(
+        name: "penggunaan_material",
+        pattern: "penggunaan_material",
+        defaults: new { controller = "Material", action = "PenggunaanMaterial" });
+
+    endpoints.MapControllerRoute(
+        name: "penggunaan_material_",
+        pattern: "penggunaan_material_",
+        defaults: new { controller = "Material", action = "PenggunaanMaterial_" });
+
+    endpoints.MapControllerRoute(
+        name: "add_prognosa_material",
+        pattern: "add_prognosa_material",
+        defaults: new { controller = "Material", action = "AddPrognosaMaterial" });
+    endpoints.MapControllerRoute(
+        name: "edit_pr",
+        pattern: "edit_pr",
+        defaults: new { controller = "Material", action = "EditPR" });
+    endpoints.MapControllerRoute(
+        name: "get_work_order",
+        pattern: "get_work_order",
+        defaults: new { controller = "Material", action = "GetWorkOrder" });
+    endpoints.MapControllerRoute(
+        name: "get_material_",
+        pattern: "get_material_",
+        defaults: new { controller = "Material", action = "GetMaterial_" });
+    endpoints.MapControllerRoute(
+        name: "update_pr",
+        pattern: "update_pr",
+        defaults: new { controller = "Material", action = "UpdatePR" });
+    endpoints.MapControllerRoute(
+        name: "list_pr",
+        pattern: "list_pr",
+        defaults: new { controller = "Material", action = "ListPR" });
+    endpoints.MapControllerRoute(
+        name: "list_pr_",
+        pattern: "list_pr_",
+        defaults: new { controller = "Material", action = "ListPR_" });
+    endpoints.MapControllerRoute(
+       name: "distribusi_pr",
+       pattern: "distribusi_pr",
+       defaults: new { controller = "Material", action = "DistribusiPR" });
+    endpoints.MapControllerRoute(
+       name: "distribusi_pr_",
+       pattern: "distribusi_pr_",
+       defaults: new { controller = "Material", action = "DistribusiPR_" });
+    endpoints.MapControllerRoute(
+       name: "remove_buyer",
+       pattern: "remove_buyer",
+       defaults: new { controller = "Material", action = "RemoveBuyer" });
+    endpoints.MapControllerRoute(
+       name: "doc_pr",
+       pattern: "doc_pr",
+       defaults: new { controller = "Material", action = "DocPR" });
+    endpoints.MapControllerRoute(
+       name: "add_status_pengadaan",
+       pattern: "add_status_pengadaan",
+       defaults: new { controller = "Material", action = "StatusPengadaan" });
+    endpoints.MapControllerRoute(
+       name: "add_dt",
+       pattern: "add_dt",
+       defaults: new { controller = "Material", action = "AddDT" });
 });
 
 app.Run();

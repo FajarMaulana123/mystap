@@ -32,6 +32,7 @@ namespace mystap.Models
         public DbSet<SowGroup> sowGroup { get; set; }
         public DbSet<HistoryReservasi> historyReservasi { get; set; }
         public DbSet<Zpm01>zpm01 { get; set; }
+        public DbSet<WorkOrder>work_order { get; set; }
         public DbSet<Bom>bom { get; set; }
         public DbSet<BomFiles> bomFiles { get; set; }
 
@@ -50,6 +51,12 @@ namespace mystap.Models
         public DbSet<ViewDetailMaterial> view_detail_material { get; set;}
         public DbSet<ViewJoblist> view_joblist { get; set; }
         public DbSet<ViewPlanningJoblist> viewPlanningJoblist { get; set; }
+        public DbSet<ViewCountEksekusi> viewCountEksekusi { get; set; }
+        public DbSet<ViewReservasi> viewReservasi { get; set; }
+        public DbSet<ViewOutstandingReservasi> viewOutstandingReservasi { get; set; }
+        public DbSet<ViewUpdatePr> viewUpdatePr { get; set; }
+        public DbSet<ViewListPr> viewListPr { get; set; }
+        public DbSet<ViewDistribusiPr> viewDistribusiPr { get; set; }
     }
 }
 

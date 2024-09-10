@@ -7,10 +7,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Content Remove="Views\Material\Outstanding_Reservasi.cshtml" />
-  </ItemGroup>
-
-  <ItemGroup>
     <PackageReference Include="jquery.datatables" Version="1.10.15" />
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="7.0.0" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="6.0.32">
@@ -31,10 +27,6 @@
     <Folder Include="wwwroot\upload\sow\" />
     <Folder Include="wwwroot\upload\steerco\materi\" />
     <Folder Include="wwwroot\upload\steerco\notulen\" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <None Include="Views\Material\Outstanding_Reservasi.cshtml" />
   </ItemGroup>
 
 </Project>

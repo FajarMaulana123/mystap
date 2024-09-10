@@ -43,6 +43,6 @@
         public string? keterangan { get; set; }
         public int? prognosa_matl { get; set; }
 
-        public Project project{ get; set; }
+        //public Project project{ get; set; }
     }
 }

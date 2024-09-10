@@ -20,7 +20,7 @@ namespace joblist.Controllers
         {
             _context = context;
         }
-        
+
         public IActionResult Joblist()
         {
 			ViewBag.project = _context.project.Where(p => p.deleted == 0).Where(p => p.active == "1").ToList();
@@ -1091,6 +1091,173 @@ namespace joblist.Controllers
             }
         }
 
+        public IActionResult EksekusiJoblist()
+        {
+            ViewBag.project = _context.project.Where(p => p.deleted == 0).Where(p => p.active == "1").ToList();
+           
+            return View();
+        }
+
+        public async Task<IActionResult> PaketEksekusi()
+        {
+            try
+            {
+                var draw = HttpContext.Request.Form["draw"].FirstOrDefault();
+                // Skipping number of Rows count
+                var start = Request.Form["start"].FirstOrDefault();
+                // Paging Length 10, 20
+                var length = Request.Form["length"].FirstOrDefault();
+                // Sort Column Name
+                var sortColumn = Request.Form["columns[" + Request.Form["order[0][column]"].FirstOrDefault() + "][name]"].FirstOrDefault();
+                // Sort Column Direction (asc, desc)
+                var sortColumnDirection = Request.Form["order[0][dir]"].FirstOrDefault();
+                // Search Value from (Search box)
+                var searchValue = Request.Form["search[value]"].FirstOrDefault();
+                // Paging Size (10, 20, 50, 100)
+                int pageSize = length != null ? Convert.ToInt32(length) : 0;
+                int skip = start != null ? Convert.ToInt32(start) : 0;
+                int recordsTotal = 0;
+
+                var eqtagno = Request.Form["eqTagNo"].FirstOrDefault();
+                var disiplin = Request.Form["disiplin"].FirstOrDefault();
+                var status_eksekusi = Request.Form["status_eksekusi"].FirstOrDefault();
+                var table = Request.Form["table"].FirstOrDefault();
+
+                var data = (from jd in _context.joblist_Detail
+                            join j in _context.joblist on jd.joblist_id equals j.id
+                            join u in _context.users on jd.pic equals u.id
+                            select new
+                            {
+                                d = jd,
+                                eqTagNo = j.eqTagNo,
+                                id_project = j.projectID,
+                                alias = u.alias
+                            }).Where(p => p.id_project == Convert.ToInt32(Request.Form["project"].FirstOrDefault())).Where(p => p.d.deleted == 0);
+
+                if (!string.IsNullOrEmpty(eqtagno))
+                {
+                    data = data.Where(p => p.eqTagNo.StartsWith(eqtagno));
+                }
+
+                if (!string.IsNullOrEmpty(disiplin))
+                {
+                    data = data.Where(p => p.d.disiplin == disiplin);
+                }
+
+                if (!string.IsNullOrEmpty(status_eksekusi))
+                {
+                    data = data.Where(p => p.d.dikerjakan == status_eksekusi);
+                }
+
+                if(table == "paket")
+                {
+                    data = data.Where(p => p.d.id_paket == null);
+                }
+
+
+                if (!(string.IsNullOrEmpty(sortColumn) && (string.IsNullOrEmpty(sortColumnDirection) || sortColumnDirection != "-1")))
+                {
+                    data = data.OrderBy(sortColumn + " " + sortColumnDirection);
+                }
+
+                if (!string.IsNullOrEmpty(searchValue))
+                {
+                    data = data.Where(b => b.d.jobDesc.StartsWith(searchValue));
+                }
+
+                // Total number of rows count
+                //Console.WriteLine(customerData);
+                recordsTotal = data.Count();
+                // Paging
+                var datas = await data.Skip(skip).Take(pageSize).ToListAsync();
+
+                return Json(new { draw = draw, recordsFiltered = recordsTotal, recordsTotal = recordsTotal, data = datas });
+            }
+            catch
+            {
+                throw;
+            }
+        }
+
+        public IActionResult StatusEksekusi()
+        {
+            try
+            {
+                string id = Request.Form["id"];
+                string[] id_ = id.Split(",");
+
+                var status_ = Request.Form["status_"].FirstOrDefault();
+                var dikerjakan = Request.Form["dikerjakan"].FirstOrDefault();
+                var keterangan = Request.Form["keterangan"].FirstOrDefault();
+                var mitigasi = Request.Form["mitigasi"].FirstOrDefault();
+
+                
+                foreach(var val in id_)
+                {
+                    Joblist_Detail job = _context.joblist_Detail.Where(p => p.id == Convert.ToInt64(val)).FirstOrDefault();
+                    if (job != null)
+                    {
+                        if (status_ == "dikerjakan") {
+                            job.dikerjakan = "YA";
+                            job.keterangan = keterangan;
+                            job.mitigasi = null;
+                        } else
+                        {
+                            job.dikerjakan = "TIDAK";
+                            job.keterangan = keterangan;
+                            job.mitigasi = mitigasi;
+                        }
+
+                        _context.SaveChanges();
+                    }
+                }
+
+                return Json(new { result = true });
+            }
+            catch
+            {
+                throw;
+            }
+        }
+
+        public IActionResult CountEksekusi()
+        {
+            try
+            {
+
+                var project_filter = Request.Form["project_filter"].FirstOrDefault();
+                var disiplin_filter = Request.Form["disiplin_filter"].FirstOrDefault();
+
+                var w = "";
+
+                if (!string.IsNullOrEmpty(project_filter))
+                {
+                    w += " and joblist.projectID = " + project_filter;
+                }
+
+                if (!string.IsNullOrEmpty(disiplin_filter))
+                {
+                    w += " and joblist_detail.disiplin = '" + disiplin_filter + "' ";
+                }
+
+                var query = $"select count(DISTINCT (case when joblist_detail.dikerjakan = 'YA' then joblist_detail.id else null end)) as di_kerjakan, " +
+                    "count(DISTINCT (case when joblist_detail.dikerjakan = 'TIDAK' then joblist_detail.id else null end)) as tidak_dikerjakan " +
+                    "from Mystap.dbo.joblist_detail " +
+                    "left join Mystap.dbo.joblist on joblist.id = joblist_detail.joblist_id " +
+                    "where joblist_detail.deleted = 0 " + w;
+
+                var c = FormattableStringFactory.Create(query);
+                var data = _context.viewCountEksekusi.FromSql(c).FirstOrDefault();
+
+                return Json(new { result = data });
+            }
+            catch
+            {
+                throw;
+            }
+        }
+
+        
 
     }
 }

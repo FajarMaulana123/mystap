@@ -21,7 +21,10 @@
                                 <div class="form-group">
                                     <label for="" >Project</label>
                                     <select name="project_filter" id="project_filter" class="form-control form-control-sm">
-                                   
+                                    @foreach (var val in ViewBag.project)
+                                    {
+                                        <option value="@(val.revision)" data-id="@(val.id)"> @(val.description)</option>
+                                    }
                                     </select>
                                 </div>
                             </div>

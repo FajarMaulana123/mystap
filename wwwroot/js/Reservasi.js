@@ -40,15 +40,89 @@ $(document).ready(function () {
             }
         },
         columns: [
-            { data: 'status_', name: 'status_' },
-            { data: 'status_ready', name: 'status_ready' },
+            {
+                data: 'status_', name: 'status_',
+                render: function (data, type, full, meta) {
+                    var s = "";
+                    if (full.status_ == 'create_pr') {
+                        s = '<span class="badge bg-red-300 shadow-none">Create PR</span>';
+                    } else if (full.status_ == 'outstanding_pr') {
+                        s = '<span class="badge bg-orange-700 shadow-none">Outstanding PR</span>';
+                    } else if (full.status_ == 'tunggu_onsite') {
+                        s = '<span class="badge bg-blue-300 shadow-none">Tunggu Onsite</span>';
+                    } else if (full.status_ == 'onsite') {
+                        s = '<span class="badge bg-blue-600 shadow-none">Onsite</span>';
+                    } else if (full.status_ == 'terpenuhi_stock') {
+                        s = '<span class="badge bg-purple-300 shadow-none">Stock</span>';
+                    } else if (full.status_ == 'inquiry_harga') {
+                        s = '<span class="badge bg-orange-400 shadow-none">Inquiry Harga</span>';
+                    } else if (full.status_ == 'tunggu_pr') {
+                        s = '<span class="badge bg-orange-300 shadow-none">Tunggu PR</span>';
+                    } else if (full.status_ == 'evaluasi_dp3') {
+                        s = '<span class="badge bg-indigo-300 shadow-none">Evaluasi DP3</span>';
+                    } else if (full.status_ == 'inquiry_harga') {
+                        s = '<span class="badge bg-purple-600 shadow-none">Inquiry Harga</span>';
+                    } else if (full.status_ == 'hps_oe') {
+                        s = '<span class="badge bg-yellow-300 shadow-none">HPS OE</span>';
+                    } else if (full.status_ == 'bidder_list') {
+                        s = '<span class="badge bg-teal-300 shadow-none">Bidder List</span>';
+                    } else if (full.status_ == 'penilaian_kualifikasi') {
+                        s = '<span class="badge bg-yellow-600 shadow-none">Penilaian Kualifikasi</span>';
+                    } else if (full.status_ == 'rfq') {
+                        s = '<span class="badge bg-lime-300 shadow-none">RFQ</span>';
+                    } else if (full.status_ == 'pemasukan_penawaran') {
+                        s = '<span class="badge bg-orange-600 shadow-none">Pemasukan Penawaran</span>';
+                    } else if (full.status_ == 'pembukaan_penawaran') {
+                        s = '<span class="badge bg-yellow-300 shadow-none">Pembukaan Penawaran</span>';
+                    } else if (full.status_ == 'evaluasi_penawaran') {
+                        s = '<span class="badge bg-red-300 shadow-none">Evaluasi Penawaran</span>';
+                    } else if (full.status_ == 'klarifikasi_spesifikasi') {
+                        s = '<span class="badge bg-pink-300 shadow-none">Klarfikasi Spesifikasi</span>';
+                    } else if (full.status_ == 'evaluasi_teknis') {
+                        s = '<span class="badge bg-teal-600 shadow-none">Evaluasi Teknis</span>';
+                    } else if (full.status_ == 'evaluasi_tkdn') {
+                        s = '<span class="badge bg-orange-900 shadow-none">Evaluasi TKDN</span>';
+                    } else if (full.status_ == 'negosiasi') {
+                        s = '<span class="badge bg-lime-600 shadow-none">Negosiasi</span>';
+                    } else if (full.status_ == 'lhp') {
+                        s = '<span class="badge bg-orange-600 shadow-none">LHP</span>';
+                    } else if (full.status_ == 'pengumuman_pemenang') {
+                        s = '<span class="badge bg-green-300 shadow-none">Pengumuman Pemenang</span>';
+                    } else if (full.status_ == 'penunjuk_pemenang') {
+                        s = '<span class="badge bg-green-600 shadow-none">Penunjukan Pemenang</span>';
+                    } else if (full.status_ == 'purchase_order') {
+                        s = '<span class="badge bg-gray-400 shadow-none">Purchase Order</span>';
+                    }
+
+                    var status = s;
+                    return status;
+                }
+            },
+            {
+                data: 'status_ready', name: 'status_ready',
+                render: function (data, type, full, meta) {
+                    var s = "";
+                    if (full.status_ready == 'ready') {
+                        s = '<span class="badge bg-blue-300 shadow-none">Ready</span>';
+                    } else if (full.status_ready == 'on_track') {
+                        s = '<span class="badge bg-green-300 shadow-none">On Track</span>';
+                    } else if (full.status_ready == 'delay') {
+                        s = '<span class="badge bg-orange-300 shadow-none">Delay</span>';
+                    } else {
+                        s = '<span class="badge bg-gray-300 shadow-none">undefined</span>';
+                    }
+
+                    var status = s;
+                    return status;
+                }
+            },
             { data: 'order', name: 'order' },
-            { data: 'description', name: 'description' },
+            { data: 'wo_description', name: 'wo_description' },
             { data: 'main_work_ctr', name: 'main_work_ctr' },
             { data: 'revision', name: 'revision' },
             { data: 'reserv_no', name: 'reserv_no' },
             { data: 'material', name: 'material' },
-            { data: 'material_description', name: 'material_description' },
+            { data: 'description', name: 'description' },
             { data: 'itm', name: 'itm' },
             { data: 'pr', name: 'pr' },
             { data: 'pr_item', name: 'pr_item' },
@@ -57,7 +131,24 @@ $(document).ready(function () {
             { data: 'reqmt_qty', name: 'reqmt_qty' },
             { data: 'pr_qty', name: 'pr_qty' },
             { data: 'po_qty', name: 'po_qty' },
-            { data: 'status_qty', name: 'status_qty' },
+            {
+                data: 'status_qty', name: 'status_qty',
+                render: function (data, type, full, meta) {
+                    var s = "";
+                    if (full.status_qty == 'balance') {
+                        s = '<span class="badge bg-green-300 shadow-none">Balance</span>';
+                    } else if (full.status_qty == 'not_balance') {
+                        s = '<span class="badge bg-red-300 shadow-none">Not Balance</span>';
+                    } else if (full.status_qty == 'fis') {
+                        s = '<span class="badge bg-orange-300 shadow-none">FIs</span>';
+                    } else {
+                        s = '<span class="badge bg-gray-300 shadow-none">undefined</span>';
+                    }
+
+                    var status = s;
+                    return status;
+                }
+            },
             { data: 'dt_', name: 'dt_' },
             { data: 'prognosa_', name: 'prognosa_' },
             { data: 'md', name: 'md' },
@@ -65,7 +156,7 @@ $(document).ready(function () {
 
         ],
        /* columnDefs: [
-            (user_auth == 'user' || user_auth == 'admin') ? { "visible": false, "targets": [21] } : {},
+            (user_auth == 'user' || user_auth == 'admin') ? { "visible": false, "targets": [21] } : {},+
         ],*/
         "order": [],
         buttons: /*(user_auth == 'superadmin' || user_auth == 'admin') ?*/ [

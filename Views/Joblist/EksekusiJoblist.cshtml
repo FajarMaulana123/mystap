@@ -21,6 +21,10 @@
                                 <div class="col-md-3 mb-2">
                                     <label>Project</label>
                                     <select name="project_filter" id="project_filter" class="form-control form-control-sm">
+                                @foreach (var val in ViewBag.project)
+                                {
+                                    <option value="@(val.id)" data-rev="@(val.revision)"> @(val.description)</option>
+                                }
                                     </select> 
                                 </div>
                                 <div class="col-md-3 mb-2">
@@ -102,6 +106,7 @@
                     <button type="button" class="btn-close"  data-bs-dismiss="modal" aria-label="Close">
                     </button>
                 </div>
+                <form id="form_tidak">
                 <div class="modal-body">   
                     <div class="row">
                         <input type="hidden" name="status_" id="status_" class="form-control form-control-sm">
@@ -125,11 +130,12 @@
                     <a href="javascript:;" class="btn btn-white" data-bs-dismiss="modal">Close</a>
                     <button type="submit" class="btn btn-success">Submit</button>
                 </div>
+                </form>
             </div>
         </div>
     </div>
 
 @section Scripts
 {
-    <script src="~/js/Eksekusi_Joblist.js"></script>
+    <script src="~/js/EksekusiJoblist.js"></script>
 }

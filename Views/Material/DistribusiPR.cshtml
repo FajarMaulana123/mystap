@@ -1,0 +1,326 @@
+﻿@{
+    ViewData["Title"] = "Distribusi PR";
+}
+
+<ol class="breadcrumb float-xl-end">
+    <li class="breadcrumb-item"><a href="javascript:void(0);"> <i data-feather="map-pin"></i></a></li>
+    <li class="breadcrumb-item active" aria-current="page"><span>Distribusi PR</span></li>
+</ol>
+<h1 class="page-header">Distribusi PR</h1>
+    <div class="panel panel-inverse">
+    <div class="accordion" id="accordion">
+        <div class="accordion-item border-0">
+            <div class="accordion-header" id="headingOne">
+                <button class="accordion-button bg-gray-900 text-white px-3 py-10px pointer-cursor" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne">
+                    <i class="fa fa-circle fa-fw text-blue me-2 fs-8px"></i>Filter
+                </button>
+            </div>
+            <div id="collapseOne" class="accordion-collapse collapse show" data-bs-parent="#accordion">
+                <div class="accordion-body bg-gray-800 text-white">
+                    <div class="row">
+                        <div class="col-md-4 mb-2">
+                            <div class="form-group">
+                                <label for="" >Project</label>
+                                <select name="project_filter" id="project_filter" class="form-control form-control-sm">
+                                    @foreach (var val in ViewBag.project)
+                                    {
+                                        <option value="@(val.revision)" data-id="@(val.id)"> @(val.description)</option>
+                                    }
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-md-4 mb-2">
+                            <div class="form-group">
+                                <label for=""></label>
+                                <select name="taoh_filter" id="taoh_filter" class="form-control form-control-sm">
+                                    <option value="T">TA</option>
+                                    <option value="O">OH</option>
+                                    <option value="R">Rutin</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-md-4 mb-2">
+                            <div class="form-group">
+                                <label for="" >LLDI</label>
+                                <select name="lld_filter" id="lld_filter" class="form-control form-control-sm">
+                                    <option value="">ALL</option>
+                                    <option value="LLDI">LLDI</option>
+                                    <option value="NON_LLDI">NON LLDI</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-4 mb-2">
+                            <div class="form-group">
+                                <label>eqTagNo</label>
+                                <input type="text" name="eqTagNo_filter" id="eqTagNo_filter" class="form-control">
+                            </div> 
+                        </div> 
+                        <div class="col-md-4 mb-2">
+                            <div class="form-group">
+                                <label>No PR</label>
+                                <input type="text" name="pr_filter" id="pr_filter" class="form-control">
+                            </div>
+                        </div>
+                        <div class="col-md-4 mb-2">
+                            <div class="form-group">
+                                <label>No Material</label>
+                                <input type="text" name="wo_filter" id="wo_filter" class="form-control">
+                            </div> 
+                        </div> 
+                    </div>
+                    <div class="row">
+                        <div class="col-md-4 mb-2">
+                            <div class="form-group">
+                                <label for="">Buyer</label>
+                                <select name="buyer_filter" id="buyer_filter" class="form-control form-control-sm">
+                                    <option value="">ALL</option>
+                                    @foreach (var val in ViewBag.buyer)
+                                    {
+                                        <option value="@(val.alias)"> @(val.alias)</option>
+                                    }
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-md-4 mb-2">
+                            <div class="form-group">
+                                <label for="">Status Pengadaan</label>
+                                <select name="status_pengadaan_filter" id="status_pengadaan_filter" class="form-control form-control-sm">
+                                    <option value="">ALL</option>
+                                    <option value="tunggu_pr">Tunggu PR</option>
+                                    <option value="evaluasi_dp3">Evaluasi DP3</option>
+                                    <option value="inquiry_harga">Inquiry Harga</option>
+                                    <option value="hps_oe">HPS OE</option>
+                                    <option value="bidder_list">Bidder List</option>
+                                    <option value="penilaian_kualifikasi">Penilaian Kualifikasi</option>
+                                    <option value="rfq">RFQ</option>
+                                    <option value="pemasukan_penawaran">Pemasukan Penawaran</option>
+                                    <option value="pembukaan_penawaran">Pembukaan Penawaran</option>
+                                    <option value="evaluasi_penawaran">Evaluasi Penawaran</option>
+                                    <option value="klarifikasi_spesifikasi">Klarifikasi Spesifikasi</option>
+                                    <option value="evaluasi_teknis">Evaluasi Teknis</option>
+                                    <option value="evaluasi_tkdn">Evaluasi TKDN</option>
+                                    <option value="negosiasi">Negosiasi</option>
+                                    <option value="lhp">LHP</option>
+                                    <option value="pengumuman_pemenang">Pengumuman Pemenang</option>
+                                    <option value="penunjuk_pemenang">Penunjukan Pemenang</option>
+                                    <option value="purchase_order">Purchase Order</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row mt-3 ">
+                        <div class="col-md-12">
+                            <button class="btn btn-primary" id="filter"> Filter</button>
+                            <button class="btn btn-warning" id="reset"> Reset</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="panel panel-inverse">
+    <div class="panel-heading">
+        <h4 class="panel-title">Data List PR</h4>
+        <div class="panel-heading-btn">
+            <a href="javascript:;" class="btn btn-xs btn-icon btn-default" data-toggle="panel-expand"><i class="fa fa-expand"></i></a>
+            <a href="javascript:;" class="btn btn-xs btn-icon btn-warning" data-toggle="panel-collapse"><i class="fa fa-minus"></i></a>
+        </div>
+    </div> 
+    <div class="panel-body">
+        <div class="table-responsive ">
+            <table id="table" class="table small table-striped table-bordered dataTables_wrapper" width="100%">
+                <thead>
+                    <tr>
+                        <th><input class="form-check-input check-all" name="check-all" type="checkbox" /></th>
+                        <th>PR</th>
+                        <th>PR Item</th>
+                        <th>Qty PR</th>
+                        <th>Release Date</th>
+                        <th>Order</th>
+                        <th>Material No</th>
+                        <th>Material</th>
+                        <th>PO</th>
+                        <th>LLD</th>
+                        <th>Equipment</th>
+                        @* <th>Eqp. Cat</th>
+                        <th>Manufacturer</th> *@
+                        <th>Buyer</th>
+                        @*  <th>Status PR</th>*@
+                        <th>Doc PR</th>
+                        <th>DT TA</th>
+                        <th>DT INV</th>
+                        <th>DT PURCH</th>
+                        <th>Status Pengadaan</th>
+                        <th>Keterangan</th>
+                    </tr>
+                </thead>
+                    
+            </table>
+        </div>
+    </div>
+</div>
+
+@*<div class="modal fade" id="buyer" tabindex="-1" role="dialog" aria-labelledby="ModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-sm" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title judul-modal" id="Modal">Set Buyer</h5>
+                <button type="button" class="btn-close"  data-bs-dismiss="modal" aria-label="Close">
+                </button>
+            </div>
+            <form id="buyer-form">
+            <div class="modal-body">   
+                <div class="row">
+                    <div class="col-md-12 mb-2">
+                        <div class="form-group">
+                            <label>Buyer</label>
+                            <select name="buyer" id="buyer" class="form-control form-control-sm">
+                                <option value="">- Pilih Buyer -</option>
+                               
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <a href="javascript:;" class="btn btn-white" data-bs-dismiss="modal">Close</a>
+                <button type="submit" class="btn btn-success">Submit</button>
+            </div>
+            </form>
+        </div>
+    </div>
+</div> *@
+
+<div class="modal fade" id="status" tabindex="-1" role="dialog" aria-labelledby="ModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-sm" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title judul-modal" id="Modal"></h5>
+                <button type="button" class="btn-close"  data-bs-dismiss="modal" aria-label="Close">
+                </button>
+            </div>
+            <form id="status-form">
+            <div class="modal-body">    
+                <input type="hidden" name="hidden_status" id="hidden_status" value="add">   
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="form-group mb-2">
+                            <label>Buyer</label>
+                            <select name="buyer" id="buyer" class="form-control form-control-sm">
+                                <option value="">- Pilih Buyer -</option>
+                                    @foreach (var val in ViewBag.buyer)
+                                    {
+                                        <option value="@(val.alias)"> @(val.alias)</option>
+                                    }
+                            </select>
+                        </div>
+                        <div class="form-group mb-2">
+                            <label>Status Pengadaan</label>
+                            <select name="status_pengadaan" id="status_pengadaan" class="form-control form-control-sm">
+                                <option value="">- Pilih Status Pengadaan -</option>
+                                <option value="tunggu_pr" data-dt = "52">Tunggu PR</option>
+                                <option value="evaluasi_dp3" data-dt = "49">Evaluasi DP3</option>
+                                <option value="inquiry_harga" data-dt = "48">Inquiry Harga</option>
+                                <option value="hps_oe" data-dt = "34">HPS/OE</option>
+                                <option value="bidder_list" data-dt = "32">Bidder List</option>
+                                <option value="penilaian_kualifikasi" data-dt = "31">Penilaian Kualifikasi</option>
+                                <option value="rfq" data-dt = "30">RFQ</option>
+                                <option value="pemasukan_penawaran" data-dt = "24">Pemasukan Penawaran</option>
+                                <option value="pembukaan_penawaran" data-dt = "23">Pembukaan Penawaran</option>
+                                <option value="evaluasi_penawaran" data-dt = "23">Evaluasi Penawaran</option>
+                                <option value="klarifikasi_spesifikasi" data-dt = "23">Klarifikasi Spesifikasi</option>
+                                <option value="evaluasi_teknis" data-dt = "23">Evaluasi Teknis</option>
+                                <option value="evaluasi_tkdn" data-dt = "23">Evaluasi TKDN</option>
+                                <option value="negosiasi" data-dt = "16">Negosiasi</option>
+                                <option value="lhp" data-dt = "9">LHP</option>
+                                <option value="pengumuman_pemenang" data-dt = "7">Pengumuman Pemenang</option>
+                                <option value="penunjuk_pemenang" data-dt = "4">Penunjuk Pemenang</option>
+                                <option value="purchase_order" data-dt = "3">Purchase Order</option>
+                            </select>
+                        </div>
+                        <div class="form-group mb-2">
+                            <label class="form-label col-form-label">Delivery Time</label>
+                            <div class="input-group">
+                                <input type="number" name="dt_" id="dt_" class="form-control form-control-sm">
+                                <span class="input-group-text"> / Hari</span>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="">Keterangan</label>
+                            <textarea name="keterangan" id="keterangan" cols="30" rows="10" class="form-control form-control-sm"></textarea>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <a href="javascript:;" class="btn btn-white" data-bs-dismiss="modal">Close</a>
+                <button type="submit" class="btn btn-success">Submit</button>
+            </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="dt" tabindex="-1" role="dialog" aria-labelledby="ModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-sm" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title " id="Modal">Delivery Time</h5>
+                <button type="button" class="btn-close"  data-bs-dismiss="modal" aria-label="Close">
+                </button>
+            </div>
+            <form id="dt-form">
+            <div class="modal-body">   
+                <div class="row">
+                    <div class="col-md-12 mb-2">
+                        <div class="form-group">
+                            <label for="">Delivery Time</label>
+                            <input type="number" name="dt" id="dt" class="form-control form-control-sm">
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <a href="javascript:;" class="btn btn-white" data-bs-dismiss="modal">Close</a>
+                <button type="submit" class="btn btn-success">Submit</button>
+            </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@*  <div class="modal fade" id="keterangan" tabindex="-1" role="dialog" aria-labelledby="ModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-sm" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title " id="Modal">Keterangan</h5>
+                <button type="button" class="btn-close"  data-bs-dismiss="modal" aria-label="Close">
+                </button>
+            </div>
+            <form id="keterangan-form">
+            <div class="modal-body">   
+                <div class="row">
+                    <div class="col-md-12 mb-2">
+                        <div class="form-group">
+                            <label for="">Keterangan</label>
+                            <textarea name="keterangan" id="keterangan" cols="30" rows="10" class="form-control form-control-sm"></textarea>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <a href="javascript:;" class="btn btn-white" data-bs-dismiss="modal">Close</a>
+                <button type="submit" class="btn btn-success">Submit</button>
+            </div>
+            </form>
+        </div>
+    </div>
+</div>  *@
+
+@section Scripts
+{
+    <script src="~/js/DistribusiPR.js"></script>
+}
