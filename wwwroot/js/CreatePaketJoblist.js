@@ -49,7 +49,13 @@
             },
         ],
         columns: [
-            { data: 'check', name: 'check', orderable: false, },
+            {
+                data: 'check', name: 'check', orderable: false,
+                "render": function (data, type, full, meta) {
+                    var status = '<div class="form-check"><input class="form-check-input check" name="check" type="checkbox" value="' + full.d.id + '"/></div>';
+                    return status;
+                },
+            },
             // {
             //     class: 'dt-control',
             //     orderable: false,
@@ -57,33 +63,127 @@
             //     defaultContent: '',
             // },
             // { data: 'DT_RowIndex', name: 'DT_RowIndex', orderable: false, searchable: false },
-            { data: 'eqTagNo', name: 'joblist.eqTagNo' },
-            { data: 'jobDesc', name: 'jobDesc' },
-            { data: 'alias', name: 'users.alias' },
-            { data: 'status', name: 'status' },
+            { data: 'eqTagNo', name: 'eqTagNo' },
+            {
+                render: function (data, type, full, meta) {
+                    return full.d.jobDesc;
+                }
+            },
+            {
+                render: function (data, type, full, meta) {
+                    return full.alias;
+                }
+            },
+            {
+                data: 'status', name: 'status', 
+                render: function (data, type, full, meta) {
+
+                    var p = (full.d.project == 1) ? '<span class="badge bg-primary">Project</span>' : '';
+                    var cp = (full.d.critical_job == 1) ? '<span class="badge bg-danger">Critical Job</span>' : '';
+                    var f = (full.d.freezing == 1) ? '<span class="badge bg-info">Freezing</span>' : '';
+                    var status = p + ' ' + cp + ' ' + f;
+                    return status;
+
+                },
+            },
             // {data: 'no_memo', name: 'no_memo', orderable: false, searchable: false},
             {
                 data: 'isjasa',
                 name: 'isjasa',
+                render: function (data, type, full, meta) {
+                    var d = (full.d.jasa == 1) ? '<i class="fas fa-check-square text-primary"></i>' : '-';
+                    return d;
+                }
             },
             // {data: 'noPaket', name: 'noPaket', orderable: false, searchable: false},
             // {data: 'judul_paket', name: 'judul_paket', orderable: false, searchable: false},
             // {data: 'wo_jasa', name: 'wo_jasa', orderable: false, searchable: false},
             // {data: 'no_po', name: 'no_po', orderable: false, searchable: false},
             // {data: 'no_sp', name: 'no_sp', orderable: false, searchable: false},
-            { data: 'status_jasa', name: 'status_jasa' },
+            {
+                data: 'status_jasa', name: 'status_jasa',
+                render: function (data, type, full, meta) {
+                    var s = "";
+                    if (full.d.status_jasa != null) {
+                        if (full.d.status_jasa == 'COMPLETED') {
+                            s = '<span class="badge bg-success shadow-none">Completed</span>';
+                        } else if (full.d.status_jasa == 'NOT_COMPLETED') {
+                            s = '<span class="badge bg-warning shadow-none">Not Completed</span>';
+                        } else if (full.d.status_jasa == 'NOT_PLANNED') {
+                            s = '<span class="badge bg-dark shadow-none">Not Planned</span>';
+                        } else {
+                            s = '<span class="badge bg-danger shadow-none">Not Identify</span>';
+                        }
+                    }
+                    return s;
+
+                },
+            },
             {
                 data: 'ismaterial',
                 name: 'ismaterial',
+                render: function (data, type, full, meta) {
+                    var d = (full.d.material == 1) ? '<i class="fas fa-check-square text-primary"></i>' : '-';
+                    return d;
+                }
             },
             // {data: 'order', name: 'order', orderable: false, searchable: false},
-            { data: 'status_material', name: 'status_material' },
+            {
+                data: 'status_material', name: 'd.status_material',
+                render: function (data, type, full, meta) {
+                    var s = "";
+                    if (full.d.status_material != null) {
+                        if (full.d.status_material == 'COMPLETED') {
+                            s = '<span class="badge bg-success shadow-none">Completed</span>';
+                        } else if (full.d.status_material == 'NOT_COMPLETED') {
+                            s = '<span class="badge bg-warning shadow-none">Not Completed</span>';
+                        } else if (full.d.status_material == 'NOT_PLANNED') {
+                            s = '<span class="badge bg-dark shadow-none">Not Planned</span>';
+                        } else {
+                            s = '<span class="badge bg-danger shadow-none">Not Identify</span>';
+                        }
+                    }
+                    return s;
+                }
+            },
             // {data: 'ket_status_material', name: 'ket_status_material'},
-            { data: 'all_in_kontrak', name: 'all_in_kontrak' },
-            { data: 'lldi', name: 'lldi' },
+            {
+                data: 'all_in_kontrak', name: 'd.all_in_kontrak',
+                render: function (data, type, full, meta) {
+                    var d = (full.d.all_in_kontrak == 1) ? '<i class="fas fa-check-square text-primary"></i>' : '-';
+                    return d;
+                }
+            },
+            {
+                data: 'lldi', name: 'd.lldi',
+                render: function (data, type, full, meta) {
+                    var d = (full.d.lldi == 1) ? '<i class="fas fa-check-square text-primary"></i>' : '-';
+                    return d;
+                }
+            },
             // {data: 'alasan', name: 'alasan'},
-            { data: 'status_job', name: 'status_job' },
-            { data: 'disiplin', name: 'disiplin' },
+            {
+                data: 'status_job', name: 'd.status_job',
+                render: function (data, type, full, meta) {
+                    var s = "";
+                    if (full.d.status_job == 'COMPLETED') {
+                        s = '<span class="badge bg-success shadow-none">Completed</span>';
+                    } else if (full.d.status_job == 'NOT_COMPLETED') {
+                        s = '<span class="badge bg-warning shadow-none">Not Completed</span>';
+                    } else if (full.d.status_job == 'NOT_PLANNED') {
+                        s = '<span class="badge bg-dark shadow-none">Not Planned</span>';
+                    } else {
+                        s = '<span class="badge bg-danger shadow-none">Not Identify</span>';
+                    }
+                    return s;
+
+                },
+            },
+            {
+                render: function (data, type, full, meta) {
+                    return full.d.disiplin;
+                }
+            },
             // {
             //     data: 'action', 
             //     name: 'action', 

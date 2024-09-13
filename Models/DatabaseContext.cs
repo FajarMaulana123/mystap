@@ -23,6 +23,7 @@ namespace mystap.Models
         public DbSet<Joblist_Detail> joblist_Detail { get; set; }
         public DbSet<JoblistDetailMemo> joblistDetailMemo { get; set; }
         public DbSet<JoblistDetailWo> joblistDetailWo { get; set; }
+        public DbSet<PaketJoblist> paketJoblist { get; set; }
         public DbSet<ContractTracking> contractTracking { get; set; }
         public DbSet<Durasi> durasi { get; set; }
         public DbSet<Memo> memo { get; set; }
@@ -51,6 +52,7 @@ namespace mystap.Models
         public DbSet<ViewDetailMaterial> view_detail_material { get; set;}
         public DbSet<ViewJoblist> view_joblist { get; set; }
         public DbSet<ViewPlanningJoblist> viewPlanningJoblist { get; set; }
+        public DbSet<ViewPaketJoblist> viewPaketJoblist { get; set; }
         public DbSet<ViewCountEksekusi> viewCountEksekusi { get; set; }
         public DbSet<ViewReservasi> viewReservasi { get; set; }
         public DbSet<ViewOutstandingReservasi> viewOutstandingReservasi { get; set; }

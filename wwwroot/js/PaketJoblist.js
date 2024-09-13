@@ -1,4 +1,5 @@
-﻿$(document).ready(function () {
+﻿
+$(document).ready(function () {
     $.ajaxSetup({
         headers: {
             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -42,15 +43,42 @@
             { data: 'no_memo', name: 'no_memo' },
             { data: 'disiplin', name: 'disiplin' },
             { data: 'total', name: 'total' },
-            { data: 'status', name: 'status' },
-            { data: 'action', name: 'action', orderable: false, searchable: false },
+            {
+                data: 'status_tagno', name: 'status_tagno',
+                render: function (data, type, full, meta) {
+                    var s = "";
+                    if (full.status_tagno == 'ready') {
+                        s = '<span class="badge bg-success">Ready</span>';
+                    } else if (full.status_tagno == 'not_ready') {
+                        s = '<span class="badge bg-danger">Not Ready</span>';
+                    } else if (full.status_tagno == 'not_identify') {
+                        s = 'N/R';
+                    } else if (full.status_tagno == 'not_execute') {
+                        s = '<span class="badge bg-black">Not Execute</span>';
+                    } else {
+                        s = '<span class="badge bg-secondary">Undefined</span>';
+                    }
+
+                    return s;
+
+                },            },
+            {
+                orderable: false, searchable: false,
+                render: function (data,type,full,meta) {
+                    var s = '<div class="d-flex"><a href="edit_paket_joblist_/' + full.id_paket + '" class="btn btn-xs waves-effect waves-light btn-outline-warning edit mr-1" ><i class="fas fa-pen fa-xs"></i></a>' +
+                        '<a href="javascript:void(0);" style="margin-left:5px" class="btn btn-xs waves-effect waves-light btn-outline-danger delete " data-id="' + full.id_paket + '"><i class="fas fa-trash fa-xs"></i></a></div>';
+                    return s;
+                }
+            },
         ],
         columnDefs: [
             { className: 'text-center', targets: [5, 6] },
-            (user_auth == 'user') ? { "visible": false, "targets": [7] } : {},
+            /*(user_auth == 'user') ? { "visible": false, "targets": [7] } : {},*/
         ],
         order: [],
-        buttons: (user_auth == 'superadmin' || user_auth == 'admin') ? [{
+        buttons:
+            //(user_auth == 'superadmin' || user_auth == 'admin') ? [
+        [{
             text: '<i class="far fa-edit"></i> New',
             className: 'btn btn-success',
             action: function (e, dt, node, config) {
@@ -68,22 +96,43 @@
                 orthogonal: 'fullNotes'
             }
         },
-        ] : [{
-            extend: 'excel',
-            title: 'Data Paket Joblist',
-            className: 'btn',
-            text: '<i class="far fa-file-code"></i> Excel',
-            titleAttr: 'Excel',
-            exportOptions: {
-                columns: ':not(:last-child)',
-                orthogonal: 'fullNotes'
-            }
-        }]
+        ] 
+        //: [{
+        //    extend: 'excel',
+        //    title: 'Data Paket Joblist',
+        //    className: 'btn',
+        //    text: '<i class="far fa-file-code"></i> Excel',
+        //    titleAttr: 'Excel',
+        //    exportOptions: {
+        //        columns: ':not(:last-child)',
+        //        orthogonal: 'fullNotes'
+        //    }
+        //}]
     });
 
     function format(d) {
-        return '<div style="background-color: lightblue;padding: 10px"><h5>Detail Paket JobList :</h5>' +
-            d.detail_ + '</div>';
+        
+        var div = $('<div/>')
+            .addClass('loading')
+            .text('Loading...');
+
+        $.ajax({
+            url: '/detail_paket_joblist',
+            type: 'POST',
+            data: {
+                id_project: d.id_project,
+                project_rev: d.project_rev,
+                id_paket: d.id_paket,
+            },
+            dataType: 'json',
+            success: function (json) {
+                div
+                    .html(json.data)
+                    .removeClass('loading');
+            }
+        });
+
+        return div;
     }
 
     $('#table tbody').on('click', 'td.dt-control', function () {

@@ -237,7 +237,7 @@ app.UseEndpoints(endpoints =>
     endpoints.MapControllerRoute(
         name: "update_joblist",
         pattern: "update_joblist/{id?}",
-        defaults: new { controller = "joblist", action = "UpdateJoblist" });
+        defaults: new { controller = "Joblist", action = "UpdateJoblist" });
 
     endpoints.MapControllerRoute(
         name: "create_joblist_",
@@ -343,6 +343,46 @@ app.UseEndpoints(endpoints =>
         name: "count_eksekusi",
         pattern: "count_eksekusi",
         defaults: new { controller = "Joblist", action = "CountEksekusi" });
+
+    endpoints.MapControllerRoute(
+        name: "paket_joblist",
+        pattern: "paket_joblist",
+        defaults: new { controller = "Joblist", action = "PaketJoblist" });
+
+    endpoints.MapControllerRoute(
+        name: "paket_joblist_",
+        pattern: "paket_joblist_",
+        defaults: new { controller = "Joblist", action = "PaketJoblist_" });
+
+    endpoints.MapControllerRoute(
+       name: "detail_paket_joblist",
+       pattern: "detail_paket_joblist",
+       defaults: new { controller = "Joblist", action = "GetDetailPaket" });
+
+    endpoints.MapControllerRoute(
+        name: "create_paket_joblist_",
+        pattern: "create_paket_joblist_",
+        defaults: new { controller = "Joblist", action = "CreatePaketJoblist" });
+
+    endpoints.MapControllerRoute(
+        name: "create_paket_joblist",
+        pattern: "create_paket_joblist",
+        defaults: new { controller = "Joblist", action = "CreatePaketJoblist_" });
+
+    endpoints.MapControllerRoute(
+        name: "edit_paket_joblist_",
+        pattern: "edit_paket_joblist_/{id?}",
+        defaults: new { controller = "Joblist", action = "UpdatePaketJoblist" });
+
+    endpoints.MapControllerRoute(
+        name: "edit_paket_joblist",
+        pattern: "edit_paket_joblist",
+        defaults: new { controller = "Joblist", action = "UpdatePaketJoblist_" });
+
+    endpoints.MapControllerRoute(
+        name: "list_selected",
+        pattern: "list_selected",
+        defaults: new { controller = "Joblist", action = "ListSelected" });
 
     endpoints.MapControllerRoute(
        name: "rapat",
@@ -654,10 +694,11 @@ app.UseEndpoints(endpoints =>
        pattern: "delete_bom",
        defaults: new { controller = "Data", action = "Delete_Bom" });
 
+    //Material
     endpoints.MapControllerRoute(
-     name: "material",
-     pattern: "material",
-     defaults: new { controller = "Material", action = "Material" });
+        name: "material",
+        pattern: "material",
+        defaults: new { controller = "Material", action = "Material" });
 
     endpoints.MapControllerRoute(
        name: "material_",

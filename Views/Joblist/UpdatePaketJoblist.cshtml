@@ -1,5 +1,8 @@
-﻿@{
+﻿@removeTagHelper Microsoft.AspNetCore.Mvc.TagHelpers.OptionTagHelper, Microsoft.AspNetCore.Mvc.TagHelpers
+
+@{
     ViewData["Title"] = "Edit Paket Joblist";
+    var selected_project = "";
 }
 <ol class="breadcrumb float-xl-end">
         <li class="breadcrumb-item"><a href="javascript:void(0);">   <i data-feather="file"></i></a></li>
@@ -24,8 +27,19 @@
                                 <div class="form-group">
                                     <label for="">Project</label>
                                     <select name="project_filter" id="project_filter" class="form-control form-control-sm" disabled>
-                                        
-                                    </select>
+                                    @foreach (var val in ViewBag.project)
+                                    {
+                                        @if (ViewBag.paket_joblist.projectID == val.id)
+                                        {
+                                            selected_project = "selected";
+                                        }
+                                        else
+                                        {
+                                            selected_project = "";
+                                        }
+                                        <option value="@(val.id)" data-desc="@(val.description)" @(selected_project)>@(val.description)</option>
+                                    }
+                                </select>
                                 </div> 
                             </div>
                             <div class="col-md-12 mb-2">
@@ -33,10 +47,10 @@
                                     <label for="">No. Paket</label>
                                     <div class="row">
                                         <div class="col-md-8">
-                                            <input type="number" name="no_paket" id="no_paket" class="form-control form-control-sm " value="{{$data['paket_joblist']->no_paket}}">
+                                            <input type="number" name="no_paket" id="no_paket" class="form-control form-control-sm " value="@(ViewBag.paket_joblist.no_paket)">
                                         </div>
                                         <div class="col-md-4 form-check mt-2">
-                                            <input class="form-check-input" name="additional" type="checkbox" value="1" {{($data['paket_joblist']->additional == 1) ? 'checked' : '' }}/>
+                                            <input class="form-check-input" name="additional" type="checkbox" value="1" @((ViewBag.paket_joblist.additional == 1) ? "checked" : "") />
                                             <label class="form-check-label" for="">Additional</label>
                                         </div>
                                     </div>
@@ -45,13 +59,13 @@
                             <div class="col-md-12 mb-2">
                                 <div class="form-group">
                                     <label for="">TagNo. Joblist</label>
-                                    <input type="text" name="tag_no" id="tag_no" class="form-control form-control-sm" value="{{$data['paket_joblist']->tag_no}}">
+                                <input type="text" name="tag_no" id="tag_no" class="form-control form-control-sm" value="@(ViewBag.paket_joblist.tag_no)">
                                 </div>
                             </div>
                             <div class="col-md-12 mb-2">
                                 <div class="form-group">
                                     <label for="">No Memo</label>
-                                    <input type="text" name="no_memo" id="no_memo" class="form-control form-control-sm" value="{{$data['paket_joblist']->no_memo}}">
+                                <input type="text" name="no_memo" id="no_memo" class="form-control form-control-sm" value="@(ViewBag.paket_joblist.no_memo)">
                                 </div>
                             </div>
                             <div class="col-md-12 mb-2">
@@ -59,11 +73,11 @@
                                     <label for="">Disiplin</label>
                                     <select name="disiplin_paket" id="disiplin_paket" class="form-control form-control-sm">
                                         <option value="">- Pilih Disiplin -</option>
-                                        <option value="STA" {{($data['paket_joblist']->disiplin == 'STA') ? 'selected' : ''}}>STATIONARY</option>
-                                        <option value="ROT" {{($data['paket_joblist']->disiplin == 'ROT') ? 'selected' : ''}}>ROTATING</option>
-                                        <option value="CIV" {{($data['paket_joblist']->disiplin == 'CIV') ? 'selected' : ''}}>CIVIL</option>
-                                        <option value="INS" {{($data['paket_joblist']->disiplin == 'INS') ? 'selected' : ''}}>INSTRUMENT</option>
-                                        <option value="ELEC" {{($data['paket_joblist']->disiplin == 'ELEC') ? 'selected' : ''}}>ELECTRICAL</option>
+                                        <option value="STA" @((ViewBag.paket_joblist.disiplin == "STA") ? "selected" : "")>STATIONARY</option>
+                                        <option value="ROT" @((ViewBag.paket_joblist.disiplin == "ROT") ? "selected" : "")>ROTATING</option>
+                                        <option value="CIV" @((ViewBag.paket_joblist.disiplin == "CIV") ? "selected" : "")>CIVIL</option>
+                                        <option value="INS" @((ViewBag.paket_joblist.disiplin == "INS") ? "selected" : "")>INSTRUMENT</option>
+                                        <option value="ELEC" @((ViewBag.paket_joblist.disiplin == "ELEC") ? "selected" : "")>ELECTRICAL</option>
                                     </select>
                                 </div>
                             </div>
@@ -71,7 +85,7 @@
                         <div class="row">
                             <div style="align-items: right">
                                 <a href="/paket_joblist" class="btn btn-warning">Kembali</a>
-                                {{-- <a href="/create_joblist" class="btn btn-primary"><i class="far fa-edit"></i> New</a> --}}
+                                @* {{-- <a href="/create_joblist" class="btn btn-primary"><i class="far fa-edit"></i> New</a> --}} *@
                                 <button type="submit" class="btn btn-info">Submit</button>
                             </div>
                         </div>
@@ -89,7 +103,7 @@
                     </div>
                 </div> 
                 <div class="panel-body">
-                    {{-- <div class="row mb-2">
+                 @*    {{-- <div class="row mb-2">
                         <label for="" class="col-1" ><b>Filter :</b></label>
                         <div class="col-3">
                             <select name="project_filter" id="project_filter" class="form-control form-control-sm">
@@ -112,14 +126,14 @@
                         <div class="col-2">
                             <button class="btn btn-primary btn-sm" style="width:100%" id="filter"> Filter</button>
                         </div>
-                    </div> --}}
+                    </div> --}} *@
                     <div class="row">
                         <div class="table-responsive">
                             <table id="table" class="table small table-striped table-bordered dataTables_wrapper " --bs-table-accent-bg: transparant; width="100%">
                                 <thead>
                                     <tr>
                                         <th><input class="form-check-input check-all" name="check-all" type="checkbox" /></th>
-                                        {{-- <th></th> --}}
+                                       @*  {{-- <th></th> --}} *@
                                         <th>TagNo</th>
                                         <th width="10%">Desc</th>
                                         <th>PIC</th>
