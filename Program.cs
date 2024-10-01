@@ -685,6 +685,36 @@ app.UseEndpoints(endpoints =>
        defaults: new { controller = "Contract", action = "Delete_DurasiStep" });
 
     endpoints.MapControllerRoute(
+         name: "contracttracking",
+         pattern: "contracttracking",
+         defaults: new { controller = "Contract", action = "ContractTracking" });
+
+    endpoints.MapControllerRoute(
+         name: "contract_",
+         pattern: "contract_",
+         defaults: new { controller = "Contract", action = "ContractTracking_" });
+
+    endpoints.MapControllerRoute(
+         name: "create_contract",
+         pattern: "create_contract",
+         defaults: new { controller = "Contract", action = "CreateContract" });
+
+    endpoints.MapControllerRoute(
+        name: "create_contracttracking",
+        pattern: "create_contracttracking",
+        defaults: new { controller = "Contract", action = "CreateContract_" });
+
+    endpoints.MapControllerRoute(
+         name: "getKatTender",
+         pattern: "getKatTender",
+         defaults: new { controller = "Contract", action = "GetKatTender" });
+
+    endpoints.MapControllerRoute(
+         name: "get_sow",
+         pattern: "get_sow",
+         defaults: new { controller = "Contract", action = "GetSow" });
+
+    endpoints.MapControllerRoute(
       name: "user",
       pattern: "user",
       defaults: new { controller = "User", action = "Users" });

@@ -10,6 +10,7 @@ namespace mystap.Models
         public string? kat_tender { get; set; }
         public int? susun_kak { get; set; }
         public int? susun_oe { get; set; }
+        public int? persetujuan { get; set; }
         public int? kirim_ke_co { get; set; }
         public int? pengumuman_pendaftaran { get; set; }
         public int? sertifikasi { get; set; }
@@ -27,6 +28,7 @@ namespace mystap.Models
         public int? jawaban_sanggah { get; set; }
         public int? tunjuk_pemenang { get; set; }
         public int? proses_spb { get; set; }
+        private int? total { get; set; }
 
         [ForeignKey("id_project")]
         public Project project { get; set; }

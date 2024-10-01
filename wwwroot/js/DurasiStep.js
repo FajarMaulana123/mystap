@@ -36,6 +36,7 @@
             { data: 'kat_tender', name: 'kat_tender' },
             { data: 'susun_kak', name: 'susun_kak' },
             { data: 'susun_oe', name: 'susun_oe' },
+            { data: 'persetujuan', name: 'persetujuan' },
             { data: 'kirim_ke_co', name: 'kirim_ke_co' },
             { data: 'pengumuman_pendaftaran', name: 'pengumuman_pendaftaran' },
             { data: 'sertifikasi', name: 'sertifikasi' },
@@ -56,7 +57,7 @@
 
             {
                 "render": function (data, type, full, meta) {
-                    return '<div class="d-flex"><a href="javascript:void(0);" class="btn btn-warning  btn-xs edit mr-1" data-id="'+ full.id + '" data-id_project="' + full.id_project + '" data-kat_tender="' + full.kat_tender + '" data-susun_kak="' + full.susun_kak + '" data-susun_oe="' + full.susun_oe + '" data-kirim_ke_co="' + full.kirim_ke_co + '" data-pengumuman_pendaftaran="' + full.pengumuman_pendaftaran + '" data-sertifikasi="' + full.sertifikasi + '" data-prakualifikasi="' + full.prakualifikasi + '" data-undangan="' + full.undangan + '" data-pemberian="' + full.pemberian + '" data-penyampaian="' + full.penyampaian + '" data-pembukaan="' + full.pembukaan + '" data-evaluasi="' + full.evaluasi + '" data-negosiasi="' + full.negosiasi + '" data-usulan="' + full.usulan + '" data-keputusan="' + full.keputusan + '" data-pengumuman_pemenang="' + full.pengumuman_pemenang + '" data-pengajuan_sanggah="' + full.pengajuan_sanggah + '" data-jawaban_sanggah="' + full.jawaban_sanggah + '" data-tunjuk_pemenang="' + full.tunjuk_pemenang + '" data-proses_spb="' + full.proses_spb + '"><i class="fas fa-pen fa-xs"></i></a><a href = "javascript:void(0);" style = "margin-left:5px" class="btn btn-danger btn-xs delete " data-id="' + full.id + '" > <i class="fas fa-trash fa-xs"></i></a ></div > ';
+                    return '<div class="d-flex"><a href="javascript:void(0);" class="btn btn-warning  btn-xs edit mr-1" data-id="' + full.id + '" data-id_project="' + full.id_project + '" data-kat_tender="' + full.kat_tender + '" data-susun_kak="' + full.susun_kak + '" data-susun_oe="' + full.susun_oe + '" data-persetujuan="' + full.persetujuan + '" data-kirim_ke_co="' + full.kirim_ke_co + '" data-pengumuman_pendaftaran="' + full.pengumuman_pendaftaran + '" data-sertifikasi="' + full.sertifikasi + '" data-prakualifikasi="' + full.prakualifikasi + '" data-undangan="' + full.undangan + '" data-pemberian="' + full.pemberian + '" data-penyampaian="' + full.penyampaian + '" data-pembukaan="' + full.pembukaan + '" data-evaluasi="' + full.evaluasi + '" data-negosiasi="' + full.negosiasi + '" data-usulan="' + full.usulan + '" data-keputusan="' + full.keputusan + '" data-pengumuman_pemenang="' + full.pengumuman_pemenang + '" data-pengajuan_sanggah="' + full.pengajuan_sanggah + '" data-jawaban_sanggah="' + full.jawaban_sanggah + '" data-tunjuk_pemenang="' + full.tunjuk_pemenang + '" data-proses_spb="' + full.proses_spb + '"><i class="fas fa-pen fa-xs"></i></a><a href = "javascript:void(0);" style = "margin-left:5px" class="btn btn-danger btn-xs delete " data-id="' + full.id + '" > <i class="fas fa-trash fa-xs"></i></a ></div > ';
                 },
                 orderable: false,
                 searchable: false
@@ -68,7 +69,7 @@
         // },
         columnDefs: [
             {
-                targets: [2, 5, 9],
+                targets: [2, 6, 10],
                 className: 'text-wrap width-200'
 
 
@@ -91,7 +92,7 @@
 
         {
             extend: 'excel',
-            title: 'Project',
+            title: 'SLA / Durasi Step',
             className: 'btn btn-outline-primary',
             text: '<i class="far fa-file-code"></i> Excel',
             titleAttr: 'Excel',
@@ -129,6 +130,7 @@
         $('#kat_tender').val($(this).data('kat_tender'));
         $('#susun_kak').val($(this).data('susun_kak'));
         $('#susun_oe').val($(this).data('susun_oe'));
+        $('#persetujuan').val($(this).data('persetujuan'));
         $('#kirim_ke_co').val($(this).data('kirim_ke_co'));
         $('#pengumuman_pendaftaran').val($(this).data('pengumuman_pendaftaran'));
         $('#sertifikasi').val($(this).data('sertifikasi'));
@@ -206,30 +208,30 @@
         errorClass: "is-invalid",
         // validClass: "is-valid",
         rules: {
-            plant: {
-                required: true
-            },
-            year: {
-                required: true
-            },
-            execution_date: {
-                required: true
-            },
-            finish_date: {
-                required: true
-            },
-            revision: {
-                required: true
-            },
-            description: {
-                required: true
-            },
-            durasiTABrick: {
-                required: true
-            },
-            section: {
-                required: true
-            }
+            //plant: {
+            //    required: true
+            //},
+            //year: {
+            //    required: true
+            //},
+            //execution_date: {
+            //    required: true
+            //},
+            //finish_date: {
+            //    required: true
+            //},
+            //revision: {
+            //    required: true
+            //},
+            //description: {
+            //    required: true
+            //},
+            //durasiTABrick: {
+            //    required: true
+            //},
+            //section: {
+            //    required: true
+            //}
 
 
         },
@@ -270,7 +272,7 @@
                     if (data.result == false) {
                         Swal.fire({
                             title: 'Gagal',
-                            text: "Gagal Tambah / Update Project",
+                            text: "Gagal Tambah / Update SLA",
                             icon: 'error',
                             // timer: 3000,
                             showCancelButton: false,

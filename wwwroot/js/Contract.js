@@ -8,10 +8,10 @@
             pic_filter: $('#pic_filter').val()
         },
         success: function (res) {
-            $('.on_track').html(res.on_track);
-            $('.potensi_delay').html(res.potensi_delay);
-            $('.delay').html(res.delay);
-            $('.sp').html(res.sp);
+            $('.on_track').html(res.data.on_track);
+            $('.potensi_delay').html(res.data.potensi_delay);
+            $('.delay').html(res.data.delay);
+            $('.sp').html(res.data.sp);
         }
     })
 }
@@ -42,39 +42,219 @@ $(document).ready(function () {
             }
         },
         columns: [
+            //{
+            //    "data": null, orderable: false, "render": function (data, type, full, meta) {
+            //        return meta.row + 1;
+            //    }
+            //},
+            { data: 'noPaket', name: 'noPaket' },
             {
-                "data": null, orderable: false, "render": function (data, type, full, meta) {
-                    return meta.row + 1;
+                render: function (data, type, full, meta) {
+                    return full.wo + " " + full.pr + " " + full.po + " " + full.noSP;
                 }
             },
-            { data: 'noPaket', name: 'noPaket' },
-            { data: 'nomor', name: 'nomor' },
 
             { data: 'judulPekerjaan', name: 'judulPekerjaan' },
             { data: 'pic', name: 'pic' },
-            { data: 'targetCO', name: 'targetCO' },
-            { data: 'aktualCO', name: 'aktualCO' },
-            { data: 'floatDaysCO', name: 'floatDaysCO' },
-            { data: 'targetBukaPH', name: 'targetBukaPH' },
-            { data: 'aktualBukaPH', name: 'aktualBukaPH' },
-            { data: 'FDBukaPH', name: 'FDBukaPH' },
-            { data: 'targetSP', name: 'targetSP' },
-            { data: 'aktualSP', name: 'aktualSP' },
-            { data: 'FDSP', name: 'FDSP' },
-            { data: 'T.lightcurr', name: 'T.lightcurr' },
-            { data: 'deadLine', name: 'deadLine' },
+            {
+                data: 'targetCO', name: 'targetCO',
+                render: function (data, type, full, meta) {
+                    var date = full.targetCO;
+                    return date.split('T')[0];
+                }
+            },
+            {
+                data: 'aktualCO', name: 'aktualCO',
+                render: function (data, type, full, meta) {
+                    var date = full.aktualCO;
+                    if (date != null) {
+                        return date.split('T')[0];
+                    } else {
+                        return "";
+                    }
+                }
+            },
+            {
+                data: 'floatDaysCO', name: 'floatDaysCO',
+                render: function (data, type, full, meta) {
+                    const target = new Date(full.targetCO);
+                    var aktual;
+                    if (full.aktualCO != null) {
+                        aktual = new Date(full.aktualCO);
+                    } else {
+                        aktual = new Date();
+                    }
+                    const diffTime = Math.abs(target - aktual);
+                    const hari = Math.floor(diffTime / (1000 * 60 * 60 * 24)); 
+                    var isi = "";
+                    if (hari > 20) {
+                        isi = '<span class="badge bg-green-600 ">'+hari+'</span>';
+                    } else if (hari <= 20 && hari >= 0) {
+                        isi = '<span class="badge bg-warning ">'+hari+'</span>';
+                    } else if (hari < 0) {
+                        isi = '<span class="badge bg-danger ">'+hari+'</span>';
+                    } else {
+                        isi = hari;
+                    }
+
+                    return isi;
+                }
+            },
+            {
+                data: 'targetBukaPH', name: 'targetBukaPH',
+                render: function (data, type, full, meta) {
+                    var date = full.targetBukaPH;
+                    if (date != null) {
+                        return date.split('T')[0];
+                    } else {
+                        return "";
+                    }
+                }
+            },
+            {
+                data: 'aktualBukaPH', name: 'aktualBukaPH',
+                render: function (data, type, full, meta) {
+                    var date = full.aktualBukaPH;
+                    if (date != null) {
+                        return date.split('T')[0];
+                    } else {
+                        return "";
+                    }
+                }
+            },
+            {
+                data: 'FDBukaPH', name: 'FDBukaPH',
+                render: function (data, type, full, meta) {
+                    const target = new Date(full.targetBukaPH);
+                    var aktual;
+                    if (full.aktualBukaPH != null) {
+                        aktual = new Date(full.aktualBukaPH);
+                    } else {
+                        aktual = new Date();
+                    }
+                    const diffTime = Math.abs(target - aktual);
+                    const hari = Math.floor(diffTime / (1000 * 60 * 60 * 24));
+                    var isi = "";
+                    if (hari > 20) {
+                        isi = '<span class="badge bg-green-600 ">' + hari + '</span>';
+                    } else if (hari <= 20 && hari >= 0) {
+                        isi = '<span class="badge bg-warning ">' + hari + '</span>';
+                    } else if (hari < 0) {
+                        isi = '<span class="badge bg-danger ">' + hari + '</span>';
+                    } else {
+                        isi = hari;
+                    }
+
+                    return isi;
+                }
+            },
+            {
+                data: 'targetSP', name: 'targetSP',
+                render: function (data, type, full, meta) {
+                    var date = full.targetSP;
+                    if (date != null) {
+                        return date.split('T')[0];
+                    } else {
+                        return "";
+                    }
+                }
+            },
+            {
+                data: 'aktualSP', name: 'aktualSP',
+                render: function (data, type, full, meta) {
+                    var date = full.aktualSP;
+                    if (date != null) {
+                        return date.split('T')[0];
+                    } else {
+                        return "";
+                    }
+                }
+            },
+            {
+                data: 'FDSP', name: 'FDSP',
+                render: function (data, type, full, meta) {
+                    const target = new Date(full.targetSP);
+                    var aktual;
+                    if (full.aktualCO != null) {
+                        aktual = new Date(full.aktualSP);
+                    } else {
+                        aktual = new Date();
+                    }
+                    const diffTime = Math.abs(target - aktual);
+                    const hari = Math.floor(diffTime / (1000 * 60 * 60 * 24));
+                    var isi = "";
+                    if (hari > 20) {
+                        isi = '<span class="badge bg-green-600 ">' + hari + '</span>';
+                    } else if (hari <= 20 && hari >= 0) {
+                        isi = '<span class="badge bg-warning ">' + hari + '</span>';
+                    } else if (hari < 0) {
+                        isi = '<span class="badge bg-danger ">' + hari + '</span>';
+                    } else {
+                        isi = hari;
+                    }
+
+                    return isi;
+                }
+            },
+            {
+                data: 'T.lightcurr', name: 'T.lightcurr',
+                render: function (data, type, full, meta) {
+                    var isi = "";
+                    if (full.aktualSP != null) {
+                        isi = '<span class="text-primary"><i class="fa fa-circle fs-20px fa-fw me-5px"></i></span>';
+                    } else {
+                        if (full.t_light > 30) {
+                            isi = '<span class="text-green-600"><i class="fa fa-circle fs-20px fa-fw me-5px"></i></span>';
+                        } else if (full.t_light <= 30 && full.t_light > 20) {
+                            isi = '<span class="text-warning "><i class="fa fa-circle fs-20px fa-fw me-5px"></i></span>';
+                        } else if (full.t_light <= 20) {
+                            isi = '<span class="text-danger"><i class="fa fa-circle fs-20px fa-fw me-5px"></i></span>';
+                        } else {
+                            isi = "-";
+                        }
+                    }
+                    return isi;
+                }
+            },
+            {
+                data: 'deadLine', name: 'deadLine',
+                render: function (data, type, full, meta) {
+                    var date = full.deadLine;
+                    if (date != null) {
+                        return date.split('T')[0];
+                    } else {
+                        return "";
+                    }
+                }
+            },
 
             { data: 'currStat', name: 'currStat' },
             { data: 'currStatDesc', name: 'currStatDesc' },
-            { data: 'file_sp', name: 'file_sp' },
+            {
+                data: 'file_sp', name: 'file_sp',
+                render: function (data, type, full, meta) {
+                    var isi = "";
+                    if (full.file_sp != null) {
+                        isi = '<a href="'+full.file_sp+'" class="btn btn-info btn-sm" target="_blank">File</a>';
+                    } else {
+                        isi = '';
+                    }
+                    return isi;
+                }
+            },
 
             {
                 data: 'action',
                 name: 'action',
                 orderable: false,
-                searchable: false
+                searchable: false,
+                render: function (data, type, full, meta) {
+                    var actionBtn = '<div class="d-flex"><a href="/edit_contract/' + full.idPaket + '" class="btn btn-xs waves-effect waves-light btn-outline-warning edit mr-1" ><i class="fas fa-pen fa-xs"></i></a><a href="javascript:void(0);" style="margin-left:5px" class="btn btn-danger btn-xs delete " data-id="'+full.idPaket+'"><i class="fas fa-trash fa-xs"></i></a></div>';
+                    return actionBtn;
+                }
             },
         ],
+        order: [],
         columnDefs: [
 
             //    { className: 'text-center', targets: [7,11,15,16] },
@@ -107,7 +287,7 @@ $(document).ready(function () {
             },
            /* (user_auth == 'user') ? { "visible": false, "targets": [17] } : {},*/
         ],
-        buttons: (user_auth == 'superadmin' || user_auth == 'admin') ? [{
+        buttons: [{
             text: '<i class="far fa-edit"></i> New',
             className: 'btn btn-success',
             action: function (e, dt, node, config) {
@@ -133,23 +313,7 @@ $(document).ready(function () {
         },
 
 
-        ] : [{
-            extend: 'excel',
-            title: 'Kontrak Jasa',
-            className: 'btn',
-            text: '<i class="far fa-file-code"></i> Excel',
-            titleAttr: 'Excel',
-            exportOptions: {
-                columns: ':not(:last-child)',
-            }
-        },
-        {
-            text: '<i class="far fa-file"></i> Summary Progress',
-            className: 'btn btn-warning',
-            action: function (e, dt, node, config) {
-                window.location.href = 'progress';
-            }
-        }]
+        ]
 
     });
 

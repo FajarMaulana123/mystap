@@ -361,36 +361,6 @@ namespace mystap.Controllers
             }
         }
 
-        public IActionResult ContractTracking()
-        {
-            ViewBag.groups_ = _context.sowGroup
-               .Where(p => p.deleted == 0)
-               .GroupBy(x => new { x.inisial, x.groups_ })
-               .Select(z => new
-               {
-                   inisial = z.Key.inisial,
-                   groups_ = z.Key.groups_
-
-               })
-               .ToList();
-            ViewBag.sow_group = _context.sowGroup.Where(p => p.deleted != 1).ToList();
-            ViewBag.userAccount = _context.users.Where(p => p.locked != 1).Where(p => p.statPekerja == "PLANNER").Where(p => p.alias != null).Where(p => p.alias != "").Where(p => p.statPekerja == "PEKERJA").ToList();
-            ViewBag.project = _context.project.Where(p => p.deleted == 0).ToList();
-            ViewBag.unit = _context.unit
-               .Where(p => p.deleted == 0)
-               .GroupBy(x => new { x.unitCode, x.unitProses })
-               .Select(z => new
-               {
-                   unitCode = z.Key.unitCode,
-                   unitProses = z.Key.unitProses
-
-               })
-               .ToList();
-
-            return View();
-        }
-      
-       
         public IActionResult DurasiStep()
         {
             ViewBag.project = _context.project.Where(p => p.deleted == 0).Where(p => p.active == "1").ToList();
@@ -430,6 +400,7 @@ namespace mystap.Controllers
                                         description = a.project.description,
                                         kat_tender = a.kat_tender,
                                         susun_kak = a.susun_kak,
+                                        persetujuan = a.persetujuan,
                                         susun_oe = a.susun_oe,
                                         kirim_ke_co = a.kirim_ke_co,
                                         pengumuman_pendaftaran = a.pengumuman_pendaftaran,
@@ -500,6 +471,7 @@ namespace mystap.Controllers
                 durasi.kat_tender = formcollaction["kat_tender"];
                 durasi.susun_kak = Convert.ToInt32(formcollaction["susun_kak"]);
                 durasi.susun_oe = Convert.ToInt32(formcollaction["susun_oe"]);
+                durasi.persetujuan = Convert.ToInt32(formcollaction["persetujuan"]);
                 durasi.kirim_ke_co = Convert.ToInt32(formcollaction["kirim_ke_co"]);
                 durasi.pengumuman_pendaftaran = Convert.ToInt32(formcollaction["pengumuman_pendaftaran"]);
                 durasi.sertifikasi = Convert.ToInt32(formcollaction["sertifikasi"]);
@@ -550,6 +522,7 @@ namespace mystap.Controllers
                     obj.kat_tender = Request.Form["kat_tender"].FirstOrDefault();
                     obj.susun_kak = Convert.ToInt32(Request.Form["susun_kak"].FirstOrDefault());
                     obj.susun_oe = Convert.ToInt32(Request.Form["susun_oe"].FirstOrDefault());
+                    obj.persetujuan = Convert.ToInt32(Request.Form["persetujuan"].FirstOrDefault());
                     obj.kirim_ke_co = Convert.ToInt32(Request.Form["kirim_ke_co"].FirstOrDefault());
                     obj.pengumuman_pendaftaran = Convert.ToInt32(Request.Form["pengumuman_pendaftaran"].FirstOrDefault());
                     obj.sertifikasi = Convert.ToInt32(Request.Form["sertifikasi"].FirstOrDefault());
@@ -572,9 +545,9 @@ namespace mystap.Controllers
 
 
                     _context.SaveChanges();
-                    return Json(new { Results = true });
+                    return Json(new { result = true });
                 }
-                return Json(new { Results = false });
+                return Json(new { result = false });
             }
             catch
             {
@@ -582,6 +555,254 @@ namespace mystap.Controllers
             }
         }
 
-       
+        public IActionResult ContractTracking()
+        {
+            
+            ViewBag.userAccount = _context.users.Where(p => p.locked != 1).Where(p => p.statPekerja == "PLANNER").Where(p => p.alias != null).Where(p => p.alias != "").Where(p => p.statPekerja == "PEKERJA").ToList();
+            ViewBag.project = _context.project.Where(p => p.deleted == 0).Where(p => p.active == "1").ToList();
+            ViewBag.unit = _context.unit
+               .Where(p => p.deleted == 0)
+               .GroupBy(x => new { x.unitCode, x.unitProses })
+               .Select(z => new
+               {
+                   unitCode = z.Key.unitCode,
+                   unitProses = z.Key.unitProses
+
+               })
+               .ToList();
+
+            return View();
+        }
+
+        public async Task<IActionResult> ContractTracking_()
+        {
+            try
+            {
+
+                var draw = HttpContext.Request.Form["draw"].FirstOrDefault();
+
+                var start = Request.Form["start"].FirstOrDefault();
+
+                var length = Request.Form["length"].FirstOrDefault();
+
+                var sortColumn = Request.Form["columns[" + Request.Form["order[1][column]"].FirstOrDefault() + "][name]"].FirstOrDefault();
+
+                var sortColumnDirection = Request.Form["order[1][dir]"].FirstOrDefault();
+
+                var searchValue = Request.Form["search[value]"].FirstOrDefault();
+
+                int pageSize = length != null ? Convert.ToInt32(length) : 0;
+                int skip = start != null ? Convert.ToInt32(start) : 0;
+                int recordsTotal = 0;
+
+                var project = Request.Form["project_filter"].FirstOrDefault();
+                var unit = Request.Form["unit_filter"].FirstOrDefault();
+                var pic = Request.Form["pic_filter"].FirstOrDefault();
+
+                var customerData = _context.contractTracking.Where(p => p.deleted != 1);
+
+
+                if (!string.IsNullOrEmpty(project))
+                {
+                    customerData = customerData.Where(p => p.projectID == Convert.ToInt32(project));
+                }
+
+                if (!string.IsNullOrEmpty(unit))
+                {
+                    customerData = customerData.Where(p => p.unit == unit);
+                }
+
+                if (!string.IsNullOrEmpty(pic))
+                {
+                    customerData = customerData.Where(p => p.pic == pic);
+                }
+
+
+                if (!(string.IsNullOrEmpty(sortColumn) && string.IsNullOrEmpty(sortColumnDirection)))
+                {
+                    customerData = customerData.OrderBy(sortColumn + " " + sortColumnDirection);
+                }
+
+                if (!string.IsNullOrEmpty(searchValue))
+                {
+                    customerData = customerData.Where(b => b.judulPekerjaan.StartsWith(searchValue));
+                }
+                // Total number of rows count
+                //Console.WriteLine(customerData);
+                recordsTotal = customerData.Count();
+                // Paging
+                var datas = await customerData.Skip(skip).Take(pageSize).ToListAsync();
+                //var data = _memoryCache.Get("products");
+                //data = await _memoryCache.Set("products", datas, expirationTime);
+                // Returning Json Data
+                return Json(new { draw = draw, recordsFiltered = recordsTotal, recordsTotal = recordsTotal, data = datas });
+            }
+            catch
+            {
+                throw;
+            }
+        }
+
+        public IActionResult CreateContract()
+        {
+            ViewBag.project = _context.project.Where(p => p.deleted == 0).Where(p => p.active == "1").ToList();
+            ViewBag.pic = _context.users.Where(p => p.locked != 1).Where(p => p.statPekerja == "PLANNER").Where(p => p.alias != null && p.alias != "").Where(p => p.status == "PEKERJA").ToList();
+            ViewBag.unitProses = _context.unitProses.Where(p => p.deleted == 0).ToList();
+            ViewBag.unit = _context.contractItem.Where(p => p.item_group == "UNIT").ToList();
+            ViewBag.kategori = _context.contractItem.Where(p => p.item_group == "KATEGORIPAKET").ToList();
+            ViewBag.kriteria = _context.contractItem.Where(p => p.item_group == "KRITERIA").ToList();
+            ViewBag.skill = _context.contractItem.Where(p => p.item_group == "SKILLGROUP").ToList();
+            ViewBag.srcvendor = _context.contractItem.Where(p => p.item_group == "SRCVENDOR").ToList();
+            ViewBag.asalsrc = _context.contractItem.Where(p => p.item_group == "ASALSRC").ToList();
+            ViewBag.koordinasi = _context.contractItem.Where(p => p.item_group == "KOORDINASI").ToList();
+            ViewBag.kat_tender = _context.contractItem.Where(p => p.item_group == "KATEGORITENDER").ToList();
+            ViewBag.dirpws = _context.contractItem.Where(p => p.item_group == "DIRPWS").ToList();
+            return View();
+        }
+
+        public IActionResult GetSow()
+        {
+            var id = Request.Form["project"].FirstOrDefault();
+            var data = _context.sow.Where(p => p.projectID == Convert.ToInt64(id) && p.deleted == 0).ToList();
+            var isi = "<option value=''>Select List SOW</option>";
+            foreach(var val in data)
+            {
+                isi += "<option value='"+val.judulPekerjaan+"'>" + val.judulPekerjaan + "</option>";
+            }
+
+            return Ok(isi);
+        }
+
+        public IActionResult GetKatTender()
+        {
+            var id_project = Convert.ToInt32(Request.Form["project"].FirstOrDefault());
+            var data = _context.durasi.Where(p => p.id_project == id_project)
+                .GroupBy(p => new { p.kat_tender })
+                .Select(j => new
+                {
+                    kat_tender = j.Key.kat_tender,
+                    project_id = j.Select(p => p.id_project),
+                    total = j.Select(p => p.kirim_ke_co + p.pengumuman_pendaftaran + p.sertifikasi + p.prakualifikasi + p.undangan + p.pemberian + p.pemberian + p.penyampaian + p.pembukaan + p.evaluasi + p.negosiasi + p.usulan + p.keputusan + p.pengumuman_pemenang + p.pengajuan_sanggah + p.jawaban_sanggah + p.tunjuk_pemenang + p.proses_spb).Sum(),
+                    total_ph = j.Select(p => p.pembukaan + p.evaluasi + p.negosiasi + p.usulan + p.keputusan + p.pengumuman_pemenang + p.pengajuan_sanggah + p.jawaban_sanggah + p.tunjuk_pemenang + p.proses_spb).Sum(),
+                }).ToList();
+
+            var isi = "<option value=''>Select Kat Tender</option>";
+            foreach (var val in data)
+            {
+                isi += "<option value='" + val.kat_tender + "' data-total='"+val.total+ "' data-total_ph='"+val.total_ph+"'>" + val.kat_tender + "</option>";
+            }
+
+            return Ok(isi);
+        }
+
+        public IActionResult CreateContract_()
+        {
+            try
+            {
+                var unit = Request.Form["unit"].FirstOrDefault();
+                var bulan = Request.Form["bulan"].FirstOrDefault();
+                var idCode = Request.Form["unit"].FirstOrDefault() + bulan.Split('-')[1].ToString() + bulan.Split('-')[0].ToString().Substring(2, 2).ToString();
+
+                var cek = _context.contractTracking.Where(p => p.noPaket.StartsWith(idCode)).Select(p => new
+                {
+                    kode = p.noPaket.Max()
+                }).FirstOrDefault();
+
+                var no = 0;
+                if (cek == null)
+                {
+                    no = 1;
+                }
+                else
+                {
+                    var p = cek.kode;
+                    no = p + 1;
+                }
+
+                ContractTracking val = new ContractTracking();
+                val.noPaket = idCode + no.ToString("D3");
+                val.projectID = Convert.ToInt64(Request.Form["projectID"].FirstOrDefault());
+                val.bulan = bulan.Split('-')[1].ToString();
+                val.tahun = bulan.Split('-')[0].ToString();
+                val.judulPekerjaan = Request.Form["judulPekerjaan"].FirstOrDefault();
+                val.unit = Request.Form["unit"].FirstOrDefault();
+                val.pic = Request.Form["pic"].FirstOrDefault();
+                val.kategoriPaket = Request.Form["kategoriPaket"].FirstOrDefault();
+                val.tipePaket = Request.Form["tipePaket"].FirstOrDefault();
+                val.kriteria = Request.Form["kriteria"].FirstOrDefault();
+                val.katPaket = Request.Form["katPaket"].FirstOrDefault();
+                val.skillGroup = Request.Form["skillGroup"].FirstOrDefault();
+                val.csms = Request.Form["csms"].FirstOrDefault();
+                val.sourceVendor = Request.Form["sourceVendor"].FirstOrDefault();
+                val.asalSource = Request.Form["asalSource"].FirstOrDefault();
+                val.tipe_koordinasi = Convert.ToInt32(Request.Form["tipe_koordinasi"].FirstOrDefault());
+                val.koordinasi = Request.Form["koordinasi"].FirstOrDefault();
+                val.kota = Request.Form["kota"].FirstOrDefault();
+                val.disiplin = Request.Form["disiplin"].FirstOrDefault();
+                val.dirPWS = Request.Form["direksiPengawas"].FirstOrDefault();
+                val.perluAanwijzing = Convert.ToInt32(Request.Form["preluAanwijzing"].FirstOrDefault());
+                val.katTender = Request.Form["katTender"].FirstOrDefault();
+                val.deadLine = Convert.ToDateTime(Request.Form["deadline"].FirstOrDefault()).Date;
+                val.persiapan = Convert.ToInt32(Request.Form["persiapan"].FirstOrDefault());
+                val.fabrikasi = Convert.ToInt32(Request.Form["fabrikasi"].FirstOrDefault());
+                val.mech = Convert.ToInt32(Request.Form["mdays"].FirstOrDefault());
+                val.finishing = Convert.ToInt32(Request.Form["finishing"].FirstOrDefault());
+                val.pemeliharaan = Convert.ToInt32(Request.Form["maint"].FirstOrDefault());
+                val.targetCO = Convert.ToDateTime(Request.Form["target_co"].FirstOrDefault()).Date;
+                val.selesai = Convert.ToDateTime(Request.Form["end_date"].FirstOrDefault()).Date;
+                val.targetBukaPH = Convert.ToDateTime(Request.Form["target_buka_ph"].FirstOrDefault()).Date;
+                val.targetSP = Convert.ToDateTime(Request.Form["target_terbit_sp"].FirstOrDefault()).Date;
+                val.dateCreated = DateTime.Now;
+                val.createdBy = 1;
+                val.deleted = 0;
+
+                var durasi = _context.durasi.Where(p => p.id_project == Convert.ToInt64(Request.Form["projectID"].FirstOrDefault()) && p.kat_tender == Request.Form["katTender"].FirstOrDefault()).FirstOrDefault();
+                if (durasi != null)
+                {
+                    DateTime target = Convert.ToDateTime(Request.Form["target_terbit_sp"].FirstOrDefault()).AddDays(-Convert.ToDouble(durasi.proses_spb));
+                    val.target_penunjukan_pemenang = target.Date;
+                    val.target_jawaban_sanggah = Convert.ToDateTime(val.target_penunjukan_pemenang).AddDays(-Convert.ToDouble(durasi.tunjuk_pemenang));
+                    val.target_pengajuan_sanggah = Convert.ToDateTime(val.target_jawaban_sanggah).AddDays(-Convert.ToDouble(durasi.jawaban_sanggah));
+                    val.target_pengumuman_pemenang = Convert.ToDateTime(val.target_pengajuan_sanggah).AddDays(-Convert.ToDouble(durasi.pengajuan_sanggah));
+                    val.target_keputusan_pemenang = Convert.ToDateTime(val.target_pengumuman_pemenang).AddDays(-Convert.ToDouble(durasi.pengumuman_pemenang));
+                    val.target_usulan_pemenang = Convert.ToDateTime(val.target_keputusan_pemenang).AddDays(-Convert.ToDouble(durasi.keputusan));
+                    val.target_negosiasi = Convert.ToDateTime(val.target_usulan_pemenang).AddDays(-Convert.ToDouble(durasi.usulan));
+                    val.target_evaluasi = Convert.ToDateTime(val.target_negosiasi).AddDays(-Convert.ToDouble(durasi.negosiasi));
+                    val.target_pembukaan = Convert.ToDateTime(val.target_evaluasi).AddDays(-Convert.ToDouble(durasi.evaluasi));
+                    DateTime target_penyampaian = Convert.ToDateTime(val.target_pembukaan).AddDays(-Convert.ToDouble(durasi.pembukaan));
+                    val.target_pemberian = Convert.ToDateTime(target_penyampaian).AddDays(-Convert.ToDouble(durasi.penyampaian));
+                    val.target_undangan = Convert.ToDateTime(val.target_pemberian).AddDays(-Convert.ToDouble(durasi.pemberian));
+                    val.target_prakualifikasi = Convert.ToDateTime(val.target_undangan).AddDays(-Convert.ToDouble(durasi.undangan));
+                    val.target_sertifikasi = Convert.ToDateTime(val.target_prakualifikasi).AddDays(-Convert.ToDouble(durasi.prakualifikasi));
+                    val.target_pengumuman = Convert.ToDateTime(val.target_sertifikasi).AddDays(-Convert.ToDouble(durasi.sertifikasi));
+                    DateTime target_co = Convert.ToDateTime(val.target_pengumuman).AddDays(-Convert.ToDouble(durasi.pengumuman_pendaftaran));
+                    val.target_persetujuan = Convert.ToDateTime(target_co).AddDays(-Convert.ToDouble(durasi.kirim_ke_co));
+                    val.target_oe = Convert.ToDateTime(val.target_persetujuan).AddDays(-Convert.ToDouble(durasi.persetujuan));
+                    val.target_kak = Convert.ToDateTime(val.target_oe).AddDays(-Convert.ToDouble(durasi.susun_oe));
+
+                    DateTime a = Convert.ToDateTime(Request.Form["deadline"].FirstOrDefault()).Date;
+                    DateTime b = Convert.ToDateTime(Request.Form["target_terbit_sp"].FirstOrDefault()).Date;
+                    val.t_light = (a - b).Days;
+                }
+
+                Boolean t;
+                if (val != null)
+                {
+                    _context.contractTracking.Add(val);
+                    _context.SaveChanges();
+                    t = true;
+                }
+                else
+                {
+                    t = false;
+                }
+                return Json(new { result = t });
+
+            }
+            catch
+            {
+                throw;
+            }
+        }
     }
 }

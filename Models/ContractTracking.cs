@@ -121,6 +121,8 @@ namespace mystap.Models
         public DateTime? akt_kak { get; set; }
         public DateTime? target_oe { get; set; }
         public DateTime? akt_oe { get; set; }
+        public DateTime? target_persetujuan { get; set; }
+        public DateTime? akt_persetujuan { get; set; }
         public DateTime? target_co { get; set; }
         public DateTime? akt_co { get; set; }
         public DateTime? target_pengumuman { get; set; }

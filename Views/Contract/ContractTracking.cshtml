@@ -23,7 +23,7 @@
                                     <select name="project_filter" id="project_filter" class="form-control form-control-sm">
                                     @foreach (var val in ViewBag.project)
                                     {
-                                        <option value="@(val.projectNo)" data-id="@(val.id)" data-desc="@(val.description)" data-rev="@(val.revision)"> @(val.description)</option>
+                                        <option value="@(val.id)" data-rev="@(val.revision)" data-desc="@(val.description)" data-rev="@(val.revision)"> @(val.description)</option>
                                     }
                                     </select>
                                 </div>
@@ -83,7 +83,7 @@
                     <thead>
                         <tr>
 
-                        <th>No</th>
+                        @* <th>No</th> *@
                         <th>No.Paket</th>
                             <th>No. WO,PR,PO,SPB</th>
                             

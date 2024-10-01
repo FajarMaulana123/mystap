@@ -1,6 +1,8 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 namespace mystap.Models
 {
+    [Table("contract_item")]
     public class ContractItem
     {
         public long id { get; set; }

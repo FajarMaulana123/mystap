@@ -1,0 +1,344 @@
+﻿@{
+    ViewData["Title"] = "Create Contract";
+}
+
+<ol class="breadcrumb float-xl-end">
+    <li class="breadcrumb-item"><a href="javascript:void(0);">Paket Kontrak</a></li>
+    <li class="breadcrumb-item"><a href="/contracttracking">Paket Jasa</a></li>
+    <li class="breadcrumb-item active" aria-current="page"><span>Create Contract</span></li>
+</ol>
+<h1 class="page-header">Create Contract</h1>
+<div class="panel panel-inverse">
+    <div class="panel-heading">
+        <h4 class="panel-title"></h4>
+        <div class="panel-heading-btn">
+            <a href="javascript:;" class="btn btn-xs btn-icon btn-default" data-toggle="panel-expand"><i class="fa fa-expand"></i></a>
+                   
+            <a href="javascript:;" class="btn btn-xs btn-icon btn-warning" data-toggle="panel-collapse"><i class="fa fa-minus"></i></a>
+
+        </div>
+    </div> 
+    <div class="panel-body">
+        <div class="row">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-body">
+                        <form id="add-form">
+                            <div class="row">
+                                <div class="col-md-4 mb-2">
+                                    <div class="form-group">
+                                        <label>Project</label>
+                                        <select  class="form-control select2" name="projectID" id="projectID">
+                                            <option value="">Select Project</option>
+                                            @foreach (var val in ViewBag.project)
+                                            {
+                                                <option value="@(val.id)" > @(val.description)</option>
+                                            }
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-md-4 mb-2">
+                                    <div class="form-group">
+                                        <label>Judul Pekerjaan </label>
+                                        <select name="judulPekerjaan" id="judulPekerjaan" class="form-control select2">
+                                            <option value="">Select List SOW</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-md-4 mb-2">
+                                    <div class="form-group">
+                                        <label>Bulan</label>
+                                        <input type="month" name="bulan" id="bulan" class="form-control ">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-4 mb-2">
+                                    <div class="form-group">
+                                        <label>unit</label>
+                                        <select name="unit" id="unit" class="form-control select2">
+                                            <option value="">Select unit</option>
+                                            @foreach (var val in ViewBag.unit)
+                                            {
+                                                <option value="@(val.item)"> @(val.item)</option>
+                                            }
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-md-4 mb-2">
+                                    <div class="form-group">
+                                        <label>PIC</label>
+                                        <select name="pic" id="pic" class="form-control select2">
+                                            <option value="">All PIC</option>
+                                            @foreach (var val in ViewBag.pic)
+                                            {
+                                                <option value="@(val.alias)"> @(val.alias)</option>
+                                            }
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-md-4 mb-2">
+                                    <div class="form-group">
+                                        <label>kategori Pekerjaan</label>
+                                        <select name="kategoriPaket" id="kategoriPaket" class="form-control select2">
+                                            <option value="">Select Kategori</option>
+                                            @foreach (var val in ViewBag.kategori)
+                                            {
+                                                <option value="@(val.item)"> @(val.item)</option>
+                                            }
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-4 mb-2">
+                                    <div class="form-group">
+                                        <label>Tipe Paket</label>
+                                        <select name="tipePaket" id="tipePaket" class="form-control select2">
+                                            <option value="">Select Paket</option>
+                                            <option value="VOL">VOL</option>
+                                            <option value="EQHR">EQHR</option>
+                                            <option value="MDAY">MDAY</option>
+                                            <option value="LS">LS</option>
+                                            <option value="MIXED">MIXED</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-md-4 mb-2">
+                                    <div class="form-group">
+                                        <label>kriteria</label>
+                                        <select name="kriteria" id="kriteria" class="form-control select2">
+                                            <option value="">Select Kriteria</option>
+                                            @foreach (var val in ViewBag.kriteria)
+                                            {
+                                                <option value="@(val.item)"> @(val.item)</option>
+                                            }
+                                        </select> 
+                                    </div>
+                                </div>
+                                <div class="col-md-4 mb-2">
+                                    <div class="form-group">
+                                        <label>Kat Paket</label>
+                                        <select name="katPaket" id="katPaket" class="form-control select2">
+                                            <option value="">Select Kat Paket</option>
+                                            <option value="NORMAL">NORMAL</option>
+                                            <option value="TAMBAHAN">TAMBAHAN</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-4 mb-2">
+                                    <div class="form-group">
+                                        <label>Skill Group</label>
+                                        <select name="skillGroup" id="skillGroup" class="form-control select2">
+                                            <option value="">Select Skill Group</option>
+                                            @foreach (var val in ViewBag.skill)
+                                            {
+                                                <option value="@(val.item)"> @(val.item)</option>
+                                            }
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-md-4 mb-2">
+                                    <div class="form-group">
+                                        <label>CSMS</label>
+                                        <select name="csms" id="csms" class="form-control select2">
+                                            <option value="">Select CSMS</option>
+                                            <option value="HIGH">HIGH</option>
+                                            <option value="MEDIUM">MEDIUM</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-md-4 mb-2">
+                                    <div class="form-group">
+                                        <label>Source Group</label>
+                                        <select name="sourceGroup" id="sourceGroup" class="form-control select2">
+                                            <option value="">Select Source Group</option>
+                                            @foreach (var val in ViewBag.srcvendor)
+                                            {
+                                                <option value="@(val.item)"> @(val.item)</option>
+                                            }
+                                          
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-4 mb-2">
+                                    <div class="form-group">
+                                        <label>Asal Source</label>
+                                        <select name="asalSource" id="asalSource" class="form-control select2">
+                                            <option value="">Select Asal Source</option>
+                                            @foreach (var val in ViewBag.asalsrc)
+                                            {
+                                                <option value="@(val.item)"> @(val.item)</option>
+                                            }
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-md-2 mb-2">
+                                    <label>koordinasi</label>
+                                    <div class="n-chk">
+                                        <label class="new-control new-radio new-radio-text radio-primary">
+                                            <input type="radio" class="new-control-input tipe_koordinasi" name="tipe_koordinasi" value="0">
+                                            <span class="new-control-indicator"></span><span class="new-radio-content">Tidak Perlu</span>
+                                        </label>
+                                        <label class="new-control new-radio new-radio-text radio-primary">
+                                            <input type="radio" class="new-control-input tipe_koordinasi" name="tipe_koordinasi" value="1">
+                                            <span class="new-control-indicator"></span><span class="new-radio-content">Perlu</span>
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="col-md-2 mb-2"> 
+                                    <div class="form-group"  id="show_koordinasi" style="display:none;">
+                                        <label>Kordinasi Dengan :</label>
+                                        <select name="koordinasi" id="koordinasi" class="form-control select2">
+                                            <option value="">Select Koordinasi</option>
+                                            @foreach (var val in ViewBag.koordinasi)
+                                            {
+                                                <option value="@(val.item)"> @(val.item)</option>
+                                            }
+                                           
+                                        </select>
+                                    </div>
+                                </div>            
+                                <div class="col-md-4 mb-2">
+                                    <div class="form-group">
+                                        <label>Kota</label>
+                                        <input id="kota" type="text" name="kota"  class="form-control" >
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-4 mb-2">
+                                    <div class="form-group">
+                                        <label>Direksi Pengawas</label>
+                                        <select name="direksiPengawas" id="direksiPengawas" class="form-control select2">
+                                            <option value="">Select Direksi</option>
+                                            @foreach (var val in ViewBag.dirpws)
+                                            {
+                                                <option value="@(val.item)"> @(val.item)</option>
+                                            }
+                                            
+                                        </select>
+                                        <div class="n-chk mt-2 mb-2">
+                                            <label class="new-control new-checkbox new-checkbox-text checkbox-primary">
+                                                <input type="checkbox" value="1" name="perluAanwijzing" id="perluAanwijzing" class="new-control-input">
+                                                <span class="new-control-indicator"></span><span class="new-chk-content">Perlu Aanwijzing</span>
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-4 mb-2">
+                                    <div class="form-group">
+                                        <label>Kat Tender</label>
+                                        <select name="katTender" id="katTender" class="form-select ">
+                                        <option value="">Select Kat Tender</option>
+                                                  
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-md-4 mb-2">
+                                    <div class="form-group">
+                                        <label>Disiplin</label>
+                                        <select name="disiplin" id="disiplin" class="form-control form-control-sm">
+                                            <option value="">Select Disiplin</option>
+                                            <option value="Mechanical">Mechanical</option>
+                                            <option value="Rotating">Rotating</option>
+                                            <option value="Instrument">Instrument</option>
+                                            <option value="Electrical">Electrical</option>
+                                            <option value="Civil">Civil</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-2 mb-2">
+                                    <div class="form-group">
+                                        <label>Dead line</label>
+                                        <input type="date" name="deadline" id="deadline" class="form-control ">
+                                    </div>
+                                </div>
+                                <div class="col-md-2 mb-2">
+                                    <div class="form-group">
+                                        <label>Persiapan</label>
+                                        <input type="number" name="persiapan" id="persiapan" value="0" class="form-control" onchange="count_date()">
+                                    </div>
+                                </div>
+                                <div class="col-md-2 mb-2">
+                                    <div class="form-group">
+                                        <label>Fabrikasi</label>
+                                        <input type="number" name="fabrikasi" id="fabrikasi" value="0" class="form-control" onchange="count_date()">
+                                    </div>
+                                </div>
+                                <div class="col-md-2 mb-2">
+                                    <div class="form-group">
+                                        <label>M. Days</label>
+                                        <input type="number" name="mdays" id="mdays" value="0" class="form-control" onchange="count_date()">
+                                    </div>
+                                </div>
+                                <div class="col-md-2 mb-2">
+                                    <div class="form-group">
+                                        <label>Finishing</label>
+                                        <input type="number" name="finishing" id="finishing" value="0" class="form-control" onchange="count_date()">
+                                    </div>
+                                </div>
+                                <div class="col-md-2 mb-2">
+                                    <div class="form-group">
+                                        <label>Maint</label>
+                                        <input type="number" name="maint" id="maint" value="0" class="form-control" onchange="count_date()">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6 mb-2">
+                                    <div class="form-group">
+                                        <label>Target Ke CO</label>
+                                        <input type="date" name="target_co" id="target_co" class="form-control" readonly>
+                                    </div>
+                                </div>
+                                <div class="col-md-3 mb-2">
+                                    <div class="form-group">
+                                        <label>Start Date</label>
+                                        <input type="date" name="start_date" id="start_date" class="form-control" readonly>
+                                    </div>
+                                </div>
+                                <div class="col-md-3 mb-2">
+                                    <div class="form-group">
+                                        <label>End Date</label>
+                                        <input type="date" name="end_date" id="end_date" class="form-control" readonly> 
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6 mb-2">
+                                    <div class="form-group">
+                                        <label>Target Buka PH</label>
+                                        <input type="date" name="target_buka_ph" id="target_buka_ph" class="form-control" readonly>
+                                    </div>
+                                </div>
+                                <div class="col-md-6 mb-2">
+                                    <div class="form-group">
+                                        <label>Target Terbit SP</label>
+                                        <input type="date" name="target_terbit_sp" id="target_terbit_sp" class="form-control" readonly>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-actions">
+                                <div class="text-right">
+                                    <button type="submit" class="btn btn-info">Submit</button>
+                                    <button class="btn btn-dark">Reset</button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts             {
+    <script src="~/js/CreateContract.js"> </script>
+}

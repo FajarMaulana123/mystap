@@ -37,7 +37,7 @@ namespace mystap.Models
         public DbSet<WorkOrder>work_order { get; set; }
         public DbSet<Bom>bom { get; set; }
         public DbSet<BomFiles> bomFiles { get; set; }
-
+        public DbSet<ContractItem> contractItem { get; set; }
 
 
         //View Model
