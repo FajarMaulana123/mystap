@@ -433,6 +433,215 @@ namespace mystap.Controllers
             }
         }
 
+        public IActionResult Pir()
+        {
+
+            ViewBag.project = _context.project.Where(p => p.deleted == 0).Where(p => p.active == "1").ToList();
+
+            return View();
+        }
+        public async Task<IActionResult> Get_Pir()
+        {
+            try
+            {
+                var draw = HttpContext.Request.Form["draw"].FirstOrDefault();
+                // Skipping number of Rows count
+                var start = Request.Form["start"].FirstOrDefault();
+                // Paging Length 10, 20
+                var length = Request.Form["length"].FirstOrDefault();
+                // Sort Column Name
+                var sortColumn = Request.Form["columns[" + Request.Form["order[1][column]"].FirstOrDefault() + "][name]"].FirstOrDefault();
+                // Sort Column Direction (asc, desc)
+                var sortColumnDirection = Request.Form["order[1][dir]"].FirstOrDefault();
+                // Search Value from (Search box)
+                var searchValue = Request.Form["search[value]"].FirstOrDefault();
+                // Paging Size (10, 20, 50, 100)
+                int pageSize = length != null ? Convert.ToInt32(length) : 0;
+                int skip = start != null ? Convert.ToInt32(start) : 0;
+                int recordsTotal = 0;
+
+
+                var project_filter = Request.Form["project"].FirstOrDefault();
+                var project_rev = Request.Form["project_rev"].FirstOrDefault();
+
+                var customerData = _context.pir.Include("users").Where(s => s.id_project == Convert.ToInt64(project_filter)).Where(s => s.deleted == 0).Select(a => new { id = a.id, id_project = a.id_project, tanggal = a.tanggal, judul = a.judul, materi = a.materi, notulen = a.notulen, nama_ = a.users.alias, created_date = a.created_date });
+
+                // Sorting
+                if (!(string.IsNullOrEmpty(sortColumn) && string.IsNullOrEmpty(sortColumnDirection)))
+                {
+                    customerData = customerData.OrderBy(sortColumn + " " + sortColumnDirection);
+                }
+
+                //search
+                if (!string.IsNullOrEmpty(searchValue))
+                {
+                    customerData = customerData.Where(m => m.judul.StartsWith(searchValue) || m.notulen.StartsWith(searchValue) || m.nama_.StartsWith(searchValue));
+                }
+
+
+
+
+                // Total number of rows count
+                //Console.WriteLine(customerData);
+                recordsTotal = customerData.Count();
+                // Paging
+                var datas = await customerData.Skip(skip).Take(pageSize).ToListAsync();
+                //var data = _memoryCache.Get("products");
+                //data = await _memoryCache.Set("products", datas, expirationTime);
+                // Returning Json Data
+                return Json(new { draw = draw, recordsFiltered = recordsTotal, recordsTotal = recordsTotal, data = datas });
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+
+        [HttpPost]
+        public IActionResult Create_Pir(IFormCollection formcollaction)
+        {
+
+            try
+            {
+                Pir pir = new Pir();
+                pir.id_project = Convert.ToInt32(formcollaction["id_project"]);
+                pir.judul = formcollaction["judul"];
+                pir.created_by = 1;
+                pir.tanggal = Convert.ToDateTime(formcollaction["tanggal"]);
+                pir.created_date = DateTime.Now;
+                pir.deleted = 0;
+
+                if (Request.Form.Files.Count() != 0)
+                {
+
+                    if (pir.materi == null)
+                    {
+                        IFormFile postedFile = Request.Form.Files[0];
+                        string fileName = DateTime.Now.ToString("yyyyMMddHHmmssfff") + "_" + postedFile.FileName;
+                        string path = environment.WebRootPath + "/upload/pir/materi/" + fileName;
+                        using (var stream = System.IO.File.Create(path))
+                        {
+                            postedFile.CopyTo(stream);
+                            pir.materi = "upload/pir/materi/" + fileName;
+                        }
+                    }
+                    if (pir.notulen == null)
+                    {
+                        IFormFile postedFile2 = Request.Form.Files[1];
+                        string fileName2 = DateTime.Now.ToString("yyyyMMddHHmmssfff") + "_" + postedFile2.FileName;
+                        string path = environment.WebRootPath + "/upload/pir/notulen/" + fileName2;
+                        using (var stream = System.IO.File.Create(path))
+                        {
+                            postedFile2.CopyTo(stream);
+                            pir.notulen = "upload/pir/notulen/" + fileName2;
+                        }
+                    }
+
+
+                }
+
+
+                Boolean t;
+                if (pir != null)
+                {
+                    _context.pir.Add(pir);
+                    _context.SaveChanges();
+                    t = true;
+                }
+                else
+                {
+                    t = false;
+                }
+                return Json(new { result = t });
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+
+        }
+        public IActionResult Update_Pir(Pir pir)
+        {
+
+            try
+            {
+                int id = Int32.Parse(Request.Form["hidden_id"].FirstOrDefault());
+                Pir obj = _context.pir.Where(p => p.id == id).FirstOrDefault();
+
+                if (obj != null)
+                {
+                    obj.id_project = Convert.ToInt64(Request.Form["id_project"]);
+                    obj.judul = Request.Form["judul"].FirstOrDefault();
+                    obj.tanggal = Convert.ToDateTime(Request.Form["tanggal"].FirstOrDefault()).Date;
+
+                    if (Request.Form.Files.Count() != 0)
+                    {
+                        if (obj.materi != null)
+                        {
+                            string ExitingFile = environment.WebRootPath + "/" + obj.materi;
+                            System.IO.File.Delete(ExitingFile);
+
+                            IFormFile postedFile = Request.Form.Files[0];
+                            string fileName = DateTime.Now.ToString("yyyyMMddHHmmssfff") + "_" + postedFile.FileName;
+                            string path = environment.WebRootPath + "/upload/pir/materi/" + fileName;
+
+                            using (var stream = System.IO.File.Create(path))
+                            {
+                                postedFile.CopyTo(stream);
+                                obj.materi = "upload/pir/materi/" + fileName;
+                            }
+                        }
+                        if (obj.notulen != null)
+                        {
+                            string ExitingFile = environment.WebRootPath + "/" + obj.notulen;
+                            System.IO.File.Delete(ExitingFile);
+
+                            IFormFile postedFile = Request.Form.Files[1];
+                            string fileName2 = DateTime.Now.ToString("yyyyMMddHHmmssfff") + "_" + postedFile.FileName;
+                            string path = environment.WebRootPath + "/upload/pir/notulen/" + fileName2;
+
+                            using (var stream = System.IO.File.Create(path))
+                            {
+                                postedFile.CopyTo(stream);
+                                obj.notulen = "upload/pir/notulen/" + fileName2;
+                            }
+                        }
+
+
+                    }
+                    _context.SaveChanges();
+                    return Json(new { result = true });
+                }
+                return Json(new { result = false });
+            }
+            catch
+            {
+                throw;
+            }
+        }
+
+        public IActionResult Deleted_Pir(Pir pir)
+        {
+            try
+            {
+                int id = Int32.Parse(Request.Form["id"].FirstOrDefault());
+                Pir obj = _context.pir.Where(p => p.id == id).FirstOrDefault();
+
+                if (obj != null)
+                {
+                    obj.deleted = 1;
+                    _context.SaveChanges();
+
+                    return Json(new { title = "Sukses!", icon = "success", status = "Berhasil Dihapus" });
+                }
+                return Json(new { title = "Maaf!", icon = "error", status = "Tidak Dapat di Hapus!, Silahkan Hubungi Administrator " });
+            }
+            catch
+            {
+                throw;
+            }
+        }
+
         public IActionResult Project()
         {
             ViewBag.plant = _context.plans.Where(p => p.deleted == 0).ToList();

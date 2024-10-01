@@ -30,8 +30,7 @@
                         <th>Location</th>
                         <th>Main Work</th>
                         <th>Rekomendasi</th>
-                        {{--
-                        <th>Aksi</th> --}}
+                        @* <th>Aksi</th> *@
                     </tr>
                 </thead>
 
@@ -80,14 +79,14 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
                 </button>
             </div>
-            <form id="import-form">
+            <form asp-controller="Joblist" asp-action="ImportNotif" method="post" enctype="multipart/form-data">
                 <div class="modal-body">
                     <input type="hidden" name="hidden_status" id="hidden_status" value="add">
                     <div class="row">
                         <div class="col-md-12 mb-2">
                             <div class="form-group">
                                 <label>Import File</label>
-                                <input type="file" name="import" id="import" class="form-control form-control-sm">
+                                <input type="file" name="file" id="import" class="form-control form-control-sm">
                             </div>
                         </div>
                     </div>
@@ -103,5 +102,5 @@
 </div>
 @section Scripts
 {
-    <script src="~/js/Notifikasi.js"> </script>
+    <script src="~/js/Notifikasi.js"></script>
 }

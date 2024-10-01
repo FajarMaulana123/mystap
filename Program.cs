@@ -385,6 +385,21 @@ app.UseEndpoints(endpoints =>
         defaults: new { controller = "Joblist", action = "ListSelected" });
 
     endpoints.MapControllerRoute(
+        name: "notifikasi",
+        pattern: "notifikasi",
+        defaults: new { controller = "Joblist", action = "Notifikasi" });
+
+    endpoints.MapControllerRoute(
+       name: "notifikasi_",
+       pattern: "notifikasi_",
+       defaults: new { controller = "Joblist", action = "Get_Notifikasi" });
+
+    endpoints.MapControllerRoute(
+      name: "import_notif",
+      pattern: "import_notif",
+      defaults: new { controller = "Joblist", action = "ImportNotif" });
+
+    endpoints.MapControllerRoute(
        name: "rapat",
        pattern: "rapat",
        defaults: new { controller = "Data", action = "Rapat" });
@@ -433,6 +448,31 @@ app.UseEndpoints(endpoints =>
        name: "delete_steerco",
        pattern: "delete_steerco",
        defaults: new { controller = "Data", action = "Deleted_Steerco" });
+
+    endpoints.MapControllerRoute(
+       name: "pir",
+       pattern: "pir",
+       defaults: new { controller = "Data", action = "Pir" });
+
+    endpoints.MapControllerRoute(
+       name: "pir_",
+       pattern: "pir_",
+       defaults: new { controller = "Data", action = "Get_Pir" });
+
+    endpoints.MapControllerRoute(
+       name: "create_pir",
+       pattern: "create_pir",
+       defaults: new { controller = "Data", action = "Create_Pir" });
+
+    endpoints.MapControllerRoute(
+       name: "update_pir",
+       pattern: "update_pir",
+       defaults: new { controller = "Data", action = "Update_Pir" });
+
+    endpoints.MapControllerRoute(
+       name: "delete_pir",
+       pattern: "delete_pir",
+       defaults: new { controller = "Data", action = "Deleted_Pir" });
 
     endpoints.MapControllerRoute(
        name: "project",

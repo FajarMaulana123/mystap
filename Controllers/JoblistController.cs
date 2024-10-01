@@ -2,6 +2,7 @@
 using MessagePack;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.CodeAnalysis;
+using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using mystap.Models;
@@ -10,15 +11,23 @@ using System.Data;
 using System.Globalization;
 using System.Linq.Dynamic.Core;
 using System.Runtime.CompilerServices;
-
+using System.Data.OleDb;
+using System.Data.SqlClient;
+using System.Configuration;
+using ExcelDataReader;
+using Microsoft.Extensions.Hosting;
 namespace joblist.Controllers
 {
     public class JoblistController : Controller
     {
         private readonly DatabaseContext _context;
-        public JoblistController(DatabaseContext context)
+        IConfiguration configuration;
+        IWebHostEnvironment hostEnvironment;
+        public JoblistController(DatabaseContext context, IConfiguration configuration, IWebHostEnvironment hostEnvironment)
         {
             _context = context;
+            this.configuration = configuration;
+            this.hostEnvironment = hostEnvironment;
         }
 
         public IActionResult Joblist()
@@ -1763,6 +1772,202 @@ namespace joblist.Controllers
             }
         }
 
+        public IActionResult Notifikasi()
+        {
+
+            return View();
+        }
+
+        public async Task<IActionResult> Get_Notifikasi()
+
+        {
+            try
+            {
+                var draw = HttpContext.Request.Form["draw"].FirstOrDefault();
+                // Skipping number of Rows count
+                var start = Request.Form["start"].FirstOrDefault();
+                // Paging Length 10, 20
+                var length = Request.Form["length"].FirstOrDefault();
+                // Sort Column Name
+
+                var sortColumn = Request.Form["columns[" + Request.Form["order[1][column]"].FirstOrDefault() + "][name]"].FirstOrDefault();
+                // Sort Column Direction (asc, desc)
+                var sortColumnDirection = Request.Form["order[1][dir]"].FirstOrDefault();
+
+                // Search Value from (Search box)
+                var searchValue = Request.Form["search[value]"].FirstOrDefault();
+                // Paging Size (10, 20, 50, 100)
+                int pageSize = length != null ? Convert.ToInt32(length) : 0;
+                int skip = start != null ? Convert.ToInt32(start) : 0;
+                int recordsTotal = 0;
+                var project = Request.Form["project"].FirstOrDefault();
+                var project_rev = Request.Form["project_rev"].FirstOrDefault();
+                var eqtagno = Request.Form["eqTagNo"].FirstOrDefault();
+                var jobno = Request.Form["jobNo"].FirstOrDefault();
+                var unitcode = Request.Form["unitCode"].FirstOrDefault();
+                var user_section = Request.Form["user_section"].FirstOrDefault();
+                // Getting all Customer data
+                var customerData = (from c in _context.notifikasi
+                                    select new
+                                    {
+                                        id = c.id,
+                                        notification_type = c.notification_type,
+                                        notifikasi = c.notifikasi,
+                                        order = c.order,
+                                        notification_date = c.notification_date,
+                                        created_by = c.created_by,
+                                        created_on = c.created_on,
+                                        change_by = c.change_by,
+                                        change_on = c.change_on,
+                                        planner_group = c.planner_group,
+                                        description = c.description,
+                                        user_status = c.user_status,
+                                        system_status = c.system_status,
+                                        maintenance_plant = c.maintenance_plant,
+                                        functional_location = c.functional_location,
+                                        equipment = c.equipment,
+                                        required_start = c.required_start,
+                                        required_end = c.required_end,
+                                        location = c.location,
+                                        main_work_center = c.main_work_center,
+                                        maintenance_item = c.maintenance_item,
+                                        maintenance_plan = c.maintenance_plan,
+                                        rekomendasi = c.rekomendasi
+
+                                    });
+
+
+
+                if (!(string.IsNullOrEmpty(sortColumn) && string.IsNullOrEmpty(sortColumnDirection)))
+                {
+                    customerData = customerData.OrderBy(sortColumn + " " + sortColumnDirection);
+                }
+
+                if (!string.IsNullOrEmpty(searchValue))
+                {
+                    customerData = customerData.Where(b => b.notifikasi.StartsWith(searchValue));
+                }
+                // Total number of rows count
+                //Console.WriteLine(customerData);
+                recordsTotal = customerData.Count();
+                // Paging
+                var datas = await customerData.Skip(skip).Take(pageSize).ToListAsync();
+                //var data = _memoryCache.Get("products");
+                //data = await _memoryCache.Set("products", datas, expirationTime);
+                // Returning Json Data
+                return Json(new { draw = draw, recordsFiltered = recordsTotal, recordsTotal = recordsTotal, data = datas });
+            }
+            catch (Exception)
+
+            {
+                throw;
+            }
+        }
+       
+        IExcelDataReader reader;
+
+        // GET: /<controller>/
+           
+        [HttpPost]
+        public async Task<IActionResult> ImportNotif(IFormFile file)
+        {
+            try
+            {
+                // Check the File is received
+
+                if (file == null)
+                    throw new Exception("File is Not Received...");
+
+
+                // Create the Directory if it is not exist
+                string dirPath = Path.Combine(hostEnvironment.WebRootPath, "ReceivedReports");
+                if (!Directory.Exists(dirPath))
+                {
+                    Directory.CreateDirectory(dirPath);
+                }
+
+                // MAke sure that only Excel file is used 
+                string dataFileName = Path.GetFileName(file.FileName);
+
+                string extension = Path.GetExtension(dataFileName);
+
+                string[] allowedExtsnions = new string[] { ".xls", ".xlsx" };
+
+                if (!allowedExtsnions.Contains(extension))
+                    throw new Exception("Sorry! This file is not allowed, make sure that file having extension as either .xls or .xlsx is uploaded.");
+
+                // Make a Copy of the Posted File from the Received HTTP Request
+                string saveToPath = Path.Combine(dirPath, dataFileName);
+
+                using (FileStream stream = new FileStream(saveToPath, FileMode.Create))
+                {
+                    file.CopyTo(stream);
+                }
+
+                // USe this to handle Encodeing differences in .NET Core
+                System.Text.Encoding.RegisterProvider(System.Text.CodePagesEncodingProvider.Instance);
+                // read the excel file
+                using (var stream = new FileStream(saveToPath, FileMode.Open))
+                {
+                    if (extension == ".xls")
+                        reader = ExcelReaderFactory.CreateBinaryReader(stream);
+                    else
+                        reader = ExcelReaderFactory.CreateOpenXmlReader(stream);
+
+                    DataSet ds = new DataSet();
+                    ds = reader.AsDataSet();
+                    reader.Close();
+
+                    if (ds != null && ds.Tables.Count > 0)
+                    {
+                        // Read the the Table
+                        DataTable serviceDetails = ds.Tables[0];
+                        for (int i = 1; i < serviceDetails.Rows.Count; i++)
+                        {
+                            Notifikasi notifikasi = new Notifikasi();
+                            notifikasi.notification_type = serviceDetails.Rows[i][0].ToString();
+                            notifikasi.notifikasi = serviceDetails.Rows[i][1].ToString();
+                            notifikasi.order = serviceDetails.Rows[i][2].ToString();
+                            notifikasi.notification_date = Convert.ToDateTime(serviceDetails.Rows[i][3].ToString());
+                            notifikasi.created_by = serviceDetails.Rows[i][4].ToString();
+                            notifikasi.created_on = Convert.ToDateTime(serviceDetails.Rows[i][5].ToString());
+                            notifikasi.change_by = serviceDetails.Rows[i][6].ToString();
+                            notifikasi.change_on = Convert.ToDateTime(serviceDetails.Rows[i][7].ToString());
+                            notifikasi.planner_group = serviceDetails.Rows[i][8].ToString();
+                            notifikasi.description = serviceDetails.Rows[i][9].ToString();
+                            notifikasi.user_status = Convert.ToInt32(serviceDetails.Rows[i][10].ToString());
+                            notifikasi.system_status = serviceDetails.Rows[i][11].ToString();
+                            notifikasi.maintenance_plant = serviceDetails.Rows[i][12].ToString();
+                            notifikasi.functional_location = serviceDetails.Rows[i][13].ToString();
+                            notifikasi.equipment = serviceDetails.Rows[i][14].ToString();
+                            notifikasi.required_start = Convert.ToDateTime(serviceDetails.Rows[i][15].ToString());
+                            notifikasi.required_end = Convert.ToDateTime(serviceDetails.Rows[i][16].ToString());
+                            notifikasi.location = serviceDetails.Rows[i][17].ToString();
+                            notifikasi.main_work_center = serviceDetails.Rows[i][18].ToString();
+                            notifikasi.maintenance_item = serviceDetails.Rows[i][19].ToString();
+                            notifikasi.maintenance_plan = serviceDetails.Rows[i][20].ToString();
+                            notifikasi.rekomendasi = serviceDetails.Rows[i][21].ToString();
+                          
+
+
+                            // Add the record in Database
+                            await _context.notifikasi.AddAsync(notifikasi);
+                            await _context.SaveChangesAsync();
+                        }
+                    }
+                }
+                return RedirectToAction("Notifikasi");
+            }
+            catch (Exception ex)
+            {
+                return View("Error", new ErrorViewModel()
+                {
+                    ControllerName = this.RouteData.Values["controller"].ToString(),
+                    ActionName = this.RouteData.Values["action"].ToString(),
+                    ErrorMessage = ex.Message
+                });
+            }
+        }
 
     }
 }

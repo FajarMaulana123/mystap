@@ -25,7 +25,13 @@
             { data: 'equipment', name: 'equipment' },
             { data: 'location', name: 'location' },
             { data: 'main_work_center', name: 'main_work_center' },
-            { data: 'file', name: 'file' }
+            {
+                "render": function (data, type, full, meta) {
+                    return '<a href="' + full.rekomendasi + '" class="badge bg-info" target="blank_"><i class="far fa-copy"></i> file</a>';
+                },
+                orderable: false,
+                searchable: false
+            },
             // {
             //     data: 'action', 
             //     name: 'action', 
@@ -40,13 +46,13 @@
 
 
             },
-            (user_auth == 'user') ? { "visible": false, "targets": [10] } : {},
+           /* (user_auth == 'user') ? { "visible": false, "targets": [10] } : {},*/
         ],
-        buttons: (user_auth == 'superadmin' || user_auth == 'admin') ? [{
+        buttons: /*(user_auth == 'superadmin' || user_auth == 'admin') ?*/ [{
             text: '<i class="far fa-edit"></i> Import',
             className: 'btn btn-success',
             action: function (e, dt, node, config) {
-                $('#import-form')[0].reset();
+               /* $('#import-form')[0].reset();*/
                 $('#import').modal('show');
                 $('.judul-modal').text('Import Data');
                 $('#hidden_status').val('add');
@@ -62,7 +68,7 @@
             // exportOptions: {
             //     columns: ':not(:last-child)',
             // }
-        },] : [{
+        },] /*: [{
             extend: 'excel',
             title: 'Plant',
             className: 'btn',
@@ -71,7 +77,7 @@
             // exportOptions: {
             //     columns: ':not(:last-child)',
             // }
-        }]
+        }]*/
     });
     // table.button( 0 ).nodes().css('height', '35px')
     $(document).on('click', '.rekomendasi', function () {
@@ -241,6 +247,9 @@
                     alert('Error adding / update data');
                 }
             });
+            $(document).ready(function () {
+                $("#GridView1").prepend($("<thead></thead>").append($(this).find("tr:first"))).dataTable();
+            });  
         }
     });
 

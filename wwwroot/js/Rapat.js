@@ -64,8 +64,7 @@
             },
             {
                 "render": function (data, type, full, meta) {
-                    return '<div class="d-flex"><a href="javascript:void(0);" class="btn btn-warning  btn-xs edit mr-1" data-id="' + full.id + '"data-id_project="' + full.id_project + '" data-judul="' + full.judul + '" data-tanggal="' + full.tanggal + '" data-materi="' + full.materi + '" data-notulen="' + full.notulen + '" ><i class="fas fa-pen fa-xs"></i></a>' +
-                        '< a href = "javascript:void(0);" style = "margin-left:5px" class="btn btn-danger btn-xs delete " data - id="' + full.id + '" > <i class="fas fa-trash fa-xs"></i></a ></div > ';
+                    return '<div class="d-flex"><a href="javascript:void(0);" class="btn btn-warning  btn-xs edit mr-1" data-id="' + full.id + '"data-id_project="' + full.id_project + '" data-judul="' + full.judul + '" data-tanggal="' + full.tanggal + '" data-materi="' + full.materi + '" data-notulen="' + full.notulen + '" ><i class="fas fa-pen fa-xs"></i></a><a href = "javascript:void(0);" style = "margin-left:5px" class="btn btn-danger btn-xs delete " data-id="' + full.id + '" > <i class="fas fa-trash fa-xs"></i></a ></div > ';
                 },
                 orderable: false,
                 searchable: false
@@ -224,7 +223,7 @@
                     if (data.result != true) {
                         Swal.fire({
                             title: 'Gagal',
-                            text: "Gagal Tambah / Update User",
+                            text: "Gagal Tambah / Update Rapat",
                             icon: 'error',
                             timer: 3000,
                             showCancelButton: false,

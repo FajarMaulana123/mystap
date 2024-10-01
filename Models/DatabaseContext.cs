@@ -14,6 +14,7 @@ namespace mystap.Models
         public DbSet<Project> project { get; set; }
         public DbSet<Rapat> rapat { get; set; }
         public DbSet<Steerco> steerco { get; set; }
+        public DbSet<Pir> pir { get; set; }
         public DbSet<Unit> unit { get; set; }
         public DbSet<UnitProses> unitProses { get; set; }
         public DbSet<Equipments> equipments { get; set; }

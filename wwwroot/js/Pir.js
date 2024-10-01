@@ -12,10 +12,10 @@
         serverSide: true,
         deferLoading: 0,
         language: {
-            "emptyTable": "Data tidak ditemukan - Silahkan Filter data Steerco terlebih dahulu !"
+            "emptyTable": "Data tidak ditemukan - Silahkan Filter data Rapat terlebih dahulu !"
         },
         ajax: {
-            url: '/steerco_',
+            url: '/pir_',
             method: 'POST',
             data: function (d) {
                 d.project = $('#project_filter').val();
@@ -23,7 +23,7 @@
         },
         columnDefs: [
             { className: 'text-center', targets: [5, 6] },
-           /* (user_auth == 'user') ? { "visible": false, "targets": [6] } : {},*/
+            /*(user_auth == 'user') ? { "visible": false, "targets": [6] } : {},*/
         ],
         columns: [
             {
@@ -34,10 +34,11 @@
             { data: 'judul', name: 'judul' },
             {
                 data: 'tanggal', name: 'tanggal', render: function (data, type, full, meta) {
-                    var date = new Date(full.created_date);
+                    var date = new Date(full.tanggal);
                     var string = date.getDate() + "-" + date.getMonth() + "-" + date.getFullYear();
                     return string;
-                } },
+                }
+            },
             { data: 'nama_', name: 'nama_' },
             {
                 data: 'created_date', name: 'created_date',
@@ -69,21 +70,21 @@
                 searchable: false
             },
         ],
-        buttons: /*(user_auth == 'superadmin' || user_auth == 'admin') ? */[{
+        buttons: /*(user_auth == 'superadmin' || user_auth == 'admin') ?*/ [{
             text: '<i class="far fa-edit"></i> New',
             className: 'btn btn-success',
             action: function (e, dt, node, config) {
                 $('#add-form')[0].reset();
                 $('#Modal').modal('show');
                 $('#btn-sb').text('Tambah');
-                $('.judul-modal').text('Tambah Data Steerco');
+                $('.judul-modal').text('Tambah Data Pir');
                 $('#hidden_status').val('add');
             }
         },
 
         {
             extend: 'excel',
-            title: 'Steerco',
+            title: 'Data Pir',
             className: 'btn',
             text: '<i class="far fa-file-code"></i> Excel',
             titleAttr: 'Excel',
@@ -95,7 +96,7 @@
 
         ] /*: [{
             extend: 'excel',
-            title: 'Steerco',
+            title: 'Data Pir',
             className: 'btn',
             text: '<i class="far fa-file-code"></i> Excel',
             titleAttr: 'Excel',
@@ -103,13 +104,14 @@
                 columns: ':not(:last-child)',
             }
         }]*/
+
     });
     
     // table.button( 0 ).nodes().css('height', '35px')
 
     $(document).on('click', '#filter', function () {
         var project = $('#project_filter').find(':selected').data('desc');
-        $('#title-steerco').html('Data Steerco ( ' + project + ' )');
+        $('#title-pir').html('Data Pir ( ' + project + ' )');
         table.ajax.reload();
     })
 
@@ -123,7 +125,7 @@
         $('#add-form')[0].reset();
         $('#Modal').modal('show');
         $('#btn-sb').text('Update');
-        $('.judul-modal').text('Edit Steerco');
+        $('.judul-modal').text('Edit Data Pir');
         var tgl = $(this).data('tanggal').split("T");
         $('#hidden_status').val('edit');
         $('#hidden_id').val($(this).data('id'));
@@ -147,7 +149,7 @@
         }).then((result) => {
             if (result.value) {
                 $.ajax({
-                    url: "/delete_steerco",
+                    url: "/delete_pir",
                     type: "POST",
                     data: {
                         id: id
@@ -191,9 +193,9 @@
         submitHandler: function (form) {
             let url;
             if ($('#hidden_status').val() == 'add') {
-                url = '/create_steerco';
+                url = '/create_pir';
             } else {
-                url = '/update_steerco';
+                url = '/update_pir';
             }
             $.ajax({
                 url: url,
@@ -221,7 +223,7 @@
                     if (data.result != true) {
                         Swal.fire({
                             title: 'Gagal',
-                            text: "Gagal Tambah / Update Steerco",
+                            text: "Gagal Tambah / Update Pir",
                             icon: 'error',
                             timer: 3000,
                             showCancelButton: false,
