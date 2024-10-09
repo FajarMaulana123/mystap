@@ -705,6 +705,16 @@ app.UseEndpoints(endpoints =>
         defaults: new { controller = "Contract", action = "CreateContract_" });
 
     endpoints.MapControllerRoute(
+        name: "update_contracttracking",
+        pattern: "update_contracttracking",
+        defaults: new { controller = "Contract", action = "UpdateContract_" });
+
+    endpoints.MapControllerRoute(
+         name: "edit_contract/",
+         pattern: "edit_contract/{id?}",
+         defaults: new { controller = "Contract", action = "UpdateContract" });
+
+    endpoints.MapControllerRoute(
          name: "getKatTender",
          pattern: "getKatTender",
          defaults: new { controller = "Contract", action = "GetKatTender" });
@@ -713,6 +723,21 @@ app.UseEndpoints(endpoints =>
          name: "get_sow",
          pattern: "get_sow",
          defaults: new { controller = "Contract", action = "GetSow" });
+
+    endpoints.MapControllerRoute(
+         name: "related_",
+         pattern: "related_",
+         defaults: new { controller = "Contract", action = "RelatedJoblist" });
+
+    endpoints.MapControllerRoute(
+         name: "delete_wo_jasa",
+         pattern: "delete_wo_jasa",
+         defaults: new { controller = "Contract", action = "deleteWoJasa" });
+
+    endpoints.MapControllerRoute(
+         name: "get_data_target",
+         pattern: "get_data_target",
+         defaults: new { controller = "Contract", action = "getDataTarget" });
 
     endpoints.MapControllerRoute(
       name: "user",

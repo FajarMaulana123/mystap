@@ -7,6 +7,14 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Content Remove="wwwroot\js\UpdateContract.js" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <_ContentIncludedByDefault Remove="wwwroot\js\UpdateContract.js" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="ClosedXML" Version="0.102.3" />
     <PackageReference Include="ExcelDataReader" Version="3.7.0" />
     <PackageReference Include="ExcelDataReader.DataSet" Version="3.7.0" />
@@ -36,6 +44,10 @@
     <Folder Include="wwwroot\upload\sow\" />
     <Folder Include="wwwroot\upload\steerco\materi\" />
     <Folder Include="wwwroot\upload\steerco\notulen\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="wwwroot\js\UpdateContract.js" />
   </ItemGroup>
 
 </Project>

@@ -1,7 +1,10 @@
 ﻿using Azure.Core;
+using ClosedXML.Excel;
+using DocumentFormat.OpenXml.Vml;
 using Humanizer;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.Options;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
@@ -279,19 +282,19 @@ namespace mystap.Controllers
 
                     string tahun = Request.Form["tahun"].FirstOrDefault();
                     string inisial = Request.Form["inisial"].FirstOrDefault();
-                    var cek = _context.sow.Where(p => p.tahun == tahun).Where(w => w.tahun.Contains(tahun)).Max(p => new { kode = p.jobCode, tahun = p.tahun });
-                    int no = 0;
-                    if (cek.kode != tahun)
-                    {
-                        no = 1;
-                    }
-                    else
-                    {
-                        no = Convert.ToInt32(cek.kode) + 1;
-                    }
+                    //var cek = _context.sow.Where(p => p.tahun == tahun).Where(w => w.tahun.Contains(tahun)).Max(p => new { kode = p.jobCode, tahun = p.tahun });
+                    //int no = 0;
+                    //if (cek.kode != tahun)
+                    //{
+                    //    no = 1;
+                    //}
+                    //else
+                    //{
+                    //    no = Convert.ToInt32(cek.kode) + 1;
+                    //}
 
-                    obj.jobCode = Request.Form["inisial"].FirstOrDefault() + "-" + no.ToString("D3");
-                    obj.noSOW = Request.Form["event"].FirstOrDefault() + "-" + no.ToString("D3") + "-" + Request.Form["inisial"].FirstOrDefault() + Request.Form["urut"].FirstOrDefault() + "-" + Request.Form["area"].FirstOrDefault() + "/" + Request.Form["codeKabo"].FirstOrDefault() + "/" + tahun.Substring(tahun.Length - 2); ;
+                    //obj.jobCode = Request.Form["inisial"].FirstOrDefault() + "-" + no.ToString("D3");
+                    //obj.noSOW = Request.Form["event"].FirstOrDefault() + "-" + no.ToString("D3") + "-" + Request.Form["inisial"].FirstOrDefault() + Request.Form["urut"].FirstOrDefault() + "-" + Request.Form["area"].FirstOrDefault() + "/" + Request.Form["codeKabo"].FirstOrDefault() + "/" + tahun.Substring(tahun.Length - 2); ;
                     obj.projectID = Convert.ToInt32(Request.Form["project"].FirstOrDefault());
                     obj.events = Request.Form["events"].FirstOrDefault();
                     obj.groups = Request.Form["groups_"].FirstOrDefault();
@@ -317,7 +320,7 @@ namespace mystap.Controllers
                         using (var stream = System.IO.File.Create(path))
                         {
                             postedFile.CopyTo(stream);
-                            obj.file = "upload/bom/" + fileName;
+                            obj.file = "upload/sow/" + fileName;
                         }
 
                     }
@@ -749,6 +752,7 @@ namespace mystap.Controllers
                 val.finishing = Convert.ToInt32(Request.Form["finishing"].FirstOrDefault());
                 val.pemeliharaan = Convert.ToInt32(Request.Form["maint"].FirstOrDefault());
                 val.targetCO = Convert.ToDateTime(Request.Form["target_co"].FirstOrDefault()).Date;
+                val.mulai = Convert.ToDateTime(Request.Form["start_date"].FirstOrDefault()).Date;
                 val.selesai = Convert.ToDateTime(Request.Form["end_date"].FirstOrDefault()).Date;
                 val.targetBukaPH = Convert.ToDateTime(Request.Form["target_buka_ph"].FirstOrDefault()).Date;
                 val.targetSP = Convert.ToDateTime(Request.Form["target_terbit_sp"].FirstOrDefault()).Date;
@@ -798,6 +802,384 @@ namespace mystap.Controllers
                 }
                 return Json(new { result = t });
 
+            }
+            catch
+            {
+                throw;
+            }
+        }
+
+        public IActionResult UpdateContract(long id)
+        {
+            ViewBag.sow = _context.sow.Where(p => p.deleted == 0).ToList();
+            ViewBag.project = _context.project.Where(p => p.deleted == 0).Where(p => p.active == "1").ToList();
+            ViewBag.user = _context.users.Where(p => p.locked != 1).Where(p => p.statPekerja == "PLANNER").Where(p => p.alias != null && p.alias != "").Where(p => p.status == "PEKERJA").ToList();
+            ViewBag.unitProses = _context.unitProses.Where(p => p.deleted == 0).ToList();
+            ViewBag.unit = _context.contractItem.Where(p => p.item_group == "UNIT").ToList();
+            ViewBag.kategori = _context.contractItem.Where(p => p.item_group == "KATEGORIPAKET").ToList();
+            ViewBag.kriteria = _context.contractItem.Where(p => p.item_group == "KRITERIA").ToList();
+            ViewBag.skill = _context.contractItem.Where(p => p.item_group == "SKILLGROUP").ToList();
+            ViewBag.srcvendor = _context.contractItem.Where(p => p.item_group == "SRCVENDOR").ToList();
+            ViewBag.asalsrc = _context.contractItem.Where(p => p.item_group == "ASALSRC").ToList();
+            ViewBag.koordinasi = _context.contractItem.Where(p => p.item_group == "KOORDINASI").ToList();
+            ViewBag.kat_tender = _context.contractItem.Where(p => p.item_group == "KATEGORITENDER").ToList();
+            ViewBag.dirpws = _context.contractItem.Where(p => p.item_group == "DIRPWS").ToList();
+            ViewBag.manpower = _context.contractItem.Where(p => p.item_group == "MANPOWER").ToList();
+            ViewBag.fisilitator = _context.contractItem.Where(p => p.item_group == "FISILITATOR").ToList();
+            ViewBag.status = _context.contractItem.Where(p => p.item_group == "STATUS").ToList();
+            ViewBag.tools = _context.contractItem.Where(p => p.item_group == "TOOLS").ToList();
+            ViewBag.koordinasi = _context.contractItem.Where(p => p.item_group == "KOORDINASI").ToList();
+
+            var contract = _context.contractTracking.Where(p => p.idPaket == id).FirstOrDefault();
+            ViewBag.durasi = _context.durasi.Where(p => p.id_project == contract.projectID && p.kat_tender == contract.katTender).FirstOrDefault();
+            ViewBag.data = contract;
+
+            return View();
+        }
+
+        public IActionResult UpdateContract_()
+        {
+            try
+            {
+                var bulan = Request.Form["bulan"].FirstOrDefault();
+                int id_ = Int32.Parse(Request.Form["hidden_id"].FirstOrDefault());
+                ContractTracking val = _context.contractTracking.Where(p => p.idPaket == id_).FirstOrDefault();
+                Boolean t;
+                if (val != null)
+                {
+                    val.unit = Request.Form["unit"].FirstOrDefault();
+                    val.bulan = bulan.Split('-')[1].ToString();
+                    val.tahun = bulan.Split('-')[0].ToString();
+                    val.pic = Request.Form["pic"].FirstOrDefault();
+                    val.projectID = Convert.ToInt64(Request.Form["projectNo"].FirstOrDefault());
+                    val.katPaket = Request.Form["katPaket"].FirstOrDefault();
+                    val.tipePaket = Request.Form["tipePaket"].FirstOrDefault();
+                    val.kriteria = Request.Form["kriteria"].FirstOrDefault();
+                    val.judulPekerjaan = Request.Form["judulPekerjaan"].FirstOrDefault();
+                    val.tipe_koordinasi = Convert.ToInt32(Request.Form["tipe_koordinasi"].FirstOrDefault());
+                    val.koordinasi = Request.Form["koordinasi"].FirstOrDefault();
+                    val.disiplin = Request.Form["disiplin"].FirstOrDefault();
+                    val.dirPWS = Request.Form["direksiPengawas"].FirstOrDefault();
+
+                    val.katTender = Request.Form["katTender"].FirstOrDefault();
+                    val.WO = Request.Form["orderNo"].FirstOrDefault();
+                    val.PR = Request.Form["pr_no"].FirstOrDefault();
+                    val.po = Request.Form["po_no"].FirstOrDefault();
+                    val.noSP = Request.Form["sp_no"].FirstOrDefault();
+                    val.deadLine = Convert.ToDateTime(Request.Form["dead_line"].FirstOrDefault()).Date;
+                    val.targetSP = Convert.ToDateTime(Request.Form["terbit_sp"].FirstOrDefault()).Date;
+                    val.skillGroup = Request.Form["skillGroup"].FirstOrDefault();
+                    val.csms = Request.Form["csms"].FirstOrDefault();
+                    val.sourceVendor = Request.Form["sourceVendor"].FirstOrDefault();
+                    val.asalSource = Request.Form["asalSource"].FirstOrDefault();
+                    val.kota = Request.Form["kota"].FirstOrDefault();
+
+                    if (Request.Form.Files.Count() != 0)
+                    {
+                        if (val.file_sp != null)
+                        {
+                            string ExitingFile = environment.WebRootPath + "/" + val.file_sp;
+                            System.IO.File.Delete(ExitingFile);
+                        }
+
+                        IFormFile postedFile = Request.Form.Files[0];
+                        string fileName = DateTime.Now.ToString("yyyyMMddHHmmssfff") + "_" + postedFile.FileName;
+                        string path = environment.WebRootPath + "/upload/paket_jasa/" + fileName;
+
+                        using (var stream = System.IO.File.Create(path))
+                        {
+                            postedFile.CopyTo(stream);
+                            val.file_sp = "upload/paket_jasa/" + fileName;
+                        }
+
+                    }
+                    else
+                    {
+                        val.file_sp = Request.Form["file_"].FirstOrDefault();
+                    }
+
+                    DateTime a = Convert.ToDateTime(Request.Form["deadline"].FirstOrDefault()).Date;
+                    DateTime b = Convert.ToDateTime(Request.Form["target_terbit_sp"].FirstOrDefault()).Date;
+                    val.t_light = (a - b).Days;
+
+
+                    val.target_penunjukan_pemenang = (Request.Form["target_penunjukan_pemenang"].FirstOrDefault() != "") ? Convert.ToDateTime(Request.Form["target_penunjukan_pemenang"].FirstOrDefault()).Date : null;
+                    val.target_jawaban_sanggah = (Request.Form["target_jawaban_sanggah"].FirstOrDefault() != "") ?  Convert.ToDateTime(Request.Form["target_jawaban_sanggah"].FirstOrDefault()).Date : null;
+                    val.target_pengajuan_sanggah = (Request.Form["target_pengajuan_sanggah"].FirstOrDefault() != "") ? Convert.ToDateTime(Request.Form["target_pengajuan_sanggah"].FirstOrDefault()).Date : null;
+                    val.target_pengumuman_pemenang = (Request.Form["target_pengumuman_pemenang"].FirstOrDefault() != "") ? Convert.ToDateTime(Request.Form["target_pengumuman_pemenang"].FirstOrDefault()).Date : null;
+                    val.target_keputusan_pemenang = (Request.Form["target_keputusan_pemenang"].FirstOrDefault() != "") ? Convert.ToDateTime(Request.Form["target_keputusan_pemenang"].FirstOrDefault()).Date : null;
+                    val.target_usulan_pemenang = (Request.Form["target_usulan_penetapan_calon_pemenang"].FirstOrDefault() != "") ? Convert.ToDateTime(Request.Form["target_usulan_penetapan_calon_pemenang"].FirstOrDefault()).Date : null;
+                    val.target_negosiasi = (Request.Form["target_negosiasi"].FirstOrDefault() != "") ? Convert.ToDateTime(Request.Form["target_negosiasi"].FirstOrDefault()).Date : null;
+                    val.target_evaluasi = (Request.Form["target_penetapan_evaluasi_penawaran"].FirstOrDefault() != "") ? Convert.ToDateTime(Request.Form["target_penetapan_evaluasi_penawaran"].FirstOrDefault()).Date : null;
+                    val.target_pembukaan = (Request.Form["target_pembukaan_penawaran"].FirstOrDefault() != "") ? Convert.ToDateTime(Request.Form["target_pembukaan_penawaran"].FirstOrDefault()).Date : null;
+                    val.targetBukaPH = (Request.Form["target_penyampaian_dokumen"].FirstOrDefault() != "") ? Convert.ToDateTime(Request.Form["target_penyampaian_dokumen"].FirstOrDefault()).Date : null;
+                    val.target_pemberian = (Request.Form["target_pemberian_penjelasan"].FirstOrDefault() != "") ? Convert.ToDateTime(Request.Form["target_pemberian_penjelasan"].FirstOrDefault()).Date : null;
+                    val.target_undangan = (Request.Form["target_undangan"].FirstOrDefault() != "") ? Convert.ToDateTime(Request.Form["target_undangan"].FirstOrDefault()).Date : null;
+                    val.target_prakualifikasi = (Request.Form["target_prakualifikasi"].FirstOrDefault() != "") ? Convert.ToDateTime(Request.Form["target_prakualifikasi"].FirstOrDefault()).Date : null;
+                    val.target_sertifikasi = (Request.Form["target_sertifikasi"].FirstOrDefault() != "") ? Convert.ToDateTime(Request.Form["target_sertifikasi"].FirstOrDefault()).Date : null;
+                    val.target_pengumuman = (Request.Form["target_pengumuman_pendaftaran"].FirstOrDefault() != "") ? Convert.ToDateTime(Request.Form["target_pengumuman_pendaftaran"].FirstOrDefault()).Date : null;
+                    val.targetCO = (Request.Form["target_kirim_paket_ke_co"].FirstOrDefault() != "") ? Convert.ToDateTime(Request.Form["target_kirim_paket_ke_co"].FirstOrDefault()).Date : null;
+                    val.target_persetujuan = (Request.Form["target_persetujuan"].FirstOrDefault() != "") ? Convert.ToDateTime(Request.Form["target_persetujuan"].FirstOrDefault()).Date : null;
+                    val.target_oe = (Request.Form["target_susun_oe"].FirstOrDefault() != "") ? Convert.ToDateTime(Request.Form["target_susun_oe"].FirstOrDefault()).Date : null;
+                    val.target_kak = (Request.Form["target_susun_kak"].FirstOrDefault() != "") ? Convert.ToDateTime(Request.Form["target_susun_kak"].FirstOrDefault()).Date : null;
+
+
+                    val.akt_penunjukan_pemenang = (Request.Form["aktual_penunjukan_pemenang"].FirstOrDefault() != "") ? Convert.ToDateTime(Request.Form["aktual_penunjukan_pemenang"].FirstOrDefault()).Date : null;
+                    val.akt_jawaban_sanggah = (Request.Form["aktual_jawaban_sanggah"].FirstOrDefault() != "") ? Convert.ToDateTime(Request.Form["aktual_jawaban_sanggah"].FirstOrDefault()).Date : null;
+                    val.akt_pengajuan_sanggah = (Request.Form["aktual_pengajuan_sanggah"].FirstOrDefault() != "") ? Convert.ToDateTime(Request.Form["aktual_pengajuan_sanggah"].FirstOrDefault()).Date : null;
+                    val.akt_pengumuman_pemenang = (Request.Form["aktual_pengumuman_pemenang"].FirstOrDefault() != "") ? Convert.ToDateTime(Request.Form["aktual_pengumuman_pemenang"].FirstOrDefault()).Date : null;
+                    val.akt_keputusan_pemenang = (Request.Form["aktual_keputusan_pemenang"].FirstOrDefault() != "") ? Convert.ToDateTime(Request.Form["aktual_keputusan_pemenang"].FirstOrDefault()).Date : null;
+                    val.akt_usulan_pemenang = (Request.Form["aktual_usulan_penetapan_calon_pemenang"].FirstOrDefault() != "") ? Convert.ToDateTime(Request.Form["aktual_usulan_penetapan_calon_pemenang"].FirstOrDefault()).Date : null;
+                    val.akt_negosiasi = (Request.Form["aktual_negosiasi"].FirstOrDefault() != "") ? Convert.ToDateTime(Request.Form["aktual_negosiasi"].FirstOrDefault()).Date : null;
+                    val.akt_evaluasi = (Request.Form["aktual_penetapan_evaluasi_penawaran"].FirstOrDefault() != "") ? Convert.ToDateTime(Request.Form["aktual_penetapan_evaluasi_penawaran"].FirstOrDefault()).Date : null;
+                    val.akt_pembukaan = (Request.Form["aktual_pembukaan_penawaran"].FirstOrDefault() != "") ? Convert.ToDateTime(Request.Form["aktual_pembukaan_penawaran"].FirstOrDefault()).Date : null;
+                    val.aktualBukaPH = (Request.Form["aktual_penyampaian_dokumen"].FirstOrDefault() != "") ? Convert.ToDateTime(Request.Form["aktual_penyampaian_dokumen"].FirstOrDefault()).Date : null;
+                    val.akt_pemberian = (Request.Form["aktual_pemberian_penjelasan"].FirstOrDefault() != "") ? Convert.ToDateTime(Request.Form["aktual_pemberian_penjelasan"].FirstOrDefault()).Date : null;
+                    val.akt_undangan = (Request.Form["aktual_undangan"].FirstOrDefault() != "") ? Convert.ToDateTime(Request.Form["aktual_undangan"].FirstOrDefault()).Date : null;
+                    val.akt_prakualifikasi = (Request.Form["aktual_prakualifikasi"].FirstOrDefault() != "") ? Convert.ToDateTime(Request.Form["aktual_prakualifikasi"].FirstOrDefault()).Date : null;
+                    val.akt_sertifikasi = (Request.Form["aktual_sertifikasi"].FirstOrDefault() != "") ? Convert.ToDateTime(Request.Form["aktual_sertifikasi"].FirstOrDefault()).Date : null;
+                    val.akt_pengumuman = (Request.Form["aktual_pengumuman_pendaftaran"].FirstOrDefault() != "") ? Convert.ToDateTime(Request.Form["aktual_pengumuman_pendaftaran"].FirstOrDefault()).Date : null;
+                    val.aktualCO = (Request.Form["aktual_kirim_paket_ke_co"].FirstOrDefault() != "") ? Convert.ToDateTime(Request.Form["aktual_kirim_paket_ke_co"].FirstOrDefault()).Date : null;
+                    val.akt_persetujuan = (Request.Form["akt_persetujuan"].FirstOrDefault() != "") ? Convert.ToDateTime(Request.Form["akt_persetujuan"].FirstOrDefault()).Date : null;
+                    val.akt_oe = (Request.Form["akt_persetujuan"].FirstOrDefault() != "") ? Convert.ToDateTime(Request.Form["aktual_susun_oe"].FirstOrDefault()).Date : null;
+                    val.akt_kak = (Request.Form["aktual_susun_kak"].FirstOrDefault() != "") ? Convert.ToDateTime(Request.Form["aktual_susun_kak"].FirstOrDefault()).Date : null;
+
+
+                    val.aktualSP = (Request.Form["aktual_proses_spb"].FirstOrDefault() != "") ? Convert.ToDateTime(Request.Form["aktual_proses_spb"].FirstOrDefault()).Date : null;
+                    val.currStat = Request.Form["current"].FirstOrDefault();
+                    val.currStatDesc = Request.Form["ket_current"].FirstOrDefault();
+
+                    val.mulai = (Request.Form["start"].FirstOrDefault() != "") ? Convert.ToDateTime(Request.Form["start"].FirstOrDefault()).Date : null;
+                    val.selesai = (Request.Form["end"].FirstOrDefault() != "") ? Convert.ToDateTime(Request.Form["end"].FirstOrDefault()).Date : null;
+                    val.persiapan = Convert.ToInt32(Request.Form["preparing"].FirstOrDefault());
+                    val.fabrikasi = Convert.ToInt32(Request.Form["fabrikasi"].FirstOrDefault());
+                    val.mech = Convert.ToInt32(Request.Form["mechanical"].FirstOrDefault());
+                    val.finishing = Convert.ToInt32(Request.Form["finishing"].FirstOrDefault());
+                    val.pemeliharaan = Convert.ToInt32(Request.Form["maintenance"].FirstOrDefault());
+
+                    using var transaction = _context.Database.BeginTransaction();
+                    try
+                    {
+                        _context.SaveChanges();
+                        if (val.WO != "")
+                        {
+                            Joblist_Detail jobplan = _context.joblist_Detail.Where(p => p.no_jasa == id_).FirstOrDefault();
+                            if (jobplan != null)
+                            {
+                                if (Convert.ToString(val.aktualCO) != "")
+                                {
+                                    jobplan.status_jasa = "COMPLETED";
+                                }
+                                else
+                                {
+                                    jobplan.status_jasa = "NOT_COMPLETED";
+                                }
+                                _context.SaveChanges();
+                            }
+                        }
+                        transaction.Commit();
+                        t = true;
+                    }
+                    catch (Exception)
+                    {
+                        transaction.Rollback();
+                        t = false;
+                    }
+                   
+                }
+                else
+                {
+                    t = false;
+                }
+
+                return Json(new { result = t });
+            }
+            catch
+            {
+                throw;
+            }
+        }
+
+        public async Task<IActionResult> RelatedJoblist()
+        {
+            try {
+                var draw = HttpContext.Request.Form["draw"].FirstOrDefault();
+
+                var start = Request.Form["start"].FirstOrDefault();
+
+                var length = Request.Form["length"].FirstOrDefault();
+
+                var sortColumn = Request.Form["columns[" + Request.Form["order[1][column]"].FirstOrDefault() + "][name]"].FirstOrDefault();
+
+                var sortColumnDirection = Request.Form["order[1][dir]"].FirstOrDefault();
+
+                var searchValue = Request.Form["search[value]"].FirstOrDefault();
+
+                int pageSize = length != null ? Convert.ToInt32(length) : 0;
+                int skip = start != null ? Convert.ToInt32(start) : 0;
+                int recordsTotal = 0;
+
+                var customerData = (from j in _context.joblist
+                                    join jd in _context.joblist_Detail on j.id equals jd.joblist_id
+                                    join e in _context.equipments on j.id_eqTagNo equals e.id
+                                    select new
+                                    {
+                                        id = jd.id,
+                                        eqTagNo = e.eqTagNo,
+                                        jobNo = j.jobNo,
+                                        jobDesc = jd.jobDesc,
+                                        no_jasa = jd.no_jasa,
+                                        deleted = j.deleted,
+                                    }).Where(p => p.no_jasa == Convert.ToInt32(Request.Form["id_contract"].FirstOrDefault()) && p.deleted == 0);
+
+
+                if (!(string.IsNullOrEmpty(sortColumn) && string.IsNullOrEmpty(sortColumnDirection)))
+                {
+                    customerData = customerData.OrderBy(sortColumn + " " + sortColumnDirection);
+                }
+
+                if (!string.IsNullOrEmpty(searchValue))
+                {
+                    customerData = customerData.Where(b => b.eqTagNo.StartsWith(searchValue));
+                }
+                // Total number of rows count
+                //Console.WriteLine(customerData);
+                recordsTotal = customerData.Count();
+                // Paging
+                var datas = await customerData.Skip(skip).Take(pageSize).ToListAsync();
+                //var data = _memoryCache.Get("products");
+                //data = await _memoryCache.Set("products", datas, expirationTime);
+                // Returning Json Data
+                return Json(new { draw = draw, recordsFiltered = recordsTotal, recordsTotal = recordsTotal, data = datas });
+            } catch
+            {
+                throw;
+            }
+        }
+
+        public IActionResult getDataTarget()
+        {
+            try
+            {
+                var durasi = _context.durasi.Where(p => p.id_project == Convert.ToInt64(Request.Form["id_project"].FirstOrDefault()) && p.kat_tender == Request.Form["kattender"].FirstOrDefault()).FirstOrDefault();
+                 
+                if (durasi != null)
+                {
+                    var target_sp = Convert.ToDateTime(Request.Form["target_sp"].FirstOrDefault()).Date;
+                    var target_penunjukan_pemenang = Convert.ToDateTime(Request.Form["target_sp"].FirstOrDefault()).AddDays(-Convert.ToDouble(durasi.proses_spb)) ;
+                    var target_jawaban_sanggah = Convert.ToDateTime(target_penunjukan_pemenang).AddDays(-Convert.ToDouble(durasi.tunjuk_pemenang));
+                    var target_pengajuan_sanggah = Convert.ToDateTime(target_jawaban_sanggah).AddDays(-Convert.ToDouble(durasi.jawaban_sanggah));
+                    var target_pengumuman_pemenang = Convert.ToDateTime(target_pengajuan_sanggah).AddDays(-Convert.ToDouble(durasi.pengajuan_sanggah));
+                    var target_keputusan_pemenang = Convert.ToDateTime(target_pengumuman_pemenang).AddDays(-Convert.ToDouble(durasi.pengumuman_pemenang));
+                    var target_usulan_pemenang = Convert.ToDateTime(target_keputusan_pemenang).AddDays(-Convert.ToDouble(durasi.keputusan));
+                    var target_negosiasi = Convert.ToDateTime(target_usulan_pemenang).AddDays(-Convert.ToDouble(durasi.usulan));
+                    var target_evaluasi = Convert.ToDateTime(target_negosiasi).AddDays(-Convert.ToDouble(durasi.negosiasi));
+                    var target_pembukaan = Convert.ToDateTime(target_evaluasi).AddDays(-Convert.ToDouble(durasi.evaluasi));
+                    var target_penyampaian = Convert.ToDateTime(target_pembukaan).AddDays(-Convert.ToDouble(durasi.pembukaan));
+                    var target_pemberian = Convert.ToDateTime(target_penyampaian).AddDays(-Convert.ToDouble(durasi.penyampaian));
+                    var target_undangan = Convert.ToDateTime(target_pemberian).AddDays(-Convert.ToDouble(durasi.pemberian));
+                    var target_prakualifikasi = Convert.ToDateTime(target_undangan).AddDays(-Convert.ToDouble(durasi.undangan));
+                    var target_sertifikasi = Convert.ToDateTime(target_prakualifikasi).AddDays(-Convert.ToDouble(durasi.prakualifikasi));
+                    var target_pengumuman = Convert.ToDateTime(target_sertifikasi).AddDays(-Convert.ToDouble(durasi.sertifikasi));
+                    var target_co = Convert.ToDateTime(target_pengumuman).AddDays(-Convert.ToDouble(durasi.pengumuman_pendaftaran));
+                    var target_persetujuan = Convert.ToDateTime(target_co).AddDays(-Convert.ToDouble(durasi.kirim_ke_co));
+                    var target_oe = Convert.ToDateTime(target_persetujuan).AddDays(-Convert.ToDouble(durasi.persetujuan));
+                    var target_kak = Convert.ToDateTime(target_oe).AddDays(-Convert.ToDouble(durasi.susun_oe));
+
+                    return Json(new
+                    {
+                        result = true,
+                        target_spb = target_sp,
+                        target_penunjukan_pemenang = target_penunjukan_pemenang,
+                        target_jawaban_sanggah = target_jawaban_sanggah,
+                        target_pengajuan_sanggah = target_pengajuan_sanggah,
+                        target_pengumuman_pemenang = target_pengumuman_pemenang,
+                        target_keputusan_pemenang = target_keputusan_pemenang,
+                        target_usulan_pemenang = target_usulan_pemenang,
+                        target_negosiasi = target_negosiasi,
+                        target_evaluasi = target_evaluasi,
+                        target_pembukaan = target_pembukaan,
+                        target_penyampaian = target_penyampaian,
+                        target_pemberian = target_pemberian,
+                        target_undangan = target_undangan,
+                        target_prakualifikasi = target_prakualifikasi,
+                        target_sertifikasi = target_sertifikasi,
+                        target_pengumuman = target_pengumuman,
+                        target_co = target_co,
+                        target_persetujuan = target_persetujuan,
+                        target_oe = target_oe,
+                        target_kak = target_kak,
+                    });
+                }
+                else
+                {
+                    return Json(new { result = false });
+                }
+            }
+            catch
+            {
+                throw;
+            }
+        }
+
+        public IActionResult deleteWoJasa()
+        {
+            try
+            {
+                Joblist_Detail jobplan = _context.joblist_Detail.Where(p => p.id == Convert.ToInt64(Request.Form["id"].FirstOrDefault())).FirstOrDefault();
+                if(jobplan != null)
+                {
+                    jobplan.no_jasa = null;
+                    jobplan.order_jasa = null;
+                    jobplan.pekerjaan = null;
+                    jobplan.status_jasa = "NOT_PLANNED";
+                    if (jobplan.jasa != 0 || jobplan.all_in_kontrak != 0 || jobplan.material != 0)
+                    {
+                       
+
+                        if (jobplan.status_jasa != "")
+                        {
+                            jobplan.status_job = jobplan.status_jasa;
+                        }
+
+                        if (jobplan.jasa != 0 || jobplan.material != 0)
+                        {
+                            if (jobplan.status_material == "COMPLETED" && jobplan.status_jasa != "COMPLETED")
+                            {
+                                jobplan.status_job = "NOT_COMPLETED";
+                            }
+
+                            if (jobplan.status_jasa == "COMPLETED" && jobplan.status_material != "COMPLETED")
+                            {
+                                jobplan.status_job = "NOT_COMPLETED";
+                            }
+
+                            if (jobplan.status_jasa != "COMPLETED" && jobplan.status_material != "COMPLETED")
+                            {
+                                jobplan.status_job = "NOT_COMPLETED";
+                            }
+
+                            if (jobplan.status_jasa == "NOT_PLANNED" && jobplan.status_material == "NOT_PLANNED")
+                            {
+                                jobplan.status_job = "NOT_COMPLETED";
+                            }
+
+                            if (jobplan.status_jasa == "COMPLETED" && jobplan.status_material == "COMPLETED")
+                            {
+                                jobplan.status_job = "COMPLETED";
+                            }
+                        }
+                    }
+                    else
+                    {
+                        jobplan.status_job = "NOT_IDENTIFY";
+                    }
+
+                    _context.SaveChanges();
+                    return Json(new { title = "Sukses!", icon = "success", status = "Berhasil Dihapus" });
+                }
+                return Json(new { title = "Maaf!", icon = "error", status = "Tidak Dapat di Hapus!, Silahkan Hubungi Administrator " });
+            
             }
             catch
             {

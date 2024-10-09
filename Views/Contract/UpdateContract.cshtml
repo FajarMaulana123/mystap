@@ -1,0 +1,1720 @@
+﻿@removeTagHelper Microsoft.AspNetCore.Mvc.TagHelpers.OptionTagHelper, Microsoft.AspNetCore.Mvc.TagHelpers
+@{
+    ViewData["Title"] = "Update Contract";
+}
+<div class="layout-px-spacing">
+       @*  {{-- <div class="row">
+            <div class="col-11"> --}} *@
+                        <ol class="breadcrumb float-xl-end">
+                            <li class="breadcrumb-item"><a href="javascript:void(0);">   <i data-feather="file"></i></a></li>
+                            <li class="breadcrumb-item"><a href="/contracttracking">Paket Kontrak</a></li>
+                            <li class="breadcrumb-item active" aria-current="page"><span>Update Contract</span></li>
+                        </ol>
+                        <h1 class="page-header">Update Contract</h1>
+             
+           @*  {{-- </div>
+        </div> --}} *@
+        <form id="add-form"> 
+       @*  {{-- <div class="panel panel-inverse">
+            <div class="panel-heading">
+                <h4 class="panel-title"></h4>
+                <div class="panel-heading-btn">
+                    <a href="javascript:;" class="btn btn-xs btn-icon btn-default" data-toggle="panel-expand"><i class="fa fa-expand"></i></a>
+                    <a href="javascript:;" class="btn btn-xs btn-icon btn-warning" data-toggle="panel-collapse"><i class="fa fa-minus"></i></a>
+                </div>
+            </div>
+            
+            <div class="panel-body">  
+                <div class="row">
+                    <div class="col-12"> --}} *@
+                        <div class="card mb-2">
+                            <div class="card-body">
+                                    <input type="hidden" name="hidden_id" id="hidden_id" value="@(ViewBag.data.idPaket)">
+                                        <div class="row">
+                                            <div class="col-md-6 mb-2">
+                                                <div class="form-group">
+                                                    <label>No Paket</label>
+                                                    <fieldset disabled>
+                                                        <input type="text" name="noPaket" id="noPaket" disable class="form-control" value="@(ViewBag.data.noPaket)">
+                                                    </fieldset>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-3 mb-2 ">
+                                                <div class="form-group">
+                                                    <label>Unit</label>
+                                                    <select name="unit" id="unit" class="form-control select2" >
+                                                    <option value="">Select unit</option>
+                                                    @foreach (var val in ViewBag.unit)
+                                                    {
+                                                        <option value="@(val.item)" @((ViewBag.data.unit == val.item) ? "selected" : "")> @(val.item)</option>
+                                                    }
+
+                                                </select>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-3 mb-2">
+                                                <div class="form-group">
+                                                    <label>PIC</label>
+                                                    <select name="pic" id="pic" class="form-control select2">
+                                                        <option value="">Select PIC</option>
+                                                        @foreach (var val in ViewBag.user)
+                                                        {
+                                                            <option value="@(val.alias)" @((ViewBag.data.pic == val.alias) ? "selected" : "")> @(val.alias)</option>
+                                                        }
+                                                    </select>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-6 mb-2">
+                                                <div class="form-group">
+                                                    <label>Project</label>
+                                                    <select name="projectNo" id="projectNo" class="form-control form-control-sm select2" >
+                                                        <option value="">Select Project</option>
+                                                        @foreach (var val in ViewBag.project)
+                                                        {
+                                                            <option value="@(val.id)" @((ViewBag.data.projectID == val.id) ? "selected" : "")> @(val.description)</option>
+                                                        }
+                                                    </select>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-3 mb-2">
+                                                <div class="form-group">
+                                                    <label>Kategori Paket</label>
+                                                    <select name="kategoriPaket" id="kategoriPaket" class="form-control select2">
+                                                    <option value="">Select Kategori</option>
+                                                    @foreach (var val in ViewBag.kategori)
+                                                    {
+                                                        <option value="@(val.item)" @((ViewBag.data.kategoriPaket == val.item) ? "selected" : "")> @(val.item)</option>
+                                                    }
+                                                </select>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-3 mb-2">
+                                                <div class="form-group">
+                                                    <label>Tipe Paket</label>
+                                                    <select name="tipePaket" id="tipePaket" class="form-control select2">
+                                                    <option value="">Select Paket</option>
+                                                    <option value="VOL" @((ViewBag.data.tipePaket == "VOL") ? "selected" : "")>VOL</option>
+                                                    <option value="EQHR" @((ViewBag.data.tipePaket == "EQHR") ? "selected" : "")>EQHR</option>
+                                                    <option value="MDAY" @((ViewBag.data.tipePaket == "MDAY") ? "selected" : "")>MDAY</option>
+                                                    <option value="LS" @((ViewBag.data.tipePaket == "LS") ? "selected" : "")>LS</option>
+                                                    <option value="MIXED" @((ViewBag.data.tipePaket == "MIXED") ? "selected" : "")>MIXED</option>
+                                                </select>
+                                                </div>
+                                            </div>
+                                              
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-6 mb-2">
+                                            <div class="form-group">
+                                                <label>Bulan</label>
+                                                <input type="month" name="bulan" id="bulan" class="form-control " value="@(ViewBag.data.tahun)-@(ViewBag.data.bulan)" disable>
+                                            </div>
+                                            </div>
+                                            <div class="col-md-3 mb-2">
+                                                <div class="form-group">
+                                                    <label>Kriteria </label>
+                                                    <select name="kriteria" id="kriteria" class="form-control select2">
+                                                        <option value="">Select Kriteria</option>
+                                                        @foreach (var val in ViewBag.kriteria)
+                                                        {
+                                                            <option value="@(val.item)" @((ViewBag.data.kriteria == val.item) ? "selected" : "")> @(val.item)</option>
+                                                        }
+                                                    </select> 
+                                                </div>
+                                            </div>
+                                            <div class="col-md-3 mb-2">
+                                                <div class="form-group">
+                                                    <label>Kat Paket </label>
+                                                    <select name="katPaket" id="katPaket" class="form-control select2">
+                                                        <option value="">Select Kat Paket</option>
+                                                        <option value="NORMAL" @((ViewBag.data.katPaket == "NORMAL") ? "selected" : "")>NORMAL</option>
+                                                        <option value="TAMBAHAN" @((ViewBag.data.katPaket == "TAMBAHAN") ? "selected" : "")>TAMBAHAN</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-6 mb-2">
+                                                <div class="form-group">
+                                                    <label>Judul Pekerjaan </label>
+                                                    <select name="judulPekerjaan" id="judulPekerjaan" class="form-control form-control-sm select2" disable>
+                                                        <option value="">Select List SOW</option>
+                                                        @* sow *@
+                                                        @foreach (var val in ViewBag.sow)
+                                                        {
+                                                            <option value="@(val.judulPekerjaan)" @((ViewBag.data.judulPekerjaan == val.judulPekerjaan) ? "selected" : "")> @(val.judulPekerjaan)</option>
+                                                        }
+                                                    </select>
+                                            </div>
+                                            </div>
+                                            <div class="col-md-3 mb-2">
+                                                <label>koordinasi</label>
+                                                <div class="n-chk">
+                                                    <label class="new-control new-radio new-radio-text radio-primary">
+                                                        <input type="radio" class="new-control-input tipe_koordinasi" name="tipe_koordinasi" value="0" @((ViewBag.data.tipe_koordinasi == 0) ? "checked" : "")>
+                                                        <span class="new-control-indicator"></span><span class="new-radio-content">Tidak Perlu</span>
+                                                    </label>
+                                                    <label class="new-control new-radio new-radio-text radio-primary">
+                                                        <input type="radio" class="new-control-input tipe_koordinasi" name="tipe_koordinasi" value="1" value="0" @((ViewBag.data.tipe_koordinasi == 1) ? "checked" : "")>
+                                                        <span class="new-control-indicator"></span><span class="new-radio-content">Perlu</span>
+                                                    </label>
+                                                </div>
+                                            </div>  
+                                            <div class="col-md-3 mb-2">
+                                                <div class="form-group" id="show_koordinasi" style="display:@((ViewBag.data.tipe_koordinasi == 1) ? "block" : "none");">
+                                                    <label>Kordinasi Dengan :</label>
+                                                    <select name="koordinasi" id="koordinasi" class="form-control select2">
+                                                        <option value="">Select Koordinasi</option>
+                                                        @foreach (var val in ViewBag.koordinasi)
+                                                        {
+                                                            <option value="@(val.item)" @((ViewBag.data.koordinasi == val.item) ? "selected" : "")> @(val.item)</option>
+                                                        }
+                                                    </select>
+                                                </div>
+                                            </div>    
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-6 mb-2">
+                                                <div class="form-group">
+                                                    <label>Direksi Pengawas</label>
+                                                        <select name="direksiPengawas" id="direksiPengawas" class="form-control form-control-sm">
+                                                            <option value="">Select Direksi</option>
+                                                            @foreach (var val in ViewBag.dirpws)
+                                                            {
+                                                                <option value="@(val.item)" @((ViewBag.data.dirPWS == val.item) ? "selected" : "")> @(val.item)</option>
+                                                            }
+                                                        </select>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6 mb-2">
+                                                <div class="form-group">
+                                                    <label>Disiplin</label>
+                                                        <select name="disiplin" id="disiplin" class="form-control form-control-sm">
+                                                            <option value="">Select Disiplin</option>
+                                                            <option value="Mechanical" @((ViewBag.data.disiplin == "Mechanical") ? "selected" : "")>Mechanical</option>
+                                                            <option value="Rotating" @((ViewBag.data.disiplin == "Rotating") ? "selected" : "")>Rotating</option>
+                                                            <option value="Instrument" @((ViewBag.data.disiplin == "Instrument") ? "selected" : "")>Instrument</option>
+                                                            <option value="Electrical" @((ViewBag.data.disiplin == "Electrical") ? "selected" : "")>Electrical</option>
+                                                            <option value="Civil" @((ViewBag.data.disiplin == "Civil") ? "selected" : "")>Civil</option>
+                                                        </select>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        @* {{-- <div class="form-actions">
+                                            <div class="text-right" style="text-align: right;">
+                                                <button type="submit" class="btn btn-info">Submit</button>
+                                                <button type="reset" class="btn btn-dark">Reset</button>
+                                            </div>
+                                        </div> --}} *@
+                                    </div>
+                                @* {{-- </form> --}} *@
+                            </div>
+                        @* {{-- </div> --}} *@
+                    @* {{-- </div>
+                </div>
+            </div>
+        </div> --}} *@
+        @* {{-- <div class="panel panel-inverse">
+            <div class="panel-heading">
+                <h4 class="panel-title"></h4>
+                <div class="panel-heading-btn">
+                    <a href="javascript:;" class="btn btn-xs btn-icon btn-default" data-toggle="panel-expand"><i class="fa fa-expand"></i></a>
+                    <a href="javascript:;" class="btn btn-xs btn-icon btn-warning" data-toggle="panel-collapse"><i class="fa fa-minus"></i></a>
+                </div>
+            </div>   
+            <div class="panel-body">  
+                <div class="row">
+                    <div class="col-12"> --}} *@
+                        <div class="card mb-2">
+                            <div class="card-body">
+                                <ul class="nav nav-pills" style="justify-content: left; background-color: lightgray">
+                                    <li class="nav-item">
+                                        <a href="#nav-pills-tab-1" data-bs-toggle="tab" class="nav-link active">
+                                        Tender | Vendor
+                                        </a>
+                                    </li>
+                                    <!-- <li class="nav-item">
+                                        <a href="#nav-pills-tab-2" data-bs-toggle="tab" class="nav-link">
+                                        Vendor
+                                        </a>
+                                    </li> -->
+                                    <li class="nav-item">
+                                        <a href="#nav-pills-tab-3" data-bs-toggle="tab" class="nav-link">
+                                        Target Step
+                                        </a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a href="#nav-pills-tab-4" data-bs-toggle="tab" class="nav-link">
+                                        Durasi Step
+                                        </a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a href="#nav-pills-tab-5" data-bs-toggle="tab" class="nav-link">
+                                        Durasi|Chal Session|Kick of Meeting|Sosialisasi JSA
+                                        </a>
+                                    </li>
+                                   @*  {{-- <li class="nav-item">
+                                        <a href="#nav-pills-tab-6" data-bs-toggle="tab" class="nav-link">
+                                        Resources
+                                        </a>
+                                    </li> --}} *@
+                                    @* {{-- <li class="nav-item">
+                                        <a href="#nav-pills-tab-7" data-bs-toggle="tab" class="nav-link">
+                                        Status Tagihan|Potensi Addendum|Note
+                                        </a>
+                                    </li> --}} *@
+                                    <li class="nav-item">
+                                        <a href="#nav-pills-tab-8" data-bs-toggle="tab" class="nav-link">
+                                        Related Joblist
+                                        </a>
+                                    </li>
+                                </ul>
+                                <div class="tab-content p-3 rounded-top panel rounded-0 m-0">
+                                    <!-- BEGIN tab-pane -->
+                                    <div class="tab-pane fade active show" id="nav-pills-tab-1">
+                                        <div class="row">
+                                                <div class="col-md-6">
+                                                    <div class="card">
+                                                        <div class="card-header">
+                                                            Tender : 
+                                                        </div>
+                                                        <div class="card-body">
+                                                        <div class="row">
+                                                            <div class="col-md-6">
+                                                                <div class="form-group mb-2">
+                                                                    <label>Kat Tender</label>
+                                                                         <input type="hidden" name="hidden_kattender" id="hidden_kattender" value="@(ViewBag.data.katTender)" />
+                                                                        <select name="katTender" id="katTender" class="form-control form-control-sm">
+                                                                        
+                                                                        </select>
+                                                                </div>
+                                                                 <div class="form-group mb-2">
+                                                                    <label>Dead Line</label>
+                                                    <input type="date" name="dead_line" id="dead_line" class="form-control form-control-sm" value="@(Convert.ToDateTime(ViewBag.data.deadLine).ToString("yyyy-MM-dd"))">
+                                                                </div>
+                                                                <div class="form-group mb-2">
+                                                                    <label>Serah terima/Terbit SP</label>
+                                                    <input type="date" name="terbit_sp" id="terbit_sp" class="form-control form-control-sm" value="@((ViewBag.data.aktualSP != null) ? Convert.ToDateTime(ViewBag.data.aktualSP).ToString("yyyy-MM-dd") : Convert.ToDateTime(ViewBag.data.targetSP).ToString("yyyy-MM-dd"))">
+                                                                </div>
+                                                                <div class="form-group">
+                                                                    <label>SP No</label>  
+                                                                    <input type="text" name="sp_no" id="sp_no"  class="form-control form-control-sm" value="@(ViewBag.noSP)">
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-md-6 ">
+                                                                <div class="form-group mb-2">
+                                                                    <label>Order No</label>  
+                                                                    <input type="text" name="orderNo" id="orderNo"  class="form-control form-control-sm" value="@(ViewBag.data.WO)">
+                                                                </div>
+                                                                <div class="form-group mb-2">
+                                                                    <label>PR No</label>
+                                                                    <input type="text" name="pr_no" id="pr_no"  class="form-control form-control-sm" value="@(ViewBag.data.PR)">
+                                                                </div>
+                                                                <div class="form-group mb-2">
+                                                                    <label>PO No</label>  
+                                                                    <input type="text" name="po_no" id="po_no"  class="form-control form-control-sm" value="@(ViewBag.data.po)">
+                                                                </div>
+                                                                <div class="form-group">
+                                                                    <label>Upload SP/SP3MK</label>
+                                                                    <input type="file" name="file_sp" id="file_sp" class="form-control form-control-sm">
+                                                                    <input type="hidden" name="file_" id="file_" class="form-control form-control-sm" value="@(ViewBag.data.file_sp)">
+                                                                </div>
+                                                                @if (ViewBag.data.file_sp != null || ViewBag.data.file_sp != "")
+                                                                {
+                                                                   <a href="/upload/@(ViewBag.data.file_sp)" target="_blank"><i class="fa-solid fa-eye"></i> Lihat File</a>
+                                                                }
+                                                            </div>
+                                                            <!-- <div class="col-md-6 mb-2">
+                                                                <div class="form-group">
+                                                                    <label>Direksi Pengawas</label>
+                                                                        <select name="direksiPengawas" id="direksiPengawas" class="form-control form-control-sm">
+                                                                            <option value="">Select Direksi</option>
+                                                                               
+                                                                        </select>
+                                                                </div>
+                                                            </div> -->
+                                                        </div>
+                                                        <!-- <div class="row">
+                                                            <div class="col-md-6 mb-2">
+                                                                <div class="form-group">
+                                                                    <label>Nilai HPS/OE</label>
+                                                                    <input type="text" name="nilaiHPS" id="nilaiHPS" class="form-control form-control-sm">
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-md-6 mb-2">
+                                                                <div class="form-group">
+                                                                    <label>Nilai Kontrak</label>
+                                                                    <input type="text" name="nilaiKontrak" id="nilaiKontrak" class="form-control form-control-sm">
+                                                                </div>
+                                                            </div>
+                                                        </div> -->
+                                                        <!-- <div class="row">
+                                                            <div class="col-md-12 mb-2">
+                                                                <div class="form-group">
+                                                                    <label>Order No</label>  
+                                                                    <input type="text" name="orderNo" id="orderNo"  class="form-control form-control-sm">
+                                                                </div>
+                                                            </div>
+                                                        </div> -->
+                                                        @* {{-- <div class="row">
+                                                            <div class="col-md-6 mb-2">
+                                                                
+                                                            </div>
+                                                            <div class="col-md-6 mb-2">
+                                                                
+                                                            </div>
+                                                        </div>  --}} *@
+                                                        <!-- <div class="row">
+                                                            <div class="col-md-6 mb-2">
+                                                                <div class="form-group">
+                                                                    <label>Sico</label>
+                                                                    <input type="text" name="sico" id="sico"  class="form-control form-control-sm">
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-md-6 mb-2">
+                                                                <div class="form-group">
+                                                                    <label>no SP</label>  
+                                                                    <input type="text" name="no_sp" id="no_sp"  class="form-control form-control-sm">
+                                                                </div>
+                                                            </div>
+                                                        </div> -->
+                                                        @* {{-- <div class="row">
+                                                             <div class="col-md-6 mb-2">
+                                                                <div class="form-group">
+                                                                    <label>TMT SP</label>
+                                                                    <input type="date" name="tmt_sp" id="tmt_sp"  class="form-control form-control-sm">
+                                                                </div>
+                                                            </div> 
+                                                            <div class="col-md-6 mb-2">
+                                                               
+                                                            </div>
+                                                            <div class="col-md-6 mb-2">
+                                                                
+                                                            </div>
+                                                        </div>   --}} *@
+                                                       @*  {{-- <div class="row">
+                                                            <div class="col-md-6 mb-2">
+                                                                <div class="form-group">
+                                                                    <label>Aktual TMT SP</label>
+                                                                    <input type="text" name="aktual_tmt_sp" id="aktual_tmt_sp"  class="form-control form-control-sm">
+                                                                </div>
+                                                            </div>
+                                                            
+                                                        </div> --}} *@
+                                                        <!-- <div class="row">
+                                                            <div class="col-md-12 mb-2">
+                                                                <div class="n-chk">
+                                                                    <label class="new-control new-checkbox new-checkbox-text checkbox-primary">
+                                                                        <input type="checkbox" value="1" name="aanwijzing" id="aanwijzing" class="new-control-input">
+                                                                        <span class="new-control-indicator"></span><span class="new-chk-content">Perlu Aanwijzing</span>
+                                                                    </label>
+                                                                    <label class="new-control new-checkbox new-checkbox-text checkbox-primary">
+                                                                        <input type="checkbox" value="1" name="kontrak_man_power" id="kontrak_man_power" class="new-control-input">
+                                                                        <span class="new-control-indicator"></span><span class="new-chk-content">Kontrak Man Power</span>
+                                                                    </label>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="row">
+                                                            <div class="col-md-4 mb-2">
+                                                                <div class="form-group">
+                                                                    <label>Klasifikasi Kontrak</label>
+                                                                    <input type="text" name="klasifikasi_kontrak" id="klasifikasi_kontrak"  class="form-control form-control-sm">
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-md-4 mb-2">
+                                                                <div class="form-group">
+                                                                    <label>Nilai Hasil Kerja</label>  
+                                                                    <input type="text" name="nilai_hasil_kerja" id="nilai_hasil_kerja"  class="form-control form-control-sm">
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-md-4 mb-2">
+                                                                <div class="form-group">
+                                                                    <label>Kategori Critical Work</label>
+                                                                    <input type="text" name="kategori_critical_work" id="kategori_critical_work"  class="form-control form-control-sm">
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="row">
+                                                            <div class="col-md-6 mb-2">
+                                                                <div class="form-group">
+                                                                    <label>Rencana & Aktual PIC</label>
+                                                                    <input type="date" name="rencana" id="rencana"  class="form-control form-control-sm">
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-md-6 mb-2">
+                                                                <div class="form-group">
+                                                                    <label>Vendor Terlibat dalam Proses Tender</label>  
+                                                                    <input type="date" name="vendor_terlibat" id="vendor_terlibat"  class="form-control form-control-sm">
+                                                                </div>
+                                                            </div>
+                                                        </div> -->
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            
+                                                <div class="col-md-6">
+                                                    <div class="card">
+                                                        <div class="card-header">
+                                                            Vendor : 
+                                                        </div>
+                                                        <div class="card-body">
+                                                            <div class="row">
+                                                                <div class="col-md-6 mb-2">
+                                                                    <div class="form-group">
+                                                                        <label>Skill Group</label>
+                                                                            <select name="skillGroup" id="skillGroup" class="form-control form-control-sm">
+                                                                                <option value="">Select Skill Group</option>
+                                                                                @foreach (var val in ViewBag.skill)
+                                                                                {
+                                                                                    <option value="@(val.item)" @((ViewBag.data.skillGroup == val.item) ? "selected" : "")> @(val.item)</option>
+                                                                                }
+                                                                            </select>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="col-md-6 mb-2">
+                                                                    <div class="form-group">
+                                                                        <label>CSMS</label>
+                                                                            <select name="csms" id="csms" class="form-control form-control-sm">
+                                                                                <option value="">Select CSMS</option>
+                                                                                <option value="HIGH" @((ViewBag.data.csms == "HIGH") ? "selected" : "")>HIGH</option>
+                                                                                <option value="MEDIUM" @((ViewBag.data.csms == "MEDIUM") ? "selected" : "")>MEDIUM</option>
+                                                                            </select>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            <div class="row">
+                                                                <div class="col-md-6 mb-2">
+                                                                    <div class="form-group">
+                                                                        <label>Source Vendor</label>
+                                                                            <select name="srcvendor" id="srcvendor" class="form-control form-control-sm">
+                                                                                <option value="">Select Source Vendor</option>
+                                                                                @foreach (var val in ViewBag.srcvendor)
+                                                                                {
+                                                                                    <option value="@(val.item)" @((ViewBag.data.sourceVendor == val.item) ? "selected" : "")> @(val.item)</option>
+                                                                                }
+                                                                            </select>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="col-md-6 mb-2">
+                                                                    <div class="form-group">
+                                                                        <label>Asal Source</label>
+                                                                        <select name="aslsrc" id="aslsrc" class="form-control form-control-sm">
+                                                                            <option value="">Select Asal Source</option>
+                                                                            @foreach (var val in ViewBag.asalsrc)
+                                                                            {
+                                                                                <option value="@(val.item)" @((ViewBag.data.asalSource == val.item) ? "selected" : "")> @(val.item)</option>
+                                                                            }
+                                                                        </select>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            <div class="row">
+                                                                <div class="col-md-6 mb-2">
+                                                                    <div class="form-group">
+                                                                        <label>Kota</label>
+                                                                            <input type="text" name="kota" id="kota" class="form-control form-control-sm" value="@(ViewBag.data.kota)">
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            <!-- <div class="row">
+                                                                <div class="col-md-6 mb-2">
+                                                                    <div class="form-group">
+                                                                        <label>Nama Vendor</label>
+                                                                        <input type="text" name="nama_vendor" id="nama_vendor" class="form-control form-control-sm">
+                                                                    </div>
+                                                                </div>
+                                                                <div class="col-md-6 mb-2">
+                                                                    <div class="form-group">
+                                                                        <label>Contact Person</label>
+                                                                        <input type="text" name="contact_person" id="contact_person" class="form-control form-control-sm">
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            <div class="row">
+                                                                <div class="col-md-6 mb-2">
+                                                                    <div class="form-group">
+                                                                        <label>Ket. Lain Terkait Vendor</label>
+                                                                        <input type="text" name="keterangan_vendor" id="keterangan_vendor" class="form-control form-control-sm">
+                                                                    </div>
+                                                                </div>
+                                                                <div class="col-md-6 mb-2">
+                                                                    <div class="form-group">
+                                                                        <label>Konfirmasi Ke Vendor</label>
+                                                                        <input type="text" name="konfirmasi_vendor" id="konfirmasi_vendor" class="form-control form-control-sm">
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            <div class="row">
+                                                                <div class="col-md-12 mb-2">
+                                                                    <div class="form-group">
+                                                                        <label>Action Plan</label>
+                                                                        <input type="text" name="action_plan" id="action_plan" class="form-control form-control-sm">
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            <div class="row">
+                                                                <div class="col-md-6 mb-2">
+                                                                    <div class="form-group">
+                                                                        <label>Pola Shift</label>
+                                                                        <input type="number" name="pola_shift" id="pola_shift" class="form-control form-control-sm">
+                                                                    </div>
+                                                                </div>
+                                                                <div class="col-md-6 mb-2">
+                                                                    <div class="form-group">
+                                                                        <label>Per Shift Man Power</label>
+                                                                        <input type="number" name="shift_man_power" id="shift_man_power" class="form-control form-control-sm">
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            <div class="row">
+                                                                <div class="col-md-6 mb-2">
+                                                                    <div class="form-group">
+                                                                        <label>Total Jam Kerja/Hari</label>
+                                                                        <input type="number" name="total_jam_kerja" id="total_jam_kerja" class="form-control form-control-sm">
+                                                                    </div>
+                                                                </div>
+                                                                <div class="col-md-6 mb-2">
+                                                                    <div class="form-group">
+                                                                        <label>Total Man Power</label>
+                                                                        <input type="number" name="total_man_power" id="total_man_power" class="form-control form-control-sm">
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            <div class="row">
+                                                                <div class="col-md-12 mb-2">
+                                                                    <div class="form-group">
+                                                                        <label>Denda</label>
+                                                                        <div class="row">
+                                                                            <div class="col-md-6 mb-2">
+                                                                                <div class="input-group mb-4">
+                                                                                    <div class="input-group-prepend">
+                                                                                        <span class="input-group-text">MIN</span>
+                                                                                    </div>
+                                                                                    <input type="number" name="min" id="min" class="form-control form-control-sm">
+                                                                                    <div class="input-group-append">
+                                                                                        <span class="input-group-text">%</span>
+                                                                                    </div>
+                                                                                </div>
+                                                                            </div>
+                                                                            <div class="col-md-6 mb-2">
+                                                                                <div class="input-group mb-4">
+                                                                                    <div class="input-group-prepend">
+                                                                                        <span class="input-group-text">MAX</span>
+                                                                                    </div>
+                                                                                    <input type="number" name="max" id="max" class="form-control form-control-sm">
+                                                                                    <div class="input-group-append">
+                                                                                        <span class="input-group-text">%</span>
+                                                                                    </div>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>   -->
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                        </div>
+                                    </div>
+                                    <!-- <div class="tab-pane fade" id="nav-pills-tab-2">
+                                        <form id="form_2">
+                                        
+                                        <div class="form-actions">
+                                            <div class="text-right" style="text-align: right;">
+                                                <button type="submit" class="btn btn-info">Submit</button>
+                                                <button type="reset" class="btn btn-dark">Reset</button>
+                                            </div>
+                                        </div>
+                                        </form>   
+                                    </div> -->
+                                    <div class="tab-pane fade" id="nav-pills-tab-3">
+                                        <div class="row table-responsive">
+                                            <table class="table table-sm" width="100%">
+                                                <tr>
+                                                    <td width="30%"></td>
+                                                    <td class="text-center" style="--bs-table-accent-bg: #f2fd14;"><b>TARGET</b></td>
+                                                    <td class="text-center"><b>AKTUAL</b></td>
+                                                    <td class="text-center" style="--bs-table-accent-bg: #14fdf6;"><b>PROGNOSA</b></td>
+                                                </tr>
+                                                <tr>
+                                                    <td>PENYUSUNAN KAK</td>
+                                    <td style="--bs-table-accent-bg: #f2fd14;"><input type="DATE" name="target_susun_kak" id="target_susun_kak" class="form-control form-control-sm" value="@(Convert.ToDateTime(ViewBag.data.target_kak).ToString("yyyy-MM-dd"))" readonly></td>
+                                    <td><input type="DATE" name="aktual_susun_kak" id="aktual_susun_kak" class="form-control form-control-sm" value="@((ViewBag.data.akt_kak != null ) ? Convert.ToDateTime(ViewBag.data.akt_kak).ToString("yyyy-MM-dd") : "")"></td>
+                                                    <td style="--bs-table-accent-bg: #14fdf6;"><input type="DATE" name="prognosa_susun_kak" id="prognosa_susun_kak" class="form-control form-control-sm" readonly></td>
+                                                </tr>
+                                                <tr>
+                                                    <td>PENYUSUNAN OE</td>
+                                    <td style="--bs-table-accent-bg: #f2fd14;"><input type="DATE" name="target_susun_oe" id="target_susun_oe" class="form-control form-control-sm" value="@(Convert.ToDateTime(ViewBag.data.target_oe).ToString("yyyy-MM-dd"))" readonly></td>
+                                    <td><input type="DATE" name="aktual_susun_oe" id="aktual_susun_oe" class="form-control form-control-sm" value="@((ViewBag.data.akt_oe != null ) ? Convert.ToDateTime(ViewBag.data.akt_oe).ToString("yyyy-MM-dd") : "")"></td>
+                                                    <td style="--bs-table-accent-bg: #14fdf6;"><input type="DATE" name="prognosa_susun_oe" id="prognosa_susun_oe" class="form-control form-control-sm" readonly></td>
+                                                </tr>
+                                                <tr>
+                                                    <td>PERSETUJUAN</td>
+                                    <td style="--bs-table-accent-bg: #f2fd14;"><input type="DATE" name="target_persetujuan" id="target_persetujuan" class="form-control form-control-sm" value="@(Convert.ToDateTime(ViewBag.data.target_persetujuan).ToString("yyyy-MM-dd"))" readonly></td>
+                                    <td><input type="DATE" name="akt_persetujuan" id="akt_persetujuan" class="form-control form-control-sm" value="@((ViewBag.data.akt_persetujuan != null) ? Convert.ToDateTime(ViewBag.data.akt_persetujuan).ToString("yyyy-MM-dd") : "")"></td>
+                                                    <td style="--bs-table-accent-bg: #14fdf6;"><input type="DATE" name="prognosa_persetujuan" id="prognosa_persetujuan" class="form-control form-control-sm" readonly></td>
+                                                </tr>
+                                                <tr>
+                                                    <td>KIRIM PAKET KE CO</td>
+                                    <td style="--bs-table-accent-bg: #f2fd14;"><input type="DATE" name="target_kirim_paket_ke_co" id="target_kirim_paket_ke_co" class="form-control form-control-sm" value="@(Convert.ToDateTime(ViewBag.data.targetCO).ToString("yyyy-MM-dd"))" readonly></td>
+                                    <td><input type="DATE" name="aktual_kirim_paket_ke_co" id="aktual_kirim_paket_ke_co" class="form-control form-control-sm" value="@((ViewBag.data.aktualCO != null) ? Convert.ToDateTime(ViewBag.data.aktualCO).ToString("yyyy-MM-dd") : "")"></td>
+                                                    <td style="--bs-table-accent-bg: #14fdf6;"><input type="DATE" name="prognosa_kirim_paket_ke_co" id="prognosa_kirim_paket_ke_co" class="form-control form-control-sm" readonly></td>
+                                                </tr>
+                                                <tr>
+                                                    <td>PENGUMUMAN PENDAFTARAN</td>
+                                    <td style="--bs-table-accent-bg: #f2fd14;"><input type="DATE" name="target_pengumuman_pendaftaran" id="target_pengumuman_pendaftaran" class="form-control form-control-sm" value="@(Convert.ToDateTime(ViewBag.data.target_pengumuman).ToString("yyyy-MM-dd"))" readonly></td>
+                                    <td><input type="DATE" name="aktual_pengumuman_pendaftaran" id="aktual_pengumuman_pendaftaran" class="form-control form-control-sm" value="@((ViewBag.data.akt_pengumuman != null) ? Convert.ToDateTime(ViewBag.data.akt_pengumuman).ToString("yyyy-MM-dd") : "")"></td>
+                                                    <td style="--bs-table-accent-bg: #14fdf6;"><input type="DATE" name="prognosa_pengumuman_pendaftaran" id="prognosa_pengumuman_pendaftaran"  class="form-control form-control-sm" readonly></td>
+                                                </tr>
+                                                <tr>
+                                                    <td>SERTIFIKASI</td>
+                                    <td style="--bs-table-accent-bg: #f2fd14;"><input type="DATE" name="target_sertifikasi" id="target_sertifikasi" class="form-control form-control-sm" value="@(Convert.ToDateTime(ViewBag.data.target_sertifikasi).ToString("yyyy-MM-dd"))" readonly></td>
+                                    <td><input type="DATE" name="aktual_sertifikasi" id="aktual_sertifikasi" class="form-control form-control-sm" value="@((ViewBag.data.akt_sertifikasi != null) ? Convert.ToDateTime(ViewBag.data.akt_sertifikasi).ToString("yyyy-MM-dd") : "")"></td>
+                                                    <td style="--bs-table-accent-bg: #14fdf6;"><input type="DATE" name="prognosa_sertifikasi" id="prognosa_sertifikasi" class="form-control form-control-sm" readonly></td>
+                                                </tr>
+                                                <tr>
+                                                    <td>PRAKUALIFIKASI</td>
+                                    <td style="--bs-table-accent-bg: #f2fd14;"><input type="DATE" name="target_prakualifikasi" id="target_prakualifikasi" class="form-control form-control-sm" value="@(Convert.ToDateTime(ViewBag.data.target_prakualifikasi).ToString("yyyy-MM-dd"))" readonly></td>
+                                    <td><input type="DATE" name="aktual_prakualifikasi" id="aktual_prakualifikasi" class="form-control form-control-sm" value="@((ViewBag.data.akt_prakualifikasi != null) ? Convert.ToDateTime(ViewBag.data.akt_prakualifikasi).ToString("yyyy-MM-dd") : "")"></td>
+                                                    <td style="--bs-table-accent-bg: #14fdf6;"><input type="DATE" name="prognosa_prakualifikasi" id="prognosa_prakualifikasi" class="form-control form-control-sm" readonly></td>
+                                                </tr>
+                                                <tr>
+                                                    <td>UNDANGAN & PENGAMBILAN DOKUMEN</td>
+                                    <td style="--bs-table-accent-bg: #f2fd14;"><input type="DATE" name="target_undangan" id="target_undangan" class="form-control form-control-sm" value="@(Convert.ToDateTime(ViewBag.data.target_undangan).ToString("yyyy-MM-dd"))" readonly></td>
+                                    <td><input type="DATE" name="aktual_undangan" id="aktual_undangan" class="form-control form-control-sm" value="@((ViewBag.data.akt_undangan != null) ? Convert.ToDateTime(ViewBag.data.akt_undangan).ToString("yyyy-MM-dd") : "")"></td>
+                                                    <td style="--bs-table-accent-bg: #14fdf6;"><input type="DATE" name="prognosa_undangan" id="prognosa_undangan" class="form-control form-control-sm" readonly></td>
+                                                </tr>
+                                                <tr>
+                                                    <td>PEMBERIAN PENJELASAN</td>
+                                    <td style="--bs-table-accent-bg: #f2fd14;"><input type="DATE" name="target_pemberian_penjelasan" id="target_pemberian_penjelasan" class="form-control form-control-sm" value="@(Convert.ToDateTime(ViewBag.data.target_pemberian).ToString("yyyy-MM-dd"))" readonly></td>
+                                    <td><input type="DATE" name="aktual_pemberian_penjelasan" id="aktual_pemberian_penjelasan" class="form-control form-control-sm" value="@((ViewBag.data.akt_pemberian != null) ? Convert.ToDateTime(ViewBag.data.akt_pemberian).ToString("yyyy-MM-dd") : "")"></td>
+                                                    <td style="--bs-table-accent-bg: #14fdf6;"><input type="DATE" name="prognosa_pemberian_penjelasan" id="prognosa_pemberian_penjelasan" class="form-control form-control-sm" readonly></td>
+                                                </tr>
+                                                <tr>
+                                                    <td>PENYAMPAIAN DOKUMEN PENAWARAN</td>
+                                    <td style="--bs-table-accent-bg: #f2fd14;"><input type="DATE" name="target_penyampaian_dokumen" id="target_penyampaian_dokumen" class="form-control form-control-sm" value="@(Convert.ToDateTime(ViewBag.data.targetBukaPH).ToString("yyyy-MM-dd"))" readonly></td>
+                                    <td><input type="DATE" name="aktual_penyampaian_dokumen" id="aktual_penyampaian_dokumen" class="form-control form-control-sm" value="@((ViewBag.data.aktualBukaPH != null) ? Convert.ToDateTime(ViewBag.data.aktualBukaPH).ToString("yyyy-MM-dd") : "")"></td>
+                                                    <td style="--bs-table-accent-bg: #14fdf6;"><input type="DATE" name="prognosa_penyampaian_dokumen" id="prognosa_penyampaian_dokumen" class="form-control form-control-sm" readonly></td>
+                                                </tr>
+                                                <tr>
+                                                    <td>PEMBUKAAN DOKUMEN PENAWARAN</td>
+                                    <td style="--bs-table-accent-bg: #f2fd14;"><input type="DATE" name="target_pembukaan_penawaran" id="target_pembukaan_penawaran" class="form-control form-control-sm" value="@(Convert.ToDateTime(ViewBag.data.target_pembukaan).ToString("yyyy-MM-dd"))" readonly></td>
+                                    <td><input type="DATE" name="aktual_pembukaan_penawaran" id="aktual_pembukaan_penawaran" class="form-control form-control-sm" value="@((ViewBag.data.akt_pembukaan != null) ? Convert.ToDateTime(ViewBag.data.akt_pembukaan).ToString("yyyy-MM-dd") : "")"></td>
+                                                    <td style="--bs-table-accent-bg: #14fdf6;"><input type="DATE" name="prognosa_pembukaan_penawaran" id="prognosa_pembukaan_penawaran" class="form-control form-control-sm" readonly></td>
+                                                </tr>
+                                                <tr>
+                                                    <td>EVALUASI PENAWARAN</td>
+                                    <td style="--bs-table-accent-bg: #f2fd14;"><input type="DATE" name="target_penetapan_evaluasi_penawaran" id="target_penetapan_evaluasi_penawaran" class="form-control form-control-sm" value="@(Convert.ToDateTime(ViewBag.data.target_evaluasi).ToString("yyyy-MM-dd"))" readonly></td>
+                                    <td><input type="DATE" name="aktual_penetapan_evaluasi_penawaran" id="aktual_penetapan_evaluasi_penawaran" class="form-control form-control-sm" value="@((ViewBag.data.akt_evaluasi != null) ? Convert.ToDateTime(ViewBag.data.akt_evaluasi).ToString("yyyy-MM-dd") : "")"></td>
+                                                    <td style="--bs-table-accent-bg: #14fdf6;"><input type="DATE" name="prognosa_penetapan_evaluasi_penawaran" id="prognosa_penetapan_evaluasi_penawaran" class="form-control form-control-sm" readonly></td>
+                                                </tr>
+                                                <tr>
+                                                    <td>NEGOSIASI</td>
+                                    <td style="--bs-table-accent-bg: #f2fd14;"><input type="DATE" name="target_negosiasi" id="target_negosiasi" class="form-control form-control-sm" value="@(Convert.ToDateTime(ViewBag.data.target_negosiasi).ToString("yyyy-MM-dd"))" readonly></td>
+                                    <td><input type="DATE" name="aktual_negosiasi" id="aktual_negosiasi" class="form-control form-control-sm" value="@((ViewBag.data.akt_negosiasi != null) ? Convert.ToDateTime(ViewBag.data.akt_negosiasi).ToString("yyyy-MM-dd") : "")"></td>
+                                                    <td style="--bs-table-accent-bg: #14fdf6;"><input type="DATE" name="prognosa_negosiasi" id="prognosa_negosiasi" class="form-control form-control-sm" readonly></td>
+                                                </tr>
+                                                <tr>
+                                                    <td>USULAN PENETAPAN CALON PEMENANG</td>
+                                    <td style="--bs-table-accent-bg: #f2fd14;"><input type="DATE" name="target_usulan_penetapan_calon_pemenang" id="target_usulan_penetapan_calon_pemenang" class="form-control form-control-sm" value="@(Convert.ToDateTime(ViewBag.data.target_usulan_pemenang).ToString("yyyy-MM-dd"))" readonly></td>
+                                    <td><input type="DATE" name="aktual_usulan_penetapan_calon_pemenang" id="aktual_usulan_penetapan_calon_pemenang" class="form-control form-control-sm" value="@((ViewBag.data.akt_usulan_pemenang != null) ? Convert.ToDateTime(ViewBag.data.akt_usulan_pemenang).ToString("yyyy-MM-dd") : "")"></td>
+                                                    <td style="--bs-table-accent-bg: #14fdf6;"><input type="DATE" name="prognosa_usulan_penetapan_calon_pemenang" id="prognosa_usulan_penetapan_calon_pemenang" class="form-control form-control-sm" readonly></td>
+                                                </tr>
+                                                <tr>
+                                                    <td>KEPUTUSAN PEMENANG</td>
+                                    <td style="--bs-table-accent-bg: #f2fd14;"><input type="DATE" name="target_keputusan_pemenang" id="target_keputusan_pemenang" class="form-control form-control-sm" value="@(Convert.ToDateTime(ViewBag.data.target_keputusan_pemenang).ToString("yyyy-MM-dd"))" readonly></td>
+                                    <td><input type="DATE" name="aktual_keputusan_pemenang" id="aktual_keputusan_pemenang" class="form-control form-control-sm" value="@((ViewBag.data.akt_keputusan_pemenang != null) ? Convert.ToDateTime(ViewBag.data.akt_keputusan_pemenang).ToString("yyyy-MM-dd") : "")"></td>
+                                                    <td style="--bs-table-accent-bg: #14fdf6;"><input type="DATE" name="prognosa_keputusan_pemenang" id="prognosa_keputusan_pemenang" class="form-control form-control-sm" readonly></td>
+                                                </tr>
+                                                <tr>
+                                                    <td>PENGUMUMAN PEMENANG</td>
+                                    <td style="--bs-table-accent-bg: #f2fd14;"><input type="DATE" name="target_pengumuman_pemenang" id="target_pengumuman_pemenang" class="form-control form-control-sm" value="@(Convert.ToDateTime(ViewBag.data.target_pengumuman_pemenang).ToString("yyyy-MM-dd"))" readonly></td>
+                                    <td><input type="DATE" name="aktual_pengumuman_pemenang" id="aktual_pengumuman_pemenang" class="form-control form-control-sm" value="@((ViewBag.data.akt_pengumuman_pemenang != null) ? Convert.ToDateTime(ViewBag.data.akt_pengumuman_pemenang).ToString("yyyy-MM-dd") : "")"></td>
+                                                    <td style="--bs-table-accent-bg: #14fdf6;"><input type="DATE" name="prognosa_pengumuman_pemenang" id="prognosa_pengumuman_pemenang" class="form-control form-control-sm" readonly></td>
+                                                </tr>
+                                                <tr>
+                                                    <td>PENGAJUAN SANGGAH</td>
+                                    <td style="--bs-table-accent-bg: #f2fd14;"><input type="DATE" name="target_pengajuan_sanggah" id="target_pengajuan_sanggah" class="form-control form-control-sm" value="@(Convert.ToDateTime(ViewBag.data.target_pengajuan_sanggah).ToString("yyyy-MM-dd"))" readonly></td>
+                                    <td><input type="DATE" name="aktual_pengajuan_sanggah" id="aktual_pengajuan_sanggah" class="form-control form-control-sm" value="@((ViewBag.data.akt_pengajuan_sanggah != null) ? Convert.ToDateTime(ViewBag.data.akt_pengajuan_sanggah).ToString("yyyy-MM-dd") : "")"></td>
+                                                    <td style="--bs-table-accent-bg: #14fdf6;"><input type="DATE" name="prognosa_pengajuan_sanggah" id="prognosa_pengajuan_sanggah" class="form-control form-control-sm" readonly></td>
+                                                </tr>
+                                                <tr>
+                                                    <td>JAWABAN SANGGAH</td>
+                                    <td style="--bs-table-accent-bg: #f2fd14;"><input type="DATE" name="target_jawaban_sanggah" id="target_jawaban_sanggah" class="form-control form-control-sm" value="@(Convert.ToDateTime(ViewBag.data.target_jawaban_sanggah).ToString("yyyy-MM-dd"))" readonly></td>
+                                    <td><input type="DATE" name="aktual_jawaban_sanggah" id="aktual_jawaban_sanggah" class="form-control form-control-sm" value="@((ViewBag.data.akt_jawaban_sanggah != null) ? Convert.ToDateTime(ViewBag.data.akt_jawaban_sanggah).ToString("yyyy-MM-dd") : "")"></td>
+                                                    <td style="--bs-table-accent-bg: #14fdf6;"><input type="DATE" name="prognosa_jawaban_sanggah" id="prognosa_jawaban_sanggah" class="form-control form-control-sm" readonly></td>
+                                                </tr>
+                                                <tr>
+                                                    <td>PENUNJUKAN PEMENANG</td>
+                                    <td style="--bs-table-accent-bg: #f2fd14;"><input type="DATE" name="target_penunjukan_pemenang" id="target_penunjukan_pemenang" class="form-control form-control-sm" value="@(Convert.ToDateTime(ViewBag.data.target_penunjukan_pemenang).ToString("yyyy-MM-dd"))" readonly></td>
+                                    <td><input type="DATE" name="aktual_penunjukan_pemenang" id="aktual_penunjukan_pemenang" class="form-control form-control-sm" value="@((ViewBag.data.akt_penunjukan_pemenang != null) ? Convert.ToDateTime(ViewBag.data.akt_penunjukan_pemenang).ToString("yyyy-MM-dd") : "")"></td>
+                                                    <td style="--bs-table-accent-bg: #14fdf6;"><input type="DATE" name="prognosa_penunjukan_pemenang" id="prognosa_penunjukan_pemenang" class="form-control form-control-sm" readonly></td>
+                                                </tr>
+                                                <tr>
+                                                    <td>PROSES SPB</td>
+                                    <td style="--bs-table-accent-bg: #f2fd14;"><input type="DATE" name="target_proses_spb" id="target_proses_spb" class="form-control form-control-sm" value="@(Convert.ToDateTime(ViewBag.data.targetSP).ToString("yyyy-MM-dd"))" readonly></td>
+                                    <td><input type="DATE" name="aktual_proses_spb" id="aktual_proses_spb" class="form-control form-control-sm" value="@((ViewBag.data.aktualSP != null) ? Convert.ToDateTime(ViewBag.data.aktualSP).ToString("yyyy-MM-dd") : "")"></td>
+                                                    <td style="--bs-table-accent-bg: #14fdf6;"><input type="DATE" name="prognosa_proses_spb" id="prognosa_proses_spb" class="form-control form-control-sm" readonly></td>
+                                                </tr>
+                                            </table>
+                                        </div>
+                                        
+                                        <div class="row">
+                                            <div class="col-12 mb-2">
+                                                <div class="card">
+                                                    <div class="card-header">
+                                                    Penjelasan Status :
+                                                    </div>
+                                                    <div class="card-body">
+                                                        <div class="row">
+                                                            <div class="col-md-12">
+                                                                <div class="form-group">
+                                                                    <label>Current</label>
+                                                                    <input type="text" name="current" id="current" class="form-control form-control-sm" value="@(ViewBag.data.currStat)" readonly>
+                                                                    
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="row">
+                                                            <div class="col-md-12">
+                                                                <div class="form-group">
+                                                                    <label>Keterangan Current</label>
+                                                                    <textarea class="form-control" name="ket_current" id="ket_current" rows="9">@(ViewBag.data.currStatDesc)</textarea>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <!-- <div class="col-md-3 mb-2">
+                                                <div class="card">
+                                                    <div class="card-header">
+                                                        Keterangan Terkait Target SP : 
+                                                    </div>
+                                                    <div class="card-body">
+                                                        <div class="row">
+                                                            <div class="col-md-12">
+                                                                <div class="form-group">
+                                                                    <textarea class="form-control"  id="issue" rows="7"></textarea>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-3 mb-2">
+                                                <div class="card">
+                                                    <div class="card-header">
+                                                        Keterangan Status : 
+                                                    </div>
+                                                    <div class="card-body">
+                                                        <div class="row">
+                                                            <div class="col-md-12">
+                                                                <div class="form-group">
+                                                                    
+                                                                    <textarea class="form-control" name="ket_status" id="ket_status" rows="7"></textarea>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div> -->
+                                            <!-- <div class="col-md-3 mb-2">
+                                                <div class="card">
+                                                    <div class="card-header">
+                                                        Alasan Retender : 
+                                                    </div>
+                                                    <div class="card-body">
+                                                        <div class="row">
+                                                            <div class="col-md-12">
+                                                                <div class="form-group">
+                                                                    
+                                                                    <textarea class="form-control" name="alasan_retender" id="alasan_retender" rows="7"></textarea>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div> -->
+                                        </div>
+                                    </div>
+                                    <div class="tab-pane fade" id="nav-pills-tab-4">
+                                        <div class="row">
+                                        <div class="col-md-3 mb-2">
+                                                <div class="form-group">
+                                                    <label> </label>
+                                                    <fieldset disabled>
+                                                        
+                                                        <div class="input-group mb-4">
+                                                            
+                                                            <input type="TEXT" style="BORDER: HIDDEN; BACKGROUND-COLOR: white;" class="form-control form-control-sm" placeholder="Durasi Susun KAK" >
+                                                        </div>
+                                                        <div class="input-group mb-4">
+                                                        
+                                                            <input type="TEXT" style="BORDER: HIDDEN; BACKGROUND-COLOR: white;" class="form-control form-control-sm" placeholder="Durasi Susun OE">
+                                                        </div>
+                                                        <div class="input-group mb-4">
+                                                            
+                                                            <input type="TEXT" style="BORDER: HIDDEN; BACKGROUND-COLOR: white;" class="form-control form-control-sm" placeholder="Durasi Kirim ke CO">
+                                                        </div>
+                                                        <div class="input-group mb-4">
+                                                            
+                                                            <input type="TEXT" style="BORDER: HIDDEN; BACKGROUND-COLOR: white;" class="form-control form-control-sm" placeholder="Durasi Pengumuman Pendaftaran">
+                                                        </div>
+                                                        <div class="input-group mb-4">
+                                                            
+                                                            <input type="TEXT" style="BORDER: HIDDEN; BACKGROUND-COLOR: white;" class="form-control form-control-sm" placeholder="Durasi Sertifikasi">
+                                                        </div>
+                                                        <div class="input-group mb-4">
+                                                            
+                                                            <input type="TEXT" style="BORDER: HIDDEN; BACKGROUND-COLOR: white;" class="form-control form-control-sm" placeholder="Durasi Prakualifikasi">
+                                                        </div>
+                                                        <div class="input-group mb-4">
+                                                            
+                                                            <input type="TEXT" style="BORDER: HIDDEN; BACKGROUND-COLOR: white;" class="form-control form-control-sm" placeholder="Durasi Undangan & Pengambilan Dokumen Pengadaan">
+                                                        </div>
+                                                        <div class="input-group mb-4">
+                                                            
+                                                            <input type="TEXT" style="BORDER: HIDDEN; BACKGROUND-COLOR: white;" class="form-control form-control-sm" placeholder="Durasi Pemberian Penjelasan">
+                                                        </div>
+                                                        <div class="input-group mb-4">
+                                                            
+                                                            <input type="TEXT" style="BORDER: HIDDEN; BACKGROUND-COLOR: white;" class="form-control form-control-sm" placeholder="Durasi Penyampaian Dokumen Penawaran">
+                                                        </div>
+                                                        <div class="input-group mb-4">
+                                                            
+                                                            <input type="TEXT" style="BORDER: HIDDEN; BACKGROUND-COLOR: white;" class="form-control form-control-sm" placeholder="Durasi Pembukaan Dokumen Penawaran">
+                                                        </div>
+                                                    </fieldset>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-1 mb-2">
+                                                <div class="form-group">
+                                                    <label></label>
+                                                        <div class="input-group mb-4">
+                                                            <input type="number" nama="susun_kak" id="susun_kak" class="form-control form-control-sm" value="@(ViewBag.durasi.susun_kak)">
+                                                        </div>
+                                                        <div class="input-group mb-4">
+                                                            <input type="number" nama="susun_oe" id="susun_oe" class="form-control form-control-sm" value="@(ViewBag.durasi.susun_oe)">
+                                                        </div>
+                                                        <div class="input-group mb-4">
+                                                            <input type="number" nama="persetujuan" id="persetujuan" class="form-control form-control-sm" value="@(ViewBag.durasi.persetujuan)">
+                                                        </div>
+                                                        <div class="input-group mb-4">
+                                                            <input type="number" nama="kirim_ke_co" id="kirim_ke_co" class="form-control form-control-sm" value="@(ViewBag.durasi.kirim_ke_co)">
+                                                        </div>
+                                                        <div class="input-group mb-4">
+                                                            <input type="number" nama="pengumuman_pendaftaran" id="pengumuman_pendaftaran" class="form-control form-control-sm" value="@(ViewBag.durasi.pengumuman_pendaftaran)">
+                                                        </div>
+                                                        <div class="input-group mb-4">
+                                                            <input type="number" nama="sertifikasi" id="sertifikasi" class="form-control form-control-sm" value="@(ViewBag.durasi.sertifikasi)">
+                                                        </div>
+                                                        <div class="input-group mb-4">
+                                                            <input type="number" nama="prakualifikasi" id="prakualifikasi" class="form-control form-control-sm" value="@(ViewBag.durasi.prakualifikasi)">
+                                                        </div>
+                                                        <div class="input-group mb-4">
+                                                            <input type="number" nama="undangan" id="undangan" class="form-control form-control-sm" value="@(ViewBag.durasi.undangan)">
+                                                        </div>
+                                                        <div class="input-group mb-4">
+                                                            <input type="number" name="pemberian" id="pemberian" class="form-control form-control-sm" value="@(ViewBag.durasi.pemberian)">
+                                                        </div>
+                                                        <div class="input-group mb-4">
+                                                            <input type="number" name="penyampaian" id="penyampaian" class="form-control form-control-sm" value="@(ViewBag.durasi.penyampaian)">
+                                                        </div>
+                                                        <div class="input-group mb-4">
+                                                            <input type="number" name="pembukaan" id="pembukaan" class="form-control form-control-sm" value="@(ViewBag.durasi.pembukaan)">
+                                                        </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-2 mb-2">
+                                                <div class="form-group">
+                                                    <label></label>
+                                                    <fieldset disabled>
+                                                        <div class="input-group mb-4">
+                                                            
+                                                            <input type="TEXT" style="BORDER: HIDDEN; BACKGROUND-COLOR: white;" class="form-control form-control-sm" placeholder="Hari">
+                                                        </div>
+                                                        <div class="input-group mb-4">
+                                                        
+                                                            <input type="TEXT" style="BORDER: HIDDEN; BACKGROUND-COLOR: white;" class="form-control form-control-sm" placeholder="Hari">
+                                                        </div>
+                                                        <div class="input-group mb-4">
+                                                            
+                                                            <input type="TEXT" style="BORDER: HIDDEN; BACKGROUND-COLOR: white;" class="form-control form-control-sm" placeholder="Hari">
+                                                        </div>
+                                                        <div class="input-group mb-4">
+                                                            
+                                                            <input type="TEXT" style="BORDER: HIDDEN; BACKGROUND-COLOR: white;" class="form-control form-control-sm" placeholder="Hari">
+                                                        </div>
+                                                        <div class="input-group mb-4">
+                                                            
+                                                            <input type="TEXT" style="BORDER: HIDDEN; BACKGROUND-COLOR: white;" class="form-control form-control-sm" placeholder="Hari">
+                                                        </div>
+                                                        <div class="input-group mb-4">
+                                                            
+                                                            <input type="TEXT" style="BORDER: HIDDEN; BACKGROUND-COLOR: white;" class="form-control form-control-sm" placeholder="Hari">
+                                                        </div>
+                                                        <div class="input-group mb-4">
+                                                            
+                                                            <input type="TEXT" style="BORDER: HIDDEN; BACKGROUND-COLOR: white;" class="form-control form-control-sm" placeholder="Hari">
+                                                        </div>
+                                                        <div class="input-group mb-4">
+                                                            
+                                                            <input type="TEXT" style="BORDER: HIDDEN; BACKGROUND-COLOR: white;" class="form-control form-control-sm" placeholder="Hari">
+                                                        </div>
+                                                        <div class="input-group mb-4">
+                                                            
+                                                            <input type="TEXT" style="BORDER: HIDDEN; BACKGROUND-COLOR: white;" class="form-control form-control-sm" placeholder="Hari">
+                                                        </div>
+                                                        <div class="input-group mb-4">
+                                                            
+                                                            <input type="TEXT" style="BORDER: HIDDEN; BACKGROUND-COLOR: white;" class="form-control form-control-sm" placeholder="Hari">
+                                                        </div>
+                                                    </fieldset>
+                                                </div>
+                                            </div>
+                                        <div class="col-md-3 mb-2">
+                                                <div class="form-group">
+                                                    <label> </label>
+                                                    <fieldset disabled>
+                                                        <div class="input-group mb-4">
+                                                        <input type="text" style="BORDER: HIDDEN; BACKGROUND-COLOR: white;" id="disabledTextInput" class="form-control form-control-sm" placeholder="Durasi Evaluasi Penawaran">
+                                                        </div>
+                                                        <div class="input-group mb-4">
+                                                            <input type="TEXT" style="BORDER: HIDDEN; BACKGROUND-COLOR: white;" class="form-control form-control-sm" placeholder="Durasi Negosiasi">
+                                                        </div>
+                                                        <div class="input-group mb-4">
+                                                            
+                                                            <input type="TEXT" style="BORDER: HIDDEN; BACKGROUND-COLOR: white;" class="form-control form-control-sm" placeholder="Durasi Usulan Penetapan Calon Pemenang">
+                                                        </div>
+                                                        <div class="input-group mb-4">
+                                                            
+                                                            <input type="TEXT" style="BORDER: HIDDEN; BACKGROUND-COLOR: white;" class="form-control form-control-sm" placeholder="Durasi Keputusan Pemenang">
+                                                        </div>
+                                                        <div class="input-group mb-4">
+                                                        
+                                                            <input type="TEXT" style="BORDER: HIDDEN; BACKGROUND-COLOR: white;" class="form-control form-control-sm" placeholder="Durasi Pengumuman Pemenang">
+                                                        </div>
+                                                        <div class="input-group mb-4">
+                                                            
+                                                            <input type="TEXT" style="BORDER: HIDDEN; BACKGROUND-COLOR: white;" class="form-control form-control-sm" placeholder="Durasi Pengajuan Sanggah">
+                                                        </div>
+                                                        <div class="input-group mb-4">
+                                                            
+                                                            <input type="TEXT" style="BORDER: HIDDEN; BACKGROUND-COLOR: white;" class="form-control form-control-sm" placeholder="Durasi jawaban Sanggah">
+                                                        </div>
+                                                        <div class="input-group mb-4">
+                                                            
+                                                            <input type="TEXT" style="BORDER: HIDDEN; BACKGROUND-COLOR: white;" class="form-control form-control-sm" placeholder="Durasi Penunjukan Pemenang">
+                                                        </div>
+                                                        <div class="input-group mb-4">
+                                                            
+                                                            <input type="TEXT" style="BORDER: HIDDEN; BACKGROUND-COLOR: white;" class="form-control form-control-sm" placeholder="Durasi Proses SPB">
+                                                        </div>
+                                                    </fieldset>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-1 mb-2">
+                                                <div class="form-group">
+                                                    <label></label>
+                                                        
+                                                        <div class="input-group mb-4">
+                                                            <input type="number" name="evaluasi" id="evaluasi" class="form-control form-control-sm" value="@(ViewBag.durasi.evaluasi)">
+                                                        </div>
+                                                        <div class="input-group mb-4">
+                                                            <input type="number" name="negosiasi" id="negosiasi" class="form-control form-control-sm" value="@(ViewBag.durasi.negosiasi)">
+                                                        </div>
+                                                        <div class="input-group mb-4">
+                                                            <input type="number" name="usulan" id="usulan" class="form-control form-control-sm" value="@(ViewBag.durasi.usulan)">
+                                                        </div>
+                                                        <div class="input-group mb-4">
+                                                            <input type="number" name="keputusan" id="keputusan" class="form-control form-control-sm" value="@(ViewBag.durasi.keputusan)">
+                                                        </div>
+                                                        <div class="input-group mb-4">
+                                                            <input type="number" name="pengumuman_pemenang" id="pengumuman_pemenang" class="form-control form-control-sm" value="@(ViewBag.durasi.pengumuman_pemenang)">
+                                                        </div>
+                                                        <div class="input-group mb-4">
+                                                            <input type="number" name="pengajuan_sanggah" id="pengajuan_sanggah" class="form-control form-control-sm" value="@(ViewBag.durasi.pengajuan_sanggah)">
+                                                        </div>
+                                                        <div class="input-group mb-4">
+                                                            <input type="number" name="jawaban_sanggah" id="jawaban_sanggah" class="form-control form-control-sm" value="@(ViewBag.durasi.jawaban_sanggah)">
+                                                        </div>
+                                                        <div class="input-group mb-4">
+                                                            <input type="number" name="tunjuk_pemenang" id="tunjuk_pemenang" class="form-control form-control-sm" value="@(ViewBag.durasi.tunjuk_pemenang)">
+                                                        </div>
+                                                        <div class="input-group mb-4">
+                                                            <input type="number" name="proses_spb" id="proses_spb" class="form-control form-control-sm" value="@(ViewBag.durasi.proses_spb)">
+                                                        </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-2 mb-2">
+                                                <div class="form-group">
+                                                    <label></label>
+                                                    <fieldset disabled>
+                                                        <div class="input-group mb-4">
+                                                        <input type="text" style="BORDER: HIDDEN; BACKGROUND-COLOR: white;" id="disabledTextInput" class="form-control form-control-sm" placeholder="Hari">
+                                                        </div>
+                                                        <div class="input-group mb-4">
+                                                            <input type="TEXT" style="BORDER: HIDDEN; BACKGROUND-COLOR: white;" class="form-control form-control-sm" placeholder="Hari">
+                                                        </div>
+                                                        <div class="input-group mb-4">
+                                                            
+                                                            <input type="TEXT" style="BORDER: HIDDEN; BACKGROUND-COLOR: white;" class="form-control form-control-sm" placeholder="Hari">
+                                                        </div>
+                                                        <div class="input-group mb-4">
+                                                            
+                                                            <input type="TEXT" style="BORDER: HIDDEN; BACKGROUND-COLOR: white;" class="form-control form-control-sm" placeholder="Hari">
+                                                        </div>
+                                                        <div class="input-group mb-4">
+                                                        
+                                                            <input type="TEXT" style="BORDER: HIDDEN; BACKGROUND-COLOR: white;" class="form-control form-control-sm" placeholder="Hari">
+                                                        </div>
+                                                        <div class="input-group mb-4">
+                                                            
+                                                            <input type="TEXT" style="BORDER: HIDDEN; BACKGROUND-COLOR: white;" class="form-control form-control-sm" placeholder="Hari">
+                                                        </div>
+                                                        <div class="input-group mb-4">
+                                                            
+                                                            <input type="TEXT" style="BORDER: HIDDEN; BACKGROUND-COLOR: white;" class="form-control form-control-sm" placeholder="Hari">
+                                                        </div>
+                                                        <div class="input-group mb-4">
+                                                            
+                                                            <input type="TEXT" style="BORDER: HIDDEN; BACKGROUND-COLOR: white;" class="form-control form-control-sm" placeholder="Hari">
+                                                        </div>
+                                                        <div class="input-group mb-4">
+                                                            
+                                                            <input type="TEXT" style="BORDER: HIDDEN; BACKGROUND-COLOR: white;" class="form-control form-control-sm" placeholder="Hari">
+                                                        </div>
+                                                    </fieldset>
+                                                </div>
+                                            </div>
+                                        </div>  
+                                        
+                                    </div>
+                                    <div class="tab-pane fade" id="nav-pills-tab-5">
+                                        <div class="row">
+                                            <div class="col-6 mb-2">
+                                                <div class="card">
+                                                    <div class="card-header">
+                                                        Durasi Pelaksanaan Pekerjaan
+                                                    </div>
+                                                    <div class="card-body">
+                                                        <div class="row">
+                                                            <div class="col-md-6">
+                                                                <div class="form-group">
+                                                                    <label>Start Date</label>
+                                                    <input type="date" name="start" id="start" class="form-control form-control-sm" value="@((ViewBag.data.mulai != null) ? Convert.ToDateTime(ViewBag.data.mulai).ToString("yyyy-MM-dd") : "")" readonly>
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-md-6 mb-2">
+                                                                <div class="form-group">
+                                                                    <label>End Date</label>
+                                                    <input type="date" name="end" id="end" class="form-control form-control-sm" value="@((ViewBag.data.selesai != null) ? Convert.ToDateTime(ViewBag.data.selesai).ToString("yyyy-MM-dd") : "")" readonly>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="row">
+                                                            <div id="flHorizontalForm" class="col-md-12 layout-spacing">
+                                                                <div class="statbox widget box box-shadow">
+                                                                    <div class="widget-content widget-content-area">
+                                                                        <div class="form-group row mb-4">
+                                                                            <label for="total" class="col-xl-9 col-sm-9 col-sm-9 col-form-label">Total Days</label>
+                                                                            <div class="col-xl-3 col-lg-3 col-sm-3 mb-2">
+                                                                                <input type="number" class="form-control" name="total" id="total_days" placeholder="" value="@(ViewBag.data.persiapan + ViewBag.data.fabrikasi + ViewBag.data.mech + ViewBag.data.finishing + ViewBag.data.pemeliharaan)" readonly>
+                                                                            </div>
+                                                                            <label for="total" class="col-xl-9 col-sm-9 col-sm-9 col-form-label">Preparing</label>
+                                                                            <div class="col-xl-3 col-lg-3 col-sm-3 mb-2">
+                                                                                <input type="number" class="form-control" name="preparing" id="preparing" placeholder="" value="@(ViewBag.data.persiapan)" onchange="count_date()">
+                                                                            </div>
+                                                                            <label for="total" class="col-xl-9 col-sm-9 col-sm-9 col-form-label">Fabrikasi</label>
+                                                                            <div class="col-xl-3 col-lg-3 col-sm-3 mb-2">
+                                                                                <input type="number" class="form-control" name="fabrikasi" id="fabrikasi" placeholder="" value="@(ViewBag.data.fabrikasi)" onchange="count_date()">
+                                                                            </div>
+                                                                            <label for="total" class="col-xl-9 col-sm-9 col-sm-9 col-form-label">Mechanical Days</label>
+                                                                            <div class="col-xl-3 col-lg-3 col-sm-3 mb-2">
+                                                                                <input type="number" class="form-control" name="mechanical" id="mechanical" placeholder="" value="@(ViewBag.data.mech)" onchange="count_date()">
+                                                                            </div>
+                                                                            <label for="total" class="col-xl-9 col-sm-9 col-sm-9 col-form-label">Finishing</label>
+                                                                            <div class="col-xl-3 col-lg-3 col-sm-3 mb-2">
+                                                                                <input type="number" class="form-control" name="finishing" id="finishing" placeholder="" value="@(ViewBag.data.finishing)" onchange="count_date()">
+                                                                            </div>
+                                                                            <label for="total" class="col-xl-9 col-sm-9 col-sm-9 col-form-label">Maintenance</label>
+                                                                            <div class="col-xl-3 col-lg-3 col-sm-3 mb-2">
+                                                                                <input type="number" class="form-control" name="maintenance" id="maintenance" placeholder="" value="@(ViewBag.data.pemeliharaan)" onchange="count_date()">
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            @* {{-- <div class="col-md-6 mb-2">
+                                                <div class="card">
+                                                    <div class="card-header">
+                                                        Challenge Session
+                                                    </div>
+                                                    <div class="card-body">
+                                                        <div class="row">
+                                                            <div class="col-md-12 mb-2">
+                                                                <div class="form-group">
+                                                                    <label>Target</label>
+                                                                    <input type="date" name="target" id="target" class="form-control form-control-sm">
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="row">
+                                                            <div class="col-md-12 mb-2">
+                                                                <div class="form-group">
+                                                                    <label>Aktual</label>
+                                                                    <input type="date" name="aktual" id="aktual" class="form-control form-control-sm">
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="row">
+                                                            <div class="col-md-12 mb-2">
+                                                                <div class="form-group">
+                                                                    <label>Point of Issue</label>
+                                                                    <textarea class="form-control" name="issue_challenge" id="issue_challenge" rows="9"></textarea>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div> --}} *@
+                                        </div>
+                                        @* {{-- <div class="row mt-2 mb-2">
+                                            <div class="col-md-6">
+                                                <div class="card">
+                                                    <div class="card-header">
+                                                    Kick of Meeting
+                                                    </div>
+                                                    <div class="card-body">
+                                                    <div class="row">
+                                                            <div class="col-md-12 mb-2">
+                                                                <div class="form-group">
+                                                                    <label>Target</label>
+                                                                    <input type="date" name="target_kick" id="target_kick" class="form-control form-control-sm">
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="row">
+                                                            <div class="col-md-12 mb-2">
+                                                                <div class="form-group">
+                                                                    <label>Aktual</label>
+                                                                    <input type="date" name="aktual_kick" id="aktual_kick" class="form-control form-control-sm">
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="row">
+                                                            <div class="col-md-12 mb-2">
+                                                                <div class="form-group">
+                                                                    <label>Point of Issue</label>
+                                                                    <textarea class="form-control" name="issue_kick" id="issue_kick" rows="3"></textarea>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6 mb-2">
+                                                <div class="card">
+                                                    <div class="card-header">
+                                                    Sosialisasi JSA ETC
+                                                    </div>
+                                                    <div class="card-body">
+                                                    <div class="row">
+                                                            <div class="col-md-12 mb-2">
+                                                                <div class="form-group">
+                                                                    <label>Target</label>
+                                                                    <input type="date" name="target_jsa" id="target_jsa" class="form-control form-control-sm">
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="row">
+                                                            <div class="col-md-12 mb-2">
+                                                                <div class="form-group">
+                                                                    <label>Aktual</label>
+                                                                    <input type="date" name="aktual_jsa" id="aktual_jsa" class="form-control form-control-sm">
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="row">
+                                                            <div class="col-md-12 mb-2">
+                                                                <div class="form-group">
+                                                                    <label>Point of Issue</label>
+                                                                    <textarea class="form-control" name="issue_jsa" id="issue_jsa" rows="3"></textarea>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div> --}} *@
+                                    </div>
+                                    <div class="tab-pane fade" id="nav-pills-tab-6">
+                                        
+                                        <div class="row">
+                                            <div class="col-6 mb-2">
+                                                <div class="card">
+                                                    <div class="card-header">
+                                                        Man Power :
+                                                    </div>
+                                                    <div class="card-body">
+                                                        <div class="row">
+                                                            <div class="col-md-12">
+                                                                <div class="n-chk">
+                                                                    <label class="new-control new-checkbox new-checkbox-text checkbox-primary">
+                                                                        <input type="checkbox" value="1" name="welder" id="welder" class="new-control-input">
+                                                                        <span class="new-control-indicator"></span><span class="new-chk-content">Butuh Welder</span>
+                                                                    </label>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="row">
+                                                            <div class="col-md-12 mb-2">
+                                                                <div class="form-group">
+                                                                    <label>Man Power </label>
+                                                                    <select name="manPower" id="manPower" class="form-control form-control-sm">
+                                                                    //manpower
+                                                                    </select>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="row">
+                                                            <div class="col-md-2 mb-2">
+                                                                <div class="form-group">
+                                                                    <label>Jumlah </label>
+                                                                    <input type="number" name="jumlah_man_power" id="jumlah_man_power" class="form-control form-control-sm">
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-md-4 mb-2">
+                                                                <div class="form-group">
+                                                                    <label>Pekerja </label>
+                                                                    <select name="status" id="status" class="form-control form-control-sm">
+                                                                    //foreach status
+                                                                    </select>
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-md-6 mb-2">
+                                                                <div class="form-group">
+                                                                    <label>Fasilitas Test Disediakan Oleh : </label>
+                                                                    <select name="fasilitator" id="fasilitator" class="form-control form-control-sm">
+                                                                    //foreach fasilitator
+                                                                    </select>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="row">
+                                                            <div class="col-md-6 mb-2">
+                                                                <div class="form-group">
+                                                                    <label>Tgl. Kirim </label>
+                                                                    <input type="date" name="tgl_kirim" id="tgl_kirim" class="form-control form-control-sm">
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-md-6 mb-2">
+                                                                <div class="form-group">
+                                                                    <label>Tgl. Test </label>
+                                                                    <input type="date" name="tgl_test" id="tgl_test" class="form-control form-control-sm">
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="row">
+                                                            <div class="col-md-12 mb-2">
+                                                                <div class="form-group">
+                                                                    <label>Keterangan </label>
+                                                                    <textarea class="form-control" name="ket_man_power" id="ket_man_power" rows="6"></textarea>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6 mb-2">
+                                                <div class="card">
+                                                    <div class="card-header">
+                                                        Tools
+                                                    </div>
+                                                    <div class="card-body">
+                                                        <div class="row">
+                                                            <div class="col-md-12 mb-2">
+                                                                <div class="form-group">
+                                                                <label>Tools/Equipments : </label>
+                                                                    <select name="tools" id="tools" class="form-control form-control-sm">
+                                                                    //foreach tool
+                                                                    </select>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="row">
+                                                            <div class="col-md-2 mb-2">
+                                                                <div class="form-group">
+                                                                    <label>Jumlah </label>
+                                                                    <input type="number" name="jumlah_tools" id="jumlah_tools" class="form-control form-control-sm">
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-md-4 mb-2">
+                                                                <div class="form-group">
+                                                                    <label>Kepemilikan </label>
+                                                                    <select name="kepemilikan" id="kepemilikan" class="form-control form-control-sm">
+                                                                        <option value="SENDIRI">SENDIRI</option>
+                                                                        <option value="SEWA">SEWA</option>
+                                                                    </select>
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-md-3 mb-2">
+                                                                <div class="form-group">
+                                                                    <label>Rencana</label>
+                                                                    <input type="date" name="rencana" id="rencana" class="form-control form-control-sm">
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-md-3 mb-2">
+                                                                <div class="form-group">
+                                                                    <label>Aktual</label>
+                                                                    <input type="date" name="aktual_tools" id="aktual_tools" class="form-control form-control-sm">
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="row">
+                                                            <div class="col-md-4 mb-2">
+                                                                <div class="form-group">
+                                                                    <label>Rencana Kirim</label>
+                                                                    <input type="date" name="rencana_kirim" id="rencana_kirim" class="form-control form-control-sm">
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-md-4 mb-2">
+                                                                <div class="form-group">
+                                                                    <label>Aktual Kirim</label>
+                                                                    <input type="date" name="aktual_kirim" id="aktual_kirim" class="form-control form-control-sm">
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-md-4 mb-2">
+                                                                <div class="form-group">
+                                                                    <label>Tiba</label>
+                                                                    <input type="date" name="tiba" id="tiba" class="form-control form-control-sm">
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="row">
+                                                            <div class="col-md-12 mb-2">
+                                                                <div class="form-group">
+                                                                    <label>Hasil </label>
+                                                                    <textarea class="form-control" name="hasil" id="hasil"  rows="7"></textarea>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                       
+                                    </div>
+                                    <div class="tab-pane fade" id="nav-pills-tab-7">
+                                        <div class="row">
+                                            <div class="col-6 mb-2">
+                                                <div class="card">
+                                                    <div class="card-header">
+                                                        Status Tagihan :
+                                                    </div>
+                                                    <div class="card-body">
+                                                        <div class="row">
+                                                            <div class="col-md-12 mb-2">
+                                                                <div class="n-chk">
+                                                                    <label class="new-control new-checkbox new-checkbox-text checkbox-primary">
+                                                                        <input type="checkbox" value="1" name="vendor_belum_buat" id="vendor_belum_buat" class="new-control-input">
+                                                                        <span class="new-control-indicator"></span><span class="new-chk-content">Vendor Belum Buat</span>
+                                                                    </label>
+                                                                </div>
+                                                                <div class="n-chk">
+                                                                    <label class="new-control new-checkbox new-checkbox-text checkbox-primary">
+                                                                        <input type="checkbox" value="1" name="selesai" id="selesai" class="new-control-input">
+                                                                        <span class="new-control-indicator"></span><span class="new-chk-content">Selesai</span>
+                                                                    </label>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="row">
+                                                            <div class="col-md-12 mb-2">
+                                                                    <div class="card-header">
+                                                                        Maintenance Area (MA) :
+                                                                    </div>
+                                                                    <div class="card-body">
+                                                                        <div class="row">
+                                                                            <div class="col-md-12 mb-2">
+                                                                                <div class="form-group">
+                                                                                    <label>Inpro</label>
+                                                                                    <input type="text" name="inpro_ma" id="inpro_ma" class="form-control form-control-sm">
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="row">
+                                                                            <div class="col-md-12 mb-2">
+                                                                                <div class="form-group">
+                                                                                    <label>TMT</label>
+                                                                                    <input type="date" name="tmt_ma" id="tmt_ma" class="form-control form-control-sm">
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="row">
+                                                            <div class="col-md-12 mb-2">
+                                                                    <div class="card-header">
+                                                                        Budget :
+                                                                    </div>
+                                                                    <div class="card-body">
+                                                                        <div class="row">
+                                                                            <div class="col-md-12 mb-2">
+                                                                                <div class="form-group">
+                                                                                    <label>Inpro</label>
+                                                                                    <input type="text" name="inpro_budget" id="inpro_budget" class="form-control form-control-sm">
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="row">
+                                                                            <div class="col-md-12 mb-2">
+                                                                                <div class="form-group">
+                                                                                    <label>TMT</label>
+                                                                                    <input type="date" name="tmt_budget" id="tmt_budget" class="form-control form-control-sm">
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="row">
+                                                            <div class="col-md-12 mb-2">
+                                                                    <div class="card-header">
+                                                                        Keuangan :
+                                                                    </div>
+                                                                    <div class="card-body">
+                                                                        <div class="row">
+                                                                            <div class="col-md-12 mb-2">
+                                                                                <div class="form-group">
+                                                                                    <label>Inpro</label>
+                                                                                    <input type="text" name="inpro_keuangan" id="inpro_keuangan" class="form-control form-control-sm">
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="row">
+                                                                            <div class="col-md-12 mb-2">
+                                                                                <div class="form-group">
+                                                                                    <label>TMT</label>
+                                                                                    <input type="date" name="tmt_keuangan" id="tmt_keuangan" class="form-control form-control-sm">
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="row">
+                                                            <div class="col-md-12 mb-2">
+                                                                <div class="card" >
+                                                                    <div class="card-header">
+                                                                        Paket Note :
+                                                                    </div>
+                                                                    <div class="card-body">
+                                                                        <div class="row">
+                                                                            <div class="col-md-12  mb-2">
+                                                                                <div class="form-group">
+                                                                                <textarea class="form-control" name="paket_note" id="paket_note" cols="30" rows="10"></textarea>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-6 mb-2">
+                                                <div class="card">
+                                                    <div class="card-header">
+                                                        Potensi Addendum :
+                                                    </div>
+                                                    <div class="card-body">
+                                                        <div class="row">
+                                                            <div class="col-md-12 mb-2">
+                                                                <div class="n-chk">
+                                                                    <label class="new-control new-checkbox new-checkbox-text checkbox-primary">
+                                                                        <input type="checkbox" value="1" name="criteriaMI" id="criteriaMI" class="new-control-input">
+                                                                        <span class="new-control-indicator"></span><span class="new-chk-content">Vendor Belum Buat</span>
+                                                                    </label>
+                                                                </div>
+                                                                <div class="n-chk">
+                                                                    <label class="new-control new-checkbox new-checkbox-text checkbox-primary">
+                                                                        <input type="checkbox" value="1" name="criteriaMI" id="criteriaMI" class="new-control-input">
+                                                                        <span class="new-control-indicator"></span><span class="new-chk-content">Selesai</span>
+                                                                    </label>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="row">
+                                                            <div class="col-md-12 mb-2">
+                                                            
+                                                                    <div class="card-header">
+                                                                        Waktu :
+                                                                    </div>
+                                                                    <div class="card-body">
+                                                                        <div class="row">
+                                                                            <div class="col-md-6 mb-2">
+                                                                                <div class="form-group">
+                                                                                    <label>Dari</label>
+                                                                                    <input type="date" name="mulai" id="mulai" class="form-control form-control-sm">
+                                                                                </div>
+                                                                            </div>
+                                                                            <div class="col-md-6 mb-2">
+                                                                                <div class="form-group">
+                                                                                    <label>S.d</label>
+                                                                                    <input type="date" name="selesai" id="selesai" class="form-control form-control-sm">
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="row">
+                                                                            <div class="col-md-3 mb-2">
+                                                                            <fieldset disabled>
+                                                                                <div class="form-group">
+                                                                                    <input type="TEXT" style="BORDER: HIDDEN; BACKGROUND-COLOR: white;" class="form-control form-control-sm" placeholder="Total Waktu">
+                                                                                </div>
+                                                                            </fieldset>
+                                                                            </div>
+                                                                            <div class="col-md-4 mb-2">
+                                                                                <div class="form-group">
+                                                                                    <input type="number" name="total" id="total" class="form-control form-control-sm">
+                                                                                </div>
+                                                                            </div>
+                                                                            <div class="col-md-1 mb-2">
+                                                                            <fieldset disabled>
+                                                                                <div class="form-group">
+                                                                                    <input type="TEXT" style="BORDER: HIDDEN; BACKGROUND-COLOR: white;" class="form-control form-control-sm" placeholder="+">
+                                                                                </div>
+                                                                                </fieldset>
+                                                                            </div>
+                                                                            <div class="col-md-4 mb-2">
+                                                                                <div class="form-group">
+                                                                                    <input type="number" class="form-control form-control-sm">
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                
+                                                            </div>
+                                                        </div>
+                                                        <div class="row">
+                                                            <div class="col-md-12 mb-2">
+                                                                
+                                                                    <div class="card-header">
+                                                                        Nilai :
+                                                                    </div>
+                                                                    <div class="card-body">
+                                                                        <div class="row">
+                                                                            <div class="col-md-12 mb-2">
+                                                                                <div class="form-group">
+                                                                                    <label>Nilai Addendum 1</label>
+                                                                                    <input type="text" name="nilai_add1" id="nilai_add1" class="form-control form-control-sm">
+                                                                                </div>
+                                                                            </div>
+                                                                            <div class="col-md-12 mb-2">
+                                                                                <div class="form-group">
+                                                                                    <label>Nilai Addendum 2</label>
+                                                                                    <input type="text" name="nilai_add2" id="nilai_add2" class="form-control form-control-sm">
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="row">
+                                                                            <div class="col-md-12 mb-2">
+                                                                                <div class="form-group">
+                                                                                    <label>Total Addendum 1</label>
+                                                                                    <input type="text" name="total_add1" id="total_add1" class="form-control form-control-sm">
+                                                                                </div>
+                                                                            </div>
+                                                                            <div class="col-md-12 mb-2">
+                                                                                <div class="form-group">
+                                                                                    <label>Nilai Kontrak</label>
+                                                                                    <input type="text" name="nilai_kontrak" id="nilai_kontrak" class="form-control form-control-sm">
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="row">
+                                                                            <div class="col-md-12 mb-2">
+                                                                                <div class="form-group">
+                                                                                    <label>Total</label>
+                                                                                    <input type="text" name="total" id="total" class="form-control form-control-sm">
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>  
+                                                                    </div>
+                                                            
+                                                            </div>
+                                                        </div>
+                                                        <div class="row">
+                                                            <div class="col-md-12 mb-2">
+                                                                
+                                                                    <div class="card-header">
+                                                                        Konten SP :
+                                                                    </div>
+                                                                    <div class="card-body">
+                                                                        <div class="row">
+                                                                            <div class="col-md-12 mb-2">
+                                                                                <div class="form-group">
+                                                                                    <label></label>
+                                                                                    <textarea class="form-control" name="konten_sp" id="konten_sp" cols="30" rows="10"></textarea>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                            
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="tab-pane fade" id="nav-pills-tab-8">
+                                        <div class="panel panel-inverse">
+                                            <div class="panel-heading">
+                                                <h4 class="panel-title">Data Joblist</h4>
+                                                <div class="panel-heading-btn">
+                                                    <a href="javascript:;" class="btn btn-xs btn-icon btn-default" data-toggle="panel-expand"><i class="fa fa-expand"></i></a>
+                                                    <a href="javascript:;" class="btn btn-xs btn-icon btn-warning" data-toggle="panel-collapse"><i class="fa fa-minus"></i></a>
+                                                </div>
+                                            </div> 
+                                            <div class="panel-body"> 
+                                                <div class="table-responsive">
+                                                    <table id="table" class="table small table-striped table-bordered dataTables_wrapper" width="100%">
+                                                        <thead>
+                                                            <tr>
+                                                                <th width="100px">EqTagNo</th>
+                                                                <th width="100px">Job No</th>
+                                                                <th>Job Description</th> 
+                                                                <th width="50px">Action</th> 
+                                                            </tr>
+                                                        </thead>
+                                                        
+                                                    </table>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class=" mb-2">
+                                    <a href="/contracttracking" class="btn btn-warning">Kembali</a>
+                                    <button type="submit" class="btn btn-success">Submit</button>
+                                </div>
+                            </div>                            
+                        </div>
+                    
+            
+        </form>
+    </div>
+
+@section Scripts {
+    <script src="~/js/UpdateContract.js"> </script>
+}

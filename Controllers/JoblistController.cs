@@ -16,6 +16,7 @@ using System.Data.SqlClient;
 using System.Configuration;
 using ExcelDataReader;
 using Microsoft.Extensions.Hosting;
+using DocumentFormat.OpenXml.Office2010.Excel;
 namespace joblist.Controllers
 {
     public class JoblistController : Controller
@@ -1941,35 +1942,66 @@ namespace joblist.Controllers
                         DataTable serviceDetails = ds.Tables[0];
                         for (int i = 1; i < serviceDetails.Rows.Count; i++)
                         {
-                            Notifikasi notifikasi = new Notifikasi();
-                            notifikasi.notification_type = serviceDetails.Rows[i][0].ToString();
-                            notifikasi.notifikasi = serviceDetails.Rows[i][1].ToString();
-                            notifikasi.order = serviceDetails.Rows[i][2].ToString();
-                            notifikasi.notification_date = Convert.ToDateTime(serviceDetails.Rows[i][3].ToString());
-                            notifikasi.created_by = serviceDetails.Rows[i][4].ToString();
-                            notifikasi.created_on = Convert.ToDateTime(serviceDetails.Rows[i][5].ToString());
-                            notifikasi.change_by = serviceDetails.Rows[i][6].ToString();
-                            notifikasi.change_on = Convert.ToDateTime(serviceDetails.Rows[i][7].ToString());
-                            notifikasi.planner_group = serviceDetails.Rows[i][8].ToString();
-                            notifikasi.description = serviceDetails.Rows[i][9].ToString();
-                            notifikasi.user_status = Convert.ToInt32(serviceDetails.Rows[i][10].ToString());
-                            notifikasi.system_status = serviceDetails.Rows[i][11].ToString();
-                            notifikasi.maintenance_plant = serviceDetails.Rows[i][12].ToString();
-                            notifikasi.functional_location = serviceDetails.Rows[i][13].ToString();
-                            notifikasi.equipment = serviceDetails.Rows[i][14].ToString();
-                            notifikasi.required_start = Convert.ToDateTime(serviceDetails.Rows[i][15].ToString());
-                            notifikasi.required_end = Convert.ToDateTime(serviceDetails.Rows[i][16].ToString());
-                            notifikasi.location = serviceDetails.Rows[i][17].ToString();
-                            notifikasi.main_work_center = serviceDetails.Rows[i][18].ToString();
-                            notifikasi.maintenance_item = serviceDetails.Rows[i][19].ToString();
-                            notifikasi.maintenance_plan = serviceDetails.Rows[i][20].ToString();
-                            notifikasi.rekomendasi = serviceDetails.Rows[i][21].ToString();
+                            Notifikasi obj = _context.notifikasi.Where(p => p.notifikasi == serviceDetails.Rows[i][1].ToString()).FirstOrDefault();
+                            if (obj != null)
+                            {
+                                obj.notification_type = serviceDetails.Rows[i][0].ToString();
+                                obj.notifikasi = serviceDetails.Rows[i][1].ToString();
+                                obj.order = serviceDetails.Rows[i][2].ToString();
+                                obj.notification_date = Convert.ToDateTime(serviceDetails.Rows[i][3].ToString());
+                                obj.created_by = serviceDetails.Rows[i][4].ToString();
+                                obj.created_on = Convert.ToDateTime(serviceDetails.Rows[i][5].ToString());
+                                obj.change_by = serviceDetails.Rows[i][6].ToString();
+                                obj.change_on = Convert.ToDateTime(serviceDetails.Rows[i][7].ToString());
+                                obj.planner_group = serviceDetails.Rows[i][8].ToString();
+                                obj.description = serviceDetails.Rows[i][9].ToString();
+                                obj.user_status = Convert.ToInt32(serviceDetails.Rows[i][10].ToString());
+                                obj.system_status = serviceDetails.Rows[i][11].ToString();
+                                obj.maintenance_plant = serviceDetails.Rows[i][12].ToString();
+                                obj.functional_location = serviceDetails.Rows[i][13].ToString();
+                                obj.equipment = serviceDetails.Rows[i][14].ToString();
+                                obj.required_start = Convert.ToDateTime(serviceDetails.Rows[i][15].ToString());
+                                obj.required_end = Convert.ToDateTime(serviceDetails.Rows[i][16].ToString());
+                                obj.location = serviceDetails.Rows[i][17].ToString();
+                                obj.main_work_center = serviceDetails.Rows[i][18].ToString();
+                                obj.maintenance_item = serviceDetails.Rows[i][19].ToString();
+                                obj.maintenance_plan = serviceDetails.Rows[i][20].ToString();
+                                obj.rekomendasi = serviceDetails.Rows[i][21].ToString();
+                                _context.SaveChangesAsync();
+                            }
+                            else
+                            {
+
+                                Notifikasi notifikasi = new Notifikasi();
+                                notifikasi.notification_type = serviceDetails.Rows[i][0].ToString();
+                                notifikasi.notifikasi = serviceDetails.Rows[i][1].ToString();
+                                notifikasi.order = serviceDetails.Rows[i][2].ToString();
+                                notifikasi.notification_date = Convert.ToDateTime(serviceDetails.Rows[i][3].ToString());
+                                notifikasi.created_by = serviceDetails.Rows[i][4].ToString();
+                                notifikasi.created_on = Convert.ToDateTime(serviceDetails.Rows[i][5].ToString());
+                                notifikasi.change_by = serviceDetails.Rows[i][6].ToString();
+                                notifikasi.change_on = Convert.ToDateTime(serviceDetails.Rows[i][7].ToString());
+                                notifikasi.planner_group = serviceDetails.Rows[i][8].ToString();
+                                notifikasi.description = serviceDetails.Rows[i][9].ToString();
+                                notifikasi.user_status = Convert.ToInt32(serviceDetails.Rows[i][10].ToString());
+                                notifikasi.system_status = serviceDetails.Rows[i][11].ToString();
+                                notifikasi.maintenance_plant = serviceDetails.Rows[i][12].ToString();
+                                notifikasi.functional_location = serviceDetails.Rows[i][13].ToString();
+                                notifikasi.equipment = serviceDetails.Rows[i][14].ToString();
+                                notifikasi.required_start = Convert.ToDateTime(serviceDetails.Rows[i][15].ToString());
+                                notifikasi.required_end = Convert.ToDateTime(serviceDetails.Rows[i][16].ToString());
+                                notifikasi.location = serviceDetails.Rows[i][17].ToString();
+                                notifikasi.main_work_center = serviceDetails.Rows[i][18].ToString();
+                                notifikasi.maintenance_item = serviceDetails.Rows[i][19].ToString();
+                                notifikasi.maintenance_plan = serviceDetails.Rows[i][20].ToString();
+                                notifikasi.rekomendasi = serviceDetails.Rows[i][21].ToString();
                           
 
 
-                            // Add the record in Database
-                            await _context.notifikasi.AddAsync(notifikasi);
-                            await _context.SaveChangesAsync();
+                                // Add the record in Database
+                                await _context.notifikasi.AddAsync(notifikasi);
+                                await _context.SaveChangesAsync();
+                            }
                         }
                     }
                 }
