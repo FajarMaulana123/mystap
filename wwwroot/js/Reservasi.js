@@ -347,7 +347,7 @@ $(document).ready(function () {
                     if (data.result == false) {
                         Swal.fire({
                             title: 'Gagal',
-                            text: "Gagal Import zpm01",
+                            text: data.text,
                             icon: 'error',
                             // timer: 3000,
                             showCancelButton: false,
@@ -360,7 +360,7 @@ $(document).ready(function () {
                     if (data.result == 'undefined') {
                         Swal.fire({
                             title: 'Gagal',
-                            text: "Nama File Tidak Sesuai",
+                            text: data.text,
                             icon: 'error',
                             // timer: 3000,
                             showCancelButton: false,

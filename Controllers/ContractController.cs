@@ -207,7 +207,7 @@ namespace mystap.Controllers
 
                 string tahun = formcollaction["tahun"];
                 string inisial = formcollaction["inisial"];
-                var cek = _context.sow.Where(p => p.tahun == tahun).Where(w => w.tahun.Contains(tahun)).Select(p => new
+                var cek = _context.sow.Where(p => p.tahun == tahun).Where(w => w.jobCode.Contains(inisial)).Select(p => new
                             {
                                 tahun = p.tahun,
                                 kode = p.jobCode.Max()
@@ -602,22 +602,29 @@ namespace mystap.Controllers
                 var unit = Request.Form["unit_filter"].FirstOrDefault();
                 var pic = Request.Form["pic_filter"].FirstOrDefault();
 
-                var customerData = _context.contractTracking.Where(p => p.deleted != 1);
+                var customerData = (from ct in _context.contractTracking
+                                    join sow in _context.sow on ct.id_sow equals sow.id
+                                    select new
+                                    {
+                                        contract = ct,
+                                        judul_pekerjaan = sow.judulPekerjaan,
+                                    }).Where(p => p.contract.deleted != 1);
+
 
 
                 if (!string.IsNullOrEmpty(project))
                 {
-                    customerData = customerData.Where(p => p.projectID == Convert.ToInt32(project));
+                    customerData = customerData.Where(p => p.contract.projectID == Convert.ToInt32(project));
                 }
 
                 if (!string.IsNullOrEmpty(unit))
                 {
-                    customerData = customerData.Where(p => p.unit == unit);
+                    customerData = customerData.Where(p => p.contract.unit == unit);
                 }
 
                 if (!string.IsNullOrEmpty(pic))
                 {
-                    customerData = customerData.Where(p => p.pic == pic);
+                    customerData = customerData.Where(p => p.contract.pic == pic);
                 }
 
 
@@ -628,7 +635,7 @@ namespace mystap.Controllers
 
                 if (!string.IsNullOrEmpty(searchValue))
                 {
-                    customerData = customerData.Where(b => b.judulPekerjaan.StartsWith(searchValue));
+                    customerData = customerData.Where(b => b.judul_pekerjaan.StartsWith(searchValue));
                 }
                 // Total number of rows count
                 //Console.WriteLine(customerData);
@@ -670,7 +677,7 @@ namespace mystap.Controllers
             var isi = "<option value=''>Select List SOW</option>";
             foreach(var val in data)
             {
-                isi += "<option value='"+val.judulPekerjaan+"'>" + val.judulPekerjaan + "</option>";
+                isi += "<option value='"+val.id+"' data-judul='"+val.judulPekerjaan+"'>" + val.judulPekerjaan + "</option>";
             }
 
             return Ok(isi);
@@ -727,7 +734,8 @@ namespace mystap.Controllers
                 val.projectID = Convert.ToInt64(Request.Form["projectID"].FirstOrDefault());
                 val.bulan = bulan.Split('-')[1].ToString();
                 val.tahun = bulan.Split('-')[0].ToString();
-                val.judulPekerjaan = Request.Form["judulPekerjaan"].FirstOrDefault();
+                val.id_sow = Convert.ToInt64(Request.Form["judulPekerjaan"].FirstOrDefault());
+                //val.judulPekerjaan = Request.Form["judulPekerjaan"].FirstOrDefault();
                 val.unit = Request.Form["unit"].FirstOrDefault();
                 val.pic = Request.Form["pic"].FirstOrDefault();
                 val.kategoriPaket = Request.Form["kategoriPaket"].FirstOrDefault();
@@ -855,7 +863,8 @@ namespace mystap.Controllers
                     val.katPaket = Request.Form["katPaket"].FirstOrDefault();
                     val.tipePaket = Request.Form["tipePaket"].FirstOrDefault();
                     val.kriteria = Request.Form["kriteria"].FirstOrDefault();
-                    val.judulPekerjaan = Request.Form["judulPekerjaan"].FirstOrDefault();
+                    val.id_sow = Convert.ToInt64(Request.Form["judulPekerjaan"].FirstOrDefault());
+                    //val.judulPekerjaan = Request.Form["judulPekerjaan"].FirstOrDefault();
                     val.tipe_koordinasi = Convert.ToInt32(Request.Form["tipe_koordinasi"].FirstOrDefault());
                     val.koordinasi = Request.Form["koordinasi"].FirstOrDefault();
                     val.disiplin = Request.Form["disiplin"].FirstOrDefault();
@@ -946,7 +955,7 @@ namespace mystap.Controllers
 
 
                     val.aktualSP = (Request.Form["aktual_proses_spb"].FirstOrDefault() != "") ? Convert.ToDateTime(Request.Form["aktual_proses_spb"].FirstOrDefault()).Date : null;
-                    val.currStat = Request.Form["current"].FirstOrDefault();
+                    val.currStat = (Request.Form["current"].FirstOrDefault() != "") ? Request.Form["current"].FirstOrDefault() : null;
                     val.currStatDesc = Request.Form["ket_current"].FirstOrDefault();
 
                     val.mulai = (Request.Form["start"].FirstOrDefault() != "") ? Convert.ToDateTime(Request.Form["start"].FirstOrDefault()).Date : null;

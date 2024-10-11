@@ -7,6 +7,7 @@ namespace mystap.Models
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         [Key]
         public long idPaket { get; set; }
+        public long? id_sow { get; set; }
         public string? noPaket { get; set; }
         public string? judulPekerjaan { get; set; }
         public string? kategoriPaket { get; set; }

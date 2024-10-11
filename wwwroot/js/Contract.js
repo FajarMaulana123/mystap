@@ -47,26 +47,26 @@ $(document).ready(function () {
             //        return meta.row + 1;
             //    }
             //},
-            { data: 'noPaket', name: 'noPaket' },
+            { data: 'contract.noPaket', name: 'contract.noPaket' },
             {
                 render: function (data, type, full, meta) {
-                    return full.wo + " " + full.pr + " " + full.po + " " + full.noSP;
+                    return full.contract.wo + " " + full.contract.pr + " " + full.contract.po + " " + full.contract.noSP;
                 }
             },
 
-            { data: 'judulPekerjaan', name: 'judulPekerjaan' },
-            { data: 'pic', name: 'pic' },
+            { data: 'judul_pekerjaan', name: 'judul_pekerjaan' },
+            { data: 'contract.pic', name: 'contract.pic' },
             {
                 data: 'targetCO', name: 'targetCO',
                 render: function (data, type, full, meta) {
-                    var date = full.targetCO;
+                    var date = full.contract.targetCO;
                     return date.split('T')[0];
                 }
             },
             {
                 data: 'aktualCO', name: 'aktualCO',
                 render: function (data, type, full, meta) {
-                    var date = full.aktualCO;
+                    var date = full.contract.aktualCO;
                     if (date != null) {
                         return date.split('T')[0];
                     } else {
@@ -77,10 +77,10 @@ $(document).ready(function () {
             {
                 data: 'floatDaysCO', name: 'floatDaysCO',
                 render: function (data, type, full, meta) {
-                    const target = new Date(full.targetCO);
+                    const target = new Date(full.contract.targetCO);
                     var aktual;
-                    if (full.aktualCO != null) {
-                        aktual = new Date(full.aktualCO);
+                    if (full.contract.aktualCO != null) {
+                        aktual = new Date(full.contract.aktualCO);
                     } else {
                         aktual = new Date();
                     }
@@ -103,7 +103,7 @@ $(document).ready(function () {
             {
                 data: 'targetBukaPH', name: 'targetBukaPH',
                 render: function (data, type, full, meta) {
-                    var date = full.targetBukaPH;
+                    var date = full.contract.targetBukaPH;
                     if (date != null) {
                         return date.split('T')[0];
                     } else {
@@ -114,7 +114,7 @@ $(document).ready(function () {
             {
                 data: 'aktualBukaPH', name: 'aktualBukaPH',
                 render: function (data, type, full, meta) {
-                    var date = full.aktualBukaPH;
+                    var date = full.contract.aktualBukaPH;
                     if (date != null) {
                         return date.split('T')[0];
                     } else {
@@ -125,10 +125,10 @@ $(document).ready(function () {
             {
                 data: 'FDBukaPH', name: 'FDBukaPH',
                 render: function (data, type, full, meta) {
-                    const target = new Date(full.targetBukaPH);
+                    const target = new Date(full.contract.targetBukaPH);
                     var aktual;
-                    if (full.aktualBukaPH != null) {
-                        aktual = new Date(full.aktualBukaPH);
+                    if (full.contract.aktualBukaPH != null) {
+                        aktual = new Date(full.contract.aktualBukaPH);
                     } else {
                         aktual = new Date();
                     }
@@ -151,7 +151,7 @@ $(document).ready(function () {
             {
                 data: 'targetSP', name: 'targetSP',
                 render: function (data, type, full, meta) {
-                    var date = full.targetSP;
+                    var date = full.contract.targetSP;
                     if (date != null) {
                         return date.split('T')[0];
                     } else {
@@ -162,7 +162,7 @@ $(document).ready(function () {
             {
                 data: 'aktualSP', name: 'aktualSP',
                 render: function (data, type, full, meta) {
-                    var date = full.aktualSP;
+                    var date = full.contract.aktualSP;
                     if (date != null) {
                         return date.split('T')[0];
                     } else {
@@ -173,10 +173,10 @@ $(document).ready(function () {
             {
                 data: 'FDSP', name: 'FDSP',
                 render: function (data, type, full, meta) {
-                    const target = new Date(full.targetSP);
+                    const target = new Date(full.contract.targetSP);
                     var aktual;
-                    if (full.aktualCO != null) {
-                        aktual = new Date(full.aktualSP);
+                    if (full.contract.aktualCO != null) {
+                        aktual = new Date(full.contract.aktualSP);
                     } else {
                         aktual = new Date();
                     }
@@ -200,14 +200,14 @@ $(document).ready(function () {
                 data: 'T.lightcurr', name: 'T.lightcurr',
                 render: function (data, type, full, meta) {
                     var isi = "";
-                    if (full.aktualSP != null) {
+                    if (full.contract.aktualSP != null) {
                         isi = '<span class="text-primary"><i class="fa fa-circle fs-20px fa-fw me-5px"></i></span>';
                     } else {
-                        if (full.t_light > 30) {
+                        if (full.contract.t_light > 30) {
                             isi = '<span class="text-green-600"><i class="fa fa-circle fs-20px fa-fw me-5px"></i></span>';
-                        } else if (full.t_light <= 30 && full.t_light > 20) {
+                        } else if (full.contract.t_light <= 30 && full.contract.t_light > 20) {
                             isi = '<span class="text-warning "><i class="fa fa-circle fs-20px fa-fw me-5px"></i></span>';
-                        } else if (full.t_light <= 20) {
+                        } else if (full.contract.t_light <= 20) {
                             isi = '<span class="text-danger"><i class="fa fa-circle fs-20px fa-fw me-5px"></i></span>';
                         } else {
                             isi = "-";
@@ -219,7 +219,7 @@ $(document).ready(function () {
             {
                 data: 'deadLine', name: 'deadLine',
                 render: function (data, type, full, meta) {
-                    var date = full.deadLine;
+                    var date = full.contract.deadLine;
                     if (date != null) {
                         return date.split('T')[0];
                     } else {
@@ -228,14 +228,14 @@ $(document).ready(function () {
                 }
             },
 
-            { data: 'currStat', name: 'currStat' },
-            { data: 'currStatDesc', name: 'currStatDesc' },
+            { data: 'contract.currStat', name: 'contract.currStat' },
+            { data: 'contract.currStatDesc', name: 'contract.currStatDesc' },
             {
                 data: 'file_sp', name: 'file_sp',
                 render: function (data, type, full, meta) {
                     var isi = "";
-                    if (full.file_sp != null) {
-                        isi = '<a href="'+full.file_sp+'" class="btn btn-info btn-sm" target="_blank">File</a>';
+                    if (full.contract.file_sp != null) {
+                        isi = '<a href="' + full.contract.file_sp+'" class="btn btn-info btn-sm" target="_blank">File</a>';
                     } else {
                         isi = '';
                     }
@@ -249,7 +249,7 @@ $(document).ready(function () {
                 orderable: false,
                 searchable: false,
                 render: function (data, type, full, meta) {
-                    var actionBtn = '<div class="d-flex"><a href="/edit_contract/' + full.idPaket + '" class="btn btn-xs waves-effect waves-light btn-outline-warning edit mr-1" ><i class="fas fa-pen fa-xs"></i></a><a href="javascript:void(0);" style="margin-left:5px" class="btn btn-danger btn-xs delete " data-id="'+full.idPaket+'"><i class="fas fa-trash fa-xs"></i></a></div>';
+                    var actionBtn = '<div class="d-flex"><a href="/edit_contract/' + full.contract.idPaket + '" class="btn btn-xs waves-effect waves-light btn-outline-warning edit mr-1" ><i class="fas fa-pen fa-xs"></i></a><a href="javascript:void(0);" style="margin-left:5px" class="btn btn-danger btn-xs delete " data-id="' + full.contract.idPaket+'"><i class="fas fa-trash fa-xs"></i></a></div>';
                     return actionBtn;
                 }
             },

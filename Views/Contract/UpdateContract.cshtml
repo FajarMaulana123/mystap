@@ -144,7 +144,7 @@
                                                         @* sow *@
                                                         @foreach (var val in ViewBag.sow)
                                                         {
-                                                            <option value="@(val.judulPekerjaan)" @((ViewBag.data.judulPekerjaan == val.judulPekerjaan) ? "selected" : "")> @(val.judulPekerjaan)</option>
+                                                            <option value="@(val.id)" @((ViewBag.data.id_sow == val.id) ? "selected" : "")> @(val.judulPekerjaan)</option>
                                                         }
                                                     </select>
                                             </div>

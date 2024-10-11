@@ -1,10 +1,13 @@
 ﻿using Azure.Core;
+using ExcelDataReader;
+using joblist.Controllers;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.FlowAnalysis;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using Microsoft.Extensions.Caching.Memory;
+using Microsoft.Extensions.Hosting;
 using mystap.Models;
 using Newtonsoft.Json.Linq;
 using System;
@@ -20,12 +23,16 @@ using static System.Net.Mime.MediaTypeNames;
 
 namespace mystap.Controllers
 {
+
     public class MaterialController : Controller
     {
         private readonly DatabaseContext _context;
-        public MaterialController(DatabaseContext context)
+        IWebHostEnvironment hostEnvironment;
+        IExcelDataReader reader;
+        public MaterialController(DatabaseContext context, IWebHostEnvironment hostEnvironment)
         {
             _context = context;
+            this.hostEnvironment = hostEnvironment;
         }
         public IActionResult Material()
         {
@@ -87,7 +94,7 @@ namespace mystap.Controllers
                             "    else 'not_balance' " +
                             "end) as status_qty " +
                             "from (select " +
-                            "work_order.[order],max(work_order.[description]) as wo_description,max(work_order.main_work_ctr) as main_work_ctr,max(zpm01.id) as id, max(zpm01.revision) as revision, max(zpm01.reserv_no) as reserv_no,zpm01.material,max(zpm01.material_description) as [description],zpm01.itm,max(zpm01.bun) as bun,max(zpm01.reqmt_qty) as reqmt_qty, " +
+                            "work_order.[order],max(work_order.[description]) as wo_description,max(work_order.main_work_ctr) as main_work_ctr,max(zpm01.id) as id, max(zpm01.revision) as revision, max(zpm01.reserv_no) as reserv_no,max(zpm01.material) as material,max(zpm01.material_description) as [description],zpm01.itm,max(zpm01.bun) as bun,max(zpm01.reqmt_qty) as reqmt_qty, " +
                             "max(zpm01.pr) as pr,max(zpm01.itm_pr) as pr_item,max(zpm01.qty_pr) as pr_qty,max(zpm01.qty_res) as qty_res,max(purch_order.po) as po,max(purch_order.qty_delivered) as po_qty,max(purch_order.item_po) as po_item,max(purch_order.dci) as dci, " +
                             "max(project.tglSelesaiTA) as finish_date, (max(zpm01.diff_qty) + max(zpm01.qty_pr)) as tot_, max(zpm01.fls) as fls, max(zpm01.diff_qty) as diff_qty, " +
                             "(case when max(project.taoh) = 'OH' then DATEADD(DAY, (case when  max(zpm01.prognosa_matl) is not null then max(zpm01.prognosa_matl) else 0 end),max(prognosa_oh.[start_date])) else max(project.tglTA) end) as md, " +
@@ -98,7 +105,7 @@ namespace mystap.Controllers
                             "left join Mystap.dbo.prognosa_oh on prognosa_oh.eqTagno = work_order.equipment " +
                             "left join Mystap.dbo.project on project.revision = work_order.revision " +
                             "left join Mystap.dbo.purch_order on purch_order.material = zpm01.material AND purch_order.pr = zpm01.pr AND purch_order.item_pr = zpm01.itm_pr " +
-                            "where ((del is null or del != 'X') and (zpm01.reqmt_qty is not null and zpm01.reqmt_qty != '0')) " + w + " group by work_order.[order],zpm01.material,zpm01.itm ) as b " + ws;
+                            "where ((del is null or del != 'X') and (zpm01.reqmt_qty is not null and zpm01.reqmt_qty != '0')) " + w + " group by work_order.[order],zpm01.itm ) as b " + ws;
 
                 var c = FormattableStringFactory.Create(query);
                 var datas = _context.viewReservasi.FromSql(c);
@@ -185,12 +192,12 @@ namespace mystap.Controllers
                 }
 
                 var query = @"select " +
-                    " work_order.[order] as [order],max(work_order.[description]) as wo_description, max(work_order.main_work_ctr) as main_work_ctr,zpm01.material, max(zpm01.revision) as revision, max(zpm01.reserv_no) as reserv_no,max(zpm01.material_description) as material_desc,zpm01.itm,max(zpm01.sloc) as sloc,max(zpm01.pg) as pg,max(zpm01.ict) as ict, max(zpm01.del) as del, " +
+                    " max(zpm01.id) as id,work_order.[order] as [order],max(work_order.[description]) as wo_description, max(work_order.main_work_ctr) as main_work_ctr,max(zpm01.material) as material, max(zpm01.revision) as revision, max(zpm01.reserv_no) as reserv_no,max(zpm01.material_description) as material_desc,zpm01.itm,max(zpm01.sloc) as sloc,max(zpm01.pg) as pg,max(zpm01.ict) as ict, max(zpm01.del) as del, " +
                     " max(zpm01.recipient) as recipient, max(zpm01.unloading_point) as unloading_point, max(zpm01.fls) as fls, max(zpm01.cost_ctrs) as cost_ctrs,max(zpm01.reqmt_date) as reqmt_date,max(zpm01.bun)as bun,max(zpm01.reqmt_qty) as reqmt_qty, max(zpm01.qty_f_avail_check) as qty_f_avail_check, max(zpm01.qty_withdrawn) as qty_withdrawn, " +
-                    " max(zpm01.price) as price,max(zpm01.per) as per, max(zpm01.crcy) as crcy,max(zpm01.pr) as pr,max(zpm01.itm_pr) as pr_item,max(zpm01.qty_pr) as pr_qty,max(zpm01.qty_res) as qty_res " +
+                    " max(zpm01.price) as price,max(zpm01.per) as per, max(zpm01.crcy) as crcy,max(zpm01.pr) as pr,max(zpm01.itm_pr) as pr_item,max(zpm01.qty_pr) as pr_qty,max(zpm01.qty_res) as qty_res ,max(zpm01.prognosa_matl) as prognosa_matl" +
                     " from Mystap.dbo.zpm01 " +
                     " left join Mystap.dbo.work_order on work_order.[order] = zpm01.no_order  " +
-                    " where ((zpm01.del is null or zpm01.del != 'X') and (zpm01.reqmt_qty is not null and zpm01.reqmt_qty != '0')) and (zpm01.pr is null or zpm01.pr = '') and zpm01.reqmt_qty != zpm01.qty_res " + w + " group by work_order.[order],zpm01.material,zpm01.itm ";
+                    " where ((zpm01.del is null or zpm01.del != 'X') and (zpm01.reqmt_qty is not null and zpm01.reqmt_qty != '0')) and (zpm01.pr is null or zpm01.pr = '') and zpm01.reqmt_qty != zpm01.qty_res " + w + " group by work_order.[order],zpm01.itm ";
 
                 var c = FormattableStringFactory.Create(query);
                 var datas = _context.viewOutstandingReservasi.FromSql(c);
@@ -273,12 +280,12 @@ namespace mystap.Controllers
 
 
                 var query = @"select " +
-                    " max(zpm01.id) as id,work_order.[order] as [order],max(work_order.[description]) as wo_description, max(work_order.main_work_ctr) as main_work_ctr,zpm01.material, max(zpm01.revision) as revision, max(zpm01.reserv_no) as reserv_no,max(zpm01.material_description) as material_desc,zpm01.itm,max(zpm01.sloc) as sloc,max(zpm01.pg) as pg,max(zpm01.ict) as ict, max(zpm01.del) as del, " +
+                    " max(zpm01.id) as id,work_order.[order] as [order],max(work_order.[description]) as wo_description, max(work_order.main_work_ctr) as main_work_ctr,max(zpm01.material) as material, max(zpm01.revision) as revision, max(zpm01.reserv_no) as reserv_no,max(zpm01.material_description) as material_desc,zpm01.itm,max(zpm01.sloc) as sloc,max(zpm01.pg) as pg,max(zpm01.ict) as ict, max(zpm01.del) as del, " +
                     " max(zpm01.recipient) as recipient, max(zpm01.unloading_point) as unloading_point, max(zpm01.fls) as fls, max(zpm01.cost_ctrs) as cost_ctrs,max(zpm01.reqmt_date) as reqmt_date,max(zpm01.bun)as bun,max(zpm01.reqmt_qty) as reqmt_qty, max(zpm01.qty_f_avail_check) as qty_f_avail_check, max(zpm01.qty_withdrawn) as qty_withdrawn, " +
                     " max(zpm01.price) as price,max(zpm01.per) as per, max(zpm01.crcy) as crcy,max(zpm01.pr) as pr,max(zpm01.itm_pr) as pr_item,max(zpm01.qty_pr) as pr_qty,max(zpm01.qty_res) as qty_res ,max(zpm01.prognosa_matl) as prognosa_matl" +
                     " from Mystap.dbo.zpm01 " +
                     " left join Mystap.dbo.work_order on work_order.[order] = zpm01.no_order  " +
-                    " where ((zpm01.del is null or zpm01.del != 'X') and (zpm01.reqmt_qty is not null and zpm01.reqmt_qty != '0')) " + w + " group by work_order.[order],zpm01.material,zpm01.itm ";
+                    " where ((zpm01.del is null or zpm01.del != 'X') and (zpm01.reqmt_qty is not null and zpm01.reqmt_qty != '0')) " + w + " group by work_order.[order],zpm01.itm ";
 
                 var c = FormattableStringFactory.Create(query);
                 var datas = _context.viewOutstandingReservasi.FromSql(c);
@@ -418,7 +425,7 @@ namespace mystap.Controllers
                     }
 
                     var query = @"select " +
-                            "work_order.[order],max(zpm01.id) as id, zpm01.material,max(zpm01.material_description) as [description],zpm01.itm,max(zpm01.bun) as bun,max(zpm01.reqmt_qty) as reqmt_qty, max(zpm01.reqmt_date) as reqmt_date, max(zpm01.pg) as pg, " +
+                            "work_order.[order],max(zpm01.id) as id, max(zpm01.material) as material,max(zpm01.material_description) as [description],zpm01.itm,max(zpm01.bun) as bun,max(zpm01.reqmt_qty) as reqmt_qty, max(zpm01.reqmt_date) as reqmt_date, max(zpm01.pg) as pg, " +
                             "max(zpm01.pr) as pr,max(zpm01.itm_pr) as pr_item,max(zpm01.qty_pr) as pr_qty,max(zpm01.qty_res) as qty_res, " +
                             "(case when max(zpm01.fls) = 'X' then 'fis' " +
                             "    when max(zpm01.reqmt_qty) = max(zpm01.qty_pr) then 'balance' " +
@@ -432,7 +439,7 @@ namespace mystap.Controllers
                             "from Mystap.dbo.zpm01 " +
                             "left join Mystap.dbo.work_order on work_order.[order] = zpm01.no_order " +
                             "left join Mystap.dbo.purch_order on purch_order.material = zpm01.material AND purch_order.pr = zpm01.pr AND purch_order.item_pr = zpm01.itm_pr " +
-                            "where ((del is null or del != 'X') and (zpm01.reqmt_qty is not null and zpm01.reqmt_qty != '0')) " + w + " group by work_order.[order],zpm01.material,zpm01.itm";
+                            "where ((del is null or del != 'X') and (zpm01.reqmt_qty is not null and zpm01.reqmt_qty != '0')) " + w + " group by work_order.[order],zpm01.itm";
 
                     var c = FormattableStringFactory.Create(query);
                     var datas = _context.viewUpdatePr.FromSql(c);
@@ -573,12 +580,12 @@ namespace mystap.Controllers
                 }
 
                 var query = @"select "+
-                    " max(zpm01.pr) as pr, max(zpm01.itm_pr) as pr_item, max(zpm01.qty_pr) as qty_pr, max(zpm01.pg) as pg, max(zpm01.reqmt_date) as reqmt_date, work_order.[order],zpm01.material,max(zpm01.material_description) as material_description "+
+                    " max(zpm01.pr) as pr, max(zpm01.itm_pr) as pr_item, max(zpm01.qty_pr) as qty_pr, max(zpm01.pg) as pg, max(zpm01.reqmt_date) as reqmt_date, work_order.[order],max(zpm01.material) as material,max(zpm01.material_description) as material_description "+
                     " from zpm01 "+
                     " left join work_order on work_order.[order] = zpm01.no_order "+
                     " left join purch_order on purch_order.material = zpm01.material AND purch_order.pr = zpm01.pr AND purch_order.item_pr = zpm01.itm_pr "+
                     " where (zpm01.pr is not null or zpm01.pr != '') and ((del is null or del != 'X') and (zpm01.reqmt_qty is not null and zpm01.reqmt_qty != 0)) and zpm01.reqmt_qty != '0' "+
-                    " and zpm01.revision = '"+project+"' "+w+" group by work_order.[order], zpm01.material, zpm01.itm ";
+                    " and zpm01.revision = '"+project+"' "+w+" group by work_order.[order], zpm01.itm ";
 
                 var c = FormattableStringFactory.Create(query);
                 var datas = _context.viewListPr.FromSql(c);
@@ -692,7 +699,7 @@ namespace mystap.Controllers
                 }
 
                 var query = @"select " +
-                    " max(zpm01.id) as id, max(zpm01.pr) as pr, max(zpm01.itm_pr) as pr_item, max(zpm01.qty_pr) as qty_pr, max(zpm01.pg) as pg, max(zpm01.reqmt_date) as reqmt_date, work_order.[order],zpm01.material,max(zpm01.material_description) as material_description, " +
+                    " max(zpm01.id) as id, max(zpm01.pr) as pr, max(zpm01.itm_pr) as pr_item, max(zpm01.qty_pr) as qty_pr, max(zpm01.pg) as pg, max(zpm01.reqmt_date) as reqmt_date, work_order.[order],max(zpm01.material) as material,max(zpm01.material_description) as material_description, " +
                     " max(purch_order.po) as po,max(purch_order.po_quantity) as qty_po,max(purch_order.item_po) as po_item,max(work_order.equipment) as equipment, " +
                     " (case when max(zpm01.unloading_point) = 'xx' then 'LLD' else 'Non LLD' end) as lld, (case when max(zpm01.doc_pr) != 'true' or max(zpm01.doc_pr) is null then 'false' else 'true' end) as doc_pr, " +
                     " max(zpm01.status_pr) as status_pr, max(zpm01.dt_ta) as dt_ta,max(zpm01.dt_iv) as dt_iv,max(zpm01.dt_purch) as dt_purch,max(zpm01.status_pengadaan) as status_pengadaan,max(zpm01.buyer) as buyer,max(zpm01.keterangan) as keterangan " +
@@ -700,7 +707,7 @@ namespace mystap.Controllers
                     " left join work_order on work_order.[order] = zpm01.no_order " +
                     " left join purch_order on purch_order.material = zpm01.material AND purch_order.pr = zpm01.pr AND purch_order.item_pr = zpm01.itm_pr " +
                     " where (zpm01.pr is not null or zpm01.pr != '') and ((del is null or del != 'X') and (zpm01.reqmt_qty is not null and zpm01.reqmt_qty != 0)) and zpm01.reqmt_qty != '0' " +
-                    " and zpm01.revision = '" + project + "' " + w + " group by work_order.[order], zpm01.material, zpm01.itm ";
+                    " and zpm01.revision = '" + project + "' " + w + " group by work_order.[order], zpm01.itm ";
 
                 var c = FormattableStringFactory.Create(query);
                 var datas = _context.viewDistribusiPr.FromSql(c);
@@ -874,6 +881,163 @@ namespace mystap.Controllers
             catch
             {
                 throw;
+            }
+        }
+
+        public IActionResult ImportMaterial()
+        {
+            try
+            {
+                var name = Request.Form["hidden_info"].FirstOrDefault();
+                if(name == "zpm01")
+                {
+                    var file = Request.Form.Files[0];
+                    return ImportWo(file);
+                }
+                else
+                {
+                    return Ok("asd");
+                }
+            }
+            catch
+            {
+                throw;
+            }
+        }
+
+        public IActionResult ImportWo(IFormFile file)
+        {
+            try
+            {
+
+                if (file == null)
+                {
+                    return Json(new { result = false, text = "File is Not Received..." });
+                }
+
+
+                //// Create the Directory if it is not exist
+                //string dirPath = Path.Combine(hostEnvironment.WebRootPath, "ReceivedReports");
+                //if (!Directory.Exists(dirPath))
+                //{
+                //    Directory.CreateDirectory(dirPath);
+                //}
+
+                // MAke sure that only Excel file is used 
+                string dataFileName = Path.GetFileName(file.FileName);
+
+                string extension = Path.GetExtension(dataFileName);
+
+                string[] allowedExtsnions = new string[] { ".xls", ".xlsx" };
+
+                if (!allowedExtsnions.Contains(extension))
+                {
+                    return Json(new { result = false, text = "Sorry! This file is not allowed, make sure that file having extension as either .xls or .xlsx is uploaded." });
+                }
+
+                // Make a Copy of the Posted File from the Received HTTP Request
+                //string saveToPath = Path.Combine(dirPath, dataFileName);
+
+                //using (FileStream stream = new FileStream(saveToPath, FileMode.Create))
+                //{
+                //    file.CopyTo(stream);
+                //}
+
+                string filpath = System.IO.Path.GetTempFileName();
+
+                // USe this to handle Encodeing differences in .NET Core
+                System.Text.Encoding.RegisterProvider(System.Text.CodePagesEncodingProvider.Instance);
+                // read the excel file
+                using (var stream = new FileStream(filpath, FileMode.Open))
+                {
+                    if (extension == ".xls")
+                        reader = ExcelReaderFactory.CreateBinaryReader(stream);
+                    else
+                        reader = ExcelReaderFactory.CreateOpenXmlReader(stream);
+
+                    DataSet ds = new DataSet();
+                    ds = reader.AsDataSet();
+                    reader.Close();
+
+                    if (ds != null && ds.Tables.Count > 0)
+                    {
+                        // Read the the Table
+                        DataTable serviceDetails = ds.Tables[0];
+                        for (int i = 1; i < serviceDetails.Rows.Count; i++)
+                        {
+                            WorkOrder obj = _context.work_order.Where(p => p.order == serviceDetails.Rows[i][4].ToString()).FirstOrDefault();
+                            if (obj != null)
+                            {
+                                obj.plant = serviceDetails.Rows[i][0].ToString();
+                                obj.notification = serviceDetails.Rows[i][1].ToString();
+                                obj.created_on = Convert.ToDateTime(serviceDetails.Rows[i][2].ToString());
+                                obj.superior_order = serviceDetails.Rows[i][3].ToString();
+                                obj.order = serviceDetails.Rows[i][4].ToString();
+                                obj.description = serviceDetails.Rows[i][5].ToString();
+                                obj.equipment = serviceDetails.Rows[i][6].ToString();
+                                obj.func_loc = serviceDetails.Rows[i][7].ToString();
+                                obj.location = serviceDetails.Rows[i][8].ToString();
+                                obj.revision = serviceDetails.Rows[i][9].ToString();
+                                obj.system_status = serviceDetails.Rows[i][10].ToString();
+                                obj.user_status = Convert.ToInt32(serviceDetails.Rows[i][11].ToString());
+                                obj.wbs_ord_header = serviceDetails.Rows[i][12].ToString();
+                                obj.total_plnnd_costs = Convert.ToInt32(serviceDetails.Rows[i][13].ToString());
+                                obj.total_act_costs = Convert.ToInt32(serviceDetails.Rows[i][14].ToString());
+                                obj.planner_group = serviceDetails.Rows[i][15].ToString();
+                                obj.main_work_ctr = serviceDetails.Rows[i][16].ToString();
+                                obj.changed_by = serviceDetails.Rows[i][17].ToString();
+                                obj.bas_start_date = Convert.ToDateTime(serviceDetails.Rows[i][18].ToString());
+                                obj.basic_fin_date = Convert.ToDateTime(serviceDetails.Rows[i][19].ToString());
+                                obj.actual_release = Convert.ToDateTime(serviceDetails.Rows[i][20].ToString());
+                                obj.cost_center = serviceDetails.Rows[i][21].ToString();
+                                obj.entered_by = serviceDetails.Rows[i][22].ToString();
+
+                                _context.SaveChanges();
+
+                            }
+                            else
+                            {
+
+                                WorkOrder wo = new WorkOrder();
+                                wo.plant = serviceDetails.Rows[i][0].ToString();
+                                wo.notification = serviceDetails.Rows[i][1].ToString();
+                                wo.created_on = Convert.ToDateTime(serviceDetails.Rows[i][2].ToString());
+                                wo.superior_order = serviceDetails.Rows[i][3].ToString();
+                                wo.order = serviceDetails.Rows[i][4].ToString();
+                                wo.description = serviceDetails.Rows[i][5].ToString();
+                                wo.equipment = serviceDetails.Rows[i][6].ToString();
+                                wo.func_loc = serviceDetails.Rows[i][7].ToString();
+                                wo.location = serviceDetails.Rows[i][8].ToString();
+                                wo.revision = serviceDetails.Rows[i][9].ToString();
+                                wo.system_status = serviceDetails.Rows[i][10].ToString();
+                                wo.user_status = Convert.ToInt32(serviceDetails.Rows[i][11].ToString());
+                                wo.wbs_ord_header = serviceDetails.Rows[i][12].ToString();
+                                wo.total_plnnd_costs = Convert.ToInt32(serviceDetails.Rows[i][13].ToString());
+                                wo.total_act_costs = Convert.ToInt32(serviceDetails.Rows[i][14].ToString());
+                                wo.planner_group = serviceDetails.Rows[i][15].ToString();
+                                wo.main_work_ctr = serviceDetails.Rows[i][16].ToString();
+                                wo.changed_by = serviceDetails.Rows[i][17].ToString();
+                                wo.bas_start_date = Convert.ToDateTime(serviceDetails.Rows[i][18].ToString());
+                                wo.basic_fin_date = Convert.ToDateTime(serviceDetails.Rows[i][19].ToString());
+                                wo.actual_release = Convert.ToDateTime(serviceDetails.Rows[i][20].ToString());
+                                wo.cost_center = serviceDetails.Rows[i][21].ToString();
+                                wo.entered_by = serviceDetails.Rows[i][22].ToString();
+
+
+
+                                // Add the record in Database
+                                _context.work_order.Add(wo);
+                                _context.SaveChanges();
+                            }
+                        }
+                    }
+                }
+
+                return Json(new { result = true, text = "Berhasil" });
+            }
+            catch (Exception)
+            {
+                return Json(new { result = false, text = "Harap Hubungi Administrator!!" });
             }
         }
     }

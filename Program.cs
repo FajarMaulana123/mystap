@@ -675,14 +675,14 @@ app.UseEndpoints(endpoints =>
        defaults: new { controller = "Contract", action = "Create_DurasiStep" });
 
     endpoints.MapControllerRoute(
-       name: "update_durasi_step",
-       pattern: "update_durasi_step",
-       defaults: new { controller = "Contract", action = "Update_DurasiStep" });
+        name: "update_durasi_step",
+        pattern: "update_durasi_step",
+        defaults: new { controller = "Contract", action = "Update_DurasiStep" });
 
     endpoints.MapControllerRoute(
-       name: "delete_durasi_step",
-       pattern: "delete_durasi_step",
-       defaults: new { controller = "Contract", action = "Delete_DurasiStep" });
+        name: "delete_durasi_step",
+        pattern: "delete_durasi_step",
+        defaults: new { controller = "Contract", action = "Delete_DurasiStep" });
 
     endpoints.MapControllerRoute(
          name: "contracttracking",
@@ -740,29 +740,29 @@ app.UseEndpoints(endpoints =>
          defaults: new { controller = "Contract", action = "getDataTarget" });
 
     endpoints.MapControllerRoute(
-      name: "user",
-      pattern: "user",
-      defaults: new { controller = "User", action = "Users" });
+        name: "user",
+        pattern: "user",
+        defaults: new { controller = "User", action = "Users" });
 
     endpoints.MapControllerRoute(
-       name: "usermanagemant_",
-       pattern: "usermanagemant_",
-       defaults: new { controller = "User", action = "Get_User" });
+        name: "usermanagemant_",
+        pattern: "usermanagemant_",
+        defaults: new { controller = "User", action = "Get_User" });
 
     endpoints.MapControllerRoute(
-       name: "create_usermanagement",
-       pattern: "create_usermanagement",
-       defaults: new { controller = "User", action = "Create_User" });
+        name: "create_usermanagement",
+        pattern: "create_usermanagement",
+        defaults: new { controller = "User", action = "Create_User" });
 
     endpoints.MapControllerRoute(
-       name: "update_usermanagement",
-       pattern: "update_usermanagement",
-       defaults: new { controller = "User", action = "Update_User" });
+        name: "update_usermanagement",
+        pattern: "update_usermanagement",
+        defaults: new { controller = "User", action = "Update_User" });
 
     endpoints.MapControllerRoute(
-       name: "delete_usermanagement",
-       pattern: "delete_usermanagement",
-       defaults: new { controller = "User", action = "Delete_User" });
+        name: "delete_usermanagement",
+        pattern: "delete_usermanagement",
+        defaults: new { controller = "User", action = "Delete_User" });
 
     endpoints.MapControllerRoute(
       name: "bom",
@@ -770,24 +770,24 @@ app.UseEndpoints(endpoints =>
       defaults: new { controller = "Data", action = "Bom" });
 
     endpoints.MapControllerRoute(
-       name: "bom_",
-       pattern: "bom_",
-       defaults: new { controller = "Data", action = "Get_Boms" });
+        name: "bom_",
+        pattern: "bom_",
+        defaults: new { controller = "Data", action = "Get_Boms" });
 
     endpoints.MapControllerRoute(
-       name: "create_bom",
-       pattern: "create_bom",
-       defaults: new { controller = "Data", action = "Create_Bom" });
+        name: "create_bom",
+        pattern: "create_bom",
+        defaults: new { controller = "Data", action = "Create_Bom" });
 
     endpoints.MapControllerRoute(
-       name: "update_bom",
-       pattern: "update_bom",
-       defaults: new { controller = "Data", action = "Update_Bom" });
+        name: "update_bom",
+        pattern: "update_bom",
+        defaults: new { controller = "Data", action = "Update_Bom" });
 
     endpoints.MapControllerRoute(
-       name: "delete_bom",
-       pattern: "delete_bom",
-       defaults: new { controller = "Data", action = "Delete_Bom" });
+        name: "delete_bom",
+        pattern: "delete_bom",
+        defaults: new { controller = "Data", action = "Delete_Bom" });
 
     //Material
     endpoints.MapControllerRoute(
@@ -796,9 +796,9 @@ app.UseEndpoints(endpoints =>
         defaults: new { controller = "Material", action = "Material" });
 
     endpoints.MapControllerRoute(
-       name: "material_",
-       pattern: "material_",
-       defaults: new { controller = "Material", action = "Get_Material" });
+        name: "material_",
+        pattern: "material_",
+        defaults: new { controller = "Material", action = "Get_Material" });
 
     endpoints.MapControllerRoute(
         name: "outstanding_reservasi",
@@ -806,9 +806,9 @@ app.UseEndpoints(endpoints =>
         defaults: new { controller = "Material", action = "OutstandingReservasi" });
 
     endpoints.MapControllerRoute(
-       name: "outstanding_reservasi_",
-       pattern: "outstanding_reservasi_",
-       defaults: new { controller = "Material", action = "OutstandingReservasi_" });
+        name: "outstanding_reservasi_",
+        pattern: "outstanding_reservasi_",
+        defaults: new { controller = "Material", action = "OutstandingReservasi_" });
 
     endpoints.MapControllerRoute(
         name: "penggunaan_material",
@@ -849,29 +849,35 @@ app.UseEndpoints(endpoints =>
         pattern: "list_pr_",
         defaults: new { controller = "Material", action = "ListPR_" });
     endpoints.MapControllerRoute(
-       name: "distribusi_pr",
-       pattern: "distribusi_pr",
-       defaults: new { controller = "Material", action = "DistribusiPR" });
+        name: "distribusi_pr",
+        pattern: "distribusi_pr",
+        defaults: new { controller = "Material", action = "DistribusiPR" });
     endpoints.MapControllerRoute(
-       name: "distribusi_pr_",
-       pattern: "distribusi_pr_",
-       defaults: new { controller = "Material", action = "DistribusiPR_" });
+        name: "distribusi_pr_",
+        pattern: "distribusi_pr_",
+        defaults: new { controller = "Material", action = "DistribusiPR_" });
     endpoints.MapControllerRoute(
-       name: "remove_buyer",
-       pattern: "remove_buyer",
-       defaults: new { controller = "Material", action = "RemoveBuyer" });
+        name: "remove_buyer",
+        pattern: "remove_buyer",
+        defaults: new { controller = "Material", action = "RemoveBuyer" });
     endpoints.MapControllerRoute(
-       name: "doc_pr",
-       pattern: "doc_pr",
-       defaults: new { controller = "Material", action = "DocPR" });
+        name: "doc_pr",
+        pattern: "doc_pr",
+        defaults: new { controller = "Material", action = "DocPR" });
     endpoints.MapControllerRoute(
-       name: "add_status_pengadaan",
-       pattern: "add_status_pengadaan",
-       defaults: new { controller = "Material", action = "StatusPengadaan" });
+        name: "add_status_pengadaan",
+        pattern: "add_status_pengadaan",
+        defaults: new { controller = "Material", action = "StatusPengadaan" });
     endpoints.MapControllerRoute(
-       name: "add_dt",
-       pattern: "add_dt",
-       defaults: new { controller = "Material", action = "AddDT" });
+        name: "add_dt",
+        pattern: "add_dt",
+        defaults: new { controller = "Material", action = "AddDT" });
+    endpoints.MapControllerRoute(
+        name: "import_material",
+        pattern: "import_material",
+        defaults: new { controller = "Material", action = "ImportMaterial" });
+
+
 });
 
 app.Run();

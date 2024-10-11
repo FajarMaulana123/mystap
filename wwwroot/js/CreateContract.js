@@ -254,7 +254,7 @@ $(document).ready(function() {
         let url;
             
         var form_data = new FormData(document.getElementById("add-form"));
-            
+            //form_data.append('id_sow', $('#judulPekerjaan').find(':selected').attr('data-id'));
 
         $.ajax({
             url: 'create_contracttracking',
@@ -282,7 +282,7 @@ $(document).ready(function() {
                 if (data.result != true) {
                     Swal.fire({
                         title: 'Gagal',
-                        text: "Gagal Tambah / Update Project",
+                        text: "Gagal Tambah / Update Contract",
                         icon: 'error',
                         // timer: 3000,
                         showCancelButton: false,
