@@ -890,7 +890,7 @@ namespace mystap.Controllers
             try
             {
                 var name = Request.Form["hidden_info"].FirstOrDefault();
-                if(name == "work_order")
+                if(name == "wo")
                 {
                     var file = Request.Form.Files[0];
                     return ImportWo(file);
