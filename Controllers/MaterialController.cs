@@ -1,4 +1,5 @@
 ﻿using Azure.Core;
+using DocumentFormat.OpenXml.Office2016.Drawing.Command;
 using ExcelDataReader;
 using joblist.Controllers;
 using Microsoft.AspNetCore.Mvc;
@@ -889,14 +890,44 @@ namespace mystap.Controllers
             try
             {
                 var name = Request.Form["hidden_info"].FirstOrDefault();
-                if(name == "zpm01")
+                if(name == "work_order")
                 {
                     var file = Request.Form.Files[0];
                     return ImportWo(file);
                 }
+                else if (name == "zpm01")
+                {
+                    var file = Request.Form.Files[0];
+                    return ImportZpm01(file);
+                }
+                else if(name == "zpm02")
+                {
+                    var file = Request.Form.Files[0];
+                    return ImportZpm02(file);
+                }
+                else if (name == "zpm03")
+                {
+                    var file = Request.Form.Files[0];
+                    return ImportZpm03(file);
+                }
+                else if (name == "zpm05")
+                {
+                    var file = Request.Form.Files[0];
+                    return ImportZpm05(file);
+                }
+                else if (name == "zpm07")
+                {
+                    var file = Request.Form.Files[0];
+                    return ImportZpm07(file);
+                }
+                else if (name == "mb25")
+                {
+                    var file = Request.Form.Files[0];
+                    return ImportMb25(file);
+                }
                 else
                 {
-                    return Ok("asd");
+                    return Json(new { result = false, text = "Fatal Error!!" });
                 }
             }
             catch
@@ -1028,6 +1059,666 @@ namespace mystap.Controllers
                                 // Add the record in Database
                                 _context.work_order.Add(wo);
                                 _context.SaveChanges();
+                            }
+                        }
+                    }
+                }
+
+                return Json(new { result = true, text = "Berhasil" });
+            }
+            catch (Exception)
+            {
+                return Json(new { result = false, text = "Harap Hubungi Administrator!!" });
+            }
+        }
+
+        public IActionResult ImportZpm01(IFormFile file)
+        {
+            try
+            {
+
+                if (file == null)
+                {
+                    return Json(new { result = false, text = "File is Not Received..." });
+                }
+
+
+                //// Create the Directory if it is not exist
+                //string dirPath = Path.Combine(hostEnvironment.WebRootPath, "ReceivedReports");
+                //if (!Directory.Exists(dirPath))
+                //{
+                //    Directory.CreateDirectory(dirPath);
+                //}
+
+                // MAke sure that only Excel file is used 
+                string dataFileName = Path.GetFileName(file.FileName);
+
+                string extension = Path.GetExtension(dataFileName);
+
+                string[] allowedExtsnions = new string[] { ".xls", ".xlsx" };
+
+                if (!allowedExtsnions.Contains(extension))
+                {
+                    return Json(new { result = false, text = "Sorry! This file is not allowed, make sure that file having extension as either .xls or .xlsx is uploaded." });
+                }
+
+                // Make a Copy of the Posted File from the Received HTTP Request
+                //string saveToPath = Path.Combine(dirPath, dataFileName);
+
+                //using (FileStream stream = new FileStream(saveToPath, FileMode.Create))
+                //{
+                //    file.CopyTo(stream);
+                //}
+
+                string filpath = System.IO.Path.GetTempFileName();
+
+                // USe this to handle Encodeing differences in .NET Core
+                System.Text.Encoding.RegisterProvider(System.Text.CodePagesEncodingProvider.Instance);
+                // read the excel file
+                using (var stream = new FileStream(filpath, FileMode.Open))
+                {
+                    if (extension == ".xls")
+                        reader = ExcelReaderFactory.CreateBinaryReader(stream);
+                    else
+                        reader = ExcelReaderFactory.CreateOpenXmlReader(stream);
+
+                    DataSet ds = new DataSet();
+                    ds = reader.AsDataSet();
+                    reader.Close();
+
+                    if (ds != null && ds.Tables.Count > 0)
+                    {
+                        // Read the the Table
+                        DataTable serviceDetails = ds.Tables[0];
+                        for (int i = 1; i < serviceDetails.Rows.Count; i++)
+                        {
+                            Zpm01 obj = _context.zpm01.Where(p => p.no_order == serviceDetails.Rows[i][0].ToString() && p.itm == serviceDetails.Rows[i][5].ToString()).FirstOrDefault();
+                            if (obj != null)
+                            {
+                                obj.no_order = serviceDetails.Rows[i][0].ToString();
+                                obj.revision = serviceDetails.Rows[i][1].ToString();
+                                obj.reserv_no = serviceDetails.Rows[i][2].ToString();
+                                obj.material = serviceDetails.Rows[i][3].ToString();
+                                obj.material_description = serviceDetails.Rows[i][4].ToString();
+                                obj.itm = serviceDetails.Rows[i][5].ToString();
+                                obj.sloc = serviceDetails.Rows[i][6].ToString();
+                                obj.pg = serviceDetails.Rows[i][7].ToString();
+                                obj.ict = serviceDetails.Rows[i][8].ToString();
+                                obj.del = serviceDetails.Rows[i][9].ToString();
+                                obj.unloading_point = serviceDetails.Rows[i][11].ToString();
+                                obj.fls = serviceDetails.Rows[i][12].ToString();
+                                obj.cost_ctrs = serviceDetails.Rows[i][13].ToString();
+                                obj.gl_acct = serviceDetails.Rows[i][14].ToString();
+                                obj.bun = serviceDetails.Rows[i][15].ToString();
+                                obj.reqmt_date = serviceDetails.Rows[i][16].ToString();
+                                obj.reqmt_qty = serviceDetails.Rows[i][17].ToString();
+                                obj.qty_f_avail_check = serviceDetails.Rows[i][18].ToString();
+                                obj.qty_withdrawn = serviceDetails.Rows[i][19].ToString();
+                                obj.price = serviceDetails.Rows[i][20].ToString();
+                                obj.per = serviceDetails.Rows[i][21].ToString();
+                                obj.crcy = serviceDetails.Rows[i][22].ToString();
+
+                                _context.SaveChanges();
+
+                            }
+                            else
+                            {
+
+                                Zpm01 data = new Zpm01();
+                                data.no_order = serviceDetails.Rows[i][0].ToString();
+                                data.revision = serviceDetails.Rows[i][1].ToString();
+                                data.reserv_no = serviceDetails.Rows[i][2].ToString();
+                                data.material = serviceDetails.Rows[i][3].ToString();
+                                data.material_description = serviceDetails.Rows[i][4].ToString();
+                                data.itm = serviceDetails.Rows[i][5].ToString();
+                                data.sloc = serviceDetails.Rows[i][6].ToString();
+                                data.pg = serviceDetails.Rows[i][7].ToString();
+                                data.ict = serviceDetails.Rows[i][8].ToString();
+                                data.del = serviceDetails.Rows[i][9].ToString();
+                                data.unloading_point = serviceDetails.Rows[i][11].ToString();
+                                data.fls = serviceDetails.Rows[i][12].ToString();
+                                data.cost_ctrs = serviceDetails.Rows[i][13].ToString();
+                                data.gl_acct = serviceDetails.Rows[i][14].ToString();
+                                data.bun = serviceDetails.Rows[i][15].ToString();
+                                data.reqmt_date = serviceDetails.Rows[i][16].ToString();
+                                data.reqmt_qty = serviceDetails.Rows[i][17].ToString();
+                                data.qty_f_avail_check = serviceDetails.Rows[i][18].ToString();
+                                data.qty_withdrawn = serviceDetails.Rows[i][19].ToString();
+                                data.price = serviceDetails.Rows[i][20].ToString();
+                                data.per = serviceDetails.Rows[i][21].ToString();
+                                data.crcy = serviceDetails.Rows[i][22].ToString();
+
+                                // Add the record in Database
+                                _context.zpm01.Add(data);
+                                _context.SaveChanges();
+                            }
+                        }
+                    }
+                }
+
+                return Json(new { result = true, text = "Berhasil" });
+            }
+            catch (Exception)
+            {
+                return Json(new { result = false, text = "Harap Hubungi Administrator!!" });
+            }
+        }
+
+        public IActionResult ImportZpm02(IFormFile file)
+        {
+            try
+            {
+
+                if (file == null)
+                {
+                    return Json(new { result = false, text = "File is Not Received..." });
+                }
+
+
+                //// Create the Directory if it is not exist
+                //string dirPath = Path.Combine(hostEnvironment.WebRootPath, "ReceivedReports");
+                //if (!Directory.Exists(dirPath))
+                //{
+                //    Directory.CreateDirectory(dirPath);
+                //}
+
+                // MAke sure that only Excel file is used 
+                string dataFileName = Path.GetFileName(file.FileName);
+
+                string extension = Path.GetExtension(dataFileName);
+
+                string[] allowedExtsnions = new string[] { ".xls", ".xlsx" };
+
+                if (!allowedExtsnions.Contains(extension))
+                {
+                    return Json(new { result = false, text = "Sorry! This file is not allowed, make sure that file having extension as either .xls or .xlsx is uploaded." });
+                }
+
+                // Make a Copy of the Posted File from the Received HTTP Request
+                //string saveToPath = Path.Combine(dirPath, dataFileName);
+
+                //using (FileStream stream = new FileStream(saveToPath, FileMode.Create))
+                //{
+                //    file.CopyTo(stream);
+                //}
+
+                string filpath = System.IO.Path.GetTempFileName();
+
+                // USe this to handle Encodeing differences in .NET Core
+                System.Text.Encoding.RegisterProvider(System.Text.CodePagesEncodingProvider.Instance);
+                // read the excel file
+                using (var stream = new FileStream(filpath, FileMode.Open))
+                {
+                    if (extension == ".xls")
+                        reader = ExcelReaderFactory.CreateBinaryReader(stream);
+                    else
+                        reader = ExcelReaderFactory.CreateOpenXmlReader(stream);
+
+                    DataSet ds = new DataSet();
+                    ds = reader.AsDataSet();
+                    reader.Close();
+
+                    if (ds != null && ds.Tables.Count > 0)
+                    {
+                        // Read the the Table
+                        DataTable serviceDetails = ds.Tables[0];
+                        for (int i = 1; i < serviceDetails.Rows.Count; i++)
+                        {
+                            Zpm02 obj = _context.zpm02.Where(p => p.purch_req == serviceDetails.Rows[i][3].ToString() && p.item == Convert.ToInt32(serviceDetails.Rows[i][4].ToString())).FirstOrDefault();
+                            if (obj != null)
+                            {
+                                obj.plant = serviceDetails.Rows[i][0].ToString();
+                                obj.material = serviceDetails.Rows[i][1].ToString();
+                                obj.material_description = serviceDetails.Rows[i][2].ToString();
+                                obj.purch_req = serviceDetails.Rows[i][3].ToString();
+                                obj.item = Convert.ToInt32(serviceDetails.Rows[i][4].ToString());
+                                obj.d = serviceDetails.Rows[i][5].ToString();
+                                obj.rel = serviceDetails.Rows[i][6].ToString();
+                                obj.s = serviceDetails.Rows[i][7].ToString();
+                                obj.pgr = serviceDetails.Rows[i][8].ToString();
+                                obj.tracking_no = serviceDetails.Rows[i][9].ToString();
+                                obj.qty_req = Convert.ToInt32(serviceDetails.Rows[i][10].ToString());
+                                obj.un = serviceDetails.Rows[i][11].ToString();
+                                obj.req_date = Convert.ToDateTime(serviceDetails.Rows[i][12].ToString());
+                                obj.valn_price = serviceDetails.Rows[i][13].ToString();
+                                obj.crcy = serviceDetails.Rows[i][14].ToString();
+                                obj.per = Convert.ToInt32(serviceDetails.Rows[i][15].ToString());
+                                obj.release_dt = Convert.ToDateTime(serviceDetails.Rows[i][16].ToString());
+
+
+                                _context.SaveChanges();
+
+                            }
+                            else
+                            {
+
+                                Zpm02 data = new Zpm02();
+                                data.plant = serviceDetails.Rows[i][0].ToString();
+                                data.material = serviceDetails.Rows[i][1].ToString();
+                                data.material_description = serviceDetails.Rows[i][2].ToString();
+                                data.purch_req = serviceDetails.Rows[i][3].ToString();
+                                data.item = Convert.ToInt32(serviceDetails.Rows[i][4].ToString());
+                                data.d = serviceDetails.Rows[i][5].ToString();
+                                data.rel = serviceDetails.Rows[i][6].ToString();
+                                data.s = serviceDetails.Rows[i][7].ToString();
+                                data.pgr = serviceDetails.Rows[i][8].ToString();
+                                data.tracking_no = serviceDetails.Rows[i][9].ToString();
+                                data.qty_req = Convert.ToInt32(serviceDetails.Rows[i][10].ToString());
+                                data.un = serviceDetails.Rows[i][11].ToString();
+                                data.req_date = Convert.ToDateTime(serviceDetails.Rows[i][12].ToString());
+                                data.valn_price = serviceDetails.Rows[i][13].ToString();
+                                data.crcy = serviceDetails.Rows[i][14].ToString();
+                                data.per = Convert.ToInt32(serviceDetails.Rows[i][15].ToString());
+                                data.release_dt = Convert.ToDateTime(serviceDetails.Rows[i][16].ToString());
+
+
+                                // Add the record in Database
+                                _context.zpm02.Add(data);
+                                _context.SaveChanges();
+                            }
+                        }
+                    }
+                }
+
+                return Json(new { result = true, text = "Berhasil" });
+            }
+            catch (Exception)
+            {
+                return Json(new { result = false, text = "Harap Hubungi Administrator!!" });
+            }
+        }
+
+        public IActionResult ImportZpm03(IFormFile file)
+        {
+            try
+            {
+
+                if (file == null)
+                {
+                    return Json(new { result = false, text = "File is Not Received..." });
+                }
+
+
+                //// Create the Directory if it is not exist
+                //string dirPath = Path.Combine(hostEnvironment.WebRootPath, "ReceivedReports");
+                //if (!Directory.Exists(dirPath))
+                //{
+                //    Directory.CreateDirectory(dirPath);
+                //}
+
+                // MAke sure that only Excel file is used 
+                string dataFileName = Path.GetFileName(file.FileName);
+
+                string extension = Path.GetExtension(dataFileName);
+
+                string[] allowedExtsnions = new string[] { ".xls", ".xlsx" };
+
+                if (!allowedExtsnions.Contains(extension))
+                {
+                    return Json(new { result = false, text = "Sorry! This file is not allowed, make sure that file having extension as either .xls or .xlsx is uploaded." });
+                }
+
+                // Make a Copy of the Posted File from the Received HTTP Request
+                //string saveToPath = Path.Combine(dirPath, dataFileName);
+
+                //using (FileStream stream = new FileStream(saveToPath, FileMode.Create))
+                //{
+                //    file.CopyTo(stream);
+                //}
+
+                string filpath = System.IO.Path.GetTempFileName();
+
+                // USe this to handle Encodeing differences in .NET Core
+                System.Text.Encoding.RegisterProvider(System.Text.CodePagesEncodingProvider.Instance);
+                // read the excel file
+                using (var stream = new FileStream(filpath, FileMode.Open))
+                {
+                    if (extension == ".xls")
+                        reader = ExcelReaderFactory.CreateBinaryReader(stream);
+                    else
+                        reader = ExcelReaderFactory.CreateOpenXmlReader(stream);
+
+                    DataSet ds = new DataSet();
+                    ds = reader.AsDataSet();
+                    reader.Close();
+
+                    if (ds != null && ds.Tables.Count > 0)
+                    {
+                        // Read the the Table
+                        DataTable serviceDetails = ds.Tables[0];
+                        for (int i = 1; i < serviceDetails.Rows.Count; i++)
+                        {
+                            Zpm01 obj = _context.zpm01.Where(p => p.no_order == serviceDetails.Rows[i][0].ToString() && p.material == serviceDetails.Rows[i][1].ToString() && p.revision == serviceDetails.Rows[i][3].ToString()).FirstOrDefault();
+                            if (obj != null)
+                            {
+                                obj.pr = serviceDetails.Rows[i][4].ToString();
+                                obj.itm_pr = serviceDetails.Rows[i][5].ToString();
+                                obj.req_date = Convert.ToDateTime(serviceDetails.Rows[i][15].ToString());
+                                obj.qty_pr = serviceDetails.Rows[i][16].ToString();
+                               
+                                _context.SaveChanges();
+
+                            }
+                        }
+                    }
+                }
+
+                return Json(new { result = true, text = "Berhasil" });
+            }
+            catch (Exception)
+            {
+                return Json(new { result = false, text = "Harap Hubungi Administrator!!" });
+            }
+        }
+
+        public IActionResult ImportZpm05(IFormFile file)
+        {
+            try
+            {
+
+                if (file == null)
+                {
+                    return Json(new { result = false, text = "File is Not Received..." });
+                }
+
+
+                //// Create the Directory if it is not exist
+                //string dirPath = Path.Combine(hostEnvironment.WebRootPath, "ReceivedReports");
+                //if (!Directory.Exists(dirPath))
+                //{
+                //    Directory.CreateDirectory(dirPath);
+                //}
+
+                // MAke sure that only Excel file is used 
+                string dataFileName = Path.GetFileName(file.FileName);
+
+                string extension = Path.GetExtension(dataFileName);
+
+                string[] allowedExtsnions = new string[] { ".xls", ".xlsx" };
+
+                if (!allowedExtsnions.Contains(extension))
+                {
+                    return Json(new { result = false, text = "Sorry! This file is not allowed, make sure that file having extension as either .xls or .xlsx is uploaded." });
+                }
+
+                // Make a Copy of the Posted File from the Received HTTP Request
+                //string saveToPath = Path.Combine(dirPath, dataFileName);
+
+                //using (FileStream stream = new FileStream(saveToPath, FileMode.Create))
+                //{
+                //    file.CopyTo(stream);
+                //}
+
+                string filpath = System.IO.Path.GetTempFileName();
+
+                // USe this to handle Encodeing differences in .NET Core
+                System.Text.Encoding.RegisterProvider(System.Text.CodePagesEncodingProvider.Instance);
+                // read the excel file
+                using (var stream = new FileStream(filpath, FileMode.Open))
+                {
+                    if (extension == ".xls")
+                        reader = ExcelReaderFactory.CreateBinaryReader(stream);
+                    else
+                        reader = ExcelReaderFactory.CreateOpenXmlReader(stream);
+
+                    DataSet ds = new DataSet();
+                    ds = reader.AsDataSet();
+                    reader.Close();
+
+                    if (ds != null && ds.Tables.Count > 0)
+                    {
+                        // Read the the Table
+                        DataTable serviceDetails = ds.Tables[0];
+                        for (int i = 1; i < serviceDetails.Rows.Count; i++)
+                        {
+                            PurchOrder obj = _context.purch_order.Where(p => p.pr == serviceDetails.Rows[i][3].ToString() && p.item_pr == serviceDetails.Rows[i][4].ToString()).FirstOrDefault();
+                            if (obj != null)
+                            {
+                                obj.gl_acct = serviceDetails.Rows[i][0].ToString();
+                                obj.material = serviceDetails.Rows[i][1].ToString();
+                                obj.short_text = serviceDetails.Rows[i][2].ToString();
+                                obj.pr = serviceDetails.Rows[i][3].ToString();
+                                obj.item_pr = serviceDetails.Rows[i][4].ToString();
+                                obj.po = serviceDetails.Rows[i][5].ToString();
+                                obj.item_po = serviceDetails.Rows[i][6].ToString();
+                                obj.dci = serviceDetails.Rows[i][7].ToString();
+                                obj.net_price = serviceDetails.Rows[i][9].ToString();
+                                obj.crcy = serviceDetails.Rows[i][10].ToString();
+                                obj.per = serviceDetails.Rows[i][11].ToString();
+                                obj.oun = serviceDetails.Rows[i][13].ToString();
+                                obj.doc_date = serviceDetails.Rows[i][14].ToString();
+                                obj.deliv_date = serviceDetails.Rows[i][15].ToString();
+                                obj.qty_delivered = serviceDetails.Rows[i][16].ToString();
+                              
+                                _context.SaveChanges();
+
+                            }
+                            else
+                            {
+                                PurchOrder data = new PurchOrder();
+                                data.gl_acct = serviceDetails.Rows[i][0].ToString();
+                                data.material = serviceDetails.Rows[i][1].ToString();
+                                data.short_text = serviceDetails.Rows[i][2].ToString();
+                                data.pr = serviceDetails.Rows[i][3].ToString();
+                                data.item_pr = serviceDetails.Rows[i][4].ToString();
+                                data.po = serviceDetails.Rows[i][5].ToString();
+                                data.item_po = serviceDetails.Rows[i][6].ToString();
+                                data.dci = serviceDetails.Rows[i][7].ToString();
+                                data.net_price = serviceDetails.Rows[i][9].ToString();
+                                data.crcy = serviceDetails.Rows[i][10].ToString();
+                                data.per = serviceDetails.Rows[i][11].ToString();
+                                data.oun = serviceDetails.Rows[i][13].ToString();
+                                data.doc_date = serviceDetails.Rows[i][14].ToString();
+                                data.deliv_date = serviceDetails.Rows[i][15].ToString();
+                                data.qty_delivered = serviceDetails.Rows[i][16].ToString();
+
+                                _context.purch_order.Add(data);
+                                _context.SaveChanges();
+                            }
+                        }
+                    }
+                }
+
+                return Json(new { result = true, text = "Berhasil" });
+            }
+            catch (Exception)
+            {
+                return Json(new { result = false, text = "Harap Hubungi Administrator!!" });
+            }
+        }
+
+        public IActionResult ImportZpm07(IFormFile file)
+        {
+            try
+            {
+
+                if (file == null)
+                {
+                    return Json(new { result = false, text = "File is Not Received..." });
+                }
+
+
+                //// Create the Directory if it is not exist
+                //string dirPath = Path.Combine(hostEnvironment.WebRootPath, "ReceivedReports");
+                //if (!Directory.Exists(dirPath))
+                //{
+                //    Directory.CreateDirectory(dirPath);
+                //}
+
+                // MAke sure that only Excel file is used 
+                string dataFileName = Path.GetFileName(file.FileName);
+
+                string extension = Path.GetExtension(dataFileName);
+
+                string[] allowedExtsnions = new string[] { ".xls", ".xlsx" };
+
+                if (!allowedExtsnions.Contains(extension))
+                {
+                    return Json(new { result = false, text = "Sorry! This file is not allowed, make sure that file having extension as either .xls or .xlsx is uploaded." });
+                }
+
+                // Make a Copy of the Posted File from the Received HTTP Request
+                //string saveToPath = Path.Combine(dirPath, dataFileName);
+
+                //using (FileStream stream = new FileStream(saveToPath, FileMode.Create))
+                //{
+                //    file.CopyTo(stream);
+                //}
+
+                string filpath = System.IO.Path.GetTempFileName();
+
+                // USe this to handle Encodeing differences in .NET Core
+                System.Text.Encoding.RegisterProvider(System.Text.CodePagesEncodingProvider.Instance);
+                // read the excel file
+                using (var stream = new FileStream(filpath, FileMode.Open))
+                {
+                    if (extension == ".xls")
+                        reader = ExcelReaderFactory.CreateBinaryReader(stream);
+                    else
+                        reader = ExcelReaderFactory.CreateOpenXmlReader(stream);
+
+                    DataSet ds = new DataSet();
+                    ds = reader.AsDataSet();
+                    reader.Close();
+
+                    if (ds != null && ds.Tables.Count > 0)
+                    {
+                        // Read the the Table
+                        DataTable serviceDetails = ds.Tables[0];
+                        for (int i = 1; i < serviceDetails.Rows.Count; i++)
+                        {
+                            if(serviceDetails.Rows[i][6].ToString() == "")
+                            {
+                                PurchOrder obj = _context.purch_order.Where(p => p.pr == serviceDetails.Rows[i][3].ToString() && p.item_pr == serviceDetails.Rows[i][4].ToString()).FirstOrDefault();
+                                if (obj != null)
+                                {
+                               
+                                    obj.pr = serviceDetails.Rows[i][0].ToString();
+                                    obj.item_pr = serviceDetails.Rows[i][1].ToString();
+                                    obj.material = serviceDetails.Rows[i][2].ToString();
+                                    obj.short_text = serviceDetails.Rows[i][3].ToString();
+                                    obj.po = serviceDetails.Rows[i][4].ToString();
+                                    obj.item_po = serviceDetails.Rows[i][5].ToString();
+                                    obj.d = serviceDetails.Rows[i][6].ToString();
+                                    obj.dci = serviceDetails.Rows[i][7].ToString();
+                                    obj.pgr = serviceDetails.Rows[i][8].ToString();
+                                    obj.doc_date = serviceDetails.Rows[i][9].ToString();
+                                    obj.po_quantity = serviceDetails.Rows[i][10].ToString();
+                                    obj.qty_delivered = serviceDetails.Rows[i][11].ToString();
+                                    obj.deliv_date = serviceDetails.Rows[i][12].ToString();
+                                    obj.oun = serviceDetails.Rows[i][13].ToString();
+                                    obj.net_price = serviceDetails.Rows[i][14].ToString();
+                                    obj.crcy = serviceDetails.Rows[i][15].ToString();
+                                    obj.per = serviceDetails.Rows[i][16].ToString();
+                               
+
+                                    _context.SaveChanges();
+
+                                }
+                                else
+                                {
+                                    PurchOrder data = new PurchOrder();
+                                    data.pr = serviceDetails.Rows[i][0].ToString();
+                                    data.item_pr = serviceDetails.Rows[i][1].ToString();
+                                    data.material = serviceDetails.Rows[i][2].ToString();
+                                    data.short_text = serviceDetails.Rows[i][3].ToString();
+                                    data.po = serviceDetails.Rows[i][4].ToString();
+                                    data.item_po = serviceDetails.Rows[i][5].ToString();
+                                    data.d = serviceDetails.Rows[i][6].ToString();
+                                    data.dci = serviceDetails.Rows[i][7].ToString();
+                                    data.pgr = serviceDetails.Rows[i][8].ToString();
+                                    data.doc_date = serviceDetails.Rows[i][9].ToString();
+                                    data.po_quantity = serviceDetails.Rows[i][10].ToString();
+                                    data.qty_delivered = serviceDetails.Rows[i][11].ToString();
+                                    data.deliv_date = serviceDetails.Rows[i][12].ToString();
+                                    data.oun = serviceDetails.Rows[i][13].ToString();
+                                    data.net_price = serviceDetails.Rows[i][14].ToString();
+                                    data.crcy = serviceDetails.Rows[i][15].ToString();
+                                    data.per = serviceDetails.Rows[i][16].ToString();
+
+                                    _context.purch_order.Add(data);
+                                    _context.SaveChanges();
+                                }
+                            }
+                        }
+                    }
+                }
+
+                return Json(new { result = true, text = "Berhasil" });
+            }
+            catch (Exception)
+            {
+                return Json(new { result = false, text = "Harap Hubungi Administrator!!" });
+            }
+        }
+
+        public IActionResult ImportMb25(IFormFile file)
+        {
+            try
+            {
+
+                if (file == null)
+                {
+                    return Json(new { result = false, text = "File is Not Received..." });
+                }
+
+
+                //// Create the Directory if it is not exist
+                //string dirPath = Path.Combine(hostEnvironment.WebRootPath, "ReceivedReports");
+                //if (!Directory.Exists(dirPath))
+                //{
+                //    Directory.CreateDirectory(dirPath);
+                //}
+
+                // MAke sure that only Excel file is used 
+                string dataFileName = Path.GetFileName(file.FileName);
+
+                string extension = Path.GetExtension(dataFileName);
+
+                string[] allowedExtsnions = new string[] { ".xls", ".xlsx" };
+
+                if (!allowedExtsnions.Contains(extension))
+                {
+                    return Json(new { result = false, text = "Sorry! This file is not allowed, make sure that file having extension as either .xls or .xlsx is uploaded." });
+                }
+
+                // Make a Copy of the Posted File from the Received HTTP Request
+                //string saveToPath = Path.Combine(dirPath, dataFileName);
+
+                //using (FileStream stream = new FileStream(saveToPath, FileMode.Create))
+                //{
+                //    file.CopyTo(stream);
+                //}
+
+                string filpath = System.IO.Path.GetTempFileName();
+
+                // USe this to handle Encodeing differences in .NET Core
+                System.Text.Encoding.RegisterProvider(System.Text.CodePagesEncodingProvider.Instance);
+                // read the excel file
+                using (var stream = new FileStream(filpath, FileMode.Open))
+                {
+                    if (extension == ".xls")
+                        reader = ExcelReaderFactory.CreateBinaryReader(stream);
+                    else
+                        reader = ExcelReaderFactory.CreateOpenXmlReader(stream);
+
+                    DataSet ds = new DataSet();
+                    ds = reader.AsDataSet();
+                    reader.Close();
+
+                    if (ds != null && ds.Tables.Count > 0)
+                    {
+                        // Read the the Table
+                        DataTable serviceDetails = ds.Tables[0];
+                        for (int i = 1; i < serviceDetails.Rows.Count; i++)
+                        {
+                            Zpm01 obj = _context.zpm01.Where(p => p.no_order == serviceDetails.Rows[i][2].ToString() && p.itm == serviceDetails.Rows[i][0].ToString()).FirstOrDefault();
+                            if (obj != null)
+                            {
+                                obj.diff_qty = serviceDetails.Rows[i][10].ToString();
+
+                                _context.SaveChanges();
+
                             }
                         }
                     }

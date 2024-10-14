@@ -1,8 +1,11 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Microsoft.EntityFrameworkCore;
+using System.ComponentModel.DataAnnotations;
 namespace mystap.Models
 {
+    [PrimaryKey(nameof(pr), nameof(item_pr))]
     public class PurchOrder
     {
+       
         public string material { get; set; }
         public string pr { get; set; }
         public string item_pr { get; set; }

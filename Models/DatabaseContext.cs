@@ -34,7 +34,9 @@ namespace mystap.Models
         public DbSet<SowGroup> sowGroup { get; set; }
         public DbSet<HistoryReservasi> historyReservasi { get; set; }
         public DbSet<Zpm01>zpm01 { get; set; }
+        public DbSet<Zpm02> zpm02 { get; set; }
         public DbSet<WorkOrder>work_order { get; set; }
+        public DbSet<PurchOrder>purch_order { get; set; }
         public DbSet<Bom>bom { get; set; }
         public DbSet<BomFiles> bomFiles { get; set; }
         public DbSet<ContractItem> contractItem { get; set; }
