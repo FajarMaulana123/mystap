@@ -947,12 +947,12 @@ namespace mystap.Controllers
                 }
 
 
-                //// Create the Directory if it is not exist
-                //string dirPath = Path.Combine(hostEnvironment.WebRootPath, "ReceivedReports");
-                //if (!Directory.Exists(dirPath))
-                //{
-                //    Directory.CreateDirectory(dirPath);
-                //}
+                // Create the Directory if it is not exist
+                string dirPath = Path.Combine(hostEnvironment.WebRootPath, "ReceivedReports");
+                if (!Directory.Exists(dirPath))
+                {
+                    Directory.CreateDirectory(dirPath);
+                }
 
                 // MAke sure that only Excel file is used 
                 string dataFileName = Path.GetFileName(file.FileName);
@@ -967,19 +967,19 @@ namespace mystap.Controllers
                 }
 
                 // Make a Copy of the Posted File from the Received HTTP Request
-                //string saveToPath = Path.Combine(dirPath, dataFileName);
+                string saveToPath = Path.Combine(dirPath, dataFileName);
 
-                //using (FileStream stream = new FileStream(saveToPath, FileMode.Create))
-                //{
-                //    file.CopyTo(stream);
-                //}
+                using (FileStream stream = new FileStream(saveToPath, FileMode.Create))
+                {
+                    file.CopyTo(stream);
+                }
 
-                string filpath = System.IO.Path.GetTempFileName();
+                string filpath = Path.GetFullPath(file.FileName);
 
                 // USe this to handle Encodeing differences in .NET Core
                 System.Text.Encoding.RegisterProvider(System.Text.CodePagesEncodingProvider.Instance);
                 // read the excel file
-                using (var stream = new FileStream(filpath, FileMode.Open))
+                using (var stream = new FileStream(saveToPath, FileMode.Open))
                 {
                     if (extension == ".xls")
                         reader = ExcelReaderFactory.CreateBinaryReader(stream);
@@ -1084,11 +1084,11 @@ namespace mystap.Controllers
 
 
                 //// Create the Directory if it is not exist
-                //string dirPath = Path.Combine(hostEnvironment.WebRootPath, "ReceivedReports");
-                //if (!Directory.Exists(dirPath))
-                //{
-                //    Directory.CreateDirectory(dirPath);
-                //}
+                string dirPath = Path.Combine(hostEnvironment.WebRootPath, "ReceivedReports");
+                if (!Directory.Exists(dirPath))
+                {
+                    Directory.CreateDirectory(dirPath);
+                }
 
                 // MAke sure that only Excel file is used 
                 string dataFileName = Path.GetFileName(file.FileName);
@@ -1103,19 +1103,17 @@ namespace mystap.Controllers
                 }
 
                 // Make a Copy of the Posted File from the Received HTTP Request
-                //string saveToPath = Path.Combine(dirPath, dataFileName);
+                string saveToPath = Path.Combine(dirPath, dataFileName);
 
-                //using (FileStream stream = new FileStream(saveToPath, FileMode.Create))
-                //{
-                //    file.CopyTo(stream);
-                //}
-
-                string filpath = System.IO.Path.GetTempFileName();
+                using (FileStream stream = new FileStream(saveToPath, FileMode.Create))
+                {
+                    file.CopyTo(stream);
+                }
 
                 // USe this to handle Encodeing differences in .NET Core
                 System.Text.Encoding.RegisterProvider(System.Text.CodePagesEncodingProvider.Instance);
                 // read the excel file
-                using (var stream = new FileStream(filpath, FileMode.Open))
+                using (var stream = new FileStream(saveToPath, FileMode.Open))
                 {
                     if (extension == ".xls")
                         reader = ExcelReaderFactory.CreateBinaryReader(stream);
@@ -1216,11 +1214,11 @@ namespace mystap.Controllers
 
 
                 //// Create the Directory if it is not exist
-                //string dirPath = Path.Combine(hostEnvironment.WebRootPath, "ReceivedReports");
-                //if (!Directory.Exists(dirPath))
-                //{
-                //    Directory.CreateDirectory(dirPath);
-                //}
+                string dirPath = Path.Combine(hostEnvironment.WebRootPath, "ReceivedReports");
+                if (!Directory.Exists(dirPath))
+                {
+                    Directory.CreateDirectory(dirPath);
+                }
 
                 // MAke sure that only Excel file is used 
                 string dataFileName = Path.GetFileName(file.FileName);
@@ -1235,19 +1233,17 @@ namespace mystap.Controllers
                 }
 
                 // Make a Copy of the Posted File from the Received HTTP Request
-                //string saveToPath = Path.Combine(dirPath, dataFileName);
+                string saveToPath = Path.Combine(dirPath, dataFileName);
 
-                //using (FileStream stream = new FileStream(saveToPath, FileMode.Create))
-                //{
-                //    file.CopyTo(stream);
-                //}
-
-                string filpath = System.IO.Path.GetTempFileName();
+                using (FileStream stream = new FileStream(saveToPath, FileMode.Create))
+                {
+                    file.CopyTo(stream);
+                }
 
                 // USe this to handle Encodeing differences in .NET Core
                 System.Text.Encoding.RegisterProvider(System.Text.CodePagesEncodingProvider.Instance);
                 // read the excel file
-                using (var stream = new FileStream(filpath, FileMode.Open))
+                using (var stream = new FileStream(saveToPath, FileMode.Open))
                 {
                     if (extension == ".xls")
                         reader = ExcelReaderFactory.CreateBinaryReader(stream);
@@ -1339,12 +1335,12 @@ namespace mystap.Controllers
                 }
 
 
-                //// Create the Directory if it is not exist
-                //string dirPath = Path.Combine(hostEnvironment.WebRootPath, "ReceivedReports");
-                //if (!Directory.Exists(dirPath))
-                //{
-                //    Directory.CreateDirectory(dirPath);
-                //}
+                // Create the Directory if it is not exist
+                string dirPath = Path.Combine(hostEnvironment.WebRootPath, "ReceivedReports");
+                if (!Directory.Exists(dirPath))
+                {
+                    Directory.CreateDirectory(dirPath);
+                }
 
                 // MAke sure that only Excel file is used 
                 string dataFileName = Path.GetFileName(file.FileName);
@@ -1359,19 +1355,17 @@ namespace mystap.Controllers
                 }
 
                 // Make a Copy of the Posted File from the Received HTTP Request
-                //string saveToPath = Path.Combine(dirPath, dataFileName);
+                string saveToPath = Path.Combine(dirPath, dataFileName);
 
-                //using (FileStream stream = new FileStream(saveToPath, FileMode.Create))
-                //{
-                //    file.CopyTo(stream);
-                //}
-
-                string filpath = System.IO.Path.GetTempFileName();
+                using (FileStream stream = new FileStream(saveToPath, FileMode.Create))
+                {
+                    file.CopyTo(stream);
+                }
 
                 // USe this to handle Encodeing differences in .NET Core
                 System.Text.Encoding.RegisterProvider(System.Text.CodePagesEncodingProvider.Instance);
                 // read the excel file
-                using (var stream = new FileStream(filpath, FileMode.Open))
+                using (var stream = new FileStream(saveToPath, FileMode.Open))
                 {
                     if (extension == ".xls")
                         reader = ExcelReaderFactory.CreateBinaryReader(stream);
@@ -1422,12 +1416,12 @@ namespace mystap.Controllers
                 }
 
 
-                //// Create the Directory if it is not exist
-                //string dirPath = Path.Combine(hostEnvironment.WebRootPath, "ReceivedReports");
-                //if (!Directory.Exists(dirPath))
-                //{
-                //    Directory.CreateDirectory(dirPath);
-                //}
+                // Create the Directory if it is not exist
+                string dirPath = Path.Combine(hostEnvironment.WebRootPath, "ReceivedReports");
+                if (!Directory.Exists(dirPath))
+                {
+                    Directory.CreateDirectory(dirPath);
+                }
 
                 // MAke sure that only Excel file is used 
                 string dataFileName = Path.GetFileName(file.FileName);
@@ -1442,19 +1436,17 @@ namespace mystap.Controllers
                 }
 
                 // Make a Copy of the Posted File from the Received HTTP Request
-                //string saveToPath = Path.Combine(dirPath, dataFileName);
+                string saveToPath = Path.Combine(dirPath, dataFileName);
 
-                //using (FileStream stream = new FileStream(saveToPath, FileMode.Create))
-                //{
-                //    file.CopyTo(stream);
-                //}
-
-                string filpath = System.IO.Path.GetTempFileName();
+                using (FileStream stream = new FileStream(saveToPath, FileMode.Create))
+                {
+                    file.CopyTo(stream);
+                }
 
                 // USe this to handle Encodeing differences in .NET Core
                 System.Text.Encoding.RegisterProvider(System.Text.CodePagesEncodingProvider.Instance);
                 // read the excel file
-                using (var stream = new FileStream(filpath, FileMode.Open))
+                using (var stream = new FileStream(saveToPath, FileMode.Open))
                 {
                     if (extension == ".xls")
                         reader = ExcelReaderFactory.CreateBinaryReader(stream);
@@ -1538,12 +1530,12 @@ namespace mystap.Controllers
                 }
 
 
-                //// Create the Directory if it is not exist
-                //string dirPath = Path.Combine(hostEnvironment.WebRootPath, "ReceivedReports");
-                //if (!Directory.Exists(dirPath))
-                //{
-                //    Directory.CreateDirectory(dirPath);
-                //}
+                // Create the Directory if it is not exist
+                string dirPath = Path.Combine(hostEnvironment.WebRootPath, "ReceivedReports");
+                if (!Directory.Exists(dirPath))
+                {
+                    Directory.CreateDirectory(dirPath);
+                }
 
                 // MAke sure that only Excel file is used 
                 string dataFileName = Path.GetFileName(file.FileName);
@@ -1558,19 +1550,17 @@ namespace mystap.Controllers
                 }
 
                 // Make a Copy of the Posted File from the Received HTTP Request
-                //string saveToPath = Path.Combine(dirPath, dataFileName);
+                string saveToPath = Path.Combine(dirPath, dataFileName);
 
-                //using (FileStream stream = new FileStream(saveToPath, FileMode.Create))
-                //{
-                //    file.CopyTo(stream);
-                //}
-
-                string filpath = System.IO.Path.GetTempFileName();
+                using (FileStream stream = new FileStream(saveToPath, FileMode.Create))
+                {
+                    file.CopyTo(stream);
+                }
 
                 // USe this to handle Encodeing differences in .NET Core
                 System.Text.Encoding.RegisterProvider(System.Text.CodePagesEncodingProvider.Instance);
                 // read the excel file
-                using (var stream = new FileStream(filpath, FileMode.Open))
+                using (var stream = new FileStream(saveToPath, FileMode.Open))
                 {
                     if (extension == ".xls")
                         reader = ExcelReaderFactory.CreateBinaryReader(stream);
@@ -1663,12 +1653,12 @@ namespace mystap.Controllers
                 }
 
 
-                //// Create the Directory if it is not exist
-                //string dirPath = Path.Combine(hostEnvironment.WebRootPath, "ReceivedReports");
-                //if (!Directory.Exists(dirPath))
-                //{
-                //    Directory.CreateDirectory(dirPath);
-                //}
+                // Create the Directory if it is not exist
+                string dirPath = Path.Combine(hostEnvironment.WebRootPath, "ReceivedReports");
+                if (!Directory.Exists(dirPath))
+                {
+                    Directory.CreateDirectory(dirPath);
+                }
 
                 // MAke sure that only Excel file is used 
                 string dataFileName = Path.GetFileName(file.FileName);
@@ -1683,19 +1673,18 @@ namespace mystap.Controllers
                 }
 
                 // Make a Copy of the Posted File from the Received HTTP Request
-                //string saveToPath = Path.Combine(dirPath, dataFileName);
+                string saveToPath = Path.Combine(dirPath, dataFileName);
 
-                //using (FileStream stream = new FileStream(saveToPath, FileMode.Create))
-                //{
-                //    file.CopyTo(stream);
-                //}
+                using (FileStream stream = new FileStream(saveToPath, FileMode.Create))
+                {
+                    file.CopyTo(stream);
+                }
 
-                string filpath = System.IO.Path.GetTempFileName();
 
                 // USe this to handle Encodeing differences in .NET Core
                 System.Text.Encoding.RegisterProvider(System.Text.CodePagesEncodingProvider.Instance);
                 // read the excel file
-                using (var stream = new FileStream(filpath, FileMode.Open))
+                using (var stream = new FileStream(saveToPath, FileMode.Open))
                 {
                     if (extension == ".xls")
                         reader = ExcelReaderFactory.CreateBinaryReader(stream);
