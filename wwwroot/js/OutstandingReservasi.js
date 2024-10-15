@@ -108,18 +108,20 @@
                     })
                 },
                 success: function (data) {
-                    if (data.result != true) {
+                    if (data.result == false) {
                         Swal.fire({
                             title: 'Gagal',
-                            text: "Gagal Import zpm01",
+                            text: data.text,
                             icon: 'error',
                             // timer: 3000,
                             showCancelButton: false,
                             showConfirmButton: true,
                             // buttons: false,
                         });
-                        table.ajax.reload();
-                    } else {
+
+                    }
+
+                    if (data.result == true) {
                         Swal.fire({
                             title: 'Berhasil',
                             icon: 'success',

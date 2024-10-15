@@ -925,6 +925,11 @@ namespace mystap.Controllers
                     var file = Request.Form.Files[0];
                     return ImportMb25(file);
                 }
+                else if (name == "pr_inv")
+                {
+                    var file = Request.Form.Files[0];
+                    return ImportPrInv(file);
+                }
                 else
                 {
                     return Json(new { result = false, text = "Fatal Error!!" });
@@ -943,7 +948,7 @@ namespace mystap.Controllers
 
                 if (file == null)
                 {
-                    return Json(new { result = false, text = "File is Not Received..." });
+                    return Json(new { result = false, text = "File Tidak Ada!!" });
                 }
 
 
@@ -957,13 +962,18 @@ namespace mystap.Controllers
                 // MAke sure that only Excel file is used 
                 string dataFileName = Path.GetFileName(file.FileName);
 
+                if (dataFileName != "work_order")
+                {
+                    return Json(new { result = false, text = "Harap Sesuaikan Penamaan File!!" });
+                }
+
                 string extension = Path.GetExtension(dataFileName);
 
                 string[] allowedExtsnions = new string[] { ".xls", ".xlsx" };
 
                 if (!allowedExtsnions.Contains(extension))
                 {
-                    return Json(new { result = false, text = "Sorry! This file is not allowed, make sure that file having extension as either .xls or .xlsx is uploaded." });
+                    return Json(new { result = false, text = "Maaf! File ini tidak diperbolehkan, pastikan file berekstensi .xls atau .xlsx diupload." });
                 }
 
                 // Make a Copy of the Posted File from the Received HTTP Request
@@ -1079,7 +1089,7 @@ namespace mystap.Controllers
 
                 if (file == null)
                 {
-                    return Json(new { result = false, text = "File is Not Received..." });
+                    return Json(new { result = false, text = "File Tidak Ada!!" });
                 }
 
 
@@ -1093,13 +1103,18 @@ namespace mystap.Controllers
                 // MAke sure that only Excel file is used 
                 string dataFileName = Path.GetFileName(file.FileName);
 
+                if(dataFileName != "zpm01")
+                {
+                    return Json(new { result = false, text = "Harap Sesuaikan Penamaan File!!" });
+                }
+
                 string extension = Path.GetExtension(dataFileName);
 
                 string[] allowedExtsnions = new string[] { ".xls", ".xlsx" };
 
                 if (!allowedExtsnions.Contains(extension))
                 {
-                    return Json(new { result = false, text = "Sorry! This file is not allowed, make sure that file having extension as either .xls or .xlsx is uploaded." });
+                    return Json(new { result = false, text = "Maaf! File ini tidak diperbolehkan, pastikan file berekstensi .xls atau .xlsx diupload." });
                 }
 
                 // Make a Copy of the Posted File from the Received HTTP Request
@@ -1209,7 +1224,7 @@ namespace mystap.Controllers
 
                 if (file == null)
                 {
-                    return Json(new { result = false, text = "File is Not Received..." });
+                    return Json(new { result = false, text = "File Tidak Ada!!" });
                 }
 
 
@@ -1223,13 +1238,18 @@ namespace mystap.Controllers
                 // MAke sure that only Excel file is used 
                 string dataFileName = Path.GetFileName(file.FileName);
 
+                if (dataFileName != "zpm02")
+                {
+                    return Json(new { result = false, text = "Harap Sesuaikan Penamaan File!!" });
+                }
+
                 string extension = Path.GetExtension(dataFileName);
 
                 string[] allowedExtsnions = new string[] { ".xls", ".xlsx" };
 
                 if (!allowedExtsnions.Contains(extension))
                 {
-                    return Json(new { result = false, text = "Sorry! This file is not allowed, make sure that file having extension as either .xls or .xlsx is uploaded." });
+                    return Json(new { result = false, text = "Maaf! File ini tidak diperbolehkan, pastikan file berekstensi .xls atau .xlsx diupload." });
                 }
 
                 // Make a Copy of the Posted File from the Received HTTP Request
@@ -1331,7 +1351,7 @@ namespace mystap.Controllers
 
                 if (file == null)
                 {
-                    return Json(new { result = false, text = "File is Not Received..." });
+                    return Json(new { result = false, text = "File Tidak Ada!!" });
                 }
 
 
@@ -1345,13 +1365,18 @@ namespace mystap.Controllers
                 // MAke sure that only Excel file is used 
                 string dataFileName = Path.GetFileName(file.FileName);
 
+                if (dataFileName != "zpm03")
+                {
+                    return Json(new { result = false, text = "Harap Sesuaikan Penamaan File!" });
+                }
+
                 string extension = Path.GetExtension(dataFileName);
 
                 string[] allowedExtsnions = new string[] { ".xls", ".xlsx" };
 
                 if (!allowedExtsnions.Contains(extension))
                 {
-                    return Json(new { result = false, text = "Sorry! This file is not allowed, make sure that file having extension as either .xls or .xlsx is uploaded." });
+                    return Json(new { result = false, text = "Maaf! File ini tidak diperbolehkan, pastikan file berekstensi .xls atau .xlsx diupload." });
                 }
 
                 // Make a Copy of the Posted File from the Received HTTP Request
@@ -1412,7 +1437,7 @@ namespace mystap.Controllers
 
                 if (file == null)
                 {
-                    return Json(new { result = false, text = "File is Not Received..." });
+                    return Json(new { result = false, text = "File Tidak Ada!!" });
                 }
 
 
@@ -1426,13 +1451,18 @@ namespace mystap.Controllers
                 // MAke sure that only Excel file is used 
                 string dataFileName = Path.GetFileName(file.FileName);
 
+                if (dataFileName != "zpm05")
+                {
+                    return Json(new { result = false, text = "Harap Sesuaikan Penamaan File!!" });
+                }
+
                 string extension = Path.GetExtension(dataFileName);
 
                 string[] allowedExtsnions = new string[] { ".xls", ".xlsx" };
 
                 if (!allowedExtsnions.Contains(extension))
                 {
-                    return Json(new { result = false, text = "Sorry! This file is not allowed, make sure that file having extension as either .xls or .xlsx is uploaded." });
+                    return Json(new { result = false, text = "Maaf! File ini tidak diperbolehkan, pastikan file berekstensi .xls atau .xlsx diupload." });
                 }
 
                 // Make a Copy of the Posted File from the Received HTTP Request
@@ -1526,7 +1556,7 @@ namespace mystap.Controllers
 
                 if (file == null)
                 {
-                    return Json(new { result = false, text = "File is Not Received..." });
+                    return Json(new { result = false, text = "File Tidak Ada!!" });
                 }
 
 
@@ -1540,13 +1570,18 @@ namespace mystap.Controllers
                 // MAke sure that only Excel file is used 
                 string dataFileName = Path.GetFileName(file.FileName);
 
+                if (dataFileName != "zpm07")
+                {
+                    return Json(new { result = false, text = "Harap Sesuikan Penamaan File!!" });
+                }
+
                 string extension = Path.GetExtension(dataFileName);
 
                 string[] allowedExtsnions = new string[] { ".xls", ".xlsx" };
 
                 if (!allowedExtsnions.Contains(extension))
                 {
-                    return Json(new { result = false, text = "Sorry! This file is not allowed, make sure that file having extension as either .xls or .xlsx is uploaded." });
+                    return Json(new { result = false, text = "Maaf! File ini tidak diperbolehkan, pastikan file berekstensi .xls atau .xlsx diupload." });
                 }
 
                 // Make a Copy of the Posted File from the Received HTTP Request
@@ -1649,7 +1684,7 @@ namespace mystap.Controllers
 
                 if (file == null)
                 {
-                    return Json(new { result = false, text = "File is Not Received..." });
+                    return Json(new { result = false, text = "File Tidak Ada!!" });
                 }
 
 
@@ -1663,13 +1698,18 @@ namespace mystap.Controllers
                 // MAke sure that only Excel file is used 
                 string dataFileName = Path.GetFileName(file.FileName);
 
+                if (dataFileName != "mb25")
+                {
+                    return Json(new { result = false, text = "Harap Sesuaikan Penamaan File!" });
+                }
+
                 string extension = Path.GetExtension(dataFileName);
 
                 string[] allowedExtsnions = new string[] { ".xls", ".xlsx" };
 
                 if (!allowedExtsnions.Contains(extension))
                 {
-                    return Json(new { result = false, text = "Sorry! This file is not allowed, make sure that file having extension as either .xls or .xlsx is uploaded." });
+                    return Json(new { result = false, text = "Maaf! File ini tidak diperbolehkan, pastikan file berekstensi .xls atau .xlsx diupload." });
                 }
 
                 // Make a Copy of the Posted File from the Received HTTP Request
@@ -1705,6 +1745,93 @@ namespace mystap.Controllers
                             if (obj != null)
                             {
                                 obj.diff_qty = serviceDetails.Rows[i][10].ToString();
+
+                                _context.SaveChanges();
+
+                            }
+                        }
+                    }
+                }
+
+                return Json(new { result = true, text = "Berhasil" });
+            }
+            catch (Exception)
+            {
+                return Json(new { result = false, text = "Harap Hubungi Administrator!!" });
+            }
+        }
+
+        public IActionResult ImportPrInv(IFormFile file)
+        {
+            try
+            {
+
+                if (file == null)
+                {
+                    return Json(new { result = false, text = "File Tidak Ada!!" });
+                }
+
+
+                // Create the Directory if it is not exist
+                string dirPath = Path.Combine(hostEnvironment.WebRootPath, "ReceivedReports");
+                if (!Directory.Exists(dirPath))
+                {
+                    Directory.CreateDirectory(dirPath);
+                }
+
+                // MAke sure that only Excel file is used 
+                string dataFileName = Path.GetFileName(file.FileName);
+
+                if (dataFileName != "pr_inv")
+                {
+                    return Json(new { result = false, text = "Harap Sesuaikan Penamaan File!" });
+                }
+
+                string extension = Path.GetExtension(dataFileName);
+
+                string[] allowedExtsnions = new string[] { ".xls", ".xlsx" };
+
+                if (!allowedExtsnions.Contains(extension))
+                {
+                    return Json(new { result = false, text = "Maaf! File ini tidak diperbolehkan, pastikan file berekstensi .xls atau .xlsx diupload." });
+                }
+
+                // Make a Copy of the Posted File from the Received HTTP Request
+                string saveToPath = Path.Combine(dirPath, dataFileName);
+
+                using (FileStream stream = new FileStream(saveToPath, FileMode.Create))
+                {
+                    file.CopyTo(stream);
+                }
+
+
+                // USe this to handle Encodeing differences in .NET Core
+                System.Text.Encoding.RegisterProvider(System.Text.CodePagesEncodingProvider.Instance);
+                // read the excel file
+                using (var stream = new FileStream(saveToPath, FileMode.Open))
+                {
+                    if (extension == ".xls")
+                        reader = ExcelReaderFactory.CreateBinaryReader(stream);
+                    else
+                        reader = ExcelReaderFactory.CreateOpenXmlReader(stream);
+
+                    DataSet ds = new DataSet();
+                    ds = reader.AsDataSet();
+                    reader.Close();
+
+                    if (ds != null && ds.Tables.Count > 0)
+                    {
+                        // Read the the Table
+                        DataTable serviceDetails = ds.Tables[0];
+                        for (int i = 1; i < serviceDetails.Rows.Count; i++)
+                        {
+                            Zpm01 obj = _context.zpm01.Where(p => p.no_order == serviceDetails.Rows[i][0].ToString() && p.itm == serviceDetails.Rows[i][1].ToString()).FirstOrDefault();
+                            if (obj != null)
+                            {
+                                obj.qty_res = serviceDetails.Rows[i][6].ToString();
+                                obj.pr = serviceDetails.Rows[i][7].ToString();
+                                obj.itm_pr = serviceDetails.Rows[i][8].ToString();
+                                obj.qty_pr = serviceDetails.Rows[i][9].ToString();
 
                                 _context.SaveChanges();
 
