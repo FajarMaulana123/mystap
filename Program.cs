@@ -11,10 +11,10 @@ builder.Services.AddDbContext<DatabaseContext>(options =>
 // Add services to the container.
 builder.Services.AddControllersWithViews();
 builder.Services.AddMemoryCache();
+builder.Services.AddSession();
 
 
 var app = builder.Build();
-
 
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
@@ -26,14 +26,32 @@ if (!app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 app.UseStaticFiles();
-
 app.UseRouting();
-
 app.UseAuthorization();
-
+app.UseSession();
 app.UseEndpoints(endpoints =>
 {
+
     endpoints.MapControllerRoute(
+        name: "default",
+        pattern: "{controller=Auth}/{action=Login}/{id?}");
+
+	endpoints.MapControllerRoute(
+		name: "login",
+		pattern: "login",
+		defaults: new { controller = "Auth", action = "Login" });
+
+	endpoints.MapControllerRoute(
+		name: "logout",
+		pattern: "logout",
+		defaults: new { controller = "Auth", action = "Logout" });
+
+	endpoints.MapControllerRoute(
+		name: "validate_auth",
+		pattern: "validate_auth",
+		defaults: new { controller = "Auth", action = "ValidateLogin" });
+
+	endpoints.MapControllerRoute(
 		name: "awal",
 		pattern: "awal",
 		defaults: new { controller = "Awal", action = "Awal" });
@@ -213,10 +231,6 @@ app.UseEndpoints(endpoints =>
        name: "delete_plant",
        pattern: "delete_plant",
        defaults: new { controller = "Test", action = "Delete_Plant" });
-
-    endpoints.MapControllerRoute(
-        name: "default",
-        pattern: "{controller=Awal}/{action=Awal}/{id?}");
 
     //JOBLIST   
     endpoints.MapControllerRoute(

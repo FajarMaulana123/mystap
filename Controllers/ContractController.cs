@@ -32,7 +32,9 @@ namespace mystap.Controllers
             _context = context;
             this.environment = environment;
         }
-        public IActionResult Sow()
+
+		[AuthorizedAction]
+		public IActionResult Sow()
         {
             ViewBag.groups_ = _context.sowGroup
                .Where(p => p.deleted == 0)
@@ -60,7 +62,9 @@ namespace mystap.Controllers
 
             return View();
         }
-        public async Task<IActionResult> GetSowGroup()
+
+		[AuthorizedAction]
+		public async Task<IActionResult> GetSowGroup()
         {
             try
             {
@@ -80,7 +84,9 @@ namespace mystap.Controllers
                 throw;
             }
         }
-        public async Task<IActionResult> Get_Sow()
+
+		[AuthorizedAction]
+		public async Task<IActionResult> Get_Sow()
         {
             try
             {
@@ -195,8 +201,8 @@ namespace mystap.Controllers
             }
         }
 
-
-        public IActionResult Create_Sow(IFormCollection formcollaction)
+		[AuthorizedAction]
+		public IActionResult Create_Sow(IFormCollection formcollaction)
         {
             try
             {
@@ -270,7 +276,9 @@ namespace mystap.Controllers
                 throw;
             }
         }
-        public IActionResult Update_Sow(Sow sow)
+
+		[AuthorizedAction]
+		public IActionResult Update_Sow(Sow sow)
         {
             try
             {
@@ -342,7 +350,8 @@ namespace mystap.Controllers
             }
         }
 
-        public IActionResult Deleted_Sow(Sow sow)
+		[AuthorizedAction]
+		public IActionResult Deleted_Sow(Sow sow)
         {
             try
             {
@@ -364,12 +373,15 @@ namespace mystap.Controllers
             }
         }
 
-        public IActionResult DurasiStep()
+		[AuthorizedAction]
+		public IActionResult DurasiStep()
         {
             ViewBag.project = _context.project.Where(p => p.deleted == 0).Where(p => p.active == "1").ToList();
             return View();
         }
-        public async Task<IActionResult> Get_DurasiStep()
+
+		[AuthorizedAction]
+		public async Task<IActionResult> Get_DurasiStep()
         {
             try
             {
@@ -465,7 +477,9 @@ namespace mystap.Controllers
                 throw;
             }
         }
-        public IActionResult Create_DurasiStep(IFormCollection formcollaction)
+
+		[AuthorizedAction]
+		public IActionResult Create_DurasiStep(IFormCollection formcollaction)
         {
             try
             {
@@ -511,7 +525,9 @@ namespace mystap.Controllers
                 throw;
             }
         }
-        public IActionResult Update_DurasiStep(Durasi durasi)
+
+		[AuthorizedAction]
+		public IActionResult Update_DurasiStep(Durasi durasi)
         {
             try
             {
@@ -558,7 +574,8 @@ namespace mystap.Controllers
             }
         }
 
-        public IActionResult ContractTracking()
+		[AuthorizedAction]
+		public IActionResult ContractTracking()
         {
             
             ViewBag.userAccount = _context.users.Where(p => p.locked != 1).Where(p => p.statPekerja == "PLANNER").Where(p => p.alias != null).Where(p => p.alias != "").Where(p => p.statPekerja == "PEKERJA").ToList();
@@ -577,7 +594,8 @@ namespace mystap.Controllers
             return View();
         }
 
-        public async Task<IActionResult> ContractTracking_()
+		[AuthorizedAction]
+		public async Task<IActionResult> ContractTracking_()
         {
             try
             {
@@ -653,7 +671,8 @@ namespace mystap.Controllers
             }
         }
 
-        public IActionResult CreateContract()
+		[AuthorizedAction]
+		public IActionResult CreateContract()
         {
             ViewBag.project = _context.project.Where(p => p.deleted == 0).Where(p => p.active == "1").ToList();
             ViewBag.pic = _context.users.Where(p => p.locked != 1).Where(p => p.statPekerja == "PLANNER").Where(p => p.alias != null && p.alias != "").Where(p => p.status == "PEKERJA").ToList();
@@ -670,7 +689,8 @@ namespace mystap.Controllers
             return View();
         }
 
-        public IActionResult GetSow()
+		[AuthorizedAction]
+		public IActionResult GetSow()
         {
             var id = Request.Form["project"].FirstOrDefault();
             var data = _context.sow.Where(p => p.projectID == Convert.ToInt64(id) && p.deleted == 0).ToList();
@@ -683,7 +703,8 @@ namespace mystap.Controllers
             return Ok(isi);
         }
 
-        public IActionResult GetKatTender()
+		[AuthorizedAction]
+		public IActionResult GetKatTender()
         {
             var id_project = Convert.ToInt32(Request.Form["project"].FirstOrDefault());
             var data = _context.durasi.Where(p => p.id_project == id_project)
@@ -705,7 +726,8 @@ namespace mystap.Controllers
             return Ok(isi);
         }
 
-        public IActionResult CreateContract_()
+		[AuthorizedAction]
+		public IActionResult CreateContract_()
         {
             try
             {
@@ -817,7 +839,8 @@ namespace mystap.Controllers
             }
         }
 
-        public IActionResult UpdateContract(long id)
+		[AuthorizedAction]
+		public IActionResult UpdateContract(long id)
         {
             ViewBag.sow = _context.sow.Where(p => p.deleted == 0).ToList();
             ViewBag.project = _context.project.Where(p => p.deleted == 0).Where(p => p.active == "1").ToList();
@@ -845,7 +868,8 @@ namespace mystap.Controllers
             return View();
         }
 
-        public IActionResult UpdateContract_()
+		[AuthorizedAction]
+		public IActionResult UpdateContract_()
         {
             try
             {
@@ -1009,7 +1033,8 @@ namespace mystap.Controllers
             }
         }
 
-        public async Task<IActionResult> RelatedJoblist()
+		[AuthorizedAction]
+		public async Task<IActionResult> RelatedJoblist()
         {
             try {
                 var draw = HttpContext.Request.Form["draw"].FirstOrDefault();
@@ -1066,7 +1091,8 @@ namespace mystap.Controllers
             }
         }
 
-        public IActionResult getDataTarget()
+		[AuthorizedAction]
+		public IActionResult getDataTarget()
         {
             try
             {
@@ -1131,7 +1157,8 @@ namespace mystap.Controllers
             }
         }
 
-        public IActionResult deleteWoJasa()
+		[AuthorizedAction]
+		public IActionResult deleteWoJasa()
         {
             try
             {

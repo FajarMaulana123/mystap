@@ -35,13 +35,16 @@ namespace mystap.Controllers
             _context = context;
             this.hostEnvironment = hostEnvironment;
         }
-        public IActionResult Material()
+
+		[AuthorizedAction]
+		public IActionResult Material()
         {
             ViewBag.project = _context.project.Where(p => p.deleted == 0).Where(p => p.active == "1").ToList();
             return View();
         }
 
-        public async Task<IActionResult> Get_Material()
+		[AuthorizedAction]
+		public async Task<IActionResult> Get_Material()
         {
             try
             {
@@ -139,13 +142,15 @@ namespace mystap.Controllers
             }
         }
 
-        public IActionResult OutstandingReservasi()
+		[AuthorizedAction]
+		public IActionResult OutstandingReservasi()
         {
             ViewBag.project = _context.project.Where(p => p.deleted == 0).Where(p => p.active == "1").ToList();
             return View();
         }
 
-        public async Task<IActionResult> OutstandingReservasi_()
+		[AuthorizedAction]
+		public async Task<IActionResult> OutstandingReservasi_()
         {
             try
             {
@@ -231,13 +236,15 @@ namespace mystap.Controllers
             }
         }
 
-        public IActionResult PenggunaanMaterial()
+		[AuthorizedAction]
+		public IActionResult PenggunaanMaterial()
         {
             ViewBag.project = _context.project.Where(p => p.deleted == 0).Where(p => p.active == "1").ToList();
             return View();
         }
 
-        public async Task<IActionResult> PenggunaanMaterial_()
+		[AuthorizedAction]
+		public async Task<IActionResult> PenggunaanMaterial_()
         {
             try
             {
@@ -319,7 +326,8 @@ namespace mystap.Controllers
             }
         }
 
-        public IActionResult AddPrognosaMaterial()
+		[AuthorizedAction]
+		public IActionResult AddPrognosaMaterial()
         {
             try
             {
@@ -347,14 +355,16 @@ namespace mystap.Controllers
             }
         }
 
-        public IActionResult EditPR()
+		[AuthorizedAction]
+		public IActionResult EditPR()
         {
             ViewBag.project = _context.project.Where(p => p.deleted == 0).Where(p => p.active == "1").ToList();
             ViewBag.wo = "";
             return View();
         }
 
-        public IActionResult GetWorkOrder()
+		[AuthorizedAction]
+		public IActionResult GetWorkOrder()
         {
             try
             {
@@ -368,7 +378,8 @@ namespace mystap.Controllers
             }
         }
 
-        public async Task<IActionResult> GetMaterial_()
+		[AuthorizedAction]
+		public async Task<IActionResult> GetMaterial_()
         {
             try
             {
@@ -478,7 +489,8 @@ namespace mystap.Controllers
             }
         }
 
-        public IActionResult UpdatePR()
+		[AuthorizedAction]
+		public IActionResult UpdatePR()
         {
             var id_ = Convert.ToInt64(Request.Form["hidden_id"].FirstOrDefault());
             var cek = _context.zpm01.Where(p => p.no_order == Request.Form["hidden_order"].FirstOrDefault()).Where(p => p.id == id_).FirstOrDefault();
@@ -507,13 +519,15 @@ namespace mystap.Controllers
 
         }
 
-        public IActionResult ListPR()
+		[AuthorizedAction]
+		public IActionResult ListPR()
         {
             ViewBag.project = _context.project.Where(p => p.deleted == 0).Where(p => p.active == "1").ToList();
             return View();
         }
 
-        public async Task<IActionResult> ListPR_()
+		[AuthorizedAction]
+		public async Task<IActionResult> ListPR_()
         {
             try
             {
@@ -619,14 +633,16 @@ namespace mystap.Controllers
             }
         }
 
-        public IActionResult DistribusiPR()
+		[AuthorizedAction]
+		public IActionResult DistribusiPR()
         {
             ViewBag.project = _context.project.Where(p => p.deleted == 0).Where(p => p.active == "1").ToList();
             ViewBag.buyer = _context.users.Where(p => p.subSection == "PURCHASING" && p.deleted == 0 && p.locked == 0).ToList();
             return View();
         }
 
-        public async Task<IActionResult> DistribusiPR_()
+		[AuthorizedAction]
+		public async Task<IActionResult> DistribusiPR_()
         {
             try
             {
@@ -741,7 +757,8 @@ namespace mystap.Controllers
             }
         }
 
-        public IActionResult RemoveBuyer()
+		[AuthorizedAction]
+		public IActionResult RemoveBuyer()
         {
             try
             {
@@ -765,7 +782,8 @@ namespace mystap.Controllers
             }
         }
 
-        public IActionResult DocPR()
+		[AuthorizedAction]
+		public IActionResult DocPR()
         {
             try
             {
@@ -790,7 +808,8 @@ namespace mystap.Controllers
             }
         }
 
-        public IActionResult StatusPengadaan()
+		[AuthorizedAction]
+		public IActionResult StatusPengadaan()
         {
             try
             {
@@ -841,7 +860,8 @@ namespace mystap.Controllers
             }
         }
 
-        public IActionResult AddDT()
+		[AuthorizedAction]
+		public IActionResult AddDT()
         {
             try
             {
@@ -885,7 +905,8 @@ namespace mystap.Controllers
             }
         }
 
-        public IActionResult ImportMaterial()
+		[AuthorizedAction]
+		public IActionResult ImportMaterial()
         {
             try
             {
@@ -941,7 +962,8 @@ namespace mystap.Controllers
             }
         }
 
-        public IActionResult ImportWo(IFormFile file)
+		[AuthorizedAction]
+		public IActionResult ImportWo(IFormFile file)
         {
             try
             {
@@ -1082,7 +1104,8 @@ namespace mystap.Controllers
             }
         }
 
-        public IActionResult ImportZpm01(IFormFile file)
+		[AuthorizedAction]
+		public IActionResult ImportZpm01(IFormFile file)
         {
             try
             {
@@ -1217,7 +1240,8 @@ namespace mystap.Controllers
             }
         }
 
-        public IActionResult ImportZpm02(IFormFile file)
+		[AuthorizedAction]
+		public IActionResult ImportZpm02(IFormFile file)
         {
             try
             {
@@ -1344,7 +1368,8 @@ namespace mystap.Controllers
             }
         }
 
-        public IActionResult ImportZpm03(IFormFile file)
+		[AuthorizedAction]
+		public IActionResult ImportZpm03(IFormFile file)
         {
             try
             {
@@ -1430,7 +1455,8 @@ namespace mystap.Controllers
             }
         }
 
-        public IActionResult ImportZpm05(IFormFile file)
+		[AuthorizedAction]
+		public IActionResult ImportZpm05(IFormFile file)
         {
             try
             {
@@ -1549,7 +1575,8 @@ namespace mystap.Controllers
             }
         }
 
-        public IActionResult ImportZpm07(IFormFile file)
+		[AuthorizedAction]
+		public IActionResult ImportZpm07(IFormFile file)
         {
             try
             {
@@ -1677,7 +1704,8 @@ namespace mystap.Controllers
             }
         }
 
-        public IActionResult ImportMb25(IFormFile file)
+		[AuthorizedAction]
+		public IActionResult ImportMb25(IFormFile file)
         {
             try
             {
@@ -1761,7 +1789,8 @@ namespace mystap.Controllers
             }
         }
 
-        public IActionResult ImportPrInv(IFormFile file)
+		[AuthorizedAction]
+		public IActionResult ImportPrInv(IFormFile file)
         {
             try
             {

@@ -9,8 +9,8 @@ namespace mystap.Controllers
 {
     public class AwalController : Controller
     {
-
-        public IActionResult Awal()
+		[AuthorizedAction]
+		public IActionResult Awal()
         {
             return View();
         }

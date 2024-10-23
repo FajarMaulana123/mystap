@@ -30,7 +30,9 @@ namespace mystap.Controllers
             _context = context;
             _memoryCache = memoryCache;
         }
-        public IActionResult DashboardEquipment()
+
+		[AuthorizedAction]
+		public IActionResult DashboardEquipment()
         {
             ViewBag.project = _context.project.Where(p => p.deleted == 0 ).Where(p => p.active == "1").ToList();
             ViewBag.unit = _context.unit
@@ -46,7 +48,8 @@ namespace mystap.Controllers
             return View();
         }
 
-        public async Task<IActionResult> GetReadinessEquipment()
+		[AuthorizedAction]
+		public async Task<IActionResult> GetReadinessEquipment()
         {
             try
             {
@@ -111,7 +114,8 @@ namespace mystap.Controllers
             }
         }
 
-        public async Task<IActionResult> GrafikReadinessEquipment()
+		[AuthorizedAction]
+		public async Task<IActionResult> GrafikReadinessEquipment()
         {
             try
             {
@@ -127,7 +131,8 @@ namespace mystap.Controllers
             }
         }
 
-        public async Task<IActionResult> GetEquipment()
+		[AuthorizedAction]
+		public async Task<IActionResult> GetEquipment()
         {
             try
             {
@@ -193,7 +198,8 @@ namespace mystap.Controllers
             }
         }
 
-        public async Task<IActionResult> ReadinessDetail(int projectId, string rev, int joblist)
+		[AuthorizedAction]
+		public async Task<IActionResult> ReadinessDetail(int projectId, string rev, int joblist)
         {
             try
             {
@@ -241,7 +247,8 @@ namespace mystap.Controllers
             }
         }
 
-        public async Task<IActionResult> OrderDetail()
+		[AuthorizedAction]
+		public async Task<IActionResult> OrderDetail()
         {
             try
             {
@@ -296,7 +303,8 @@ namespace mystap.Controllers
             }
         }
 
-        public IActionResult DetailJasa()
+		[AuthorizedAction]
+		public IActionResult DetailJasa()
         {
             try
             {
@@ -417,13 +425,15 @@ namespace mystap.Controllers
             }
         }
 
-        public IActionResult DashboardJoblist()
+		[AuthorizedAction]
+		public IActionResult DashboardJoblist()
         {
             ViewBag.project = _context.project.Where(p => p.deleted == 0).Where(p => p.active == "1").ToList();
             return View();
         }
 
-        public async Task<IActionResult> GetReadinessJoblist()
+		[AuthorizedAction]
+		public async Task<IActionResult> GetReadinessJoblist()
         {
             try
             {
@@ -494,7 +504,8 @@ namespace mystap.Controllers
             }
         }
 
-        public async Task<IActionResult> ReadinessDetailJoblist(int projectId, string rev, int paketJoblist)
+		[AuthorizedAction]
+		public async Task<IActionResult> ReadinessDetailJoblist(int projectId, string rev, int paketJoblist)
         {
             try
             {
@@ -555,7 +566,8 @@ namespace mystap.Controllers
             }
         }
 
-        public async Task<IActionResult> GrafikReadinessJoblist()
+		[AuthorizedAction]
+		public async Task<IActionResult> GrafikReadinessJoblist()
         {
             try
             {
@@ -571,13 +583,15 @@ namespace mystap.Controllers
             }
         }
 
-        public IActionResult DashboardJobplan()
+		[AuthorizedAction]
+		public IActionResult DashboardJobplan()
         {
             ViewBag.project = _context.project.Where(p => p.deleted == 0).Where(p => p.active == "1").ToList();
             return View();
         }
 
-        public async Task<IActionResult> SummaryMaterial()
+		[AuthorizedAction]
+		public async Task<IActionResult> SummaryMaterial()
         {
             try
             {
@@ -677,7 +691,8 @@ namespace mystap.Controllers
             }
         }
 
-        public async Task<IActionResult> SummaryJasa()
+		[AuthorizedAction]
+		public async Task<IActionResult> SummaryJasa()
         {
             try
             {
@@ -771,7 +786,8 @@ namespace mystap.Controllers
             }
         }
 
-        public async Task<IActionResult> GrafikJobplan()
+		[AuthorizedAction]
+		public async Task<IActionResult> GrafikJobplan()
         {
             try
             {
@@ -866,12 +882,14 @@ namespace mystap.Controllers
             }
         }
 
-        public IActionResult DashboardKontrak()
+		[AuthorizedAction]
+		public IActionResult DashboardKontrak()
         {
             ViewBag.project = _context.project.Where(p => p.deleted == 0).Where(p => p.active == "1").ToList();
             return View();
         }
 
+        [AuthorizedAction]
         public async Task<IActionResult> KontrakByUnit()
         {
             try
@@ -999,7 +1017,8 @@ namespace mystap.Controllers
             }
         }
 
-        public async Task<IActionResult> KontrakByStatus()
+		[AuthorizedAction]
+		public async Task<IActionResult> KontrakByStatus()
         {
             try
             {
@@ -1059,7 +1078,8 @@ namespace mystap.Controllers
             }
         }
 
-        public async Task<IActionResult> ChartKontrakByStatus()
+		[AuthorizedAction]
+		public async Task<IActionResult> ChartKontrakByStatus()
         {
             try
             {
@@ -1101,7 +1121,8 @@ namespace mystap.Controllers
             }
         }
 
-        public async Task<IActionResult> CountProgressJasa()
+		[AuthorizedAction]
+		public async Task<IActionResult> CountProgressJasa()
         {
             try
             {
@@ -1158,13 +1179,15 @@ namespace mystap.Controllers
             }
         }
 
-        public IActionResult DashboardMaterial()
+		[AuthorizedAction]
+		public IActionResult DashboardMaterial()
         {
             ViewBag.project = _context.project.Where(p => p.deleted == 0).Where(p => p.active == "1").ToList();
             return View();
         }
 
-        public async Task<IActionResult> CountSummaryMaterial()
+		[AuthorizedAction]
+		public async Task<IActionResult> CountSummaryMaterial()
         {
             try
             {
@@ -1228,7 +1251,8 @@ namespace mystap.Controllers
             }
         }
 
-        public IActionResult DetailSummaryMaterial(string? rev, string? filter, string? lldi)
+		[AuthorizedAction]
+		public IActionResult DetailSummaryMaterial(string? rev, string? filter, string? lldi)
         {
             ViewData["rev"] = rev;
             ViewData["filter"] = filter;
@@ -1236,7 +1260,8 @@ namespace mystap.Controllers
             return View();
         }
 
-        public async Task<IActionResult> DetailSummaryMaterial_()
+		[AuthorizedAction]
+		public async Task<IActionResult> DetailSummaryMaterial_()
         {
             try
             {
@@ -1341,7 +1366,8 @@ namespace mystap.Controllers
             }
         }
 
-        public async Task<IActionResult> GrafikMaterial()
+		[AuthorizedAction]
+		public async Task<IActionResult> GrafikMaterial()
         {
             try
             {
@@ -1381,7 +1407,8 @@ namespace mystap.Controllers
             }
         }
 
-        public async Task<IActionResult> GrafikProgresMaterial()
+		[AuthorizedAction]
+		public async Task<IActionResult> GrafikProgresMaterial()
         {
             try
             {
@@ -1396,7 +1423,8 @@ namespace mystap.Controllers
             }
         }
 
-        public async Task<IActionResult> SummaryMaterial_()
+		[AuthorizedAction]
+		public async Task<IActionResult> SummaryMaterial_()
         {
             try
             {
@@ -1556,7 +1584,8 @@ namespace mystap.Controllers
             }
         }
 
-        public IActionResult DetailMaterial(string? rev, string? filter, string? lldi)
+		[AuthorizedAction]
+		public IActionResult DetailMaterial(string? rev, string? filter, string? lldi)
         {
             ViewData["rev"] = rev;
             ViewData["filter"] = filter;
@@ -1564,7 +1593,8 @@ namespace mystap.Controllers
             return View();
         }
 
-        public async Task<IActionResult> DetailMaterialPengadaan()
+		[AuthorizedAction]
+		public async Task<IActionResult> DetailMaterialPengadaan()
         {
             try
             {

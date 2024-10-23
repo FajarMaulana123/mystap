@@ -17,6 +17,8 @@ using System.Configuration;
 using ExcelDataReader;
 using Microsoft.Extensions.Hosting;
 using DocumentFormat.OpenXml.Office2010.Excel;
+using Microsoft.AspNetCore.Authorization;
+using mystap;
 namespace joblist.Controllers
 {
     public class JoblistController : Controller
@@ -31,7 +33,8 @@ namespace joblist.Controllers
             this.hostEnvironment = hostEnvironment;
         }
 
-        public IActionResult Joblist()
+		[AuthorizedAction]
+		public IActionResult Joblist()
         {
 			ViewBag.project = _context.project.Where(p => p.deleted == 0).Where(p => p.active == "1").ToList();
             ViewBag.equipment = _context.equipments.Where(p => p.deleted == 0).ToList();
@@ -40,7 +43,8 @@ namespace joblist.Controllers
             return View();
         }
 
-        public async Task<IActionResult> Get_Joblist()
+		[AuthorizedAction]
+		public async Task<IActionResult> Get_Joblist()
         {
             try
             {
@@ -132,7 +136,8 @@ namespace joblist.Controllers
             }
         }
 
-        public IActionResult CreateJoblist()
+		[AuthorizedAction]
+		public IActionResult CreateJoblist()
         {
             ViewBag.project = _context.project.Where(p => p.deleted == 0).Where(p => p.active == "1").ToList();
             ViewBag.equipment = _context.equipments.Where(p => p.deleted == 0).ToList();
@@ -142,7 +147,8 @@ namespace joblist.Controllers
             return View();
         }
 
-        public IActionResult UpdateJoblist(long? id)
+		[AuthorizedAction]
+		public IActionResult UpdateJoblist(long? id)
         {
             ViewBag.project = _context.project.Where(p => p.deleted == 0).Where(p => p.active == "1").ToList();
             ViewBag.equipment = _context.equipments.Where(p => p.deleted == 0).ToList();
@@ -180,7 +186,8 @@ namespace joblist.Controllers
             return View();
         }
 
-        public IActionResult CreateJoblist_(IFormCollection formcollaction)
+		[AuthorizedAction]
+		public IActionResult CreateJoblist_(IFormCollection formcollaction)
         {
             try
             {
@@ -266,7 +273,8 @@ namespace joblist.Controllers
             }
         }
 
-        public IActionResult updateJoblist_(IFormCollection formcollaction)
+		[AuthorizedAction]
+		public IActionResult updateJoblist_(IFormCollection formcollaction)
         {
             try
             {
@@ -329,7 +337,8 @@ namespace joblist.Controllers
             }
         }
 
-        public IActionResult getEqtagno()
+		[AuthorizedAction]
+		public IActionResult getEqtagno()
         {
             var unitCode = Request.Form["unitCode"].FirstOrDefault();
             var unitKilang = Request.Form["unitKilang"].FirstOrDefault();
@@ -343,7 +352,8 @@ namespace joblist.Controllers
             return Ok(select);
         }
 
-        public IActionResult cekEqtagno()
+		[AuthorizedAction]
+		public IActionResult cekEqtagno()
         {
             var cek_tag = (from j in _context.joblist
                            join p in _context.project on j.projectID equals p.id
@@ -387,7 +397,8 @@ namespace joblist.Controllers
             }
         }
 
-        public IActionResult getMemo()
+		[AuthorizedAction]
+		public IActionResult getMemo()
         {
             var project = Request.Form["project"].FirstOrDefault();
             var data = (from m in _context.memo
@@ -411,7 +422,8 @@ namespace joblist.Controllers
 
         }
 
-        public IActionResult getMemoSelected()
+		[AuthorizedAction]
+		public IActionResult getMemoSelected()
         {
             var id = Request.Form["joblist_id"].FirstOrDefault();
             var data = _context.joblistDetailMemo.Where(p => p.jobListDetailID == Convert.ToInt64(id)).Select(p => new { id_memo = p.id_memo }).ToList();
@@ -424,7 +436,8 @@ namespace joblist.Controllers
             return Json(arr);
         }
 
-        public IActionResult getNotifikasi()
+		[AuthorizedAction]
+		public IActionResult getNotifikasi()
         {
             var data = _context.notifikasi.ToList();
             var isi = "<option value=''>Select Notifikasi</option>";
@@ -434,9 +447,9 @@ namespace joblist.Controllers
             }
             return Ok(isi);
         }
-        
 
-        public async Task<IActionResult> JoblistDetail_()
+		[AuthorizedAction]
+		public async Task<IActionResult> JoblistDetail_()
         {
             try
             {
@@ -497,7 +510,8 @@ namespace joblist.Controllers
             }
         }
 
-        public IActionResult createJoblistDetail(IFormCollection formcollaction)
+		[AuthorizedAction]
+		public IActionResult createJoblistDetail(IFormCollection formcollaction)
         {
             try
             {
@@ -592,7 +606,8 @@ namespace joblist.Controllers
             }
         }
 
-        public IActionResult updateJoblistDetail(IFormCollection formcollaction)
+		[AuthorizedAction]
+		public IActionResult updateJoblistDetail(IFormCollection formcollaction)
         {
             try
             {
@@ -673,7 +688,8 @@ namespace joblist.Controllers
             }
         }
 
-        public IActionResult deleteJoblistDetail(Joblist_Detail joblist_detail)
+		[AuthorizedAction]
+		public IActionResult deleteJoblistDetail(Joblist_Detail joblist_detail)
         {
             try
             {
@@ -695,7 +711,8 @@ namespace joblist.Controllers
             }
         }
 
-        public IActionResult CarryOffer()
+		[AuthorizedAction]
+		public IActionResult CarryOffer()
         {
             try
             {
@@ -747,6 +764,7 @@ namespace joblist.Controllers
             }
         }
 
+        [AuthorizedAction]
         public IActionResult Planning()
         {
             ViewBag.project = _context.project.Where(p => p.deleted == 0).Where(p => p.active == "1").ToList();
@@ -757,7 +775,8 @@ namespace joblist.Controllers
             return View();
         }
 
-        public async Task<IActionResult> Get_Joblist_Detail()
+		[AuthorizedAction]
+		public async Task<IActionResult> Get_Joblist_Detail()
         {
             try
             {
@@ -916,7 +935,8 @@ namespace joblist.Controllers
             }
         }
 
-        public IActionResult UpdateJobplan()
+		[AuthorizedAction]
+		public IActionResult UpdateJobplan()
         {
             try
             {
@@ -1061,7 +1081,8 @@ namespace joblist.Controllers
             }
         }
 
-        public IActionResult GetPaketKontrak()
+		[AuthorizedAction]
+		public IActionResult GetPaketKontrak()
         {
             try
             {
@@ -1080,7 +1101,8 @@ namespace joblist.Controllers
             }
         }
 
-        public IActionResult GetJoblistWo()
+		[AuthorizedAction]
+		public IActionResult GetJoblistWo()
         {
             try
             {
@@ -1101,14 +1123,16 @@ namespace joblist.Controllers
             }
         }
 
-        public IActionResult EksekusiJoblist()
+		[AuthorizedAction]
+		public IActionResult EksekusiJoblist()
         {
             ViewBag.project = _context.project.Where(p => p.deleted == 0).Where(p => p.active == "1").ToList();
            
             return View();
         }
 
-        public async Task<IActionResult> PaketEksekusi()
+		[AuthorizedAction]
+		public async Task<IActionResult> PaketEksekusi()
         {
             try
             {
@@ -1196,7 +1220,8 @@ namespace joblist.Controllers
             }
         }
 
-        public IActionResult StatusEksekusi()
+		[AuthorizedAction]
+		public IActionResult StatusEksekusi()
         {
             try
             {
@@ -1237,7 +1262,8 @@ namespace joblist.Controllers
             }
         }
 
-        public IActionResult CountEksekusi()
+		[AuthorizedAction]
+		public IActionResult CountEksekusi()
         {
             try
             {
@@ -1274,13 +1300,15 @@ namespace joblist.Controllers
             }
         }
 
-        public IActionResult PaketJoblist()
+		[AuthorizedAction]
+		public IActionResult PaketJoblist()
         {
             ViewBag.project = _context.project.Where(p => p.deleted == 0).Where(p => p.active == "1").ToList();
             return View();
         }
 
-        public async Task<IActionResult> PaketJoblist_()
+		[AuthorizedAction]
+		public async Task<IActionResult> PaketJoblist_()
         {
             try
             {
@@ -1363,13 +1391,15 @@ namespace joblist.Controllers
             }
         }
 
-        public IActionResult CreatePaketJoblist()
+		[AuthorizedAction]
+		public IActionResult CreatePaketJoblist()
         {
             ViewBag.project = _context.project.Where(p => p.deleted == 0).Where(p => p.active == "1").ToList();
             return View();
         }
 
-        public IActionResult CreatePaketJoblist_()
+		[AuthorizedAction]
+		public IActionResult CreatePaketJoblist_()
         {
             try
             {
@@ -1428,7 +1458,8 @@ namespace joblist.Controllers
             }
         }
 
-        public IActionResult UpdatePaketJoblist(long id)
+		[AuthorizedAction]
+		public IActionResult UpdatePaketJoblist(long id)
         {
             ViewBag.project = _context.project.Where(p => p.deleted == 0).Where(p => p.active == "1").ToList();
             ViewBag.paket_joblist = _context.paketJoblist.Where(p => p.id_paket == id).FirstOrDefault();
@@ -1436,7 +1467,8 @@ namespace joblist.Controllers
             return View();
         }
 
-        public async Task<IActionResult> ListSelected()
+		[AuthorizedAction]
+		public async Task<IActionResult> ListSelected()
         {
             try
             {
@@ -1510,7 +1542,8 @@ namespace joblist.Controllers
             }
         }
 
-        public IActionResult UpdatePaketJoblist_()
+		[AuthorizedAction]
+		public IActionResult UpdatePaketJoblist_()
         {
             try
             {
@@ -1578,8 +1611,8 @@ namespace joblist.Controllers
             }
         }
 
-
-        public IActionResult DeletePaketJoblist()
+		[AuthorizedAction]
+		public IActionResult DeletePaketJoblist()
         {
             try
             {
@@ -1611,8 +1644,8 @@ namespace joblist.Controllers
             }
         }
 
-
-        public async Task<IActionResult> GetDetailPaket()
+		[AuthorizedAction]
+		public async Task<IActionResult> GetDetailPaket()
         {
             try
             {
@@ -1790,13 +1823,15 @@ namespace joblist.Controllers
             }
         }
 
-        public IActionResult Notifikasi()
+		[AuthorizedAction]
+		public IActionResult Notifikasi()
         {
 
             return View();
         }
 
-        public async Task<IActionResult> Get_Notifikasi()
+		[AuthorizedAction]
+		public async Task<IActionResult> Get_Notifikasi()
 
         {
             try
@@ -1884,9 +1919,9 @@ namespace joblist.Controllers
        
         IExcelDataReader reader;
 
-        // GET: /<controller>/
-           
-        [HttpPost]
+		// GET: /<controller>/
+		[AuthorizedAction]
+		[HttpPost]
         public async Task<IActionResult> ImportNotif(IFormFile file)
         {
             try

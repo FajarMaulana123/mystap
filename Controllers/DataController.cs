@@ -20,14 +20,18 @@ namespace mystap.Controllers
             _context = context;
             this.environment = environment;
         }
-        public IActionResult Rapat()
+
+		[AuthorizedAction]
+		public IActionResult Rapat()
         {
 
             ViewBag.project = _context.project.Where(p => p.deleted == 0).Where(p => p.active == "1").ToList();
 
             return View();
         }
-        public async Task<IActionResult> Get_Rapat()
+
+		[AuthorizedAction]
+		public async Task<IActionResult> Get_Rapat()
         {
             try
             {
@@ -84,7 +88,8 @@ namespace mystap.Controllers
             }
         }
 
-        [HttpPost]
+		[AuthorizedAction]
+		[HttpPost]
         public IActionResult Create_Rapat(IFormCollection formcollaction)
         {
 
@@ -147,7 +152,9 @@ namespace mystap.Controllers
             }
 
         }
-        public IActionResult Update_Rapat(Rapat rapat)
+
+		[AuthorizedAction]
+		public IActionResult Update_Rapat(Rapat rapat)
         {
 
             try
@@ -207,7 +214,8 @@ namespace mystap.Controllers
             }
         }
 
-        public IActionResult Deleted_Rapat(Rapat rapat)
+		[AuthorizedAction]
+		public IActionResult Deleted_Rapat(Rapat rapat)
         {
             try
             {
@@ -229,14 +237,17 @@ namespace mystap.Controllers
             }
         }
 
-        public IActionResult Steerco()
+		[AuthorizedAction]
+		public IActionResult Steerco()
         {
 
             ViewBag.project = _context.project.Where(p => p.deleted == 0).Where(p => p.active == "1").ToList();
 
             return View();
         }
-        public async Task<IActionResult> Get_Steerco()
+
+		[AuthorizedAction]
+		public async Task<IActionResult> Get_Steerco()
         {
             try
             {
@@ -292,7 +303,9 @@ namespace mystap.Controllers
                 throw;
             }
         }
-        public IActionResult Create_Steerco(IFormCollection formcollaction)
+
+		[AuthorizedAction]
+		public IActionResult Create_Steerco(IFormCollection formcollaction)
         {
             try
             {
@@ -352,7 +365,9 @@ namespace mystap.Controllers
                 throw;
             }
         }
-        public IActionResult Update_Steerco(Steerco steerco)
+
+		[AuthorizedAction]
+		public IActionResult Update_Steerco(Steerco steerco)
         {
             try
             {
@@ -411,7 +426,8 @@ namespace mystap.Controllers
             }
         }
 
-        public IActionResult Deleted_Steerco(Steerco steerco)
+		[AuthorizedAction]
+		public IActionResult Deleted_Steerco(Steerco steerco)
         {
             try
             {
@@ -433,14 +449,17 @@ namespace mystap.Controllers
             }
         }
 
-        public IActionResult Pir()
+		[AuthorizedAction]
+		public IActionResult Pir()
         {
 
             ViewBag.project = _context.project.Where(p => p.deleted == 0).Where(p => p.active == "1").ToList();
 
             return View();
         }
-        public async Task<IActionResult> Get_Pir()
+
+		[AuthorizedAction]
+		public async Task<IActionResult> Get_Pir()
         {
             try
             {
@@ -497,7 +516,8 @@ namespace mystap.Controllers
             }
         }
 
-        [HttpPost]
+		[AuthorizedAction]
+		[HttpPost]
         public IActionResult Create_Pir(IFormCollection formcollaction)
         {
 
@@ -560,7 +580,9 @@ namespace mystap.Controllers
             }
 
         }
-        public IActionResult Update_Pir(Pir pir)
+
+		[AuthorizedAction]
+		public IActionResult Update_Pir(Pir pir)
         {
 
             try
@@ -620,7 +642,8 @@ namespace mystap.Controllers
             }
         }
 
-        public IActionResult Deleted_Pir(Pir pir)
+		[AuthorizedAction]
+		public IActionResult Deleted_Pir(Pir pir)
         {
             try
             {
@@ -642,12 +665,15 @@ namespace mystap.Controllers
             }
         }
 
-        public IActionResult Project()
+		[AuthorizedAction]
+		public IActionResult Project()
         {
             ViewBag.plant = _context.plans.Where(p => p.deleted == 0).ToList();
             return View();
         }
-        public async Task<IActionResult> Get_Project()
+
+		[AuthorizedAction]
+		public async Task<IActionResult> Get_Project()
         {
             try
             {
@@ -708,7 +734,9 @@ namespace mystap.Controllers
                 throw;
             }
         }
-        public IActionResult Create_Project(IFormCollection formcollaction)
+
+		[AuthorizedAction]
+		public IActionResult Create_Project(IFormCollection formcollaction)
         {
             try
             {
@@ -748,7 +776,9 @@ namespace mystap.Controllers
                 throw;
             }
         }
-        public IActionResult Update_Project(Project project)
+
+		[AuthorizedAction]
+		public IActionResult Update_Project(Project project)
         {
             try
             {
@@ -781,7 +811,8 @@ namespace mystap.Controllers
             }
         }
 
-        public IActionResult Delete_Project(Project project)
+		[AuthorizedAction]
+		public IActionResult Delete_Project(Project project)
         {
             try
             {
@@ -803,7 +834,8 @@ namespace mystap.Controllers
             }
         }
 
-        public IActionResult Equipments()
+		[AuthorizedAction]
+		public IActionResult Equipments()
         {
 
             ViewBag.weight = _context.equipments.Where(p => p.weight_unit != "").Where(p => p.deleted == 0).GroupBy(p => new { p.weight_unit }).Select(p => new { weight_unit = p.Key.weight_unit }).ToList();
@@ -819,7 +851,9 @@ namespace mystap.Controllers
 
             return View();
         }
-        public async Task<IActionResult> Get_Equipments()
+
+		[AuthorizedAction]
+		public async Task<IActionResult> Get_Equipments()
         {
             try
             {
@@ -923,7 +957,9 @@ namespace mystap.Controllers
                 throw;
             }
         }
-        public IActionResult Create_Equipments(IFormCollection formcollaction)
+
+		[AuthorizedAction]
+		public IActionResult Create_Equipments(IFormCollection formcollaction)
         {
             try
             {
@@ -1009,7 +1045,9 @@ namespace mystap.Controllers
                 throw;
             }
         }
-        public IActionResult Update_Equipments(Equipments equipments)
+
+		[AuthorizedAction]
+		public IActionResult Update_Equipments(Equipments equipments)
         {
             try
             {
@@ -1072,7 +1110,8 @@ namespace mystap.Controllers
             }
         }
 
-        public IActionResult Deleted_Equipments(Equipments equipments)
+		[AuthorizedAction]
+		public IActionResult Deleted_Equipments(Equipments equipments)
         {
             try
             {
@@ -1094,7 +1133,9 @@ namespace mystap.Controllers
                 throw;
             }
         }
-        public IActionResult CatalogProfile()
+
+		[AuthorizedAction]
+		public IActionResult CatalogProfile()
         {
 
             //ViewBag.project = _context.project.Where(p => p.deleted == 0).ToList();
@@ -1104,7 +1145,9 @@ namespace mystap.Controllers
 
             return View();
         }
-        public async Task<IActionResult> Get_Catalog_Profile()
+
+		[AuthorizedAction]
+		public async Task<IActionResult> Get_Catalog_Profile()
         {
             try
             {
@@ -1164,7 +1207,9 @@ namespace mystap.Controllers
                 throw;
             }
         }
-        public IActionResult Create_Catalog_Profile(IFormCollection formcollaction)
+
+		[AuthorizedAction]
+		public IActionResult Create_Catalog_Profile(IFormCollection formcollaction)
         {
             try
             {
@@ -1196,7 +1241,9 @@ namespace mystap.Controllers
                 throw;
             }
         }
-        public IActionResult Update_Catalog_Profile(CatalogProfile catalogProfile)
+
+		[AuthorizedAction]
+		public IActionResult Update_Catalog_Profile(CatalogProfile catalogProfile)
         {
             try
             {
@@ -1224,7 +1271,8 @@ namespace mystap.Controllers
             }
         }
 
-        public IActionResult Deleted_Catalog_Profile(CatalogProfile catalogProfile)
+		[AuthorizedAction]
+		public IActionResult Deleted_Catalog_Profile(CatalogProfile catalogProfile)
         {
             try
             {
@@ -1247,14 +1295,17 @@ namespace mystap.Controllers
             }
         }
 
-        public IActionResult Memo()
+		[AuthorizedAction]
+		public IActionResult Memo()
         {
 
             ViewBag.project = _context.project.Where(p => p.deleted == 0).Where(p => p.active == "1").ToList();
             ViewBag.requestors = _context.requestors.Where(p => p.deleted == 0).ToList();
             return View();
         }
-        public async Task<IActionResult> Get_Memo()
+
+		[AuthorizedAction]
+		public async Task<IActionResult> Get_Memo()
         {
             try
             {
@@ -1341,7 +1392,9 @@ namespace mystap.Controllers
                 throw;
             }
         }
-        public IActionResult Create_Memo(IFormCollection formcollaction)
+
+		[AuthorizedAction]
+		public IActionResult Create_Memo(IFormCollection formcollaction)
         {
             try
             {
@@ -1388,7 +1441,9 @@ namespace mystap.Controllers
                 throw;
             }
         }
-        public IActionResult Update_Memo(Memo memo)
+
+		[AuthorizedAction]
+		public IActionResult Update_Memo(Memo memo)
         {
             try
             {
@@ -1440,7 +1495,8 @@ namespace mystap.Controllers
             }
         }
 
-        public IActionResult Deleted_Memo(Memo memo)
+		[AuthorizedAction]
+		public IActionResult Deleted_Memo(Memo memo)
         {
             try
             {
@@ -1462,12 +1518,15 @@ namespace mystap.Controllers
             }
         }
 
-        public IActionResult Requestor()
+		[AuthorizedAction]
+		public IActionResult Requestor()
         {
 
             return View();
         }
-        public async Task<IActionResult> Get_Requestor()
+
+		[AuthorizedAction]
+		public async Task<IActionResult> Get_Requestor()
         {
             try
             {
@@ -1516,7 +1575,9 @@ namespace mystap.Controllers
                 throw;
             }
         }
-        public IActionResult Create_Requestor(IFormCollection formcollaction)
+
+		[AuthorizedAction]
+		public IActionResult Create_Requestor(IFormCollection formcollaction)
         {
             try
             {
@@ -1547,7 +1608,9 @@ namespace mystap.Controllers
                 throw;
             }
         }
-        public IActionResult Update_Requestor(Requestor requestor)
+
+		[AuthorizedAction]
+		public IActionResult Update_Requestor(Requestor requestor)
         {
             try
             {
@@ -1573,7 +1636,8 @@ namespace mystap.Controllers
             }
         }
 
-        public IActionResult Deleted_Requestor(Requestor requestor)
+		[AuthorizedAction]
+		public IActionResult Deleted_Requestor(Requestor requestor)
         {
             try
             {
@@ -1596,13 +1660,16 @@ namespace mystap.Controllers
             }
         }
 
-        public IActionResult Unit()
+		[AuthorizedAction]
+		public IActionResult Unit()
         {
             ViewBag.plans = _context.plans.Where(p => p.deleted == 0).ToList();
             ViewBag.unitProses = _context.unitProses.Where(p => p.deleted == 0).ToList();
             return View();
         }
-        public async Task<IActionResult> Get_Unit()
+
+		[AuthorizedAction]
+		public async Task<IActionResult> Get_Unit()
         {
             try
             {
@@ -1649,7 +1716,9 @@ namespace mystap.Controllers
                 throw;
             }
         }
-        public IActionResult Create_Unit(IFormCollection formcollaction)
+
+		[AuthorizedAction]
+		public IActionResult Create_Unit(IFormCollection formcollaction)
         {
             try
             {
@@ -1684,7 +1753,9 @@ namespace mystap.Controllers
                 throw;
             }
         }
-        public IActionResult Update_Unit(Unit unit)
+
+		[AuthorizedAction]
+		public IActionResult Update_Unit(Unit unit)
         {
             try
             {
@@ -1714,7 +1785,8 @@ namespace mystap.Controllers
             }
         }
 
-        public IActionResult Deleted_Unit(Unit unit)
+		[AuthorizedAction]
+		public IActionResult Deleted_Unit(Unit unit)
         {
             try
             {
@@ -1736,7 +1808,8 @@ namespace mystap.Controllers
             }
         }
 
-        public IActionResult getUnitKilang()
+		[AuthorizedAction]
+		public IActionResult getUnitKilang()
         {
             var unitCode = Request.Form["unitCode"].FirstOrDefault();
             var data = _context.unit.Where(p => p.unitCode == unitCode).Where(p => p.deleted == 0).OrderBy(p => p.unitKilang).ToList();
@@ -1749,8 +1822,8 @@ namespace mystap.Controllers
             return Ok(select);
         }
 
-
-        public IActionResult Bom()
+		[AuthorizedAction]
+		public IActionResult Bom()
         {
             ViewBag.project = _context.project.Where(p => p.deleted == 0).Where(p => p.active == "1").ToList();
             ViewBag.disiplin = _context.disiplins.Where(p => p.deleted != 1).ToList();
@@ -1758,7 +1831,9 @@ namespace mystap.Controllers
 
             return View();
         }
-        public async Task<IActionResult> Get_Boms()
+
+		[AuthorizedAction]
+		public async Task<IActionResult> Get_Boms()
         {
             try
             {
@@ -1809,7 +1884,9 @@ namespace mystap.Controllers
                 throw;
             }
         }
-        public IActionResult Create_Bom(BomFiles bomFiles,IFormCollection formcollaction)
+
+		[AuthorizedAction]
+		public IActionResult Create_Bom(BomFiles bomFiles,IFormCollection formcollaction)
         {
 
            
@@ -1869,7 +1946,9 @@ namespace mystap.Controllers
                     throw;
                 }
         }
-        public IActionResult Update_Bom(Bom bom)
+
+		[AuthorizedAction]
+		public IActionResult Update_Bom(Bom bom)
         {
             try
             {
@@ -1895,6 +1974,7 @@ namespace mystap.Controllers
             }
         }
 
+        [AuthorizedAction]
         public IActionResult Deleted_Bom(Bom bom)
         {
             try

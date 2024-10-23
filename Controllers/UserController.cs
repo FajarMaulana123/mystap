@@ -14,17 +14,22 @@ namespace mystap.Controllers
     public class UserController : Controller
     {
         private readonly DatabaseContext _context;
+       
         public UserController(DatabaseContext context)
         {
             _context = context;
         }
-        public IActionResult Users()
+
+		[AuthorizedAction]
+		public IActionResult Users()
         {
 
             ViewBag.plans = _context.plans.Where(p => p.deleted == 0).ToList();
             return View();
         }
-        public async Task<IActionResult> Get_User()
+
+		[AuthorizedAction]
+		public async Task<IActionResult> Get_User()
         {
             try
             {
@@ -72,7 +77,9 @@ namespace mystap.Controllers
                 throw;
             }
         }
-        public IActionResult Create_User(IFormCollection formcollaction)
+
+		[AuthorizedAction]
+		public IActionResult Create_User(IFormCollection formcollaction)
         {
             try
             {
@@ -86,7 +93,7 @@ namespace mystap.Controllers
                 users.subSection = formcollaction["subSection"];
                 users.status = formcollaction["status"];
                 users.statPekerja = formcollaction["statPekerja"];
-                users.password = formcollaction["password"];
+                users.password = EncryptPassword.Encrypt(formcollaction["password"]);
                 users.noPekerja = formcollaction["noPekerja"];
                 users.role = formcollaction["role"];
                 users.created_at = DateTime.Now;
@@ -111,7 +118,9 @@ namespace mystap.Controllers
                 throw;
             }
         }
-        public IActionResult Update_User(Users users)
+
+		[AuthorizedAction]
+		public IActionResult Update_User(Users users)
         {
             try
             {
@@ -123,6 +132,7 @@ namespace mystap.Controllers
                     obj.name = Request.Form["name"].FirstOrDefault();
                     obj.username = Request.Form["username"].FirstOrDefault();
                     obj.email = Request.Form["email"].FirstOrDefault();
+                    obj.password = EncryptPassword.Encrypt(Request.Form["password"].FirstOrDefault());
                     obj.alias = Request.Form["alias"].FirstOrDefault();
                     obj.plant = Request.Form["plant"].FirstOrDefault();
                     obj.asal = Request.Form["asal"].FirstOrDefault();
@@ -146,7 +156,8 @@ namespace mystap.Controllers
             }
         }
 
-        public IActionResult Deleted_User(Users users)
+		[AuthorizedAction]
+		public IActionResult Deleted_User(Users users)
         {
             try
             {

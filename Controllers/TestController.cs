@@ -19,13 +19,16 @@ namespace mystap.Controllers
         {
             _context = context;
         }
+
+        [AuthorizedAction]
         public IActionResult Plans()
         {
 
             return View();
         }
-        
-        public IActionResult Get_Plans()
+
+		[AuthorizedAction]
+		public IActionResult Get_Plans()
         {
             try
             {
@@ -73,7 +76,8 @@ namespace mystap.Controllers
             }
         }
 
-        public IActionResult Create_Plant (IFormCollection formcollaction)
+		[AuthorizedAction]
+		public IActionResult Create_Plant (IFormCollection formcollaction)
         {
             try
             {
@@ -106,7 +110,8 @@ namespace mystap.Controllers
             }
         }
 
-        public IActionResult Update_plant (Plans plans)
+		[AuthorizedAction]
+		public IActionResult Update_plant (Plans plans)
         {
             try
             {
@@ -132,7 +137,8 @@ namespace mystap.Controllers
             }
         }
 
-        public IActionResult Delete_plant(Plans plans)
+		[AuthorizedAction]
+		public IActionResult Delete_plant(Plans plans)
         {
             try
             {
