@@ -12,6 +12,7 @@ namespace mystap.Controllers
 		[AuthorizedAction]
 		public IActionResult Awal()
         {
+            ViewBag.role = "";
             return View();
         }
 

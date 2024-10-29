@@ -12,7 +12,9 @@ namespace mystap.Models
         //Core Model
         public DbSet<Plans> plans { get; set; }
         public DbSet<Users> users { get; set; }
-        public DbSet<Project> project { get; set; }
+        public DbSet<UserModul> userModul { get; set; }
+        public DbSet<Modul> modul { get; set; }
+		public DbSet<Project> project { get; set; }
         public DbSet<Rapat> rapat { get; set; }
         public DbSet<Steerco> steerco { get; set; }
         public DbSet<Pir> pir { get; set; }

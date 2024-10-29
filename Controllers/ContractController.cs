@@ -8,6 +8,7 @@ using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.Options;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
+using mystap.Helpers;
 using mystap.Models;
 using System;
 using System.Globalization;
@@ -36,7 +37,10 @@ namespace mystap.Controllers
 		[AuthorizedAction]
 		public IActionResult Sow()
         {
-            ViewBag.groups_ = _context.sowGroup
+            ViewBag.role = "SOW";
+            if (Module.hasModule("SOW", HttpContext.Session))
+            {
+                ViewBag.groups_ = _context.sowGroup
                .Where(p => p.deleted == 0)
                .GroupBy(x => new { x.inisial, x.groups_ })
                .Select(z => new
@@ -46,21 +50,27 @@ namespace mystap.Controllers
 
                })
                .ToList();
-            ViewBag.sow_group = _context.sowGroup.Where(p => p.deleted != 1).ToList();
-            ViewBag.userAccount = _context.users.Where(p => p.locked != 1).Where(p => p.statPekerja == "PLANNER").Where(p => p.status == "PEKERJA").Where(p => p.alias != null && p.alias != "").ToList();
-            ViewBag.project = _context.project.Where(p => p.deleted == 0 && p.active == "1").ToList();
-            ViewBag.unit = _context.unit
-               .Where(p => p.deleted == 0)
-               .GroupBy(x => new { x.unitCode, x.unitProses })
-               .Select(z => new
-               {
-                   unitCode = z.Key.unitCode,
-                   unitProses = z.Key.unitProses
+                ViewBag.sow_group = _context.sowGroup.Where(p => p.deleted != 1).ToList();
+                ViewBag.userAccount = _context.users.Where(p => p.locked != 1).Where(p => p.statPekerja == "PLANNER").Where(p => p.status == "PEKERJA").Where(p => p.alias != null && p.alias != "").ToList();
+                ViewBag.project = _context.project.Where(p => p.deleted == 0 && p.active == "1").ToList();
+                ViewBag.unit = _context.unit
+                   .Where(p => p.deleted == 0)
+                   .GroupBy(x => new { x.unitCode, x.unitProses })
+                   .Select(z => new
+                   {
+                       unitCode = z.Key.unitCode,
+                       unitProses = z.Key.unitProses
 
-               })
-               .ToList();
+                   })
+                   .ToList();
 
-            return View();
+                return View();
+            }
+            else
+            {
+                return NotFound();
+            }
+            
         }
 
 		[AuthorizedAction]
@@ -376,8 +386,17 @@ namespace mystap.Controllers
 		[AuthorizedAction]
 		public IActionResult DurasiStep()
         {
-            ViewBag.project = _context.project.Where(p => p.deleted == 0).Where(p => p.active == "1").ToList();
-            return View();
+            ViewBag.role = "DURASI_STEP";
+            if (Module.hasModule("DURASI_STEP", HttpContext.Session))
+            {
+                ViewBag.project = _context.project.Where(p => p.deleted == 0).Where(p => p.active == "1").ToList();
+                return View();
+            }
+            else
+            {
+                return NotFound();
+            }
+            
         }
 
 		[AuthorizedAction]
@@ -577,21 +596,30 @@ namespace mystap.Controllers
 		[AuthorizedAction]
 		public IActionResult ContractTracking()
         {
+            ViewBag.role = "MANAGE_CONTRACT";
+            if (Module.hasModule("MANAGE_CONTRACT", HttpContext.Session))
+            {
+                ViewBag.userAccount = _context.users.Where(p => p.locked != 1).Where(p => p.statPekerja == "PLANNER").Where(p => p.alias != null).Where(p => p.alias != "").Where(p => p.statPekerja == "PEKERJA").ToList();
+                ViewBag.project = _context.project.Where(p => p.deleted == 0).Where(p => p.active == "1").ToList();
+                ViewBag.unit = _context.unit
+                   .Where(p => p.deleted == 0)
+                   .GroupBy(x => new { x.unitCode, x.unitProses })
+                   .Select(z => new
+                   {
+                       unitCode = z.Key.unitCode,
+                       unitProses = z.Key.unitProses
+
+                   })
+                   .ToList();
+
+                return View();
+            }
+            else
+            {
+                return NotFound();
+            }
+
             
-            ViewBag.userAccount = _context.users.Where(p => p.locked != 1).Where(p => p.statPekerja == "PLANNER").Where(p => p.alias != null).Where(p => p.alias != "").Where(p => p.statPekerja == "PEKERJA").ToList();
-            ViewBag.project = _context.project.Where(p => p.deleted == 0).Where(p => p.active == "1").ToList();
-            ViewBag.unit = _context.unit
-               .Where(p => p.deleted == 0)
-               .GroupBy(x => new { x.unitCode, x.unitProses })
-               .Select(z => new
-               {
-                   unitCode = z.Key.unitCode,
-                   unitProses = z.Key.unitProses
-
-               })
-               .ToList();
-
-            return View();
         }
 
 		[AuthorizedAction]

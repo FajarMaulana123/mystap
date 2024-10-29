@@ -9,6 +9,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Hosting;
+using mystap.Helpers;
 using mystap.Models;
 using Newtonsoft.Json.Linq;
 using System;
@@ -39,8 +40,17 @@ namespace mystap.Controllers
 		[AuthorizedAction]
 		public IActionResult Material()
         {
-            ViewBag.project = _context.project.Where(p => p.deleted == 0).Where(p => p.active == "1").ToList();
-            return View();
+            ViewBag.role = "RESERVASI";
+            if (Module.hasModule("RESERVASI", HttpContext.Session))
+            {
+                ViewBag.project = _context.project.Where(p => p.deleted == 0).Where(p => p.active == "1").ToList();
+                return View();
+            }
+            else
+            {
+                return NotFound();
+            }
+            
         }
 
 		[AuthorizedAction]
@@ -145,8 +155,17 @@ namespace mystap.Controllers
 		[AuthorizedAction]
 		public IActionResult OutstandingReservasi()
         {
-            ViewBag.project = _context.project.Where(p => p.deleted == 0).Where(p => p.active == "1").ToList();
-            return View();
+            ViewBag.role = "OUTSTANDING_RESERVASI";
+            if (Module.hasModule("OUTSTANDING_RESERVASI", HttpContext.Session))
+            {
+                ViewBag.project = _context.project.Where(p => p.deleted == 0).Where(p => p.active == "1").ToList();
+                return View();
+            }
+            else
+            {
+                return NotFound();
+            }
+            
         }
 
 		[AuthorizedAction]
@@ -239,8 +258,17 @@ namespace mystap.Controllers
 		[AuthorizedAction]
 		public IActionResult PenggunaanMaterial()
         {
-            ViewBag.project = _context.project.Where(p => p.deleted == 0).Where(p => p.active == "1").ToList();
-            return View();
+            ViewBag.role = "PENGGUNAAN_MATERIAL";
+            if (Module.hasModule("PENGGUNAAN_MATERIAL", HttpContext.Session))
+            {
+                ViewBag.project = _context.project.Where(p => p.deleted == 0).Where(p => p.active == "1").ToList();
+                return View();
+            }
+            else
+            {
+                return NotFound();
+            }
+            
         }
 
 		[AuthorizedAction]
@@ -358,9 +386,18 @@ namespace mystap.Controllers
 		[AuthorizedAction]
 		public IActionResult EditPR()
         {
-            ViewBag.project = _context.project.Where(p => p.deleted == 0).Where(p => p.active == "1").ToList();
-            ViewBag.wo = "";
-            return View();
+            ViewBag.role = "EDIT_RESERVASI";
+            if (Module.hasModule("EDIT_RESERVASI", HttpContext.Session))
+            {
+                ViewBag.project = _context.project.Where(p => p.deleted == 0).Where(p => p.active == "1").ToList();
+                ViewBag.wo = "";
+                return View();
+            }
+            else
+            {
+                return NotFound();
+            }
+            
         }
 
 		[AuthorizedAction]
@@ -522,8 +559,17 @@ namespace mystap.Controllers
 		[AuthorizedAction]
 		public IActionResult ListPR()
         {
-            ViewBag.project = _context.project.Where(p => p.deleted == 0).Where(p => p.active == "1").ToList();
-            return View();
+            ViewBag.role = "LIST_PR";
+            if (Module.hasModule("LIST_PR", HttpContext.Session))
+            {
+                ViewBag.project = _context.project.Where(p => p.deleted == 0).Where(p => p.active == "1").ToList();
+                return View();
+            }
+            else
+            {
+                return NotFound();
+            }
+            
         }
 
 		[AuthorizedAction]
@@ -636,9 +682,18 @@ namespace mystap.Controllers
 		[AuthorizedAction]
 		public IActionResult DistribusiPR()
         {
-            ViewBag.project = _context.project.Where(p => p.deleted == 0).Where(p => p.active == "1").ToList();
-            ViewBag.buyer = _context.users.Where(p => p.subSection == "PURCHASING" && p.deleted == 0 && p.locked == 0).ToList();
-            return View();
+            ViewBag.role = "DISTRIBUSI_PR";
+            if (Module.hasModule("DISTRIBUSI_PR", HttpContext.Session))
+            {
+                ViewBag.project = _context.project.Where(p => p.deleted == 0).Where(p => p.active == "1").ToList();
+                ViewBag.buyer = _context.users.Where(p => p.subSection == "PURCHASING" && p.deleted == 0 && p.locked == 0).ToList();
+                return View();
+            }
+            else
+            {
+                return NotFound();
+            }
+           
         }
 
 		[AuthorizedAction]

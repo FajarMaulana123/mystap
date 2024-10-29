@@ -20,8 +20,7 @@ using DocumentFormat.OpenXml.Office2010.Excel;
 
 using Microsoft.AspNetCore.Authorization;
 using mystap;
-
-
+using mystap.Helpers;
 namespace joblist.Controllers
 {
     public class JoblistController : Controller
@@ -39,11 +38,20 @@ namespace joblist.Controllers
 		[AuthorizedAction]
 		public IActionResult Joblist()
         {
-			ViewBag.project = _context.project.Where(p => p.deleted == 0).Where(p => p.active == "1").ToList();
-            ViewBag.equipment = _context.equipments.Where(p => p.deleted == 0).ToList();
-            ViewBag.unitCode = _context.unit.Where(p => p.deleted != 1).GroupBy(p => new { p.unitCode , p.unitProses }).Select(p => new { unitCode = p.Key.unitCode , unitProses = p.Key.unitProses}).ToList();
-            ViewBag.unit = _context.unit.Where(p => p.deleted == 0).ToList();
-            return View();
+            ViewBag.role = "JOB_LIST";
+            if (Module.hasModule("JOB_LIST", HttpContext.Session))
+            {
+                ViewBag.project = _context.project.Where(p => p.deleted == 0).Where(p => p.active == "1").ToList();
+                ViewBag.equipment = _context.equipments.Where(p => p.deleted == 0).ToList();
+                ViewBag.unitCode = _context.unit.Where(p => p.deleted != 1).GroupBy(p => new { p.unitCode, p.unitProses }).Select(p => new { unitCode = p.Key.unitCode, unitProses = p.Key.unitProses }).ToList();
+                ViewBag.unit = _context.unit.Where(p => p.deleted == 0).ToList();
+                return View();
+            }
+            else
+            {
+                return NotFound();
+            }
+            
         }
 
 		[AuthorizedAction]
@@ -770,12 +778,21 @@ namespace joblist.Controllers
         [AuthorizedAction]
         public IActionResult Planning()
         {
-            ViewBag.project = _context.project.Where(p => p.deleted == 0).Where(p => p.active == "1").ToList();
-            ViewBag.equipment = _context.equipments.Where(p => p.deleted == 0).ToList();
-            ViewBag.unitCode = _context.unit.Where(p => p.deleted != 1).GroupBy(p => new { p.unitCode, p.unitProses }).Select(p => new { unitCode = p.Key.unitCode, unitProses = p.Key.unitProses }).ToList();
-            ViewBag.unit = _context.unit.Where(p => p.deleted == 0).ToList();
-            ViewBag.user = _context.users.Where(p => p.locked != 1).Where(p => p.statPekerja == "PLANNER").Where(p => p.alias != null && p.alias != "").Where(p => p.status == "PEKERJA").ToList();
-            return View();
+            ViewBag.role = "JOBPLAN";
+            if (Module.hasModule("JOBPLAN", HttpContext.Session))
+            {
+                ViewBag.project = _context.project.Where(p => p.deleted == 0).Where(p => p.active == "1").ToList();
+                ViewBag.equipment = _context.equipments.Where(p => p.deleted == 0).ToList();
+                ViewBag.unitCode = _context.unit.Where(p => p.deleted != 1).GroupBy(p => new { p.unitCode, p.unitProses }).Select(p => new { unitCode = p.Key.unitCode, unitProses = p.Key.unitProses }).ToList();
+                ViewBag.unit = _context.unit.Where(p => p.deleted == 0).ToList();
+                ViewBag.user = _context.users.Where(p => p.locked != 1).Where(p => p.statPekerja == "PLANNER").Where(p => p.alias != null && p.alias != "").Where(p => p.status == "PEKERJA").ToList();
+                return View();
+            }
+            else
+            {
+                return NotFound();
+            }
+           
         }
 
 		[AuthorizedAction]
@@ -1129,9 +1146,18 @@ namespace joblist.Controllers
 		[AuthorizedAction]
 		public IActionResult EksekusiJoblist()
         {
-            ViewBag.project = _context.project.Where(p => p.deleted == 0).Where(p => p.active == "1").ToList();
+            ViewBag.role = "EKSEKUSI_JOBLIST";
+            if (Module.hasModule("EKSEKUSI_JOBLIST", HttpContext.Session))
+            {
+                ViewBag.project = _context.project.Where(p => p.deleted == 0).Where(p => p.active == "1").ToList();
+
+                return View();
+            }
+            else
+            {
+                return NotFound();
+            }
            
-            return View();
         }
 
 		[AuthorizedAction]
@@ -1306,8 +1332,17 @@ namespace joblist.Controllers
 		[AuthorizedAction]
 		public IActionResult PaketJoblist()
         {
-            ViewBag.project = _context.project.Where(p => p.deleted == 0).Where(p => p.active == "1").ToList();
-            return View();
+            ViewBag.role = "PAKET_JOBLIST";
+            if (Module.hasModule("PAKET_JOBLIST", HttpContext.Session))
+            {
+                ViewBag.project = _context.project.Where(p => p.deleted == 0).Where(p => p.active == "1").ToList();
+                return View();
+            }
+            else
+            {
+                return NotFound();
+            }
+            
         }
 
 		[AuthorizedAction]
@@ -1829,8 +1864,17 @@ namespace joblist.Controllers
 		[AuthorizedAction]
 		public IActionResult Notifikasi()
         {
-
-            return View();
+            ViewBag.role = "NOTIFIKASI";
+            if (Module.hasModule("NOTIFIKASI", HttpContext.Session))
+            {
+               
+                return View();
+            }
+            else
+            {
+                return NotFound();
+            }
+           
         }
 
 		[AuthorizedAction]

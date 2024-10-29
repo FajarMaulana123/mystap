@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using mystap.Models;
+using Newtonsoft.Json;
 using System.Security.Cryptography;
 using System.Text;
 
@@ -38,6 +39,31 @@ namespace mystap.Controllers
 							HttpContext.Session.SetString("status", admin.status);
 							HttpContext.Session.SetString("role", admin.role);
 							HttpContext.Session.SetString("alias", admin.alias);
+
+							var builderM = (from um in _context.userModul
+											join m in _context.modul on um.id_modul equals m.id_modul
+											select new
+											{
+												id_user = um.id_user,
+												nama = m.nama,
+												alias = m.alias
+											}).Where(p => p.id_user == admin.id && p.alias != "");
+
+                            List<string> nama = new List<string>();
+                            List<string> alias = new List<string>();
+
+                            if (builderM.Count() > 0)
+							{
+								foreach(var val in builderM.ToList())
+								{
+									nama.Add(val.nama);
+									alias.Add(val.alias);
+                                }
+							}
+							
+							HttpContext.Session.SetString("admin_modules", JsonConvert.SerializeObject(alias));
+
+
 
 							return Json(new { result = true, text = "Login Berhasil" });
 						}

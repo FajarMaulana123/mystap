@@ -12,6 +12,7 @@ builder.Services.AddDbContext<DatabaseContext>(options =>
 builder.Services.AddControllersWithViews();
 builder.Services.AddMemoryCache();
 builder.Services.AddSession();
+builder.Services.AddHttpContextAccessor();
 
 
 var app = builder.Build();

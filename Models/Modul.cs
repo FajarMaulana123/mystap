@@ -1,9 +1,11 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Microsoft.EntityFrameworkCore;
+using System.ComponentModel.DataAnnotations;
 namespace mystap.Models
 {
-    public class Modul
+	[PrimaryKey(nameof(id_modul))]
+	public class Modul
     {
-        public long id_modul {  get; set; }
+        public string id_modul {  get; set; }
         public string? nama {  get; set; }
         public string? alias {  get; set; }
         public string? group {  get; set; }

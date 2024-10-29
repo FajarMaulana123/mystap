@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.DotNet.MSIdentity.Shared;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage;
+using mystap.Helpers;
 using mystap.Models;
 using Newtonsoft.Json;
 using NuGet.Packaging;
@@ -24,9 +25,16 @@ namespace mystap.Controllers
 		[AuthorizedAction]
 		public IActionResult Users()
         {
-
-            ViewBag.plans = _context.plans.Where(p => p.deleted == 0).ToList();
-            return View();
+            ViewBag.role = "USERMANAGEMENT";
+            if (Module.hasModule("USERMANAGEMENT", HttpContext.Session))
+            {
+                ViewBag.plans = _context.plans.Where(p => p.deleted == 0).ToList();
+                return View();
+            }
+            else
+            {
+                return NotFound();
+            }
         }
 
 		[AuthorizedAction]

@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Migrations.Operations;
+using mystap.Helpers;
 using mystap.Models;
 using System.Data;
 using System.Globalization;
@@ -28,10 +29,16 @@ namespace mystap.Controllers
 		[AuthorizedAction]
 		public IActionResult Rapat()
         {
-
-            ViewBag.project = _context.project.Where(p => p.deleted == 0).Where(p => p.active == "1").ToList();
-
-            return View();
+            ViewBag.role = "RAPAT";
+            if (Module.hasModule("RAPAT", HttpContext.Session))
+            {
+                ViewBag.project = _context.project.Where(p => p.deleted == 0).Where(p => p.active == "1").ToList();
+                return View();
+            }
+            else
+            {
+                return NotFound();
+            }
         }
 
 		[AuthorizedAction]
@@ -245,9 +252,16 @@ namespace mystap.Controllers
 		public IActionResult Steerco()
         {
 
-            ViewBag.project = _context.project.Where(p => p.deleted == 0).Where(p => p.active == "1").ToList();
-
-            return View();
+            ViewBag.role = "STEERCO";
+            if (Module.hasModule("STEERCO", HttpContext.Session))
+            {
+                ViewBag.project = _context.project.Where(p => p.deleted == 0).Where(p => p.active == "1").ToList();
+                return View();
+            }
+            else
+            {
+                return NotFound();
+            }
         }
 
 		[AuthorizedAction]
@@ -457,9 +471,16 @@ namespace mystap.Controllers
 		public IActionResult Pir()
         {
 
-            ViewBag.project = _context.project.Where(p => p.deleted == 0).Where(p => p.active == "1").ToList();
-
-            return View();
+            ViewBag.role = "PIR";
+            if (Module.hasModule("PIR", HttpContext.Session))
+            {
+                ViewBag.project = _context.project.Where(p => p.deleted == 0).Where(p => p.active == "1").ToList();
+                return View();
+            }
+            else
+            {
+                return NotFound();
+            }
         }
 
 		[AuthorizedAction]
@@ -673,8 +694,16 @@ namespace mystap.Controllers
 		[AuthorizedAction]
 		public IActionResult Project()
         {
-            ViewBag.plant = _context.plans.Where(p => p.deleted == 0).ToList();
-            return View();
+            ViewBag.role = "PROJECT";
+            if (Module.hasModule("PROJECT", HttpContext.Session))
+            {
+                ViewBag.plant = _context.plans.Where(p => p.deleted == 0).ToList();
+                return View();
+            }
+            else
+            {
+                return NotFound();
+            }
         }
 
 		[AuthorizedAction]
@@ -844,19 +873,28 @@ namespace mystap.Controllers
 		[AuthorizedAction]
 		public IActionResult Equipments()
         {
+            ViewBag.role = "MANAGE_EQUIPMENT";
+            if (Module.hasModule("MANAGE_EQUIPMENT", HttpContext.Session))
+            {
+                ViewBag.weight = _context.equipments.Where(p => p.weight_unit != "").Where(p => p.deleted == 0).GroupBy(p => new { p.weight_unit }).Select(p => new { weight_unit = p.Key.weight_unit }).ToList();
+                ViewBag.planner_group = _context.equipments.Where(p => p.planner_group != "").Where(p => p.deleted == 0).GroupBy(p => new { p.planner_group }).Select(p => new { planner_group = p.Key.planner_group }).ToList();
+                ViewBag.main_work_center = _context.equipments.Where(p => p.main_work_center != "").Where(p => p.deleted == 0).GroupBy(p => new { p.main_work_center }).Select(p => new { main_work_center = p.Key.main_work_center }).ToList();
+                ViewBag.location = _context.equipments.Where(p => p.location != "").Where(p => p.deleted == 0).GroupBy(p => new { p.location }).Select(p => new { location = p.Key.location }).ToList();
+                ViewBag.cost_center = _context.equipments.Where(p => p.cost_center != "").Where(p => p.deleted == 0).GroupBy(p => new { p.cost_center }).Select(p => new { cost_center = p.Key.cost_center }).ToList();
+                ViewBag.wbs_element = _context.equipments.Where(p => p.WBS_element != "").Where(p => p.deleted == 0).GroupBy(p => new { p.WBS_element }).Select(p => new { WBS_element = p.Key.WBS_element }).ToList();
+                ViewBag.manufacturer = _context.equipments.Where(p => p.manufacturer != "").Where(p => p.deleted == 0).GroupBy(p => new { p.manufacturer }).Select(p => new { manufacturer = p.Key.manufacturer }).ToList();
+                ViewBag.funcLocID = _context.equipments.Where(p => p.funcLocID != "").Where(p => p.deleted == 0).GroupBy(p => new { p.funcLocID }).Select(p => new { funcLocID = p.Key.funcLocID }).ToList();
+                ViewBag.craft = _context.equipments.Where(p => p.craft != "").Where(p => p.deleted == 0).GroupBy(p => new { p.craft }).Select(p => new { craft = p.Key.craft }).ToList();
+                ViewBag.unit_proses = _context.unitProses.Where(p => p.deleted == 0).ToList();
 
-            ViewBag.weight = _context.equipments.Where(p => p.weight_unit != "").Where(p => p.deleted == 0).GroupBy(p => new { p.weight_unit }).Select(p => new { weight_unit = p.Key.weight_unit }).ToList();
-            ViewBag.planner_group = _context.equipments.Where(p => p.planner_group != "").Where(p => p.deleted == 0).GroupBy(p => new { p.planner_group }).Select(p => new { planner_group = p.Key.planner_group }).ToList();
-            ViewBag.main_work_center = _context.equipments.Where(p => p.main_work_center != "").Where(p => p.deleted == 0).GroupBy(p => new { p.main_work_center }).Select(p => new { main_work_center = p.Key.main_work_center }).ToList();
-            ViewBag.location = _context.equipments.Where(p => p.location != "").Where(p => p.deleted == 0).GroupBy(p => new { p.location }).Select(p => new { location = p.Key.location }).ToList();
-            ViewBag.cost_center = _context.equipments.Where(p => p.cost_center != "").Where(p => p.deleted == 0).GroupBy(p => new { p.cost_center }).Select(p => new { cost_center = p.Key.cost_center }).ToList();
-            ViewBag.wbs_element = _context.equipments.Where(p => p.WBS_element != "").Where(p => p.deleted == 0).GroupBy(p => new { p.WBS_element }).Select(p => new { WBS_element = p.Key.WBS_element }).ToList();
-            ViewBag.manufacturer = _context.equipments.Where(p => p.manufacturer != "").Where(p => p.deleted == 0).GroupBy(p => new { p.manufacturer }).Select(p => new { manufacturer = p.Key.manufacturer }).ToList();
-            ViewBag.funcLocID = _context.equipments.Where(p => p.funcLocID != "").Where(p => p.deleted == 0).GroupBy(p => new { p.funcLocID }).Select(p => new { funcLocID = p.Key.funcLocID }).ToList();
-            ViewBag.craft = _context.equipments.Where(p => p.craft != "").Where(p => p.deleted == 0).GroupBy(p => new { p.craft }).Select(p => new { craft = p.Key.craft }).ToList();
-            ViewBag.unit_proses = _context.unitProses.Where(p => p.deleted == 0).ToList();
+                return View();
+            }
+            else
+            {
+                return NotFound();
+            }
 
-            return View();
+            
         }
 
 		[AuthorizedAction]
@@ -1144,13 +1182,21 @@ namespace mystap.Controllers
 		[AuthorizedAction]
 		public IActionResult CatalogProfile()
         {
+            ViewBag.role = "CATALOG_PROFILE";
+            if (Module.hasModule("CATALOG_PROFILE", HttpContext.Session))
+            {
+                //ViewBag.project = _context.project.Where(p => p.deleted == 0).ToList();
+                ViewBag.disiplin_ = _context.disiplins.Where(p => p.deleted == 0).ToList();
+                ViewBag.catprof = _context.catalogProfile.Where(p => p.deleted == 0).GroupBy(p => new { p.equipment_class }).Select(p => new { equipment_class = p.Key.equipment_class }).ToList();
 
-            //ViewBag.project = _context.project.Where(p => p.deleted == 0).ToList();
-            ViewBag.disiplin_ = _context.disiplins.Where(p => p.deleted == 0).ToList();
-            ViewBag.catprof = _context.catalogProfile.Where(p => p.deleted == 0).GroupBy(p => new { p.equipment_class }).Select(p => new { equipment_class = p.Key.equipment_class }).ToList();
-           
 
-            return View();
+                return View();
+            }
+            else
+            {
+                return NotFound();
+            }
+            
         }
 
 		[AuthorizedAction]
@@ -1305,10 +1351,18 @@ namespace mystap.Controllers
 		[AuthorizedAction]
 		public IActionResult Memo()
         {
-
-            ViewBag.project = _context.project.Where(p => p.deleted == 0).Where(p => p.active == "1").ToList();
-            ViewBag.requestors = _context.requestors.Where(p => p.deleted == 0).ToList();
-            return View();
+            ViewBag.role = "REQUEST_MEMO";
+            if (Module.hasModule("REQUEST_MEMO", HttpContext.Session))
+            {
+                ViewBag.project = _context.project.Where(p => p.deleted == 0).Where(p => p.active == "1").ToList();
+                ViewBag.requestors = _context.requestors.Where(p => p.deleted == 0).ToList();
+                return View();
+            }
+            else
+            {
+                return NotFound();
+            }
+           
         }
 
 		[AuthorizedAction]
@@ -1529,7 +1583,15 @@ namespace mystap.Controllers
 		public IActionResult Requestor()
         {
 
-            return View();
+            ViewBag.role = "REQUESTOR";
+            if (Module.hasModule("REQUESTOR", HttpContext.Session))
+            {
+                return View();
+            }
+            else
+            {
+                return NotFound();
+            }
         }
 
 		[AuthorizedAction]
@@ -1670,9 +1732,18 @@ namespace mystap.Controllers
 		[AuthorizedAction]
 		public IActionResult Unit()
         {
-            ViewBag.plans = _context.plans.Where(p => p.deleted == 0).ToList();
-            ViewBag.unitProses = _context.unitProses.Where(p => p.deleted == 0).ToList();
-            return View();
+            ViewBag.role = "MANAGE_UNIT";
+            if (Module.hasModule("MANAGE_UNIT", HttpContext.Session))
+            {
+                ViewBag.plans = _context.plans.Where(p => p.deleted == 0).ToList();
+                ViewBag.unitProses = _context.unitProses.Where(p => p.deleted == 0).ToList();
+                return View();
+            }
+            else
+            {
+                return NotFound();
+            }
+            
         }
 
 		[AuthorizedAction]
@@ -1832,11 +1903,20 @@ namespace mystap.Controllers
 		[AuthorizedAction]
 		public IActionResult Bom()
         {
-            ViewBag.project = _context.project.Where(p => p.deleted == 0).Where(p => p.active == "1").ToList();
-            ViewBag.disiplin = _context.disiplins.Where(p => p.deleted != 1).ToList();
-            ViewBag.equipment = _context.equipments.Where(p => p.deleted != 1).ToList();
+            ViewBag.role = "BOM";
+            if (Module.hasModule("BOM", HttpContext.Session))
+            {
+                ViewBag.project = _context.project.Where(p => p.deleted == 0).Where(p => p.active == "1").ToList();
+                ViewBag.disiplin = _context.disiplins.Where(p => p.deleted != 1).ToList();
+                ViewBag.equipment = _context.equipments.Where(p => p.deleted != 1).ToList();
 
-            return View();
+                return View();
+            }
+            else
+            {
+                return NotFound();
+            }
+           
         }
 
 		[AuthorizedAction]

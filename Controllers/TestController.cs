@@ -2,6 +2,7 @@
 using Microsoft.DotNet.MSIdentity.Shared;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage;
+using mystap.Helpers;
 using mystap.Models;
 using Newtonsoft.Json;
 using NuGet.Packaging;
@@ -23,8 +24,15 @@ namespace mystap.Controllers
         [AuthorizedAction]
         public IActionResult Plans()
         {
-
-            return View();
+            ViewBag.role = "PLANT";
+            if (Module.hasModule("PLANT", HttpContext.Session))
+            {
+                return View();
+            }
+            else
+            {
+                return NotFound();
+            }
         }
 
 		[AuthorizedAction]

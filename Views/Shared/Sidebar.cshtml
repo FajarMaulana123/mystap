@@ -1,6 +1,10 @@
 ﻿@{
     ViewData["Title"] = "Awal";
 }
+@using mystap.Helpers;
+@using Microsoft.AspNetCore.Http;
+@inject IHttpContextAccessor Accessor;
+
 <div id="sidebar" class="app-sidebar">
     <!-- BEGIN scrollbar -->
     <div class="app-sidebar-content" data-scrollbar="true" data-height="100%">
@@ -16,317 +20,421 @@
                     <div class="menu-profile-info">
                         <div class="d-flex align-items-center">
                             <div class="flex-grow-1">
-                                
+                                @Accessor.HttpContext.Session.GetString("alias")
                             </div>
                         </div>
-                        <small></small>
-                    </div>
-                </a>
-            </div>
-         
-
-            <div class="menu-header">Navigation</div>
-          
-            <div class="menu-item has-sub">
-                <a href="javascript:;" class="menu-link">
-                    <div class="menu-icon">
-                        <i class="fas fa-chart-pie fa-fw"></i>
-                    </div>
-                    <div class="menu-text">Dashboard</div>
-                    <div class="menu-caret"></div>
-                </a>
-                <div class="menu-submenu">
-
-                  
-                    <div class="menu-item">
-                        <a href="/dashboard_equipment" class="menu-link ">
-                            <div class="menu-text">Dashboard Equipment</div>
-                        </a>
-                    </div>
-                  
-                    <div class="menu-item">
-                        <a href="/dashboard_joblist" class="menu-link ">
-                            <div class="menu-text">Dashboard Joblist</div>
-                        </a>
-                    </div>
-                   
-                    <div class="menu-item">
-                        <a href="/dashboard_jobplan" class="menu-link ">
-                            <div class="menu-text">Dashboard Jobplan</div>
-                        </a>
-                    </div>
-                   
-                  
-                    <div class="menu-item">
-                        <a href="/dashboard_material" class="menu-link ">
-                            <div class="menu-text">Dashboard Material</div>
-                        </a>
-                    </div>
-                  
-                    <div class="menu-item">
-                        <a href="/dashboard_kontrak" class="menu-link ">
-                            <div class="menu-text">Dashboard Kontrak</div>
-                        </a>
-                    </div>
-                   
-                    <div class="menu-item">
-                        <a href="/dashboard_inventory" class="menu-link ">
-                            <div class="menu-text">Dashboard Inventory</div>
-                        </a>
-                    </div>
-                   
-                </div>
-            </div>
-         
-
-            
-            <div class="menu-item">
-                <a href="/plant" class="menu-link">
-                    <div class="menu-icon">
-                        <i class="fas fa-location-dot fa-fw"></i>
-                    </div>
-                    <div class="menu-text">Plant</div>
-                </a>
-            </div>
-           
-            <div class="menu-item">
-                <a href="/project" class="menu-link">
-                    <div class="menu-icon">
-                        <i class="fas fa-diagram-project fa-fw"></i>
-                    </div>
-                    <div class="menu-text">Project</div>
+                        <small>@Accessor.HttpContext.Session.GetString("role")</small>
+                    </div> 
                 </a>
             </div>
             
 
-            
-            <div class="menu-item has-sub">
-                <a href="javascript:;" class="menu-link">
-                    <div class="menu-icon">
-                        <i class="fas fa-clipboard-check fa-fw"></i>
-                    </div>
-                    <div class="menu-text">Joblist</div>
-                    <div class="menu-caret"></div>
-                </a>
-                <div class="menu-submenu">
-                   
-                    <div class="menu-item">
-                        <a href="/joblist" class="menu-link  ">
-                            <div class="menu-text">Manage Joblist</div>
-                        </a>
-                    </div>
-                   
-                    <div class="menu-item">
-                        <a href="/joblist_detail" class="menu-link ">
-                            <div class="menu-text">Planning Joblist</div>
-                        </a>
-                    </div>
-                   
-                    <div class="menu-item">
-                        <a href="/eksekusi_joblist" class="menu-link ">
-                            <div class="menu-text">Eksekusi Joblist</div>
-                        </a>
-                    </div>
-                   
-                    <div class="menu-item">
-                        <a href="/paket_joblist" class="menu-link ">
-                            <div class="menu-text">Manage Paket Joblist</div>
-                        </a>
-                    </div>
-                    
-                    <div class="menu-item">
-                        <a href="/notifikasi" class="menu-link ">
-                            <div class="menu-text">Notifikasi</div>
-                        </a>
-                    </div>
-                    
-                </div>
-            </div>
-     
+            @if (Module.isLogin(Accessor.HttpContext.Session))
+            {
 
-            
-            <div class="menu-item has-sub ">
-                <a href="javascript:;" class="menu-link">
-                    <div class="menu-icon">
-                        <i class="fas fa-cubes fa-fw"></i>
-                    </div>
-                    <div class="menu-text">Master Data</div>
-                    <div class="menu-caret"></div>
-                </a>
-                <div class="menu-submenu">
-                    
-                    <div class="menu-item has-sub ">
+                <div class="menu-header">Navigation</div>
+                @if (Module.forModule("DASHBOARD_EQUIPMENT", Accessor.HttpContext.Session) || Module.forModule("DASHBOARD_JOBLIST", Accessor.HttpContext.Session) || Module.forModule("DASHBOARD_JOBPLAN", Accessor.HttpContext.Session)
+                || Module.forModule("DASHBOARD_MATERIAL", Accessor.HttpContext.Session) || Module.forModule("DASHBOARD_KONTRAK", Accessor.HttpContext.Session) || Module.forModule("DASHBOARD_INVENTORY", Accessor.HttpContext.Session))
+                {
+                    <div class="menu-item has-sub">
                         <a href="javascript:;" class="menu-link">
-                            <div class="menu-text">Equipment</div>
+                            <div class="menu-icon">
+                                <i class="fas fa-chart-pie fa-fw"></i>
+                            </div>
+                            <div class="menu-text">Dashboard</div>
                             <div class="menu-caret"></div>
                         </a>
                         <div class="menu-submenu">
-                            
-                            <div class="menu-item ">
-                                <a href="/equipments" class="menu-link">
-                                    <div class="menu-text">Manage Equipment</div>
-                                </a>
-                            </div>
-                           
-                            <div class="menu-item">
-                                <a href="/catalog_profile" class="menu-link">
-                                    <div class="menu-text">Catalog Profile</div>
-                                </a>
-                            </div>
-                          
+
+                            @if (Module.forModule("DASHBOARD_EQUIPMENT", Accessor.HttpContext.Session))
+                            {
+                                <div class="menu-item @((Accessor.HttpContext.Session.GetString("module") == ViewBag.role) ? "active" : "")">
+                                    <a href="/dashboard_equipment" class="menu-link ">
+                                        <div class="menu-text">Dashboard Equipment</div>
+                                    </a>
+                                </div>
+                            }
+
+                            @if (Module.forModule("DASHBOARD_JOBLIST", Accessor.HttpContext.Session))
+                            {
+                                <div class="menu-item @((Accessor.HttpContext.Session.GetString("module") == ViewBag.role) ? "active" : "")">
+                                    <a href="/dashboard_joblist" class="menu-link ">
+                                        <div class="menu-text">Dashboard Joblist</div>
+                                    </a>
+                                </div>
+                            }
+
+                            @if (Module.forModule("DASHBOARD_JOBPLAN", Accessor.HttpContext.Session))
+                            {
+                                <div class="menu-item @((Accessor.HttpContext.Session.GetString("module") == ViewBag.role) ? "active" : "")">
+                                    <a href="/dashboard_jobplan" class="menu-link ">
+                                        <div class="menu-text">Dashboard Jobplan</div>
+                                    </a>
+                                </div>
+                            }
+
+                            @if (Module.forModule("DASHBOARD_MATERIAL", Accessor.HttpContext.Session))
+                            {
+                                <div class="menu-item @((Accessor.HttpContext.Session.GetString("module") == ViewBag.role) ? "active" : "")">
+                                    <a href="/dashboard_material" class="menu-link ">
+                                        <div class="menu-text">Dashboard Material</div>
+                                    </a>
+                                </div>
+                            }
+
+                            @if (Module.forModule("DASHBOARD_KONTRAK", Accessor.HttpContext.Session))
+                            {
+                                <div class="menu-item @((Accessor.HttpContext.Session.GetString("module") == ViewBag.role) ? "active" : "")">
+                                    <a href="/dashboard_kontrak" class="menu-link ">
+                                        <div class="menu-text">Dashboard Kontrak</div>
+                                    </a>
+                                </div>
+                            }
+
+                            @if (Module.forModule("DASHBOARD_INVENTORY", Accessor.HttpContext.Session))
+                            {
+                                <div class="menu-item @((Accessor.HttpContext.Session.GetString("module") == ViewBag.role) ? "active" : "")">
+                                    <a href="/dashboard_inventory" class="menu-link ">
+                                        <div class="menu-text">Dashboard Inventory</div>
+                                    </a>
+                                </div>
+                            }
                         </div>
-
                     </div>
-                   
-                    <div class="menu-item"><a href="/request_memo" class="menu-link"><div class="menu-text">Memo</div></a></div>
-                    
-                    <div class="menu-item"><a href="/requestor" class="menu-link"><div class="menu-text">Requestor</div></a></div>
-                   
-                    <div class="menu-item"><a href="/unit" class="menu-link"><div class="menu-text">Manage Unit</div></a></div>
-                   
-                    <div class="menu-item"><a href="/bom" class="menu-link"><div class="menu-text">Data BOM</div></a></div>
-                   
-                </div>
-            </div>
+                }
+
+                @if (Module.forModule("PLANT", Accessor.HttpContext.Session))
+                {
+                    <div class="menu-item @((Accessor.HttpContext.Session.GetString("module") == ViewBag.role) ? "active" : "")">
+                        <a href="/plant" class="menu-link">
+                            <div class="menu-icon">
+                                <i class="fas fa-location-dot fa-fw"></i>
+                            </div>
+                            <div class="menu-text">Plant</div>
+                        </a>
+                    </div>
+                }
+
+                @if (Module.forModule("PROJECT", Accessor.HttpContext.Session))
+                {
+                    <div class="menu-item @((Accessor.HttpContext.Session.GetString("module") == ViewBag.role) ? "active" : "")">
+                    <a href="/project" class="menu-link">
+                        <div class="menu-icon">
+                            <i class="fas fa-diagram-project fa-fw"></i>
+                        </div>
+                        <div class="menu-text">Project</div>
+                    </a>
+                    </div>
+                }
+
+                @if (Module.forModule("JOB_LIST", Accessor.HttpContext.Session) || Module.forModule("JOBPLAN", Accessor.HttpContext.Session) || Module.forModule("EKSEKUSI_JOBLIST", Accessor.HttpContext.Session)
+                || Module.forModule("PAKET_JOBLIST", Accessor.HttpContext.Session) || Module.forModule("NOTIFIKASI", Accessor.HttpContext.Session))
+                {
+                    <div class="menu-item has-sub">
+                        <a href="javascript:;" class="menu-link">
+                            <div class="menu-icon">
+                                <i class="fas fa-clipboard-check fa-fw"></i>
+                            </div>
+                            <div class="menu-text">Joblist</div>
+                            <div class="menu-caret"></div>
+                        </a>
+                        <div class="menu-submenu">
+
+                            @if (Module.forModule("JOB_LIST", Accessor.HttpContext.Session))
+                            {
+                                <div class="menu-item @((Accessor.HttpContext.Session.GetString("module") == ViewBag.role) ? "active" : "")">
+                                    <a href="/joblist" class="menu-link  ">
+                                        <div class="menu-text">Manage Joblist</div>
+                                    </a>
+                                </div>
+                            }
+                            @if (Module.forModule("JOBPLAN", Accessor.HttpContext.Session))
+                            {
+                                <div class="menu-item @((Accessor.HttpContext.Session.GetString("module") == ViewBag.role) ? "active" : "")">
+                                    <a href="/joblist_detail" class="menu-link ">
+                                        <div class="menu-text">Planning Joblist</div>
+                                    </a>
+                                </div>
+                            }
+                            @if (Module.forModule("EKSEKUSI_JOBLIST", Accessor.HttpContext.Session))
+                            {
+                                <div class="menu-item @((Accessor.HttpContext.Session.GetString("module") == ViewBag.role) ? "active" : "")">
+                                    <a href="/eksekusi_joblist" class="menu-link ">
+                                        <div class="menu-text">Eksekusi Joblist</div>
+                                    </a>
+                                </div>
+                            }
+                            @if (Module.forModule("PAKET_JOBLIST", Accessor.HttpContext.Session))
+                            {
+                                <div class="menu-item @((Accessor.HttpContext.Session.GetString("module") == ViewBag.role) ? "active" : "")">
+                                    <a href="/paket_joblist" class="menu-link ">
+                                        <div class="menu-text">Manage Paket Joblist</div>
+                                    </a>
+                                </div>
+                            }
+                            @if (Module.forModule("NOTIFIKASI", Accessor.HttpContext.Session))
+                            {
+                                <div class="menu-item @((Accessor.HttpContext.Session.GetString("module") == ViewBag.role) ? "active" : "")">
+                                    <a href="/notifikasi" class="menu-link ">
+                                        <div class="menu-text">Notifikasi</div>
+                                    </a>
+                                </div>
+                            }
+                        </div>
+                    </div>
+                }
+
+                @if (Module.forModule("MANAGE_EQUIPMENT", Accessor.HttpContext.Session) || Module.forModule("CATALOG_PROFILE", Accessor.HttpContext.Session) || Module.forModule("REQUEST_MEMO", Accessor.HttpContext.Session)
+                || Module.forModule("REQUESTOR", Accessor.HttpContext.Session) || Module.forModule("MANAGE_UNIT", Accessor.HttpContext.Session) || Module.forModule("BOM", Accessor.HttpContext.Session))
+                {
+                    <div class="menu-item has-sub ">
+                        <a href="javascript:;" class="menu-link">
+                            <div class="menu-icon">
+                                <i class="fas fa-cubes fa-fw"></i>
+                            </div>
+                            <div class="menu-text">Master Data</div>
+                            <div class="menu-caret"></div>
+                        </a>
+                        <div class="menu-submenu">
+                            @if (Module.forModule("MANAGE_EQUIPMENT", Accessor.HttpContext.Session) || Module.forModule("CATALOG_PROFILE", Accessor.HttpContext.Session))
+                            {
+                                <div class="menu-item has-sub ">
+                                    <a href="javascript:;" class="menu-link">
+                                        <div class="menu-text">Equipment</div>
+                                        <div class="menu-caret"></div>
+                                    </a>
+                                    <div class="menu-submenu">
+
+                                        @if (Module.forModule("MANAGE_EQUIPMENT", Accessor.HttpContext.Session))
+                                        {
+                                            <div class="menu-item @((Accessor.HttpContext.Session.GetString("module") == ViewBag.role) ? "active" : "")">
+                                                <a href="/equipments" class="menu-link">
+                                                    <div class="menu-text">Manage Equipment</div>
+                                                </a>
+                                            </div>
+                                        }
+                                        @if (Module.forModule("CATALOG_PROFILE", Accessor.HttpContext.Session))
+                                        {
+                                            <div class="menu-item @((Accessor.HttpContext.Session.GetString("module") == ViewBag.role) ? "active" : "")">
+                                                <a href="/catalog_profile" class="menu-link">
+                                                    <div class="menu-text">Catalog Profile</div>
+                                                </a>
+                                            </div>
+                                        }
+                                    </div>
+
+                                </div>
+                            }
+
+                            @if (Module.forModule("REQUEST_MEMO", Accessor.HttpContext.Session))
+                            {
+                                <div class="menu-item @((Accessor.HttpContext.Session.GetString("module") == ViewBag.role) ? "active" : "")">
+                                    <a href="/request_memo" class="menu-link">
+                                        <div class="menu-text">Memo</div>
+                                    </a>
+                                </div>
+                            }
+                            @if (Module.forModule("REQUESTOR", Accessor.HttpContext.Session))
+                            {
+                                <div class="menu-item @((Accessor.HttpContext.Session.GetString("module") == ViewBag.role) ? "active" : "")">
+                                    <a href="/requestor" class="menu-link">
+                                        <div class="menu-text">Requestor</div>
+                                    </a>
+                                </div>
+                            }
+                            @if (Module.forModule("MANAGE_UNIT", Accessor.HttpContext.Session))
+                            {
+                                <div class="menu-item @((Accessor.HttpContext.Session.GetString("module") == ViewBag.role) ? "active" : "")">
+                                    <a href="/unit" class="menu-link">
+                                        <div class="menu-text">Manage Unit</div>
+                                    </a>
+                                </div>
+                            }
+                            @if (Module.forModule("BOM", Accessor.HttpContext.Session))
+                            {
+                                <div class="menu-item @((Accessor.HttpContext.Session.GetString("module") == ViewBag.role) ? "active" : "")">
+                                    <a href="/bom" class="menu-link">
+                                        <div class="menu-text">Data BOM</div>
+                                    </a>
+                                </div>
+                            }
+                        </div>
+                    </div>
+                }
+
+                @if (Module.forModule("SOW", Accessor.HttpContext.Session) || Module.forModule("MANAGE_CONTRACT", Accessor.HttpContext.Session) || Module.forModule("DURASI_STEP", Accessor.HttpContext.Session)
+                || Module.forModule("LAST_PO", Accessor.HttpContext.Session))
+                {
+                    <div class="menu-item has-sub">
+                        <a href="javascript:;" class="menu-link">
+                            <div class="menu-icon">
+                                <i class="fas fa-file-contract fa-fw"></i>
+                            </div>
+                            <div class="menu-text">Paket Kontrak</div>
+                            <div class="menu-caret"></div>
+                        </a>
+                        <div class="menu-submenu">
+
+                            @if (Module.forModule("SOW", Accessor.HttpContext.Session))
+                            {
+                                <div class="menu-item @((Accessor.HttpContext.Session.GetString("module") == ViewBag.role) ? "active" : "")">
+                                    <a href="/sow" class="menu-link  ">
+                                        <div class="menu-text">Scope of Work</div>
+                                    </a>
+                                </div>
+                            }
+                            @if (Module.forModule("MANAGE_CONTRACT", Accessor.HttpContext.Session))
+                            {
+                                <div class="menu-item @((Accessor.HttpContext.Session.GetString("module") == ViewBag.role) ? "active" : "")">
+                                    <a href="/contracttracking" class="menu-link ">
+                                        <div class="menu-text">Paket Jasa</div>
+                                    </a>
+                                </div>
+                            }
+                            @if (Module.forModule("DURASI_STEP", Accessor.HttpContext.Session))
+                            {
+                                <div class="menu-item @((Accessor.HttpContext.Session.GetString("module") == ViewBag.role) ? "active" : "")">
+                                    <a href="/durasi_step" class="menu-link">
+                                        <div class="menu-text">SLA</div>
+                                    </a>
+                                </div>
+                            }
+                            @if (Module.forModule("LAST_PO", Accessor.HttpContext.Session))
+                            {
+                                <div class="menu-item @((Accessor.HttpContext.Session.GetString("module") == ViewBag.role) ? "active" : "")">
+                                    <a href="/last_po" class="menu-link">
+                                        <div class="menu-text">Last PO</div>
+                                    </a>
+                                </div>
+                            }
+                        </div>
+                    </div>
+                }
+
+
+
+                @if (Module.forModule("RESERVASI", Accessor.HttpContext.Session) || Module.forModule("OUTSTANDING_RESERVASI", Accessor.HttpContext.Session)
+                || Module.forModule("PENGGUNAAN_MATERIAL", Accessor.HttpContext.Session) || Module.forModule("EDIT_RESERVASI", Accessor.HttpContext.Session)
+                || Module.forModule("LIST_PR", Accessor.HttpContext.Session) || Module.forModule("DISTRIBUSI_PR", Accessor.HttpContext.Session))
+                {
+                    <div class="menu-item has-sub">
+                        <a href="javascript:;" class="menu-link">
+                            <div class="menu-icon">
+                                <i class="fas fa-briefcase fa-fw"></i>
+                            </div>
+                            <div class="menu-text">Material</div>
+                            <div class="menu-caret"></div>
+                        </a>
+                        <div class="menu-submenu">
+
+
+                            @if (Module.forModule("RESERVASI", Accessor.HttpContext.Session))
+                            {
+                                <div class="menu-item @((Accessor.HttpContext.Session.GetString("module") == ViewBag.role) ? "active" : "")">
+                                    <a href="/material" class="menu-link ">
+                                        <div class="menu-text">Reservasi</div>
+                                    </a>
+                                </div>
+                            }
+                            @if (Module.forModule("OUTSTANDING_RESERVASI", Accessor.HttpContext.Session))
+                            {
+                                <div class="menu-item @((Accessor.HttpContext.Session.GetString("module") == ViewBag.role) ? "active" : "")">
+                                    <a href="/outstanding_reservasi" class="menu-link ">
+                                        <div class="menu-text">Outstanding Reservasi</div>
+                                    </a>
+                                </div>
+                            }
+                            @if (Module.forModule("PENGGUNAAN_MATERIAL", Accessor.HttpContext.Session))
+                            {
+                                <div class="menu-item @((Accessor.HttpContext.Session.GetString("module") == ViewBag.role) ? "active" : "")">
+                                    <a href="/penggunaan_material" class="menu-link ">
+                                        <div class="menu-text">Penggunaan Material</div>
+                                    </a>
+                                </div>
+                            }
+                            @if (Module.forModule("EDIT_RESERVASI", Accessor.HttpContext.Session))
+                            {
+                                <div class="menu-item @((Accessor.HttpContext.Session.GetString("module") == ViewBag.role) ? "active" : "")">
+                                    <a href="/edit_pr" class="menu-link ">
+                                        <div class="menu-text">Edit Reservasi PR</div>
+                                    </a>
+                                </div>
+                            }
+                            @if (Module.forModule("LIST_PR", Accessor.HttpContext.Session))
+                            {
+                                <div class="menu-item @((Accessor.HttpContext.Session.GetString("module") == ViewBag.role) ? "active" : "")">
+                                    <a href="/list_pr" class="menu-link ">
+                                        <div class="menu-text">List PR</div>
+                                    </a>
+                                </div>
+                            }
+                            @if (Module.forModule("DISTRIBUSI_PR", Accessor.HttpContext.Session))
+                            {
+                                <div class="menu-item @((Accessor.HttpContext.Session.GetString("module") == ViewBag.role) ? "active" : "")">
+                                    <a href="/distribusi_pr" class="menu-link ">
+                                        <div class="menu-text">Distribusi PR</div>
+                                    </a>
+                                </div>
+                            }
+                        </div>
+                    </div>
+                }
+
            
+                <div class="menu-header">Database</div>
 
-            
-            <div class="menu-item has-sub">
-                <a href="javascript:;" class="menu-link">
-                    <div class="menu-icon">
-                        <i class="fas fa-file-contract fa-fw"></i>
+                @if (Module.forModule("STEERCO", Accessor.HttpContext.Session))
+                {
+                    <div class="menu-item @((Accessor.HttpContext.Session.GetString("module") == ViewBag.role) ? "active" : "")">
+                    <a href="/steerco" class="menu-link">
+                        <div class="menu-icon">
+                            <i class="fas fa-users-gear fa-fw"></i>
+                        </div>
+                        <div class="menu-text">Steerco</div>
+                    </a>
                     </div>
-                    <div class="menu-text">Paket Kontrak</div>
-                    <div class="menu-caret"></div>
-                </a>
-                <div class="menu-submenu">
-                    
-                    <div class="menu-item">
-                        <a href="/sow" class="menu-link  ">
-                            <div class="menu-text">Scope of Work</div>
-                        </a>
-                    </div>
-                   
-                    <div class="menu-item">
-                        <a href="/contracttracking" class="menu-link ">
-                            <div class="menu-text">Paket Jasa</div>
-                        </a>
-                    </div>
-                   
-                    <div class="menu-item">
-                        <a href="/durasi_step" class="menu-link">
-                            <div class="menu-text">SLA</div>
-                        </a>
-                    </div>
-                    
-                    <div class="menu-item">
-                        <a href="/last_po" class="menu-link">
-                            <div class="menu-text">Last PO</div>
-                        </a>
-                    </div>
-                 
-                </div>
-            </div>
+                }
 
 
+                @if (Module.forModule("RAPAT", Accessor.HttpContext.Session))
+                {
+                    <div class="menu-item @((Accessor.HttpContext.Session.GetString("module") == ViewBag.role) ? "active" : "")">
+                        <a href="/rapat" class="menu-link">
+                        <div class="menu-icon">
+                            <i class="fas fa-users fa-fw"></i>
+                        </div>
+                        <div class="menu-text">Rapat Koordinasi</div>
+                    </a>
+                    </div>
+                }
+                @if (Module.forModule("PIR", Accessor.HttpContext.Session))
+                {
+                    <div class="menu-item @((Accessor.HttpContext.Session.GetString("module") == ViewBag.role) ? "active" : "")">
+                    <a href="/pir" class="menu-link">
+                        <div class="menu-icon">
+                            <i class="fas fa-database fa-fw"></i>
+                        </div>
+                        <div class="menu-text">Data PIR</div>
+                    </a>
+                    </div>
+                }
 
 
-           
-            <div class="menu-item has-sub">
-                <a href="javascript:;" class="menu-link">
-                    <div class="menu-icon">
-                        <i class="fas fa-briefcase fa-fw"></i>
-                    </div>
-                    <div class="menu-text">Material</div>
-                    <div class="menu-caret"></div>
-                </a>
-                <div class="menu-submenu">
+                <div class="menu-header">Settings</div>
 
-                    
-                    <div class="menu-item">
-                        <a href="/material" class="menu-link ">
-                            <div class="menu-text">Reservasi</div>
-                        </a>
+                @if (Module.forModule("USERMANAGEMENT", Accessor.HttpContext.Session))
+                {
+                    <div class="menu-item @((Accessor.HttpContext.Session.GetString("module") == ViewBag.role) ? "active" : "")">
+                        <a href="/user" class="menu-link">
+                        <div class="menu-icon">
+                            <i class="fas fa-user-group fa-fw"></i>
+                        </div>
+                        <div class="menu-text">User Management</div>
+                    </a>
                     </div>
-                   
-                    <div class="menu-item">
-                        <a href="/outstanding_reservasi" class="menu-link ">
-                            <div class="menu-text">Outstanding Reservasi</div>
-                        </a>
-                    </div>
-                    
-                    <div class="menu-item">
-                        <a href="/penggunaan_material" class="menu-link ">
-                            <div class="menu-text">Penggunaan Material</div>
-                        </a>
-                    </div>
-                    
-                    <div class="menu-item">
-                        <a href="/edit_pr" class="menu-link ">
-                            <div class="menu-text">Edit Reservasi PR</div>
-                        </a>
-                    </div>
-                   
-                    <div class="menu-item">
-                        <a href="/list_pr" class="menu-link ">
-                            <div class="menu-text">List PR</div>
-                        </a>
-                    </div>
-                   
-                    <div class="menu-item">
-                        <a href="/distribusi_pr" class="menu-link ">
-                            <div class="menu-text">Distribusi PR</div>
-                        </a>
-                    </div>
-                   
-                </div>
-            </div>
-          
+                }
+            }
 
-           
-            <div class="menu-header">Database</div>
-            
-            <div class="menu-item">
-                <a href="/steerco" class="menu-link">
-                    <div class="menu-icon">
-                        <i class="fas fa-users-gear fa-fw"></i>
-                    </div>
-                    <div class="menu-text">Steerco</div>
-                </a>
-            </div>
-           
-
-            
-            <div class="menu-item">
-                <a href="/rapat" class="menu-link">
-                    <div class="menu-icon">
-                        <i class="fas fa-users fa-fw"></i>
-                    </div>
-                    <div class="menu-text">Rapat Koordinasi</div>
-                </a>
-            </div>
-
-            <div class="menu-item">
-                <a href="/pir" class="menu-link">
-                    <div class="menu-icon">
-                        <i class="fas fa-database fa-fw"></i>
-                    </div>
-                    <div class="menu-text">Data PIR</div>
-                </a>
-            </div>
-           
-
-          
-            <div class="menu-header">Settings</div>
-           
-            <div class="menu-item">
-                <a href="/user" class="menu-link">
-                    <div class="menu-icon">
-                        <i class="fas fa-user-group fa-fw"></i>
-                    </div>
-                    <div class="menu-text">User Management</div>
-                </a>
-            </div>
            
 
             <!-- BEGIN minify-button -->
