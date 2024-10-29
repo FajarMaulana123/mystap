@@ -3,6 +3,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace mystap.Models
 {
+
     public class Pir
     {
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]

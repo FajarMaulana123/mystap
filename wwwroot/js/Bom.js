@@ -63,7 +63,7 @@
 
         {
             extend: 'excel',
-            title: 'Plant',
+            title: 'Data BOM',
             className: 'btn',
             text: '<i class="far fa-file-code"></i> Excel',
             titleAttr: 'Excel',

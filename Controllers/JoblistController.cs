@@ -17,8 +17,11 @@ using System.Configuration;
 using ExcelDataReader;
 using Microsoft.Extensions.Hosting;
 using DocumentFormat.OpenXml.Office2010.Excel;
+
 using Microsoft.AspNetCore.Authorization;
 using mystap;
+
+
 namespace joblist.Controllers
 {
     public class JoblistController : Controller
@@ -2050,6 +2053,46 @@ namespace joblist.Controllers
                     ActionName = this.RouteData.Values["action"].ToString(),
                     ErrorMessage = ex.Message
                 });
+            }
+        }
+
+        public IActionResult Update_Rekomendasi(Notifikasi notifikasi)
+        {
+            try
+            {
+                int id = Int32.Parse(Request.Form["hidden_id"].FirstOrDefault());
+                Notifikasi obj = _context.notifikasi.Where(p => p.id == id).FirstOrDefault();
+
+                if (Request.Form.Files.Count() != 0)
+                    {
+                        if (obj.rekomendasi != null)
+                        {
+                            string ExitingFile = hostEnvironment.WebRootPath + "/" + obj.rekomendasi;
+                            System.IO.File.Delete(ExitingFile);
+                        }
+
+                        IFormFile postedFile = Request.Form.Files[0];
+                        string fileName = DateTime.Now.ToString("yyyyMMddHHmmssfff") + "_" + postedFile.FileName;
+                        string path = hostEnvironment.WebRootPath + "/upload/rekomendasi/" + fileName;
+
+                        using (var stream = System.IO.File.Create(path))
+                        {
+                            postedFile.CopyTo(stream);
+                            obj.rekomendasi = "upload/rekomendasi/" + fileName;
+                        }
+                    _context.SaveChanges();
+                    return Json(new { Results = true });
+                }
+                else
+                    {
+                        obj.rekomendasi = Request.Form["file_"].FirstOrDefault();
+                    _context.SaveChanges();
+                    return Json(new { Results = false });
+                    }
+            }
+            catch
+            {
+                throw;
             }
         }
 

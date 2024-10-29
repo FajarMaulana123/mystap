@@ -1,0 +1,119 @@
+﻿
+@{
+    ViewData["Title"] = "Edit Profile";
+}
+<ol class="breadcrumb float-xl-end">
+        <li class="breadcrumb-item"><a href="javascript:void(0);"> <i data-feather="package"></i></a></li>
+        <li class="breadcrumb-item active" aria-current="page"><span>My Profile</span></li>
+    </ol>
+    <h1 class="page-header">My Profile</h1>
+    <div class="panel panel-inverse">
+        <div class="profile">
+            <div class="profile-header">
+                <!-- BEGIN profile-header-cover -->
+                <div class="profile-header-cover"></div>
+                <!-- END profile-header-cover -->
+                <!-- BEGIN profile-header-content -->
+                <div class="profile-header-content">
+                    <!-- BEGIN profile-header-img -->
+                    <div class="profile-header-img">
+                        
+                        <img src="" alt="" />
+                    </div>
+                    <!-- END profile-header-img -->
+                    <!-- BEGIN profile-header-info -->
+                    <div class="profile-header-info">
+                        <h4 class="mt-0 mb-1"></h4>
+                        <p class="mb-2"></p>
+                        <a href="#" class="btn btn-xs btn-yellow disabled" ></a>
+                    </div>
+                    <!-- END profile-header-info -->
+                </div>
+                <!-- END profile-header-content -->
+                <!-- BEGIN profile-header-tab -->
+                <ul class="profile-header-tab nav nav-tabs">
+                <li class="nav-item"><a href="#profile-post" class="nav-link active" data-bs-toggle="tab">Edit Profile</a></li>
+                </ul>
+                <!-- END profile-header-tab -->
+            </div>
+        </div>
+        <div class="profile-content">
+				<!-- BEGIN tab-content -->
+			<div class="tab-content p-0">
+                <div class="tab-pane fade show active" id="profile-post">
+                    <div class="row">
+                        <div class="col-xl-12 col-lg-12 col-md-12 layout-spacing">
+                            <form id="general-info" class="section general-info" action="/profile_" method="POST" enctype="multipart/form-data">
+                               
+                                <div class="row">
+                                    <div class="col-lg-11 mx-auto">
+                                        <div class="row">
+                                            <div class="col-xl-12 col-lg-12 col-md-12 mt-md-0 mt-12">
+                                                <div class="form">
+                                                   
+                                                    <div class="row">
+                                                        <div class="col-md-12 mb-12">
+                                                                <div class="form-group">
+                                                                    <label>Image</label>
+                                                                    <input type="file" name="image" id="image_name" class="form-control form-control-sm">
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    <div class="row"> 
+                                                        
+                                                        <div class="col-md-6 mb-2">
+                                                            <div class="form-group">
+                                                                <label>Username</label>
+                                                                <input type="text" name="username" id="username" class="form-control form-control-sm" value="">
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-md-6 mb-2">
+                                                            <div class="form-group">
+                                                                <label>E-mail</label>
+                                                                <input type="email" name="email" id="email" class="form-control form-control-sm" value="">
+                                                            </div>
+                                                        </div>   
+                                                    </div>                                        
+                                                    <div class="row"> 
+                                                        <div class="col-md-6 mb-2">
+                                                            <div class="form-group">
+                                                                <label>Password</label>
+                                                                <input type="password" name="password" id="password" class="form-control form-control-sm  ">
+                                                            </div>
+                                                            
+                                                                <label id="password" class="is-invalid ">
+                                                                    <strong></strong>
+                                                                </label>
+                                                          
+                                                        </div>
+                                                        <div class="col-md-6 mb-2">
+                                                            <div class="form-group">
+                                                                <label>Retype Password</label>
+                                                                <input type="password" name="password_confirmation" id="password_confirmation" class="form-control form-control-sm">
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="form-actions mt-2">
+                                        <div class="text-right" style="text-align:right;">
+                                            <button type="submit" class="btn btn-info">Submit</button>
+                                            <button type="reset" class="btn btn-dark">Reset</button>
+                                        </div>
+                                    </div>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+@section Scripts
+{
+    <script src="~/js/Profile.js"></script>
+}

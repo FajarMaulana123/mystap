@@ -56,6 +56,11 @@ app.UseEndpoints(endpoints =>
 		pattern: "awal",
 		defaults: new { controller = "Awal", action = "Awal" });
 
+    endpoints.MapControllerRoute(
+        name: "profile_",
+        pattern: "profile_",
+        defaults: new { controller = "Data", action = "Profile_" });
+
     //DASHBOARD EQUIPMENT
     endpoints.MapControllerRoute(
         name: "dashboard_equipment",
@@ -407,6 +412,11 @@ app.UseEndpoints(endpoints =>
        name: "notifikasi_",
        pattern: "notifikasi_",
        defaults: new { controller = "Joblist", action = "Get_Notifikasi" });
+
+    endpoints.MapControllerRoute(
+      name: "update_rekomendasi",
+      pattern: "update_rekomendasi",
+      defaults: new { controller = "Joblist", action = "Update_Rekomendasi" });
 
     endpoints.MapControllerRoute(
       name: "import_notif",
@@ -772,6 +782,11 @@ app.UseEndpoints(endpoints =>
         name: "update_usermanagement",
         pattern: "update_usermanagement",
         defaults: new { controller = "User", action = "Update_User" });
+
+    endpoints.MapControllerRoute(
+        name: "locked_user",
+        pattern: "locked_user",
+        defaults: new { controller = "User", action = "Locked_User" });
 
     endpoints.MapControllerRoute(
         name: "delete_usermanagement",

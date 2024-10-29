@@ -1,5 +1,9 @@
 ﻿using Azure.Core;
+using DocumentFormat.OpenXml.InkML;
+using DocumentFormat.OpenXml.Office2010.Excel;
 using MessagePack;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Migrations.Operations;
@@ -483,6 +487,7 @@ namespace mystap.Controllers
                 var project_filter = Request.Form["project"].FirstOrDefault();
                 var project_rev = Request.Form["project_rev"].FirstOrDefault();
 
+
                 var customerData = _context.pir.Include("users").Where(s => s.id_project == Convert.ToInt64(project_filter)).Where(s => s.deleted == 0).Select(a => new { id = a.id, id_project = a.id_project, tanggal = a.tanggal, judul = a.judul, materi = a.materi, notulen = a.notulen, nama_ = a.users.alias, created_date = a.created_date });
 
                 // Sorting
@@ -811,8 +816,10 @@ namespace mystap.Controllers
             }
         }
 
+
 		[AuthorizedAction]
 		public IActionResult Delete_Project(Project project)
+
         {
             try
             {
@@ -1859,7 +1866,7 @@ namespace mystap.Controllers
                
 
                 var customerData = _context.bom.Include("users").Where(s => s.disiplin == disiplin_filter).Where(s => s.id_project == Convert.ToInt64(project_filter)).Where(s => s.deleted == 0).Select(a => new { id = a.id, no_wo = a.no_wo, tag_no = a.tag_no, id_project = a.id_project, disiplin = a.disiplin, created_date = a.created_date, created_by = a.users.alias, last_modify = a.last_modify, modify_by = a.users.alias });
-                var files = _context.bomFiles.Include("bom").Select(a => new { id = a.id, files = a.files});
+                var files = _context.bomFiles.Include("bom").Select(a => new { id = a.id, files = a.files });
                 if (!(string.IsNullOrEmpty(sortColumn) && string.IsNullOrEmpty(sortColumnDirection)))
                 {
                     customerData = customerData.OrderBy(sortColumn + " " + sortColumnDirection);
@@ -1996,6 +2003,46 @@ namespace mystap.Controllers
                 throw;
             }
         }
+
+
+        [AuthorizedAction]
+        public IActionResult Profile_()
+        {
+
+            return View();
+        }
+
+       [AuthorizedAction]
+
+        [HttpPost]
+        public async Task<IActionResult> Profile(Users users)
+        {
+            try
+            {
+                int id = Int32.Parse(Request.Form["hidden_id"].FirstOrDefault());
+                Users obj = _context.users.Where(p => p.id == id).FirstOrDefault();
+
+                if (obj != null)
+                {
+                    obj.username = Request.Form["username"].FirstOrDefault();
+                    obj.email = Request.Form["email"].FirstOrDefault();
+                    obj.foto = Request.Form["foto"].FirstOrDefault();
+                    if (obj.password != null)
+                    {
+                        obj.password = Request.Form["password"].FirstOrDefault();
+                    }
+                    _context.SaveChanges();
+                    return Json(new { result = true });
+
+                }
+                return Json(new { result = false });
+            }
+            catch
+            {
+                throw;
+            }
+        }
+
     }
 
 }

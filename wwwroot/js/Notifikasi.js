@@ -27,7 +27,7 @@
             { data: 'main_work_center', name: 'main_work_center' },
             {
                 "render": function (data, type, full, meta) {
-                    return '<a href="' + full.rekomendasi + '" class="badge bg-info" target="blank_"><i class="far fa-copy"></i> file</a>';
+                    return '<a href="javascript:void(0);" class="btn text-primary rekomendasi " data-id="' + full.id + '"  data-rekomendasi="' + full.rekomendasi + '"><i class="far fa-copy"></i> file</a>';
                 },
                 orderable: false,
                 searchable: false

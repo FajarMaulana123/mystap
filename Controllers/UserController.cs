@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Azure.Core;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.DotNet.MSIdentity.Shared;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage;
@@ -156,8 +157,63 @@ namespace mystap.Controllers
             }
         }
 
-		[AuthorizedAction]
-		public IActionResult Deleted_User(Users users)
+
+		
+
+        public IActionResult Locked_User(Users users)
+        {
+            try
+            {
+                int id = Int32.Parse(Request.Form["hidden_id"].FirstOrDefault());
+                Users obj = _context.users.Where(p => p.id == id).FirstOrDefault();
+                //var r = new Dictionary<string, string>();
+
+                if (obj.locked == 1)
+                {
+                    obj.locked = 0;
+
+                    //if (obj.locked == 0)
+                    //{
+                    //    r["title"] = "Sukses!";
+                    //    r["icon"] = "success";
+                    //    r["status"] = "Berhasil Unlocked!";
+                    //}
+                    //else
+                    //{
+                    //    r["title"] = "Maaf!";
+                    //    r["icon"] = "error";
+                    //    r["status"] = "<br><b>Tidak dapat di Hapus! <br> Silakan hubungi Administrator.</b>";
+                    //}
+                    _context.SaveChanges();
+                    return Json(new { Results = true });
+                }
+                else
+                {
+                    obj.locked = 1;
+
+                    //if (obj.locked == 1)
+                    //{
+                    //    r["title"] = "Sukses!";
+                    //    r["icon"] = "success";
+                    //    r["status"] = "Berhasil Locked";
+                    //}
+                    //else
+                    //{
+                    //    r["title"] = "Maaf!";
+                    //    r["icon"] = "error";
+                    //    r["status"] = "<br><b>Tidak dapat di Hapus! <br> Silakan hubungi Administrator.</b>";
+                    //}
+                    _context.SaveChanges();
+                    return Json(new { Results = true });
+                }
+            }
+            catch
+            {
+                throw;
+            }
+        }
+        [AuthorizedAction]
+        public IActionResult Deleted_User(Users users)
         {
             try
             {

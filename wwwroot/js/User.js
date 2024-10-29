@@ -22,12 +22,12 @@
             { data: 'role', name: 'role' },
             { data: 'lastLogin', name: 'lastLogin' },
             {
-                data: 'islocked', name: 'islocked',
+                data: 'locked', name: 'locked',
                 render: function (data, type, full, meta) {
 
-                    d = (full.locked == 1) ? "<span class='badge bg-danger'>Locked</span>" : "<span class='badge bg-warning'>Unlocked</span>";
-                    full.status = d;
-                    return "<a href='#' class='status' data-id='" + full.id + "'>" + d + "</a>";
+                    d = (full.locked == 1) ? '<span class="badge bg-success">Locked</span>' : '<span class="badge bg-warning">Unlocked</span>';
+                    full.locked = d;
+                    return "<a href='#' class='locked' data-id='" + full.id + "'>" + d + "</a>";
                 },
             },
             {
