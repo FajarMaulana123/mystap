@@ -11,7 +11,7 @@ namespace mystap.Models
         public string? revision { get; set; }
         public string? month { get; set; }
         public string? year { get; set; }
-        public string? active { get; set; }
+        public int? active { get; set; }
         public int? deleted { get; set; }
         public int? updated { get; set; }
         [Column(TypeName = "date")]

@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.DotNet.MSIdentity.Shared;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage;
+using Microsoft.IdentityModel.Tokens;
 using mystap.Helpers;
 using mystap.Models;
 using Newtonsoft.Json;
@@ -92,8 +93,10 @@ namespace mystap.Controllers
         {
             try
             {
+                
                 Users users = new Users();
                 users.name = formcollaction["name"];
+                users.email = formcollaction["email"];
                 users.username = formcollaction["username"];
                 users.alias = formcollaction["alias"];
                 users.plant = formcollaction["plant"];
@@ -106,18 +109,37 @@ namespace mystap.Controllers
                 users.noPekerja = formcollaction["noPekerja"];
                 users.role = formcollaction["role"];
                 users.created_at = DateTime.Now;
-                users.createBy = 1;
+                users.createBy = HttpContext.Session.GetInt32("id");
                 users.deleted = 0;
 
                 Boolean t;
-                if (users != null)
+                using var transaction = _context.Database.BeginTransaction();
+                try
                 {
                     _context.users.Add(users);
                     _context.SaveChanges();
+
+                    var module = formcollaction["permission[]"];
+                    if (!module.IsNullOrEmpty())
+                    {
+                     
+                        foreach (var val in module)
+                        {
+                            UserModul obj = new UserModul();
+                            obj.id_modul = val;
+                            obj.id_user = Convert.ToInt32(users.id);
+
+                            _context.userModul.Add(obj);
+                            _context.SaveChanges();
+
+                        }
+                    }
+                    transaction.Commit();
                     t = true;
                 }
-                else
+                catch
                 {
+                    transaction.Rollback();
                     t = false;
                 }
                 return Json(new { result = t });
@@ -141,7 +163,6 @@ namespace mystap.Controllers
                     obj.name = Request.Form["name"].FirstOrDefault();
                     obj.username = Request.Form["username"].FirstOrDefault();
                     obj.email = Request.Form["email"].FirstOrDefault();
-                    obj.password = EncryptPassword.Encrypt(Request.Form["password"].FirstOrDefault());
                     obj.alias = Request.Form["alias"].FirstOrDefault();
                     obj.plant = Request.Form["plant"].FirstOrDefault();
                     obj.asal = Request.Form["asal"].FirstOrDefault();
@@ -151,11 +172,49 @@ namespace mystap.Controllers
                     obj.statPekerja = Request.Form["statPekerja"].FirstOrDefault();
                     obj.noPekerja = Request.Form["noPekerja"].FirstOrDefault();
                     obj.role = Request.Form["role"].FirstOrDefault();
-                    obj.updated = 1;
                     obj.updated_at = DateTime.Now;
-                    obj.updatedBy = 1;
-                    _context.SaveChanges();
-                    return Json(new { Results = true });
+                    obj.updatedBy = HttpContext.Session.GetInt32("id");
+
+                    if (Request.Form["password"].FirstOrDefault() != "")
+                    {
+                        obj.password = EncryptPassword.Encrypt(Request.Form["password"].FirstOrDefault());
+                    }
+
+                    Boolean t;
+                    using var transaction = _context.Database.BeginTransaction();
+                    try
+                    {
+                        _context.SaveChanges();
+
+                        var cek = _context.userModul.Where(p => p.id_user == id).ToList();
+                        if (!cek.IsNullOrEmpty())
+                        {
+                            _context.userModul.Where(p => p.id_user == id).ExecuteDelete();
+                        }
+                        var module = Request.Form["permission[]"];
+                        if (!module.IsNullOrEmpty())
+                        {
+
+                            foreach (var val in module)
+                            {
+                                UserModul m = new UserModul();
+                                m.id_modul = val;
+                                m.id_user = Convert.ToInt32(obj.id);
+
+                                _context.userModul.Add(m);
+                                _context.SaveChanges();
+
+                            }
+                        }
+                        transaction.Commit();
+                        t = true;
+                    }
+                    catch
+                    {
+                        transaction.Rollback();
+                        t = false;
+                    }
+                    return Json(new { result = t });
                 }
                 return Json(new { Results = false });
             }

@@ -32,7 +32,7 @@ namespace mystap.Controllers
             ViewBag.role = "RAPAT";
             if (Module.hasModule("RAPAT", HttpContext.Session))
             {
-                ViewBag.project = _context.project.Where(p => p.deleted == 0).Where(p => p.active == "1").ToList();
+                ViewBag.project = _context.project.Where(p => p.deleted == 0).Where(p => p.active == 1).ToList();
                 return View();
             }
             else
@@ -255,7 +255,7 @@ namespace mystap.Controllers
             ViewBag.role = "STEERCO";
             if (Module.hasModule("STEERCO", HttpContext.Session))
             {
-                ViewBag.project = _context.project.Where(p => p.deleted == 0).Where(p => p.active == "1").ToList();
+                ViewBag.project = _context.project.Where(p => p.deleted == 0).Where(p => p.active == 1).ToList();
                 return View();
             }
             else
@@ -474,7 +474,7 @@ namespace mystap.Controllers
             ViewBag.role = "PIR";
             if (Module.hasModule("PIR", HttpContext.Session))
             {
-                ViewBag.project = _context.project.Where(p => p.deleted == 0).Where(p => p.active == "1").ToList();
+                ViewBag.project = _context.project.Where(p => p.deleted == 0).Where(p => p.active == 1).ToList();
                 return View();
             }
             else
@@ -745,7 +745,7 @@ namespace mystap.Controllers
 
                 if (!string.IsNullOrEmpty(status))
                 {
-                    customerData = customerData.Where(b => b.active == status);
+                    customerData = customerData.Where(b => b.active == Convert.ToInt32(status));
                 }
 
                 if (!string.IsNullOrEmpty(taoh))
@@ -787,7 +787,7 @@ namespace mystap.Controllers
                 project.durasiTABrick = Convert.ToInt32(formcollaction["durasiTABrick"]);
                 project.taoh = formcollaction["section"];
                 project.projectNo = formcollaction["kode_plant"] + project.month + project.year;
-                project.active = "1";
+                project.active = 1;
                 project.createdBy = 1;
                 project.createdDate = DateTime.Now;
                 project.deleted = 0;
@@ -861,6 +861,37 @@ namespace mystap.Controllers
                     _context.SaveChanges();
 
                     return Json(new { title = "Sukses!", icon = "success", status = "Berhasil Dihapus" });
+                }
+                return Json(new { title = "Maaf!", icon = "error", status = "Tidak Dapat di Hapus!, Silahkan Hubungi Administrator " });
+            }
+            catch
+            {
+                throw;
+            }
+        }
+
+        [AuthorizedAction]
+        public IActionResult StatusProject(Project project)
+        {
+            try
+            {
+                int id = Int32.Parse(Request.Form["id"].FirstOrDefault());
+                Project obj = _context.project.Where(p => p.id == id).FirstOrDefault();
+                if (obj != null)
+                {
+                    if(obj.active == 1)
+                    {
+                        obj.active = 0;
+                    }
+                    else
+                    {
+                        obj.active = 1;
+                    }
+
+
+                    _context.SaveChanges();
+
+                    return Json(new { title = "Sukses!", icon = "success", status = "Berhasil Merubah Status" });
                 }
                 return Json(new { title = "Maaf!", icon = "error", status = "Tidak Dapat di Hapus!, Silahkan Hubungi Administrator " });
             }
@@ -1354,7 +1385,7 @@ namespace mystap.Controllers
             ViewBag.role = "REQUEST_MEMO";
             if (Module.hasModule("REQUEST_MEMO", HttpContext.Session))
             {
-                ViewBag.project = _context.project.Where(p => p.deleted == 0).Where(p => p.active == "1").ToList();
+                ViewBag.project = _context.project.Where(p => p.deleted == 0).Where(p => p.active == 1).ToList();
                 ViewBag.requestors = _context.requestors.Where(p => p.deleted == 0).ToList();
                 return View();
             }
@@ -1906,7 +1937,7 @@ namespace mystap.Controllers
             ViewBag.role = "BOM";
             if (Module.hasModule("BOM", HttpContext.Session))
             {
-                ViewBag.project = _context.project.Where(p => p.deleted == 0).Where(p => p.active == "1").ToList();
+                ViewBag.project = _context.project.Where(p => p.deleted == 0).Where(p => p.active == 1).ToList();
                 ViewBag.disiplin = _context.disiplins.Where(p => p.deleted != 1).ToList();
                 ViewBag.equipment = _context.equipments.Where(p => p.deleted != 1).ToList();
 
@@ -2092,15 +2123,15 @@ namespace mystap.Controllers
             return View();
         }
 
-       [AuthorizedAction]
-
+        
+        [AuthorizedAction]
         [HttpPost]
-        public async Task<IActionResult> Profile(Users users)
+        public IActionResult Profile(Users users)
         {
             try
             {
                 int id = Int32.Parse(Request.Form["hidden_id"].FirstOrDefault());
-                Users obj = _context.users.Where(p => p.id == id).FirstOrDefault();
+                Users obj =  _context.users.Where(p => p.id == id).FirstOrDefault();
 
                 if (obj != null)
                 {
@@ -2111,7 +2142,7 @@ namespace mystap.Controllers
                     {
                         obj.password = Request.Form["password"].FirstOrDefault();
                     }
-                    _context.SaveChanges();
+                     _context.SaveChanges();
                     return Json(new { result = true });
 
                 }

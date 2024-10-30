@@ -52,7 +52,7 @@ namespace mystap.Controllers
                .ToList();
                 ViewBag.sow_group = _context.sowGroup.Where(p => p.deleted != 1).ToList();
                 ViewBag.userAccount = _context.users.Where(p => p.locked != 1).Where(p => p.statPekerja == "PLANNER").Where(p => p.status == "PEKERJA").Where(p => p.alias != null && p.alias != "").ToList();
-                ViewBag.project = _context.project.Where(p => p.deleted == 0 && p.active == "1").ToList();
+                ViewBag.project = _context.project.Where(p => p.deleted == 0 && p.active == 1).ToList();
                 ViewBag.unit = _context.unit
                    .Where(p => p.deleted == 0)
                    .GroupBy(x => new { x.unitCode, x.unitProses })
@@ -389,7 +389,7 @@ namespace mystap.Controllers
             ViewBag.role = "DURASI_STEP";
             if (Module.hasModule("DURASI_STEP", HttpContext.Session))
             {
-                ViewBag.project = _context.project.Where(p => p.deleted == 0).Where(p => p.active == "1").ToList();
+                ViewBag.project = _context.project.Where(p => p.deleted == 0).Where(p => p.active == 1).ToList();
                 return View();
             }
             else
@@ -600,7 +600,7 @@ namespace mystap.Controllers
             if (Module.hasModule("MANAGE_CONTRACT", HttpContext.Session))
             {
                 ViewBag.userAccount = _context.users.Where(p => p.locked != 1).Where(p => p.statPekerja == "PLANNER").Where(p => p.alias != null).Where(p => p.alias != "").Where(p => p.statPekerja == "PEKERJA").ToList();
-                ViewBag.project = _context.project.Where(p => p.deleted == 0).Where(p => p.active == "1").ToList();
+                ViewBag.project = _context.project.Where(p => p.deleted == 0).Where(p => p.active == 1).ToList();
                 ViewBag.unit = _context.unit
                    .Where(p => p.deleted == 0)
                    .GroupBy(x => new { x.unitCode, x.unitProses })
@@ -702,7 +702,7 @@ namespace mystap.Controllers
 		[AuthorizedAction]
 		public IActionResult CreateContract()
         {
-            ViewBag.project = _context.project.Where(p => p.deleted == 0).Where(p => p.active == "1").ToList();
+            ViewBag.project = _context.project.Where(p => p.deleted == 0).Where(p => p.active == 1).ToList();
             ViewBag.pic = _context.users.Where(p => p.locked != 1).Where(p => p.statPekerja == "PLANNER").Where(p => p.alias != null && p.alias != "").Where(p => p.status == "PEKERJA").ToList();
             ViewBag.unitProses = _context.unitProses.Where(p => p.deleted == 0).ToList();
             ViewBag.unit = _context.contractItem.Where(p => p.item_group == "UNIT").ToList();
@@ -871,7 +871,7 @@ namespace mystap.Controllers
 		public IActionResult UpdateContract(long id)
         {
             ViewBag.sow = _context.sow.Where(p => p.deleted == 0).ToList();
-            ViewBag.project = _context.project.Where(p => p.deleted == 0).Where(p => p.active == "1").ToList();
+            ViewBag.project = _context.project.Where(p => p.deleted == 0).Where(p => p.active == 1).ToList();
             ViewBag.user = _context.users.Where(p => p.locked != 1).Where(p => p.statPekerja == "PLANNER").Where(p => p.alias != null && p.alias != "").Where(p => p.status == "PEKERJA").ToList();
             ViewBag.unitProses = _context.unitProses.Where(p => p.deleted == 0).ToList();
             ViewBag.unit = _context.contractItem.Where(p => p.item_group == "UNIT").ToList();

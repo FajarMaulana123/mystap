@@ -39,7 +39,7 @@ namespace mystap.Controllers
             ViewBag.role = "DASHBOARD_EQUIPMENT";
             if (Module.hasModule("DASHBOARD_EQUIPMENT", HttpContext.Session))
             {
-                ViewBag.project = _context.project.Where(p => p.deleted == 0).Where(p => p.active == "1").ToList();
+                ViewBag.project = _context.project.Where(p => p.deleted == 0).Where(p => p.active == 1).ToList();
                 ViewBag.unit = _context.unit
                     .Where(p => p.deleted == 0)
                     .GroupBy(x => new { x.unitCode, x.unitProses })
@@ -442,7 +442,7 @@ namespace mystap.Controllers
             ViewBag.role = "DASHBOARD_JOBLIST";
             if (Module.hasModule("DASHBOARD_JOBLIST", HttpContext.Session))
             {
-                ViewBag.project = _context.project.Where(p => p.deleted == 0).Where(p => p.active == "1").ToList();
+                ViewBag.project = _context.project.Where(p => p.deleted == 0).Where(p => p.active == 1).ToList();
                 return View();
             }
             else
@@ -609,7 +609,7 @@ namespace mystap.Controllers
             ViewBag.role = "DASHBOARD_JOBPLAN";
             if (Module.hasModule("DASHBOARD_JOBPLAN", HttpContext.Session))
             {
-                ViewBag.project = _context.project.Where(p => p.deleted == 0).Where(p => p.active == "1").ToList();
+                ViewBag.project = _context.project.Where(p => p.deleted == 0).Where(p => p.active == 1).ToList();
                 return View();
             }
             else
@@ -917,7 +917,7 @@ namespace mystap.Controllers
             ViewBag.role = "DASHBOARD_KONTRAK";
             if (Module.hasModule("DASHBOARD_KONTRAK", HttpContext.Session))
             {
-                ViewBag.project = _context.project.Where(p => p.deleted == 0).Where(p => p.active == "1").ToList();
+                ViewBag.project = _context.project.Where(p => p.deleted == 0).Where(p => p.active == 1).ToList();
                 return View();
             }
             else
@@ -1223,7 +1223,7 @@ namespace mystap.Controllers
             ViewBag.role = "DASHBOARD_MATERIAL";
             if (Module.hasModule("DASHBOARD_MATERIAL", HttpContext.Session))
             {
-                ViewBag.project = _context.project.Where(p => p.deleted == 0).Where(p => p.active == "1").ToList();
+                ViewBag.project = _context.project.Where(p => p.deleted == 0).Where(p => p.active == 1).ToList();
                 return View();
             }
             else

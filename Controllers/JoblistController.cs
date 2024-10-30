@@ -41,7 +41,7 @@ namespace joblist.Controllers
             ViewBag.role = "JOB_LIST";
             if (Module.hasModule("JOB_LIST", HttpContext.Session))
             {
-                ViewBag.project = _context.project.Where(p => p.deleted == 0).Where(p => p.active == "1").ToList();
+                ViewBag.project = _context.project.Where(p => p.deleted == 0).Where(p => p.active == 1).ToList();
                 ViewBag.equipment = _context.equipments.Where(p => p.deleted == 0).ToList();
                 ViewBag.unitCode = _context.unit.Where(p => p.deleted != 1).GroupBy(p => new { p.unitCode, p.unitProses }).Select(p => new { unitCode = p.Key.unitCode, unitProses = p.Key.unitProses }).ToList();
                 ViewBag.unit = _context.unit.Where(p => p.deleted == 0).ToList();
@@ -150,7 +150,7 @@ namespace joblist.Controllers
 		[AuthorizedAction]
 		public IActionResult CreateJoblist()
         {
-            ViewBag.project = _context.project.Where(p => p.deleted == 0).Where(p => p.active == "1").ToList();
+            ViewBag.project = _context.project.Where(p => p.deleted == 0).Where(p => p.active == 1).ToList();
             ViewBag.equipment = _context.equipments.Where(p => p.deleted == 0).ToList();
             ViewBag.unitCode = _context.unit.Where(p => p.deleted != 1).GroupBy(p => new { p.unitCode, p.unitProses }).Select(p => new { unitCode = p.Key.unitCode, unitProses = p.Key.unitProses }).ToList();
             ViewBag.unit = _context.unit.Where(p => p.deleted == 0).ToList();
@@ -161,7 +161,7 @@ namespace joblist.Controllers
 		[AuthorizedAction]
 		public IActionResult UpdateJoblist(long? id)
         {
-            ViewBag.project = _context.project.Where(p => p.deleted == 0).Where(p => p.active == "1").ToList();
+            ViewBag.project = _context.project.Where(p => p.deleted == 0).Where(p => p.active == 1).ToList();
             ViewBag.equipment = _context.equipments.Where(p => p.deleted == 0).ToList();
             ViewBag.unitCode = _context.unit.Where(p => p.deleted != 1).GroupBy(p => new { p.unitCode, p.unitProses }).Select(p => new { unitCode = p.Key.unitCode, unitProses = p.Key.unitProses }).ToList();
             ViewBag.unit = _context.unit.Where(p => p.deleted == 0).ToList();
@@ -781,7 +781,7 @@ namespace joblist.Controllers
             ViewBag.role = "JOBPLAN";
             if (Module.hasModule("JOBPLAN", HttpContext.Session))
             {
-                ViewBag.project = _context.project.Where(p => p.deleted == 0).Where(p => p.active == "1").ToList();
+                ViewBag.project = _context.project.Where(p => p.deleted == 0).Where(p => p.active == 1).ToList();
                 ViewBag.equipment = _context.equipments.Where(p => p.deleted == 0).ToList();
                 ViewBag.unitCode = _context.unit.Where(p => p.deleted != 1).GroupBy(p => new { p.unitCode, p.unitProses }).Select(p => new { unitCode = p.Key.unitCode, unitProses = p.Key.unitProses }).ToList();
                 ViewBag.unit = _context.unit.Where(p => p.deleted == 0).ToList();
@@ -1149,7 +1149,7 @@ namespace joblist.Controllers
             ViewBag.role = "EKSEKUSI_JOBLIST";
             if (Module.hasModule("EKSEKUSI_JOBLIST", HttpContext.Session))
             {
-                ViewBag.project = _context.project.Where(p => p.deleted == 0).Where(p => p.active == "1").ToList();
+                ViewBag.project = _context.project.Where(p => p.deleted == 0).Where(p => p.active == 1).ToList();
 
                 return View();
             }
@@ -1335,7 +1335,7 @@ namespace joblist.Controllers
             ViewBag.role = "PAKET_JOBLIST";
             if (Module.hasModule("PAKET_JOBLIST", HttpContext.Session))
             {
-                ViewBag.project = _context.project.Where(p => p.deleted == 0).Where(p => p.active == "1").ToList();
+                ViewBag.project = _context.project.Where(p => p.deleted == 0).Where(p => p.active == 1).ToList();
                 return View();
             }
             else
@@ -1432,7 +1432,7 @@ namespace joblist.Controllers
 		[AuthorizedAction]
 		public IActionResult CreatePaketJoblist()
         {
-            ViewBag.project = _context.project.Where(p => p.deleted == 0).Where(p => p.active == "1").ToList();
+            ViewBag.project = _context.project.Where(p => p.deleted == 0).Where(p => p.active == 1).ToList();
             return View();
         }
 
@@ -1499,7 +1499,7 @@ namespace joblist.Controllers
 		[AuthorizedAction]
 		public IActionResult UpdatePaketJoblist(long id)
         {
-            ViewBag.project = _context.project.Where(p => p.deleted == 0).Where(p => p.active == "1").ToList();
+            ViewBag.project = _context.project.Where(p => p.deleted == 0).Where(p => p.active == 1).ToList();
             ViewBag.paket_joblist = _context.paketJoblist.Where(p => p.id_paket == id).FirstOrDefault();
 
             return View();

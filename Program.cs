@@ -525,6 +525,11 @@ app.UseEndpoints(endpoints =>
        defaults: new { controller = "Data", action = "Delete_Project" });
 
     endpoints.MapControllerRoute(
+       name: "status_project",
+       pattern: "status_project",
+       defaults: new { controller = "Data", action = "StatusProject" });
+
+    endpoints.MapControllerRoute(
        name: "equipments",
        pattern: "equipments",
        defaults: new { controller = "Data", action = "Equipments" });
