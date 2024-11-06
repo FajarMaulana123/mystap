@@ -32,6 +32,7 @@ namespace mystap.Models
         public DbSet<Durasi> durasi { get; set; }
         public DbSet<Memo> memo { get; set; }
         public DbSet<Notifikasi> notifikasi { get; set; }
+        public DbSet<FungsiBagian> fungsiBagian { get; set; }
         public DbSet<Requestor> requestors { get; set; }
         public DbSet<Sow> sow { get; set; }
         public DbSet<SowGroup> sowGroup { get; set; }

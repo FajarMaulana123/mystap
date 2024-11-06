@@ -32,7 +32,6 @@ app.UseAuthorization();
 app.UseSession();
 app.UseEndpoints(endpoints =>
 {
-
     endpoints.MapControllerRoute(
         name: "default",
         pattern: "{controller=Auth}/{action=Login}/{id?}");
@@ -47,12 +46,17 @@ app.UseEndpoints(endpoints =>
 		pattern: "logout",
 		defaults: new { controller = "Auth", action = "Logout" });
 
-	endpoints.MapControllerRoute(
+    endpoints.MapControllerRoute(
 		name: "validate_auth",
 		pattern: "validate_auth",
 		defaults: new { controller = "Auth", action = "ValidateLogin" });
 
-	endpoints.MapControllerRoute(
+    endpoints.MapControllerRoute(
+        name: "get_modul",
+        pattern: "get_modul",
+        defaults: new { controller = "Auth", action = "GetModul" });
+
+    endpoints.MapControllerRoute(
 		name: "awal",
 		pattern: "awal",
 		defaults: new { controller = "Awal", action = "Awal" });

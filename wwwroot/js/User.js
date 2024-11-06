@@ -1,4 +1,5 @@
-﻿$(document).ready(function () {
+﻿
+$(document).ready(function () {
 
     $.ajaxSetup({
         headers: {
@@ -103,14 +104,14 @@
         $("#bagian").val($(this).data('subsection'));
         $("#hidden_status").val("edit");
         $.ajax({
-            url: '/get_modul',
+            url: 'get_modul',
             type: "POST",
             data: {
                 'id': $(this).data('id'),
             },
             success: function (res) {
-                var data = JSON.parse(res)
-                var data_modul = data.data_modul;
+                console.log(res)
+                var data_modul = res.data_modul;
                 for (var i = 0; i < data_modul.length; i++) {
                     $("input[name='permission[]']").each(function () {
                         if ($(this).val() === data_modul[i].id_modul) {

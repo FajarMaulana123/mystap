@@ -8,6 +8,7 @@ using mystap.Helpers;
 using mystap.Models;
 using Newtonsoft.Json;
 using NuGet.Packaging;
+using System.Collections;
 using System.Data;
 using System.Linq.Dynamic;
 using System.Linq.Dynamic.Core;
@@ -23,14 +24,22 @@ namespace mystap.Controllers
             _context = context;
         }
 
-		[AuthorizedAction]
-		public IActionResult Users()
+        [AuthorizedAction]
+        public IActionResult Users()
         {
             ViewBag.role = "USERMANAGEMENT";
             if (Module.hasModule("USERMANAGEMENT", HttpContext.Session))
             {
-                ViewBag.plans = _context.plans.Where(p => p.deleted == 0).ToList();
-                return View();
+                ViewBag.plant = _context.plans.Where(p => p.deleted == 0).ToList();
+                ViewBag.fungsi = _context.fungsiBagian.GroupBy(p => p.fungsi).Select(p => p.Key).ToList();
+                ViewBag.bagian = _context.fungsiBagian.GroupBy(p => p.bagian).Select(p => p.Key).ToList();
+                ViewBag.groupModule = _context.modul.GroupBy(p => p.group).Select(p => new
+                {
+                    group = p.Key,
+                    jumlah = p.Select(s => s.group).Count()
+                }).OrderBy(p => p.jumlah).ToList();
+
+                return View(_context.modul.Where(s => s.status == "ACTIVE").ToList());
             }
             else
             {
@@ -38,8 +47,8 @@ namespace mystap.Controllers
             }
         }
 
-		[AuthorizedAction]
-		public async Task<IActionResult> Get_User()
+        [AuthorizedAction]
+        public async Task<IActionResult> Get_User()
         {
             try
             {
@@ -60,7 +69,7 @@ namespace mystap.Controllers
                 int recordsTotal = 0;
 
 
-                var customerData = _context.users.Where(s => s.deleted == 0).Select(a => new { id = a.id, name = a.name, username = a.username, email = a.email, role = a.role, lastLogin = a.lastLogin,created_at = a.created_at });
+                var customerData = _context.users.Where(s => s.deleted == 0);
 
                 if (!(string.IsNullOrEmpty(sortColumn) && string.IsNullOrEmpty(sortColumnDirection)))
                 {
@@ -88,21 +97,21 @@ namespace mystap.Controllers
             }
         }
 
-		[AuthorizedAction]
-		public IActionResult Create_User(IFormCollection formcollaction)
+        [AuthorizedAction]
+        public IActionResult Create_User(IFormCollection formcollaction)
         {
             try
             {
                 
                 Users users = new Users();
-                users.name = formcollaction["name"];
+                users.name = formcollaction["nama"];
                 users.email = formcollaction["email"];
                 users.username = formcollaction["username"];
                 users.alias = formcollaction["alias"];
                 users.plant = formcollaction["plant"];
                 users.asal = formcollaction["asal"];
-                users.uSection = formcollaction["uSection"];
-                users.subSection = formcollaction["subSection"];
+                users.uSection = formcollaction["fungsi"];
+                users.subSection = formcollaction["bagian"];
                 users.status = formcollaction["status"];
                 users.statPekerja = formcollaction["statPekerja"];
                 users.password = EncryptPassword.Encrypt(formcollaction["password"]);
@@ -150,8 +159,8 @@ namespace mystap.Controllers
             }
         }
 
-		[AuthorizedAction]
-		public IActionResult Update_User(Users users)
+        [AuthorizedAction]
+        public IActionResult Update_User(Users users)
         {
             try
             {
@@ -160,14 +169,14 @@ namespace mystap.Controllers
 
                 if (obj != null)
                 {
-                    obj.name = Request.Form["name"].FirstOrDefault();
+                    obj.name = Request.Form["nama"].FirstOrDefault();
                     obj.username = Request.Form["username"].FirstOrDefault();
                     obj.email = Request.Form["email"].FirstOrDefault();
                     obj.alias = Request.Form["alias"].FirstOrDefault();
                     obj.plant = Request.Form["plant"].FirstOrDefault();
                     obj.asal = Request.Form["asal"].FirstOrDefault();
-                    obj.uSection = Request.Form["uSection"].FirstOrDefault();
-                    obj.subSection = Request.Form["subSection"].FirstOrDefault();
+                    obj.uSection = Request.Form["fungsi"].FirstOrDefault();
+                    obj.subSection = Request.Form["bagian"].FirstOrDefault();
                     obj.status = Request.Form["status"].FirstOrDefault();
                     obj.statPekerja = Request.Form["statPekerja"].FirstOrDefault();
                     obj.noPekerja = Request.Form["noPekerja"].FirstOrDefault();
@@ -184,28 +193,30 @@ namespace mystap.Controllers
                     using var transaction = _context.Database.BeginTransaction();
                     try
                     {
+
                         _context.SaveChanges();
 
-                        var cek = _context.userModul.Where(p => p.id_user == id).ToList();
-                        if (!cek.IsNullOrEmpty())
-                        {
-                            _context.userModul.Where(p => p.id_user == id).ExecuteDelete();
-                        }
                         var module = Request.Form["permission[]"];
                         if (!module.IsNullOrEmpty())
                         {
-
-                            foreach (var val in module)
+                            var cek = _context.userModul.AsNoTracking().Where(p => p.id_user == id).ToList();
+                            if (!cek.IsNullOrEmpty())
                             {
-                                UserModul m = new UserModul();
-                                m.id_modul = val;
-                                m.id_user = Convert.ToInt32(obj.id);
+                                _context.userModul.Where(p => p.id_user == id).ExecuteDelete();
+                            }
+                            foreach (var c in module) 
+                            {
 
-                                _context.userModul.Add(m);
+                                UserModul um = new UserModul();
+                                um.id_user = Convert.ToInt32(obj.id);
+                                um.id_modul = c;
+
+                                _context.userModul.Add(um);
                                 _context.SaveChanges();
-
                             }
                         }
+
+
                         transaction.Commit();
                         t = true;
                     }
@@ -279,7 +290,7 @@ namespace mystap.Controllers
                 throw;
             }
         }
-        [AuthorizedAction]
+        //[AuthorizedAction]
         public IActionResult Deleted_User(Users users)
         {
             try
@@ -301,5 +312,7 @@ namespace mystap.Controllers
                 throw;
             }
         }
+
+        
     }
 }

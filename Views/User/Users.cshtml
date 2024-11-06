@@ -1,7 +1,10 @@
-﻿@model RapatViewModel
+﻿
 @{
     ViewData["Title"] = "User Management";
 }
+@model IEnumerable<Modul>
+@using mystap.Helpers
+
 <ol class="breadcrumb float-xl-end">
     <li class="breadcrumb-item active" aria-current="page"><span>User Management</span></li>
 </ol>
@@ -112,8 +115,6 @@
                                                             <option value="superadmin">Super Admin</option>
                                                             <option value="admin">Admin</option>
                                                             <option value="user">User</option>
-                                                            {{--
-                                                            <option value="management">Management</option> --}}
                                                         </select>
                                                     </div>
                                                 </div>
@@ -122,7 +123,10 @@
                                                         <label>Plant</label>
                                                         <select name="plant" id="plant" class="form-select form-control-sm">
                                                             <option value="">- Pilih Plant -</option>
-
+                                                            @foreach (var val in ViewBag.plant)
+                                                            {
+                                                                <option value="@(val.plans)">@(val.plans)</option>
+                                                            }
                                                         </select>
                                                     </div>
                                                 </div>
@@ -164,7 +168,10 @@
                                                         <label>Fungsi</label>
                                                         <select name="fungsi" id="fungsi" class="form-select form-control-sm">
                                                             <option value="">- Pilih Fungsi -</option>
-
+                                                            @foreach (var val in ViewBag.fungsi)
+                                                            {
+                                                                <option value="@(val)">@(val)</option>
+                                                            }
                                                         </select>
                                                     </div>
                                                 </div>
@@ -173,7 +180,10 @@
                                                         <label>Bagian</label>
                                                         <select name="bagian" id="bagian" class="form-select form-control-sm">
                                                             <option value="">- Pilih Bagian -</option>
-
+                                                            @foreach(var val in ViewBag.bagian)
+                                                            {
+                                                                <option value="@(val)">@(val)</option>
+                                                            }
                                                         </select>
                                                     </div>
                                                 </div>
@@ -216,6 +226,37 @@
                                         <div class="card-body">
                                             <label>Permissions</label>
                                             <div class="row row-cols-2">
+                                                @{
+                                                    var no = 1;
+                                                }
+                                                @foreach (var val in ViewBag.groupModule)
+                                                {
+                                                    <div class="col mb-2">
+                                                        <div class="card">
+                                                            <div class="card-header d-flex">
+                                                                <div class="flex-fill">
+                                                                    <div class="form-check">
+                                                                        <input class="form-check-input all-@(no) check-all-submodul" data-no="@(no)" type="checkbox" value="" id="@(no)" />
+                                                                        <label class="form-check-label" for="@(no)">@(val.group)</label>
+                                                                    </div>
+                                                                </div>
+                                                                <a data-bs-toggle="collapse" data-bs-target="#collapse@(val.group)" aria-expanded="false" class="text-primary dropdown-toggle" role="button" aria-controls="collapse@(val.group)">
+                                                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-right"><polyline points="9 18 15 12 9 6"></polyline></svg>
+                                                                </a>
+                                                            </div>
+                                                            <div class="card-body submodul-@(no) collapse submenu list-unstyled" id="collapse@(val.group)" data-parent="#collapse@(val.group)">
+                                                                @foreach (var p in Model.Where(s => s.group == val.group).ToList())
+                                                                {
+                                                                    <div class="form-check">
+                                                                        <input name="permission[]" class="form-check-input sub-@(no) checkbox-submodul" data-no_all="@(no)" data-id="@(p.id_modul)" type="checkbox" value="@(p.id_modul)" id="@(p.id_modul)" />
+                                                                        <label class="form-check-label" for="@(p.id_modul)">@(p.nama)</label>
+                                                                    </div>
+                                                                }
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    no++;
+                                                }
                                             </div>
                                         </div>
                                     </div>

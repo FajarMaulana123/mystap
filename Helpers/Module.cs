@@ -1,10 +1,18 @@
-﻿using Microsoft.AspNetCore.Mvc.Filters;
+﻿using DocumentFormat.OpenXml.Office2016.Drawing.ChartDrawing;
+using Microsoft.AspNetCore.Mvc.Filters;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
+using Microsoft.VisualBasic;
+using mystap.Models;
 using Newtonsoft.Json;
+using System.Collections;
+using System.Collections.ObjectModel;
+using System.ComponentModel;
 
 
 namespace mystap.Helpers
 {
-	public static class Module
+	public class Module
 	{
 		public static bool isLogin(ISession session)
 		{

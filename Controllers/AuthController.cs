@@ -96,5 +96,19 @@ namespace mystap.Controllers
 			return RedirectToAction("Login", "Auth");
 		}
 
-	}
+        public IActionResult GetModul()
+        {
+            try
+            {
+                int id = Int32.Parse(Request.Form["id"].FirstOrDefault());
+                var data = _context.userModul.Where(p => p.id_user == id).ToList();
+                return Json(new { data_modul = data });
+            }
+            catch
+            {
+                throw;
+            }
+        }
+
+    }
 }
