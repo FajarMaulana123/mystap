@@ -22,8 +22,9 @@
             { data: 'year', name: 'year' },
             {
                 data: 'tglTA', name: 'tglTA',
-                    render: function (data, type, full, meta) {
-                        return full.tglTA + " - " + full.tglSelesaiTA;
+                render: function (data, type, full, meta) {
+                   
+                    return full.tglTA.split('T')[0] + " - " + full.tglSelesaiTA.split('T')[0];
                 },
             },
             { data: 'revision', name: 'revision' },

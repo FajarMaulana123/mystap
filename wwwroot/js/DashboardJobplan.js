@@ -219,6 +219,7 @@ $(document).ready(function () {
                 return typeof i === 'string' ? i.replace(/[\$,]/g, '') * 1 : typeof i === 'number' ? i : 0;
             };
 
+            
             // Total over all pages
             not_planned = api
                 .column(1)
@@ -241,18 +242,19 @@ $(document).ready(function () {
                     return intVal(a) + intVal(b);
                 }, 0);
 
-            jumlah = api
-                .column(4)
-                .data()
-                .reduce(function (a, b) {
-                    return intVal(a) + intVal(b);
-                }, 0);
-
+            //var total = api
+            //    .column(4)
+            //    .data()
+            //    .reduce(function (a, b) {
+            //        console.log(a,b)
+            //        return intVal(a) + intVal(b);
+            //    }, 0);
+            
 
             $(api.column(1).footer()).html(not_planned);
             $(api.column(2).footer()).html(not_completed);
             $(api.column(3).footer()).html(completed);
-            $(api.column(4).footer()).html(jumlah);
+            $(api.column(4).footer()).html(not_planned + not_completed + completed);
         },
         buttons: [
 
@@ -268,6 +270,7 @@ $(document).ready(function () {
             },
         ]
     });
+
     var table_jasa = $('#table_jasa').DataTable({
         dom: '<"dataTables_wrapper dt-bootstrap"<"row"<"col-xl-7 d-block d-sm-flex d-xl-block justify-content-center"<"d-block d-lg-inline-flex me-0 me-md-3"l><"d-block d-lg-inline-flex"B>><"col-xl-5 d-flex d-xl-block justify-content-center"fr>>t<"row"<"col-md-5"i><"col-md-7"p>>>',
         processing: true,
@@ -350,18 +353,18 @@ $(document).ready(function () {
                     return intVal(a) + intVal(b);
                 }, 0);
 
-            jumlah = api
-                .column(4)
-                .data()
-                .reduce(function (a, b) {
-                    return intVal(a) + intVal(b);
-                }, 0);
+            //jumlah = api
+            //    .column(4)
+            //    .data()
+            //    .reduce(function (a, b) {
+            //        return intVal(a) + intVal(b);
+            //    }, 0);
 
 
             $(api.column(1).footer()).html(not_planned);
             $(api.column(2).footer()).html(not_completed);
             $(api.column(3).footer()).html(completed);
-            $(api.column(4).footer()).html(jumlah);
+            $(api.column(4).footer()).html(not_planned + not_completed + completed);
         },
         buttons: [
 

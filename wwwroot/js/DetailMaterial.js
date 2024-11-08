@@ -55,9 +55,12 @@ $(document).ready(function () {
             {
                 data: 'prognosa_', name: 'prognosa_',
                 render: function (data, type, full, meta) {
-                    var date = new Date(full.prognosa_);
-                    var string = date.getDate() + "-" + date.getMonth() + "-" + date.getFullYear();
-                    return string;
+                    var date = full.prognosa_;
+                    if (date != null) {
+                        return date.split('T')[0];
+                    } else {
+                        return "";
+                    }
                 }
             },
             {

@@ -556,8 +556,8 @@ namespace mystap.Controllers
                 if (obj != null)
                 {
 
-                    obj.id_project = Convert.ToInt64(Request.Form["id_project"].FirstOrDefault());
-                    obj.kat_tender = Request.Form["kat_tender"].FirstOrDefault();
+                    //obj.id_project = Convert.ToInt64(Request.Form["id_project"].FirstOrDefault());
+                    //obj.kat_tender = Request.Form["kat_tender"].FirstOrDefault();
                     obj.susun_kak = Convert.ToInt32(Request.Form["susun_kak"].FirstOrDefault());
                     obj.susun_oe = Convert.ToInt32(Request.Form["susun_oe"].FirstOrDefault());
                     obj.persetujuan = Convert.ToInt32(Request.Form["persetujuan"].FirstOrDefault());

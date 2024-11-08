@@ -645,7 +645,7 @@ namespace mystap.Controllers
                     " from zpm01 "+
                     " left join work_order on work_order.[order] = zpm01.no_order "+
                     " left join purch_order on purch_order.material = zpm01.material AND purch_order.pr = zpm01.pr AND purch_order.item_pr = zpm01.itm_pr "+
-                    " where (zpm01.pr is not null or zpm01.pr != '') and ((del is null or del != 'X') and (zpm01.reqmt_qty is not null and zpm01.reqmt_qty != 0)) and zpm01.reqmt_qty != '0' "+
+                    " where (zpm01.pr is not null or zpm01.pr != '') and ((del is null or del != 'X') and (zpm01.reqmt_qty is not null and zpm01.reqmt_qty != '0')) and zpm01.reqmt_qty != '0' "+
                     " and zpm01.revision = '"+project+"' "+w+" group by work_order.[order], zpm01.itm ";
 
                 var c = FormattableStringFactory.Create(query);
@@ -778,7 +778,7 @@ namespace mystap.Controllers
                     " from zpm01 " +
                     " left join work_order on work_order.[order] = zpm01.no_order " +
                     " left join purch_order on purch_order.material = zpm01.material AND purch_order.pr = zpm01.pr AND purch_order.item_pr = zpm01.itm_pr " +
-                    " where (zpm01.pr is not null or zpm01.pr != '') and ((del is null or del != 'X') and (zpm01.reqmt_qty is not null and zpm01.reqmt_qty != 0)) and zpm01.reqmt_qty != '0' " +
+                    " where (zpm01.pr is not null or zpm01.pr != '') and ((del is null or del != 'X') and (zpm01.reqmt_qty is not null and zpm01.reqmt_qty != '0')) and zpm01.reqmt_qty != '0' " +
                     " and zpm01.revision = '" + project + "' " + w + " group by work_order.[order], zpm01.itm ";
 
                 var c = FormattableStringFactory.Create(query);

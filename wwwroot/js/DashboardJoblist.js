@@ -169,8 +169,45 @@ function get_data_order(id) {
             { data: 'po_qty', name: 'po_qty' },
             { data: 'bun', name: 'bun' },
             { data: 'lld', name: 'lld' },
-            { data: 'prognosa_', name: 'prognosa_' },
-            { data: 'status_', name: 'status_' },
+            {
+                data: 'prognosa_', name: 'prognosa_',
+                render: function (data, type, full, meta) {
+                    var date = full.prognosa_;
+                    if (date != null) {
+                        return date.split('T')[0];
+                    } else {
+                        return "";
+                    }
+                }
+            },
+            {
+                data: 'status_', name: 'status_',
+                render: function (data, type, full, meta) {
+                    var s = "";
+                    if (full.status_ == 'create_pr') {
+                        s = '<span class="badge bg-red-300 shadow-none">Create PR</span>';
+                    } else if (full.status_ == 'outstanding_pr') {
+                        s = '<span class="badge bg-orange-700 shadow-none">Outstanding PR</span>';
+                    } else if (full.status_ == 'tunggu_onsite') {
+                        s = '<span class="badge bg-blue-300 shadow-none">Tunggu Onsite</span>';
+                    } else if (full.status_ == 'onsite') {
+                        s = '<span class="badge bg-blue-600 shadow-none">Onsite</span>';
+                    } else if (full.status_ == 'terpenuhi_stock') {
+                        s = '<span class="badge bg-purple-300 shadow-none">Stock</span>';
+                    } else if (full.status_ == 'inquiry_harga') {
+                        s = '<span class="badge bg-orange-400 shadow-none">Inquiry Harga</span>';
+                    } else if (full.status_ == 'hps_oe') {
+                        s = '<span class="badge bg-yellow-300 shadow-none">Penyusunan HPS/OE</span>';
+                    } else if (full.status_ == 'proses_tender') {
+                        s = '<span class="badge bg-green-200 shadow-none">Proses Tender</span>';
+                    } else if (full.status_ == 'Penetapan Pemenang') {
+                        s = '<span class="badge bg-green-600 shadow-none">Penetapan Pemenang</span>';
+                    }
+
+                    var status = s;
+                    return status;
+                }
+            }
         ],
         buttons: [
             {

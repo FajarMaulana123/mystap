@@ -52,7 +52,14 @@ $(document).ready(function () {
             { data: 'dt_', name: 'dt_' },
             {
                 data: 'prognosa_', name: 'prognosa_',
-               
+                render: function (data, type, full, meta) {
+                    var date = full.prognosa_;
+                    if (date != null) {
+                        return date.split('T')[0];
+                    } else {
+                        return "";
+                    }
+                }
             },
             {
                 data: 'status_', name: 'status_',

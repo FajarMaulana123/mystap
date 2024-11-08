@@ -247,7 +247,17 @@
                 {data: 'po_qty', name: 'po_qty'},
                 {data: 'bun', name: 'bun'},
                 {data: 'lld', name: 'lld'},
-                { data: 'prognosa_', name: 'prognosa_' },
+                {
+                    data: 'prognosa_', name: 'prognosa_',
+                    render: function (data, type, full, meta) {
+                        var date = full.prognosa_;
+                        if (date != null) {
+                            return date.split('T')[0];
+                        } else {
+                            return "";
+                        }
+                    }
+                },
                 {
                     data: 'status_', name: 'status_',
                     render :function(data, type, full, meta) {

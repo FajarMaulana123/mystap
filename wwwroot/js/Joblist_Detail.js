@@ -72,7 +72,17 @@ function get_data_order(id) {
             { data: 'bun', name: 'bun' },
             { data: 'main_work_ctr', name: 'main_work_ctr' },
             { data: 'lld', name: 'lld' },
-            { data: 'prognosa_', name: 'prognosa_' },
+            {
+                data: 'prognosa_', name: 'prognosa_',
+                render: function (data, type, full, meta) {
+                    var date = full.prognosa_;
+                    if (date != null) {
+                        return date.split('T')[0];
+                    } else {
+                        return "";
+                    }
+                }
+            },
             {
                 data: 'status_', name: 'status_',
                 render: function (data, type, full, meta) {

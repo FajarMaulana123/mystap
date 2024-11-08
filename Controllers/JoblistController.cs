@@ -158,8 +158,8 @@ namespace joblist.Controllers
             return View();
         }
 
-		[AuthorizedAction]
-		public IActionResult UpdateJoblist(long? id)
+        [AuthorizedAction]
+        public IActionResult UpdateJoblist(long? id)
         {
             ViewBag.project = _context.project.Where(p => p.deleted == 0).Where(p => p.active == 1).ToList();
             ViewBag.equipment = _context.equipments.Where(p => p.deleted == 0).ToList();
@@ -167,9 +167,12 @@ namespace joblist.Controllers
             ViewBag.unit = _context.unit.Where(p => p.deleted == 0).ToList();
 
             var data = (from j in _context.joblist
-                        join e in _context.equipments on j.id_eqTagNo equals e.id
-                        join u in _context.unit on j.unitCode equals u.id
-                        join p in _context.project on j.projectID equals p.id
+                        join e in _context.equipments on j.id_eqTagNo equals e.id into Equipments
+                        from e in Equipments.DefaultIfEmpty()
+                        join u in _context.unit on j.unitCode equals u.id into Unit
+                        from u in Unit.DefaultIfEmpty()
+                        join p in _context.project on j.projectID equals p.id into Project
+                        from p in Project.DefaultIfEmpty()
                         select new
                         {
                             projectID = p.id,

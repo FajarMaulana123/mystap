@@ -700,6 +700,7 @@ namespace mystap.Controllers
                                  not_planned = z.Select(p => p.not_planned).Distinct().Count(),
                                  not_completed = z.Select(p => p.not_completed).Distinct().Count(),
                                  completed = z.Select(p => p.completed).Distinct().Count(),
+                                 
                             }).ToListAsync();
 
                 recordsTotal = query.GroupBy(g => new
@@ -1275,7 +1276,7 @@ namespace mystap.Controllers
                     "left join work_order on work_order.[order] = zpm01.no_order  " +
                     "left join Mystap.dbo.joblist_detail_wo on joblist_detail_wo.[order] = work_order.[order] left join Mystap.dbo.joblist_detail on joblist_detail.id = joblist_detail_wo.jobListDetailID left join Mystap.dbo.joblist on joblist.id = joblist_detail.joblist_id   left join Mystap.dbo.prognosa_oh on prognosa_oh.id_joblist = joblist.id  " +
                     "left join project on project.revision = work_order.revision " +
-                    "left join purch_order on purch_order.material = zpm01.material AND purch_order.pr = zpm01.pr AND purch_order.item_pr = zpm01.itm_pr where ((del is null or del != 'X') and (zpm01.reqmt_qty is not null and zpm01.reqmt_qty != 0)) ";
+                    "left join purch_order on purch_order.material = zpm01.material AND purch_order.pr = zpm01.pr AND purch_order.item_pr = zpm01.itm_pr where ((del is null or del != 'X') and (zpm01.reqmt_qty is not null and zpm01.reqmt_qty != '0')) ";
                 query += w;
                 query += " group by work_order.[order], zpm01.itm, zpm01.pr,zpm01.reqmt_qty,zpm01.qty_res,zpm01.status_pengadaan,purch_order.po, purch_order.dci)b group by " +
                     "(case" +
@@ -1383,7 +1384,7 @@ namespace mystap.Controllers
                            " left join Mystap.dbo.work_order on work_order.[order] = zpm01.no_order " +
                            " left join Mystap.dbo.joblist_detail_wo on joblist_detail_wo.[order] = work_order.[order] left join Mystap.dbo.joblist_detail on joblist_detail.id = joblist_detail_wo.jobListDetailID left join Mystap.dbo.joblist on joblist.id = joblist_detail.joblist_id   left join Mystap.dbo.prognosa_oh on prognosa_oh.id_joblist = joblist.id  " +
                            " left join Mystap.dbo.project on project.revision = work_order.revision " +
-                           " left join Mystap.dbo.purch_order on purch_order.material = zpm01.material AND purch_order.pr = zpm01.pr AND purch_order.item_pr = zpm01.itm_pr where ((del is null or del != 'X') and (zpm01.reqmt_qty is not null and zpm01.reqmt_qty != 0)) " +
+                           " left join Mystap.dbo.purch_order on purch_order.material = zpm01.material AND purch_order.pr = zpm01.pr AND purch_order.item_pr = zpm01.itm_pr where ((del is null or del != 'X') and (zpm01.reqmt_qty is not null and zpm01.reqmt_qty != '0')) " +
                            w +
                            " group by work_order.[order], zpm01.itm) as b " + ws;
 
@@ -1442,7 +1443,7 @@ namespace mystap.Controllers
                             left join Mystap.dbo.prognosa_oh on prognosa_oh.eqTagno = work_order.equipment
                             left join Mystap.dbo.project on project.revision = work_order.revision
                             left join Mystap.dbo.purch_order on purch_order.material = zpm01.material AND purch_order.pr = zpm01.pr AND purch_order.item_pr = zpm01.itm_pr 
-                            where ((del is null or del != 'X') and (zpm01.reqmt_qty is not null and zpm01.reqmt_qty != 0))" + w+
+                            where ((del is null or del != 'X') and (zpm01.reqmt_qty is not null and zpm01.reqmt_qty != '0'))" + w+
                             "group by work_order.[order], zpm01.itm) as b group by b.status_";
                 var c = FormattableStringFactory.Create(query);
                 var data = await _context.view_grafik_material.FromSql(c).ToListAsync();
@@ -1515,7 +1516,7 @@ namespace mystap.Controllers
                     " left join Mystap.dbo.work_order on work_order.[order] = zpm01.no_order " +
                     " left join Mystap.dbo.prognosa_oh on prognosa_oh.eqTagno = work_order.equipment " +
                     " left join Mystap.dbo.project on project.revision = work_order.revision " +
-                    " left join Mystap.dbo.purch_order on purch_order.material = zpm01.material AND purch_order.pr = zpm01.pr AND purch_order.item_pr = zpm01.itm_pr where ((del is null or del != 'X') and (zpm01.reqmt_qty is not null and zpm01.reqmt_qty != 0)) " +
+                    " left join Mystap.dbo.purch_order on purch_order.material = zpm01.material AND purch_order.pr = zpm01.pr AND purch_order.item_pr = zpm01.itm_pr where ((del is null or del != 'X') and (zpm01.reqmt_qty is not null and zpm01.reqmt_qty != '0')) " +
                     w+
                     " group by work_order.[order], zpm01.itm) as b group by b.revision";
                 var c = FormattableStringFactory.Create(query);
@@ -1669,11 +1670,11 @@ namespace mystap.Controllers
 
                 if (filter != "deleted")
                 {
-                    w += " and (( zpm01.del is null or zpm01.del != 'X') and ( zpm01.reqmt_qty is not null and zpm01.reqmt_qty != 0)) ";
+                    w += " and (( zpm01.del is null or zpm01.del != 'X') and ( zpm01.reqmt_qty is not null and zpm01.reqmt_qty != '0')) ";
                 }
                 else
                 {
-                    w += " and (( zpm01.del is not null or zpm01.del = 'X') or ( zpm01.reqmt_qty is null or zpm01.reqmt_qty = 0)) ";
+                    w += " and (( zpm01.del is not null or zpm01.del = 'X') or ( zpm01.reqmt_qty is null or zpm01.reqmt_qty = '0')) ";
                 }
 
                 if (lldi != "all")
