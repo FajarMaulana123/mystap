@@ -779,6 +779,27 @@ app.UseEndpoints(endpoints =>
          defaults: new { controller = "Contract", action = "getDataTarget" });
 
     endpoints.MapControllerRoute(
+         name: "progress",
+         pattern: "progress",
+         defaults: new { controller = "Contract", action = "Progress" });
+
+    endpoints.MapControllerRoute(
+         name: "progress_",
+         pattern: "progress_",
+         defaults: new { controller = "Contract", action = "Progress_" });
+
+
+    endpoints.MapControllerRoute(
+       name: "profile",
+       pattern: "profile",
+       defaults: new { controller = "User", action = "Profile" });
+
+    endpoints.MapControllerRoute(
+      name: "profile_",
+      pattern: "profile_",
+      defaults: new { controller = "User", action = "Edit_Profile" });
+
+    endpoints.MapControllerRoute(
         name: "user",
         pattern: "user",
         defaults: new { controller = "User", action = "Users" });

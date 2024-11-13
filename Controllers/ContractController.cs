@@ -17,6 +17,7 @@ using System.Linq.Dynamic.Core;
 using System.Reflection.Metadata;
 using System.Text.RegularExpressions;
 using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
+using SelectPdf;
 
 namespace mystap.Controllers
 {
@@ -599,18 +600,9 @@ namespace mystap.Controllers
             ViewBag.role = "MANAGE_CONTRACT";
             if (Module.hasModule("MANAGE_CONTRACT", HttpContext.Session))
             {
-                ViewBag.userAccount = _context.users.Where(p => p.locked != 1).Where(p => p.statPekerja == "PLANNER").Where(p => p.alias != null).Where(p => p.alias != "").Where(p => p.statPekerja == "PEKERJA").ToList();
+                ViewBag.user = _context.users.Where(p => p.locked != 1).Where(p => p.statPekerja == "PLANNER").Where(p => p.alias != null && p.alias != "").Where(p => p.status == "PEKERJA").ToList();
                 ViewBag.project = _context.project.Where(p => p.deleted == 0).Where(p => p.active == 1).ToList();
-                ViewBag.unit = _context.unit
-                   .Where(p => p.deleted == 0)
-                   .GroupBy(x => new { x.unitCode, x.unitProses })
-                   .Select(z => new
-                   {
-                       unitCode = z.Key.unitCode,
-                       unitProses = z.Key.unitProses
-
-                   })
-                   .ToList();
+                ViewBag.unit = _context.contractItem.Where(p => p.item_group == "UNIT").ToList();
 
                 return View();
             }
@@ -1250,5 +1242,194 @@ namespace mystap.Controllers
                 throw;
             }
         }
+
+        [AuthorizedAction]
+        public IActionResult Progress()
+        {
+            ViewBag.role = "MANAGE_CONTRACT";
+            if (Module.hasModule("MANAGE_CONTRACT", HttpContext.Session))
+            {
+                ViewBag.user = _context.users.Where(p => p.locked != 1).Where(p => p.statPekerja == "PLANNER").Where(p => p.alias != null && p.alias != "").Where(p => p.status == "PEKERJA").ToList();
+                ViewBag.project = _context.project.Where(p => p.deleted == 0).Where(p => p.active == 1).ToList();
+                ViewBag.kategori_paket = _context.contractItem.Where(p => p.item_group == "KATEGORIPAKET").ToList();
+                
+
+                return View();
+            }
+            else
+            {
+                return NotFound();
+            }
+
+
+        }
+
+
+        [AuthorizedAction]
+        public IActionResult Progress_()
+        {
+            try
+            {
+
+                var project_filter = Request.Form["project_filter"].FirstOrDefault();
+                var kategori_paket_filter = Request.Form["kategori_paket_filter"].FirstOrDefault();
+                var pic_filter = Request.Form["pic_filter"].FirstOrDefault();
+
+                var query = _context.contractTracking.Where(p => p.deleted == 0);
+
+                if (!string.IsNullOrEmpty(project_filter))
+                {
+                    var pi = long.Parse(project_filter);
+                    query = query.Where(p => p.projectID == pi);
+                }
+
+                if (!string.IsNullOrEmpty(kategori_paket_filter))
+                {
+                    query = query.Where(p => p.kategoriPaket == kategori_paket_filter);
+                }
+
+                if (!string.IsNullOrEmpty(pic_filter))
+                {
+                    query = query.Where(p => p.pic == pic_filter);
+                }
+
+                var data = query.ToList();
+                var table = "";
+                if (data != null)
+                {
+                    foreach (var d in data)
+                    {
+                        var isi = "";
+                        if (d.aktualSP != null)
+                        {
+                            isi = "<span class='text-primary'><i class='fa fa-circle fs-20px fa-fw '></i></span>";
+                        }
+                        else
+                        {
+                            if (d.t_light > 30)
+                            {
+                                isi = "<span class='text-green-600 text-center'><i class='fa fa-circle fs-20px fa-fw'></i></span>";
+                            }
+                            else if (d.t_light <= 30 && d.t_light > 20)
+                            {
+                                isi = "<span class='text-warning text-center'><i class='fa fa-circle fs-20px fa-fw '></i></span>";
+                            }
+                            else if (d.t_light <= 20)
+                            {
+                                isi = "<span class='text-danger text-center'><i class='fa fa-circle fs-20px fa-fw'></i></span>";
+                            }
+                            else
+                            {
+                                isi = "-";
+                            }
+                        }
+                        var file = "";
+                        if (d.file_sp != null)
+                        {
+                            file = "<a href='" + d.file_sp + "' class='btn btn-info btn-sm' target='_blank'>File</a>";
+                        }
+                        else
+                        {
+                            file = "";
+                        }
+
+                        table += "<tr><td rowspan = '2'>" + d.WO + "<br>" + d.po + "<br>" + d.PR + "<br>" + d.noSP + "<br>" + file + "</td>" +
+                            "<td rowspan = '2'>" + d.judulPekerjaan + "</td>" +
+                            "<td rowspan = '2' style = 'text-align: center;'>" + isi + "<br>" + d.pic + "</td>" +
+                            "<td> P </td>" +
+                            "<td style = 'text-align: center;  --bs-table-accent-bg: #ffcc80;'>" + d.target_kak + "</td>" +
+                            "<td style = 'text-align: center;  --bs-table-accent-bg: #ffcc80;'>" + d.target_persetujuan + "</td>" +
+                            "<td style = 'text-align: center;  --bs-table-accent-bg: #ffcc80;'>" + d.target_oe + "</td>" +
+                            "<td style = 'text-align: center; color:blue;  --bs-table-accent-bg: #ffcc80;'>" + d.targetCO + "</td>" +
+                            "<td style = 'text-align: center;  --bs-table-accent-bg: #ffcc80;'>" + d.target_pengumuman + "</td>" +
+                            "<td style = 'text-align: center;  --bs-table-accent-bg: #ffcc80;'>" + d.target_sertifikasi + "</td> " +
+                            "<td style = 'text-align: center;  --bs-table-accent-bg: #ffcc80;'>" + d.target_prakualifikasi + "</td>" +
+                            "<td style = 'text-align: center;  --bs-table-accent-bg: #ffcc80;'>" + d.target_undangan + "</td>" +
+                            "<td style = 'text-align: center;  --bs-table-accent-bg: #ffcc80;'>" + d.target_pemberian + "</td>" +
+                            "<td style = 'text-align: center;   --bs-table-accent-bg: #ffcc80;'>" + d.targetBukaPH + "</td>" +
+                            "<td style = 'text-align: center;  --bs-table-accent-bg: #ffcc80;'>" + d.target_pembukaan + "</td>" +
+                            "<td style = 'text-align: center;  --bs-table-accent-bg: #ffcc80;'>" + d.target_evaluasi + "</td>" +
+                            "<td style = 'text-align: center;  --bs-table-accent-bg: #ffcc80;'>" + d.target_negosiasi + "</td>" +
+                            "<td style = 'text-align: center;  --bs-table-accent-bg: #ffcc80;'>" + d.target_usulan_pemenang + "</td>" +
+                            "<td style = 'text-align: center;  --bs-table-accent-bg: #ffcc80;'>" + d.target_keputusan_pemenang + "</td>" +
+                            "<td style = 'text-align: center;  --bs-table-accent-bg: #ffcc80;'>" + d.target_pengumuman_pemenang + "</td>" +
+                            "<td style = 'text-align: center;  --bs-table-accent-bg: #ffcc80;'>" + d.target_pengajuan_sanggah + "</td>" +
+                            "<td style = 'text-align: center;  --bs-table-accent-bg: #ffcc80;'>" + d.target_jawaban_sanggah + "</td>" +
+                            "<td style = 'text-align: center;  --bs-table-accent-bg: #ffcc80;'>" + d.target_penunjukan_pemenang + "</td>" +
+                            "<td style = 'text-align: center; color:blue; --bs-table-accent-bg: #ffcc80;'>" + d.targetSP + "</td>" +
+                            "<td rowspan = '2'>" + d.currStat + "</td>" +
+                        "</tr>" +
+                        "<tr>" +
+                            "<td> A </td>" +
+                            "<td style = 'text-align: center;'>" + d.akt_kak + "</td>" +
+                            "<td style = 'text-align: center;'>" + d.akt_persetujuan + "</td>" +
+                            "<td style = 'text-align: center;'>" + d.akt_oe + "</td>" +
+                            "<td style = 'text-align: center;'>" + d.aktualCO + "</td>" +
+                            "<td style = 'text-align: center;'>" + d.akt_pengumuman + "</td>" +
+                            "<td style = 'text-align: center;'>" + d.akt_sertifikasi + "</td>" +
+                            "<td style = 'text-align: center;'>" + d.akt_prakualifikasi + "</td>" +
+                            "<td style = 'text-align: center;'>" + d.akt_undangan + "</td>" +
+                            "<td style = 'text-align: center;'>" + d.akt_pemberian + "</td>" +
+                            "<td style = 'text-align: center;'>" + d.aktualBukaPH + "</td>" +
+                            "<td style = 'text-align: center;'>" + d.akt_pembukaan + "</td>" +
+                            "<td style = 'text-align: center;'>" + d.akt_evaluasi + "</td>" +
+                            "<td style = 'text-align: center;'>" + d.akt_negosiasi + "</td>" +
+                            "<td style = 'text-align: center;'>" + d.akt_usulan_pemenang + "</td>" +
+                            "<td style = 'text-align: center;'>" + d.akt_keputusan_pemenang + "</td>" +
+                            "<td style = 'text-align: center;'>" + d.akt_pengumuman_pemenang + "</td>" +
+                            "<td style = 'text-align: center;'>" + d.akt_pengajuan_sanggah + "</td>" +
+                            "<td style = 'text-align: center;'>" + d.akt_jawaban_sanggah + "</td>" +
+                            "<td style = 'text-align: center;'>" + d.akt_penunjukan_pemenang + "</td>" +
+                            "<td style = 'text-align: center;'>" + d.aktualSP + "</td>" +
+                        "</tr>";
+                    }
+                }
+                else
+                {
+                    table += "<tr>" +
+                                "<td colspan = '24' style = 'text-align:center'> Data tidak ditemukan</td>" +
+                           "</tr>";
+                }
+
+                return Ok(table);
+
+            }
+            catch
+            {
+                throw;
+            }
+
+        }
+
+        [HttpGet("GeneratePdf")]
+
+        public IActionResult GeneratePdf(string htmlContent)
+
+        {
+
+            // Create a new HTML to PDF converter
+
+            var converter = new HtmlToPdf();
+
+
+
+            // Convert HTML to PDF
+
+            var pdfDocument = converter.ConvertHtmlString(htmlContent);
+
+
+
+            // Save the PDF to a byte array
+
+            byte[] pdfBytes = pdfDocument.Save();
+
+
+
+            // Return the PDF as a download
+
+            return File(pdfBytes, "application/pdf", "myPDF.pdf");
+
+        }
+
     }
 }

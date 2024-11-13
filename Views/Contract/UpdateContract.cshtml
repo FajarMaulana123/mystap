@@ -857,6 +857,10 @@
                                                             <input type="TEXT" style="BORDER: HIDDEN; BACKGROUND-COLOR: white;" class="form-control form-control-sm" placeholder="Durasi Susun OE">
                                                         </div>
                                                         <div class="input-group mb-4">
+
+                                                            <input type="TEXT" style="BORDER: HIDDEN; BACKGROUND-COLOR: white;" class="form-control form-control-sm" placeholder="Durasi Persetujuan">
+                                                        </div>
+                                                        <div class="input-group mb-4">
                                                             
                                                             <input type="TEXT" style="BORDER: HIDDEN; BACKGROUND-COLOR: white;" class="form-control form-control-sm" placeholder="Durasi Kirim ke CO">
                                                         </div>
@@ -883,10 +887,6 @@
                                                         <div class="input-group mb-4">
                                                             
                                                             <input type="TEXT" style="BORDER: HIDDEN; BACKGROUND-COLOR: white;" class="form-control form-control-sm" placeholder="Durasi Penyampaian Dokumen Penawaran">
-                                                        </div>
-                                                        <div class="input-group mb-4">
-                                                            
-                                                            <input type="TEXT" style="BORDER: HIDDEN; BACKGROUND-COLOR: white;" class="form-control form-control-sm" placeholder="Durasi Pembukaan Dokumen Penawaran">
                                                         </div>
                                                     </fieldset>
                                                 </div>
@@ -924,9 +924,7 @@
                                                         <div class="input-group mb-4">
                                                             <input type="number" name="penyampaian" id="penyampaian" class="form-control form-control-sm" value="@(ViewBag.durasi.penyampaian)">
                                                         </div>
-                                                        <div class="input-group mb-4">
-                                                            <input type="number" name="pembukaan" id="pembukaan" class="form-control form-control-sm" value="@(ViewBag.durasi.pembukaan)">
-                                                        </div>
+                                                       
                                                 </div>
                                             </div>
                                             <div class="col-md-2 mb-2">
@@ -969,10 +967,11 @@
                                                             
                                                             <input type="TEXT" style="BORDER: HIDDEN; BACKGROUND-COLOR: white;" class="form-control form-control-sm" placeholder="Hari">
                                                         </div>
-                                                        <div class="input-group mb-4">
-                                                            
-                                                            <input type="TEXT" style="BORDER: HIDDEN; BACKGROUND-COLOR: white;" class="form-control form-control-sm" placeholder="Hari">
-                                                        </div>
+                                        <div class="input-group mb-4">
+
+                                            <input type="TEXT" style="BORDER: HIDDEN; BACKGROUND-COLOR: white;" class="form-control form-control-sm" placeholder="Hari">
+                                        </div>
+                                                       
                                                     </fieldset>
                                                 </div>
                                             </div>
@@ -980,6 +979,10 @@
                                                 <div class="form-group">
                                                     <label> </label>
                                                     <fieldset disabled>
+                                                        <div class="input-group mb-4">
+
+                                                            <input type="TEXT" style="BORDER: HIDDEN; BACKGROUND-COLOR: white;" class="form-control form-control-sm" placeholder="Durasi Pembukaan Dokumen Penawaran">
+                                                        </div>
                                                         <div class="input-group mb-4">
                                                         <input type="text" style="BORDER: HIDDEN; BACKGROUND-COLOR: white;" id="disabledTextInput" class="form-control form-control-sm" placeholder="Durasi Evaluasi Penawaran">
                                                         </div>
@@ -1020,7 +1023,9 @@
                                             <div class="col-md-1 mb-2">
                                                 <div class="form-group">
                                                     <label></label>
-                                                        
+                                    <div class="input-group mb-4">
+                                        <input type="number" name="pembukaan" id="pembukaan" class="form-control form-control-sm" value="@(ViewBag.durasi.pembukaan)">
+                                    </div>
                                                         <div class="input-group mb-4">
                                                             <input type="number" name="evaluasi" id="evaluasi" class="form-control form-control-sm" value="@(ViewBag.durasi.evaluasi)">
                                                         </div>
@@ -1054,6 +1059,10 @@
                                                 <div class="form-group">
                                                     <label></label>
                                                     <fieldset disabled>
+                                                        <div class="input-group mb-4">
+
+                                                            <input type="TEXT" style="BORDER: HIDDEN; BACKGROUND-COLOR: white;" class="form-control form-control-sm" placeholder="Hari">
+                                                        </div>
                                                         <div class="input-group mb-4">
                                                         <input type="text" style="BORDER: HIDDEN; BACKGROUND-COLOR: white;" id="disabledTextInput" class="form-control form-control-sm" placeholder="Hari">
                                                         </div>

@@ -1,0 +1,149 @@
+﻿@{
+    ViewData["Title"] = "Contract Tracking Progress";
+}
+<ol class="breadcrumb float-xl-end">
+        <li class="breadcrumb-item"><a href="javascript:void(0);">Paket Kontrak</a></li>
+        <li class="breadcrumb-item active" aria-current="page"><span>Manage Paket Jasa</span></li>
+    </ol>
+    <h1 class="page-header">Progress Paket Kontrak</h1>
+    <div class="panel panel-inverse">
+        <div class="accordion" id="accordion">
+            <div class="accordion-item border-0">
+                <div class="accordion-header" id="headingOne">
+                    <button class="accordion-button bg-gray-900 text-white px-3 py-10px pointer-cursor" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne">
+                        <i class="fa fa-circle fa-fw text-blue me-2 fs-8px"></i>Filter
+                    </button>
+                </div>
+                <div id="collapseOne" class="accordion-collapse collapse show" data-bs-parent="#accordion">
+                    <div class="accordion-body bg-gray-800 text-white">
+                        <div class="row">
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label for="" >Project</label>
+                                    <select name="project_filter" id="project_filter" class="form-control form-control-sm">
+                                    @foreach (var val in ViewBag.project)
+                                    {
+                                        <option value="@(val.id)" data-desc="@(val.description)"> @(val.description)</option>
+                                    }
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label for="" >Kategori Paket</label>
+                                    <select name="kategori_paket_filter" id="kategori_paket_filter" class="form-control form-control-sm">
+                                        <option value="">All Kategori Pekerjaan</option>
+                                    @foreach (var val in ViewBag.kategori_paket)
+                                    {
+                                        <option value="@(val.item)"> @(val.item)</option>
+                                    }
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label for="">PIC</label>
+                                    <select name="pic_filter" id="pic_filter" class="form-control form-control-sm">
+                                        <option value="">All PIC</option>
+                                    @foreach (var val in ViewBag.user)
+                                    {
+                                        <option value="@(val.alias)">@(val.alias)</option>
+                                    }
+                                    </select>
+                                </div>
+                            </div>
+                            
+                        </div>
+                        <div class="row mt-3 ">
+                            <div class="col-md-12">
+                                <button class="btn btn-primary" id="filter"> Filter</button>
+                                <button class="btn btn-warning" id="reset"> Reset</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="panel panel-inverse">
+        <div class="panel-heading">
+            <h4 class="panel-title">Data Progress Paket Kontrak</h4>
+           
+            <div class="panel-heading-btn">
+                <a href="javascript:;" class="btn btn-xs btn-icon btn-default" data-toggle="panel-expand"><i class="fa fa-expand"></i></a>
+                <a href="javascript:;" class="btn btn-xs btn-icon btn-warning" data-toggle="panel-collapse"><i class="fa fa-minus"></i></a>
+                
+            </div>
+        </div> 
+        <div class="panel-body">
+            <div class="row">
+                <div class="col-11">
+                    <div class="d-flex mb-2">
+                        <span class="badge  text-dark px-2 pt-5px pb-5px rounded fs-12px d-inline-flex align-items-center"> T.Light :</span>
+                        <span class="badge  text-green-100 px-2 pt-5px pb-5px rounded fs-12px d-inline-flex align-items-center"><i class="fa fa-circle fs-9px fa-fw me-5px"></i> On Track</span>
+                        <span class="badge  text-warning px-2 pt-5px pb-5px rounded fs-12px d-inline-flex align-items-center"><i class="fa fa-circle fs-9px fa-fw me-5px"></i> Potensi Delay</span>
+                        <span class="badge  text-danger px-2 pt-5px pb-5px rounded fs-12px d-inline-flex align-items-center"><i class="fa fa-circle fs-9px fa-fw me-5px"></i> Delay</span>
+                        <span class="badge  text-primary px-2 pt-5px pb-5px rounded fs-12px d-inline-flex align-items-center"><i class="fa fa-circle fs-9px fa-fw me-5px"></i> SP</span>
+                        <button class="btn btn-secondary px-2 pt-5px pb-5px d-inline-flex align-items-center" id="ex">Export To PDF</button>
+                       
+                    </div>
+                </div>
+                <div class="col-1">
+                    <div class="d-flex mb-2">
+                    <a href="/contracttracking" class="btn btn-warning" style="marg">Kembali</a>
+                    </div>
+                </div>
+            </div>
+           
+            <div class="table-responsive">
+                <table id="table" class="table small table-danger table-bordered dataTables_wrapper" style="    border-color: #ff8e8a; --bs-table-accent-bg: #ffe4ce; font-size:0.6em;" width="1000px">
+                    <thead>
+                        <tr>
+                            <th  rowspan="3" style="vertical-align: middle; color:white; --bs-table-accent-bg: #482a00;">No.WO.PO.PR</th>
+                            <th width="200px" rowspan="3"  style="vertical-align: middle; color:white; --bs-table-accent-bg: #482a00;">judul Pekerjaan</th>
+                            <th rowspan="3" colspan="2" style="vertical-align: middle; color:white; --bs-table-accent-bg: #482a00;">Status</th>
+                            
+                            <td  colspan="20" style="text-align: center; color:white; --bs-table-accent-bg: #482a00;">Proses Paket Kontrak Jasa</td>
+                            <th  rowspan="3" style="vertical-align: middle; color:white; --bs-table-accent-bg: #482a00;">Keterangan</th>
+                        </tr>
+                        <tr>
+                            <td colspan="4" style="text-align: center; color:white; --bs-table-accent-bg: #927449;">Turn Arround</td>
+                            <td colspan="16" style="text-align: center; color:white; --bs-table-accent-bg: #d27d00;">Contract Office</td>
+                        </tr>
+                        <tr>
+                            <th width="26px" style="text-align: center; color:white; --bs-table-accent-bg: #927449;">Susun Kak</th>
+                            <th width="26px" style="text-align: center; color:white; --bs-table-accent-bg: #927449;">Perse- tujuan</th>
+                            <th width="26px" style="text-align: center; color:white; --bs-table-accent-bg: #927449;">Susun OE</th>
+                            <th width="26px" style="text-align: center; color:white; --bs-table-accent-bg: #927449;">Kirim CO</th>
+                            <th width="26px" style="text-align: center; color:white; --bs-table-accent-bg: #d27d00;">Pendaftaran</th>
+                            <th width="26px" style="text-align: center; color:white; --bs-table-accent-bg: #d27d00;">Sertifikasi</th>
+                            <th width="26px" style="text-align: center; color:white; --bs-table-accent-bg: #d27d00;">Prakualifikasi</th>
+                            <th width="26px" style="text-align: center; color:white; --bs-table-accent-bg: #d27d00;">Undangan</th>
+                            <th width="26px" style="text-align: center; color:white; --bs-table-accent-bg: #d27d00;">Penjelasan</th>
+                            <th width="26px" style="text-align: center; color:white; --bs-table-accent-bg: #d27d00;">Buka PH</th>
+                            <th width="26px" style="text-align: center; color:white; --bs-table-accent-bg: #d27d00;">Buka Dokumen</th>
+                            <th width="26px" style="text-align: center; color:white; --bs-table-accent-bg: #d27d00;">Evaluasi</th>
+                            <th width="26px" style="text-align: center; color:white; --bs-table-accent-bg: #d27d00;">Negosiasi</th>
+                            <th width="26px" style="text-align: center; color:white; --bs-table-accent-bg: #d27d00;">Tap Nang</th>
+                            <th width="26px" style="text-align: center; color:white; --bs-table-accent-bg: #d27d00;">Kep Nang</th>
+                            <th width="26px" style="text-align: center; color:white; --bs-table-accent-bg: #d27d00;">Pengumaman</th>
+                            <th width="26px" style="text-align: center; color:white; --bs-table-accent-bg: #d27d00;">Ajuan Sanggah</th>
+                            <th width="26px" style="text-align: center; color:white; --bs-table-accent-bg: #d27d00;">Jawab Sanggah</th>
+                            <th width="26px" style="text-align: center; color:white; --bs-table-accent-bg: #d27d00;">Juk Nang</th>
+                            <th width="26px" style="text-align: center; color:white; --bs-table-accent-bg: #d27d00;">SPB</th>
+                        </tr>
+                    </thead> 
+                    <tbody id="isi_table">
+                       <tr>
+                            <td colspan="25" style="text-align:center">Data tidak ditemukan - Silahkan Filter data Contract terlebih dahulu !</td>
+                       </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+@section Scripts
+                            {
+    <script src="~/js/Progress.js"></script>
+}

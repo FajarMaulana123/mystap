@@ -299,14 +299,15 @@
                                     </a>
                                 </div>
                             }
-                            @if (Module.forModule("LAST_PO", Accessor.HttpContext.Session))
+                            @* @if (Module.forModule("LAST_PO", Accessor.HttpContext.Session))
                             {
                                 <div class="menu-item @((Accessor.HttpContext.Session.GetString("module") == ViewBag.role) ? "active" : "")">
                                     <a href="/last_po" class="menu-link">
                                         <div class="menu-text">Last PO</div>
                                     </a>
                                 </div>
-                            }
+                            } *@
+
                         </div>
                     </div>
                 }
@@ -421,7 +422,6 @@
 
 
                 <div class="menu-header">Settings</div>
-      
 
                 @if (Module.forModule("USERMANAGEMENT", Accessor.HttpContext.Session))
                 {

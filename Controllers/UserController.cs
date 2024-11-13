@@ -12,6 +12,7 @@ using System.Collections;
 using System.Data;
 using System.Linq.Dynamic;
 using System.Linq.Dynamic.Core;
+using System.Security.Claims;
 
 namespace mystap.Controllers
 {
@@ -313,6 +314,44 @@ namespace mystap.Controllers
             }
         }
 
-        
+        [AuthorizedAction]
+        public IActionResult Profile(long id)
+        {
+            
+            return View();
+          
+        }
+
+        [AuthorizedAction]
+        public async Task<IActionResult> Edit_Profile(Users Update_User)
+        {
+            {
+                if (ModelState.IsValid)
+                {
+                    Users existingUser = _context.users.FirstOrDefault(u => u.id == Update_User.id);
+
+                    // Get the currently authenticated user's ID
+                    var authenticatedUserId = Guid.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
+
+                    if (existingUser != null || existingUser.id == Update_User.id )
+                    {
+                        // User is trying to update another user's profile or the profile doesn't exist, handle accordingly
+                        return NotFound();
+                    }
+
+                    existingUser.username = Update_User.username;
+                    existingUser.email = Update_User.email;
+
+                    if (Request.Form["password"].FirstOrDefault() != "")
+                    {
+                        existingUser.password = EncryptPassword.Encrypt(Request.Form["password"].FirstOrDefault());
+                    }
+
+                    _context.SaveChanges();
+                }
+
+                return View(Profile);
+            }
+        }
     }
 }

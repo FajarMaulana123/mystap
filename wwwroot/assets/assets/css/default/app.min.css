@@ -135,7 +135,7 @@ body {
   font-weight: var(--bs-body-font-weight);
   line-height: var(--bs-body-line-height);
   color: var(--bs-body-color);
-  background: var(--bs-body-bg-img) ;
+  /*background: var(--bs-body-bg-img) ;*/
   background-size: cover;
   /* -webkit-background-size: cover;
   -moz-background-size: cover;
