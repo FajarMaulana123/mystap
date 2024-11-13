@@ -47,6 +47,7 @@ namespace mystap.Models
 
 
         //View Model
+        public DbSet<ViewBom> viewBom { get; set; }
         public DbSet<ViewReadinessEquipment> view_readiness_equipment { get; set; }
         public DbSet<ViewReadinessDetail> view_readiness_detail { get; set; }
         public DbSet<ViewGrafikReadiness> view_grafik_readiness { get; set; }

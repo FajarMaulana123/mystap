@@ -62,6 +62,11 @@ app.UseEndpoints(endpoints =>
 		defaults: new { controller = "Awal", action = "Awal" });
 
     endpoints.MapControllerRoute(
+        name: "data_material_planner",
+        pattern: "data_material_planner",
+        defaults: new { controller = "Awal", action = "DataPlanner" });
+
+    endpoints.MapControllerRoute(
         name: "profile_",
         pattern: "profile_",
         defaults: new { controller = "Data", action = "Profile_" });

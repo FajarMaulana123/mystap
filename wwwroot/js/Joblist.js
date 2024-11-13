@@ -65,18 +65,25 @@
                 orderable: false,
                 searchable: false,
                 "render": function (data, type, full, meta) {
-                    var actionBtn = '<div class="d-flex"><a href="javascript:void(0);" class="btn btn-xs waves-effect waves-light btn-outline-primary carry_offer mr-1" data-id="' + full.id + '" data-eqtagno="' + full.id_eqtagno +'"><i class="fas fa-dolly fa-xs"></i></a>' +
-                        '<a href="update_joblist/' + full.id + '" style = "margin-left:5px" class="btn btn-xs waves-effect waves-light btn-outline-warning edit "> <i class="fas fa-pen fa-xs"></i></a>';
-                    return actionBtn;
+                    var val = '<div class="d-flex">';
+                    if (role_ == "superadmin" || role_ == "admin") {
+                        val += '<a href="javascript:void(0);" class="btn btn-xs waves-effect waves-light btn-outline-primary carry_offer mr-1" data-id="' + full.id + '" data-eqtagno="' + full.id_eqtagno + '"><i class="fas fa-dolly fa-xs"></i></a>';
+                    }
+                    if (role_ == "superadmin") {
+                        val += '<a href="update_joblist/' + full.id + '" style = "margin-left:5px" class="btn btn-xs waves-effect waves-light btn-outline-warning edit "> <i class="fas fa-pen fa-xs"></i></a>';
+                    }
+                    val += '</div>';
+                        
+                    return val;
                 },
                 
             },
         ],
-        //columnDefs: [
-        //    { className: 'text-center', targets: [6, 7] },
-        //    (user_auth == 'user') ? { "visible": false, "targets": [10] } : {},
-        //],
-        buttons: /*(user_auth == 'superadmin' || user_auth == 'admin') ?*/ [{
+        columnDefs: [
+            { className: 'text-center', targets: [5, 6] },
+            (role_ == 'user') ? { "visible": false, "targets": [9] } : {},
+        ],
+        buttons: (role_ == 'superadmin' || role_ == 'admin') ? [{
             text: '<i class="far fa-edit"></i> New',
             className: 'btn btn-success',
             action: function (e, dt, node, config) {
@@ -92,7 +99,7 @@
             exportOptions: {
                 columns: ':not(:last-child)',
             }
-        }] /*: [{
+        }] : [{
             extend: 'excel',
             title: 'Job List',
             className: 'btn',
@@ -101,7 +108,7 @@
             exportOptions: {
                 columns: ':not(:last-child)',
             }
-        }]*/
+        }]
 
     });
 

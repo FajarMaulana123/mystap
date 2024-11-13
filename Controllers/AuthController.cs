@@ -37,10 +37,12 @@ namespace mystap.Controllers
 							HttpContext.Session.SetInt32("id", Convert.ToInt32(admin.id));
 							HttpContext.Session.SetString("username", admin.username);
 							HttpContext.Session.SetString("status", admin.status);
-							HttpContext.Session.SetString("role", admin.role);
+							HttpContext.Session.SetString("statPekerja", admin.statPekerja);
+                            HttpContext.Session.SetString("role", admin.role);
 							HttpContext.Session.SetString("alias", admin.alias);
+							HttpContext.Session.SetString("fungsi", admin.subSection);
 
-							var builderM = (from um in _context.userModul
+                            var builderM = (from um in _context.userModul
 											join m in _context.modul on um.id_modul equals m.id_modul
 											select new
 											{

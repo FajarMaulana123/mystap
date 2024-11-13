@@ -18,9 +18,9 @@
                 d.memo = $('#memo_filter').val();
             }
         },
-        //columnDefs: [
-        //    (user_auth == 'user') ? { "visible": false, "targets": [8] } : {},
-        //],
+        columnDefs: [
+            (role_ == 'user') ? { "visible": false, "targets": [9] } : {},
+        ],
         columns: [
             /*{ data: 'DT_RowIndex', name: 'DT_RowIndex', orderable: false, searchable: false },*/
             {
@@ -58,13 +58,21 @@
             { data: 'createBy', name: 'users.alias' },
             {
                 "render": function (data, type, full, meta) {
-                    return '<div class="d-flex"><a href="javascript:void(0);" class="btn btn-warning  btn-xs edit mr-1" data-id="' + full.id + '" data-projectID="' + full.projectID + '" data-reqNo="' + full.reqNo + '" data-reqDate="' + full.reqDate + '" data-reqDesc="' + full.reqDesc + '" data-attach="' + full.attach + '" data-requestor="' + full.requestors + '"><i class="fas fa-pen fa-xs"></i></a><a href = "javascript:void(0);" style = "margin-left:5px" class="btn btn-danger btn-xs delete " data-id="' + full.id + '" > <i class="fas fa-trash fa-xs"></i></a ></div > ';
+                    var val = '<div class="d-flex">';
+                    if (role_ == "superadmin" || role_ == "admin") {
+                        val += '<a href="javascript:void(0);" class="btn btn-warning  btn-xs edit mr-1" data-id="' + full.id + '" data-projectID="' + full.projectID + '" data-reqNo="' + full.reqNo + '" data-reqDate="' + full.reqDate + '" data-reqDesc="' + full.reqDesc + '" data-attach="' + full.attach + '" data-requestor="' + full.requestors + '"><i class="fas fa-pen fa-xs"></i></a>';
+                    }
+                    if (role_ == "superadmin") {
+                        val += '<a href = "javascript:void(0);" style = "margin-left:5px" class="btn btn-danger btn-xs delete " data-id="' + full.id + '" > <i class="fas fa-trash fa-xs"></i></a>';
+                    }
+                    val += '</div>';
+                    return val;
                 },
                 orderable: false,
                 searchable: false
             },
         ],
-        buttons: /*(user_auth == 'superadmin' || user_auth == 'admin') ? */[{
+        buttons: (role_ == 'superadmin' || role_ == 'admin') ? [{
             text: '<i class="far fa-edit"></i> New',
             className: 'btn btn-success',
             action: function (e, dt, node, config) {
@@ -86,7 +94,7 @@
                 columns: ':not(:last-child)',
             }
         },
-        ] /*: [{
+        ] : [{
             extend: 'excel',
             title: 'Request Memo',
             className: 'btn',
@@ -95,7 +103,7 @@
             exportOptions: {
                 columns: ':not(:last-child)',
             }
-        }]*/
+        }]
 
     });
 

@@ -108,7 +108,7 @@ $(document).ready(function () {
                 searchable: false
             },
             //(pr != '') ? { "visible": false, "targets": [12] } : {},
-            /*(user_auth == 'user') ? { "visible": false, "targets": [0] } : {},*/
+            (role_ == 'user') ? { "visible": false, "targets": [0] } : {},
         ],
 
         order: [],

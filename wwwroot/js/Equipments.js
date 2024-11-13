@@ -52,9 +52,17 @@ $(document).ready(function () {
             { data: 'main_work_center', name: 'main_work_center' },
             { data: 'location', name: 'location' },
             { data: 'craft', name: 'craft' },
-             {
+            {
                 "render": function (data, type, full, meta) {
-                     return '<div class="d-flex"><a href="javascript:void(0);" class="btn btn-warning  btn-xs edit mr-1" data-id="' + full.id + '" data-eqtagno="' + full.eqTagNo + '" data-description="' + full.eqDesc + '" data-func_location="' + full.funcLocID + '" data-weight="' + full.weight + '" data-jenis_weight="' + full.weight_unit + '" data-size="' + full.size + '" data-start_up_date="' + full.start_up_date + '" data-acquisition_value="' + full.acquisition_value + '" data-date_acquisition="' + full.acquisition_date + '" data-currency_key="' + full.currency_key + '" data-planning_plant="' + full.planning_plant + '" data-planning_group="' + full.planner_group + '" data-main_work_center="' + full.main_work_center + '" data-catalog_profile="' + full.catalog_profile + '" data-main_plant="' + full.maint_plant + '" data-location="' + full.location + '" data-plant_section="' + full.plant_section + '" data-main_asset_no="' + full.main_asset_no + '" data-asset_sub_no="' + full.asset_sub_no + '" data-cost_center="' + full.cost_center + '" data-wbselement="' + full.wbS_element + '" data-position="' + full.position + '" data-tin="' + full.tin + '" data-manufacturer="' + full.manufacturer + '" data-model="' + full.model + '" data-part_no="' + full.part_no + '" data-serial_no="' + full.serial_no + '" data-equipment_category="' + full.eqp_cat + '" data-date_validation="' + full.date_valid + '" data-object_type="' + full.object_type + '" data-craft="' + full.craft + '" data-country_of_manufacture="' + full.country_of_manuf + '" data-unit_proses="' + full.unitProses + '" data-year_const="' + full.year_of_const + '" data-unit_kilang="' + full.unitKilang + '" data-month_const="' + full.month_of_const + '" data-plant_main_work_center="' + full.plant_main_work_center + '" data-const_type="' + full.const_type + '" data-premit_assign="' + full.permit_assign + '" data-critical="' + full.criticallity + '" data-remark="' + full.remark + '" ><i class="fas fa-pen fa-xs"></i></a><a href = "javascript:void(0);" style = "margin-left:5px" class="btn btn-danger btn-xs delete " data-id="'+full.id+'" > <i class="fas fa-trash fa-xs"></i></a ></div > ';
+                    var val = '<div class="d-flex">';
+                    if (role_ == "superadmin" || role_ == "admin") {
+                        val += '<a href="javascript:void(0);" class="btn btn-warning  btn-xs edit mr-1" data-id="' + full.id + '" data-eqtagno="' + full.eqTagNo + '" data-description="' + full.eqDesc + '" data-func_location="' + full.funcLocID + '" data-weight="' + full.weight + '" data-jenis_weight="' + full.weight_unit + '" data-size="' + full.size + '" data-start_up_date="' + full.start_up_date + '" data-acquisition_value="' + full.acquisition_value + '" data-date_acquisition="' + full.acquisition_date + '" data-currency_key="' + full.currency_key + '" data-planning_plant="' + full.planning_plant + '" data-planning_group="' + full.planner_group + '" data-main_work_center="' + full.main_work_center + '" data-catalog_profile="' + full.catalog_profile + '" data-main_plant="' + full.maint_plant + '" data-location="' + full.location + '" data-plant_section="' + full.plant_section + '" data-main_asset_no="' + full.main_asset_no + '" data-asset_sub_no="' + full.asset_sub_no + '" data-cost_center="' + full.cost_center + '" data-wbselement="' + full.wbS_element + '" data-position="' + full.position + '" data-tin="' + full.tin + '" data-manufacturer="' + full.manufacturer + '" data-model="' + full.model + '" data-part_no="' + full.part_no + '" data-serial_no="' + full.serial_no + '" data-equipment_category="' + full.eqp_cat + '" data-date_validation="' + full.date_valid + '" data-object_type="' + full.object_type + '" data-craft="' + full.craft + '" data-country_of_manufacture="' + full.country_of_manuf + '" data-unit_proses="' + full.unitProses + '" data-year_const="' + full.year_of_const + '" data-unit_kilang="' + full.unitKilang + '" data-month_const="' + full.month_of_const + '" data-plant_main_work_center="' + full.plant_main_work_center + '" data-const_type="' + full.const_type + '" data-premit_assign="' + full.permit_assign + '" data-critical="' + full.criticallity + '" data-remark="' + full.remark + '" ><i class="fas fa-pen fa-xs"></i></a>';
+                    }
+                    if (role_ == "superadmin" || role_ == "admin") {
+                        val += '<a href = "javascript:void(0);" style = "margin-left:5px" class="btn btn-danger btn-xs delete " data-id="' + full.id + '" > <i class="fas fa-trash fa-xs"></i></a>';
+                    }
+                    val += '</div>';
+                    return val;
                 },
                 orderable: false,
                 searchable: false
@@ -62,10 +70,10 @@ $(document).ready(function () {
 
         ],
 
-        //columnDefs: [
-        //    (user_auth == 'user') ? { "visible": false, "targets": [8] } : {},
-        //],
-        buttons: /*(user_auth == 'superadmin' || user_auth == 'admin') ? */[{
+        columnDefs: [
+            (role_ == 'user') ? { "visible": false, "targets": [7] } : {},
+        ],
+        buttons: (role_ == 'superadmin' || role_ == 'admin') ? [{
             text: '<i class="far fa-edit"></i> New',
             className: 'btn btn-success',
             action: function (e, dt, node, config) {
@@ -86,7 +94,7 @@ $(document).ready(function () {
             exportOptions: {
                 columns: ':not(:last-child)',
             }
-        },] /*: [{
+        },] : [{
             extend: 'excel',
             title: 'Equipment',
             className: 'btn',
@@ -95,7 +103,7 @@ $(document).ready(function () {
             exportOptions: {
                 columns: ':not(:last-child)',
             }
-        }]*/
+        }]
     });
 
 

@@ -41,7 +41,15 @@
             { data: 'taoh', name: 'taoh' },
             {
                 "render": function (data, type, full, meta) {
-                    return '<div class="d-flex"><a href="javascript:void(0);" class="btn btn-warning  btn-xs edit mr-1" data-id="' + full.id + '" data-plant="' + full.plansID + '" data-month="' + full.month + '" data-year="' + full.year + '" data-execution_date="' + full.tglTA + '" data-finish_date ="' + full.tglSelesaiTA + '" data-revision ="' + full.revision + '" data-description ="' + full.description + '" data-durasitabrick ="' + full.durasiTABrick + '" data-section ="' + full.taoh + '" ><i class="fas fa-pen fa-xs"></i></a><a href = "javascript:void(0);" style = "margin-left:5px" class="btn btn-danger btn-xs delete " data-id="' + full.id + '" > <i class="fas fa-trash fa-xs"></i></a ></div > ';
+                    var val = '<div class="d-flex">';
+                    if (role_ == "superadmin" || role_ == "admin") {
+                        val += '<a href="javascript:void(0);" class="btn btn-warning  btn-xs edit mr-1" data-id="' + full.id + '" data-plant="' + full.plansID + '" data-month="' + full.month + '" data-year="' + full.year + '" data-execution_date="' + full.tglTA + '" data-finish_date ="' + full.tglSelesaiTA + '" data-revision ="' + full.revision + '" data-description ="' + full.description + '" data-durasitabrick ="' + full.durasiTABrick + '" data-section ="' + full.taoh + '" ><i class="fas fa-pen fa-xs"></i></a>';
+                    }
+                    if (role_ == "superadmin") {
+                        val += '<a href = "javascript:void(0);" style = "margin-left:5px" class="btn btn-danger btn-xs delete " data-id="' + full.id + '" > <i class="fas fa-trash fa-xs"></i></a>';
+                    }
+                    val += '</div>';
+                    return val;
                 },
                 orderable: false,
                 searchable: false
@@ -53,9 +61,9 @@
                 className: 'text-wrap width-200'
 
             },
-            /*(user_auth == 'user') ? { "visible": false, "targets": [10] } : {},*/
+            (role_ == 'user') ? { "visible": false, "targets": [10] } : {},
         ],
-        buttons:/* (user_auth == 'superadmin' || user_auth == 'admin') ?*/ [{
+        buttons: (role_ == 'superadmin' || role_ == 'admin') ? [{
             text: '<i class="far fa-edit"></i> New',
             className: 'btn btn-success',
             action: function (e, dt, node, config) {
@@ -75,7 +83,7 @@
             exportOptions: {
                 columns: ':not(:last-child)',
             }
-        }] /*: [{
+        }] : [{
             extend: 'excel',
             title: 'Project',
             className: 'btn',
@@ -84,7 +92,7 @@
             exportOptions: {
                 columns: ':not(:last-child)',
             }
-        }]*/
+        }]
 
     });
     $(document).on('click', '.status', function () {
@@ -131,7 +139,6 @@
         var year = $(this).data('year') + '-' + $(this).data('month');
         var exe_date = $(this).data('execution_date').split("T");
         var fin_date = $(this).data('finish_date').split("T");
-        console.log(year);
         $('#hidden_status').val('edit');
         $('#hidden_id').val($(this).data('id'));
         $('#plant').val($(this).data('plant'));

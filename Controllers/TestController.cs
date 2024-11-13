@@ -92,7 +92,7 @@ namespace mystap.Controllers
                 Plans plans = new Plans();
                 plans.plans = formcollaction["plans"];
                 plans.planDesc = formcollaction["planDesc"];
-                plans.createdBy = 1;
+                plans.createdBy = HttpContext.Session.GetInt32("id");
                 plans.createdDate = DateTime.Now;
                 plans.deleted = 0;
 
@@ -131,7 +131,7 @@ namespace mystap.Controllers
                 {
                     obj.plans = Request.Form["plans"].FirstOrDefault();
                     obj.planDesc = Request.Form["planDesc"].FirstOrDefault();
-                    obj.modifyBy = 1;
+                    obj.modifyBy = HttpContext.Session.GetInt32("id");
                     obj.lastModify = DateTime.Now;
                     _context.SaveChanges();
                     return Json(new { result = true });

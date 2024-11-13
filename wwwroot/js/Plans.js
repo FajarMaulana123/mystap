@@ -23,7 +23,15 @@
             { data: 'createdDate', name: 'createdDate' },
             {
                 "render": function (data, type, full, meta) {
-                    return '<div class="d-flex"><a href="javascript:void(0);" class="btn btn-warning  btn-xs edit mr-1" data-id="' + full.id + '" data-location="' + full.planDesc + '" data-plant="' + full.plans + '" ><i class="fas fa-pen fa-xs"></i></a><a href = "javascript:void(0);" style = "margin-left:5px" class="btn btn-danger btn-xs delete " data-id="'+full.id+'" > <i class="fas fa-trash fa-xs"></i></a ></div > ';
+                    var val = '<div class="d-flex">';
+                    if (role_ == "superadmin" || role_ == "admin") {
+                        val += '<a href="javascript:void(0);" class="btn btn-warning  btn-xs edit mr-1" data-id="' + full.id + '" data-location="' + full.planDesc + '" data-plant="' + full.plans + '" ><i class="fas fa-pen fa-xs"></i></a>';
+                    }
+                    if (role_ == "superadmin") {
+                        val += '<a href = "javascript:void(0);" style = "margin-left:5px" class="btn btn-danger btn-xs delete " data-id="' + full.id + '" > <i class="fas fa-trash fa-xs"></i></a>';
+                    }
+                    val += '</div>';
+                    return val;
                 },
                 orderable: false,
                 searchable: false
@@ -36,10 +44,10 @@
                 searchable: false
             },*/
         ],
-       /* columnDefs: [
-            (user_auth == 'user') ? { "visible": false, "targets": [6] } : {},
-        ],*/
-        buttons:/* (user_auth == 'superadmin' || user_auth == 'admin') ?*/ [{
+        columnDefs: [
+            (role_ == 'user') ? { "visible": false, "targets": [5] } : {},
+        ],
+        buttons: (role_ == 'superadmin' || role_ == 'admin') ? [{
             text: '<i class="far fa-edit"></i> New',
             className: 'btn btn-success',
             action: function (e, dt, node, config) {
@@ -59,7 +67,7 @@
             exportOptions: {
                 columns: ':not(:last-child)',
             }
-        }] /*: [{
+        }] : [{
             extxend: 'excel',
             title: 'Plant',
             className: 'btn',
@@ -68,7 +76,7 @@
             exportOptions: {
                 columns: ':not(:last-child)',
             }
-        }]*/
+        }]
     });
     //table.ajax.reload();
     // table.button( 0 ).nodes().css('height', '35px')

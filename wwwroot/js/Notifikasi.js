@@ -27,7 +27,11 @@
             { data: 'main_work_center', name: 'main_work_center' },
             {
                 "render": function (data, type, full, meta) {
-                    return '<a href="javascript:void(0);" class="btn text-primary rekomendasi " data-id="' + full.id + '"  data-rekomendasi="' + full.rekomendasi + '"><i class="far fa-copy"></i> file</a>';
+                    var val = '';
+                    if (role_ == "superadmin" || role_ == "admin") {
+                        val += '<a href="javascript:void(0);" class="btn text-primary rekomendasi " data-id="' + full.id + '"  data-rekomendasi="' + full.rekomendasi + '"><i class="far fa-copy"></i> file</a>';
+                    }
+                    return val;
                 },
                 orderable: false,
                 searchable: false
@@ -46,9 +50,9 @@
 
 
             },
-           /* (user_auth == 'user') ? { "visible": false, "targets": [10] } : {},*/
+            (role_ == 'user') ? { "visible": false, "targets": [10] } : {},
         ],
-        buttons: /*(user_auth == 'superadmin' || user_auth == 'admin') ?*/ [{
+        buttons: (role_ == 'superadmin' || role_ == 'admin') ? [{
             text: '<i class="far fa-edit"></i> Import',
             className: 'btn btn-success',
             action: function (e, dt, node, config) {
@@ -68,7 +72,7 @@
             // exportOptions: {
             //     columns: ':not(:last-child)',
             // }
-        },] /*: [{
+        },] : [{
             extend: 'excel',
             title: 'Plant',
             className: 'btn',
@@ -77,7 +81,7 @@
             // exportOptions: {
             //     columns: ':not(:last-child)',
             // }
-        }]*/
+        }]
     });
     // table.button( 0 ).nodes().css('height', '35px')
     $(document).on('click', '.rekomendasi', function () {

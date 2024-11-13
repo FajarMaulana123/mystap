@@ -216,7 +216,7 @@ namespace joblist.Controllers
                 joblist.criteriaOPT = (string.IsNullOrEmpty(formcollaction["criteriaOPT"])) ? 0 : 1;
                 joblist.userSection = formcollaction["taoh"];
                 joblist.remarks = formcollaction["remarks"];
-                joblist.createBy = 1;
+                joblist.createBy = HttpContext.Session.GetInt32("id");
                 joblist.dateCreated = DateTime.Now;
                 joblist.id_eqTagNo = Convert.ToInt64(formcollaction["id_eqtagno"]);
                 joblist.projectID = Convert.ToInt64(formcollaction["projectID"]);
@@ -335,8 +335,8 @@ namespace joblist.Controllers
                     obj.criteriaPI = (string.IsNullOrEmpty(formcollaction["criteriaPI"])) ? 0 : 1;
                     obj.criteriaOPT = (string.IsNullOrEmpty(formcollaction["criteriaOPT"])) ? 0 : 1;
                     obj.remarks = formcollaction["remarks"];
-                    obj.updatedBy = 1;
-                    obj.modifyBy = 1;
+                    obj.updatedBy = HttpContext.Session.GetInt32("id");
+                    obj.modifyBy = HttpContext.Session.GetInt32("id");
                     obj.lastModify = DateTime.Now;
 
                     _context.SaveChanges();
@@ -753,7 +753,7 @@ namespace joblist.Controllers
                     {
                         job.projectID = Convert.ToInt64(project);
                         job.keterangan = Request.Form["keterangan"].FirstOrDefault();
-                        job.modifyBy = 1;
+                        job.modifyBy = HttpContext.Session.GetInt32("id");
                         job.lastModify = DateTime.Now;
  
                         _context.SaveChanges();

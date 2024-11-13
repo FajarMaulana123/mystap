@@ -1,4 +1,7 @@
-﻿<!DOCTYPE html>
+﻿@using Microsoft.AspNetCore.Http;
+@inject IHttpContextAccessor Accessor;
+
+<!DOCTYPE html>
 <html lang="en">
 <head>
 	<meta charset="utf-8" />
@@ -179,6 +182,10 @@
 	
 	@* <script src="https://cdn.jsdelivr.net/npm/select2@4.0.13/dist/js/select2.full.min.js"></script> *@ 
 	<script src="~/assets/assets/plugins/bootstrap-datepicker/dist/js/bootstrap-datepicker.js"></script>
+	<script>
+		var fungsi_user = '@Accessor.HttpContext.Session.GetString("fungsi")';
+		var role_ = '@Accessor.HttpContext.Session.GetString("role")';
+	</script>
 	@* <script>
 	var fungsi_user = '{{Auth::user()->subSection}}';
 	</script> *@

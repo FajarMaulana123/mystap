@@ -73,6 +73,8 @@ function get_data_order(id) {
             { data: 'main_work_ctr', name: 'main_work_ctr' },
             { data: 'lld', name: 'lld' },
             {
+
+
                 data: 'prognosa_', name: 'prognosa_',
                 render: function (data, type, full, meta) {
                     var date = full.prognosa_;
@@ -259,7 +261,7 @@ $(document).ready(function () {
                     return data;
                 }
             },
-            /*(user_auth == 'user') ? */{ "visible": false, "targets": [21] } ,
+            (role_ == 'user') ? { "visible": false, "targets": [22] } : {},
         ],
         columns: [
             // {data: 'check', name: 'check', orderable: false,},
@@ -431,9 +433,16 @@ $(document).ready(function () {
                 orderable: false,
                 searchable: false,
                 "render": function (data, type, full, meta) {
-                    var actionBtn = '<div class="d-flex"><a href="javascript:void(0);" class="btn btn-xs waves-effect waves-light btn-outline-primary edit mr-1" data-id="' + full.id + '" data-id_project="' + full.id_project + '"  data-alasan="' + full.alasan + '" data-eqTagNo="' + full.eqTagNo + '" data-jobNo="' + full.jobNo + '" data-pic="' + full.pic + '" data-jobDesc="' + full.jobDesc + '" data-no_jasa="' + full.no_jasa + '" data-order_jasa="' + full.order_jasa + '" data-pekerjaan="' + full.pekerjaan + '" data-status_material="' + full.status_material + '" data-no_order="' + full.no_order + '" data-ket_status_material="' + full.ket_status_material + '" data-jasa="' + full.jasa + '" data-material="' + full.material + '" data-all_in_kontrak="' + full.all_in_kontrak + '" data-lldi="' + full.lldi + '" data-freezing="' + full.freezing +'"><i class="fas fa-pen fa-xs"></i></a>' +
-                        '<a href="javascript:void(0);" style = "margin-left:5px" class="btn btn-xs waves-effect waves-light btn-outline-danger delete " data-id="' + full.id + '"> <i class="fas fa-trash fa-xs"></i></a>';
-                    return actionBtn;
+                    var val = '<div class="d-flex">';
+                    if (role_ == "superadmin" || role_ == "admin") {
+                        val += '<a href="javascript:void(0);" class="btn btn-xs waves-effect waves-light btn-outline-primary edit mr-1" data-id="' + full.id + '" data-id_project="' + full.id_project + '"  data-alasan="' + full.alasan + '" data-eqTagNo="' + full.eqTagNo + '" data-jobNo="' + full.jobNo + '" data-pic="' + full.pic + '" data-jobDesc="' + full.jobDesc + '" data-no_jasa="' + full.no_jasa + '" data-order_jasa="' + full.order_jasa + '" data-pekerjaan="' + full.pekerjaan + '" data-status_material="' + full.status_material + '" data-no_order="' + full.no_order + '" data-ket_status_material="' + full.ket_status_material + '" data-jasa="' + full.jasa + '" data-material="' + full.material + '" data-all_in_kontrak="' + full.all_in_kontrak + '" data-lldi="' + full.lldi + '" data-freezing="' + full.freezing + '"><i class="fas fa-pen fa-xs"></i></a>';
+                    }
+                    if (role_ == "superadmin") {
+                        val += '<a href="javascript:void(0);" style = "margin-left:5px" class="btn btn-xs waves-effect waves-light btn-outline-danger delete " data-id="' + full.id + '"> <i class="fas fa-trash fa-xs"></i></a>';
+                    }
+                    val += '</div>';
+                        
+                    return val;
                 },
             },
         ],

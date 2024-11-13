@@ -61,23 +61,31 @@ $(document).ready(function () {
 
                     return s;
 
-                },            },
+                },
+            },
             {
                 orderable: false, searchable: false,
-                render: function (data,type,full,meta) {
-                    var s = '<div class="d-flex"><a href="edit_paket_joblist_/' + full.id_paket + '" class="btn btn-xs waves-effect waves-light btn-outline-warning edit mr-1" ><i class="fas fa-pen fa-xs"></i></a>' +
-                        '<a href="javascript:void(0);" style="margin-left:5px" class="btn btn-xs waves-effect waves-light btn-outline-danger delete " data-id="' + full.id_paket + '"><i class="fas fa-trash fa-xs"></i></a></div>';
-                    return s;
+                render: function (data, type, full, meta) {
+                    var val = '<div class="d-flex">';
+                    if (role_ == "superadmin" || role_ == "admin") {
+                        val += '<a href="edit_paket_joblist_/' + full.id_paket + '" class="btn btn-xs waves-effect waves-light btn-outline-warning edit mr-1" ><i class="fas fa-pen fa-xs"></i></a>';
+                    }
+                    if (role_ == "superadmin") {
+                        val += '<a href="javascript:void(0);" style="margin-left:5px" class="btn btn-xs waves-effect waves-light btn-outline-danger delete " data-id="' + full.id_paket + '"><i class="fas fa-trash fa-xs"></i></a>';
+                    }
+                    val += '</div>';
+                        
+                    return val;
                 }
             },
         ],
         columnDefs: [
             { className: 'text-center', targets: [5, 6] },
-            /*(user_auth == 'user') ? { "visible": false, "targets": [7] } : {},*/
+            (role_ == 'user') ? { "visible": false, "targets": [7] } : {},
         ],
         order: [],
         buttons:
-            //(user_auth == 'superadmin' || user_auth == 'admin') ? [
+            (role_ == 'superadmin' || role_ == 'admin') ? 
         [{
             text: '<i class="far fa-edit"></i> New',
             className: 'btn btn-success',
@@ -97,17 +105,17 @@ $(document).ready(function () {
             }
         },
         ] 
-        //: [{
-        //    extend: 'excel',
-        //    title: 'Data Paket Joblist',
-        //    className: 'btn',
-        //    text: '<i class="far fa-file-code"></i> Excel',
-        //    titleAttr: 'Excel',
-        //    exportOptions: {
-        //        columns: ':not(:last-child)',
-        //        orthogonal: 'fullNotes'
-        //    }
-        //}]
+        : [{
+            extend: 'excel',
+            title: 'Data Paket Joblist',
+            className: 'btn',
+            text: '<i class="far fa-file-code"></i> Excel',
+            titleAttr: 'Excel',
+            exportOptions: {
+                columns: ':not(:last-child)',
+                orthogonal: 'fullNotes'
+            }
+        }]
     });
 
     function format(d) {

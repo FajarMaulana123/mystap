@@ -12,6 +12,7 @@ using mystap.Models;
 using System.Data;
 using System.Globalization;
 using System.Linq.Dynamic.Core;
+using System.Runtime.CompilerServices;
 
 namespace mystap.Controllers
 {
@@ -109,7 +110,7 @@ namespace mystap.Controllers
                 Rapat rapat = new Rapat();
                 rapat.id_project = Convert.ToInt32(formcollaction["id_project"]);
                 rapat.judul = formcollaction["judul"];
-                rapat.created_by = 1;
+                rapat.created_by = HttpContext.Session.GetInt32("id");
                 rapat.tanggal = Convert.ToDateTime(formcollaction["tanggal"]);
                 rapat.created_date = DateTime.Now;
                 rapat.deleted = 0;
@@ -330,7 +331,7 @@ namespace mystap.Controllers
                 Steerco steerco = new Steerco();
                 steerco.id_project = Convert.ToInt32(formcollaction["id_project"]);
                 steerco.judul = formcollaction["judul"];
-                steerco.created_by = 1;
+                steerco.created_by = HttpContext.Session.GetInt32("id");
                 steerco.tanggal = Convert.ToDateTime(formcollaction["tanggal"]);
                 steerco.created_date = DateTime.Now;
                 steerco.deleted = 0;
@@ -552,7 +553,7 @@ namespace mystap.Controllers
                 Pir pir = new Pir();
                 pir.id_project = Convert.ToInt32(formcollaction["id_project"]);
                 pir.judul = formcollaction["judul"];
-                pir.created_by = 1;
+                pir.created_by = HttpContext.Session.GetInt32("id");
                 pir.tanggal = Convert.ToDateTime(formcollaction["tanggal"]);
                 pir.created_date = DateTime.Now;
                 pir.deleted = 0;
@@ -788,7 +789,7 @@ namespace mystap.Controllers
                 project.taoh = formcollaction["section"];
                 project.projectNo = formcollaction["kode_plant"] + project.month + project.year;
                 project.active = 1;
-                project.createdBy = 1;
+                project.createdBy = HttpContext.Session.GetInt32("id");
                 project.createdDate = DateTime.Now;
                 project.deleted = 0;
 
@@ -830,7 +831,7 @@ namespace mystap.Controllers
                     obj.tglTA = Convert.ToDateTime(Request.Form["execution_date"].FirstOrDefault()).Date;
                     obj.tglSelesaiTA = Convert.ToDateTime(Request.Form["finish_date"].FirstOrDefault()).Date;
                     obj.lastModify = DateTime.Now;
-                    obj.modifyBy = 1;
+                    obj.modifyBy = HttpContext.Session.GetInt32("id");
                     obj.plansID = Convert.ToInt64(Request.Form["plant"].FirstOrDefault());
                     obj.durasiTABrick = Convert.ToInt32(Request.Form["durasiTABrick"].FirstOrDefault());
                     obj.taoh = Request.Form["section"].FirstOrDefault();
@@ -1089,7 +1090,7 @@ namespace mystap.Controllers
                     equipments.Criticallity = formcollaction["critical"];
                     equipments.Remark = formcollaction["remark"];
                     equipments.deleted = 0;
-                    equipments.createdBy = 1;
+                    equipments.createdBy = HttpContext.Session.GetInt32("id"); 
                     equipments.dateCreated = DateTime.Now;
 
 
@@ -1173,7 +1174,7 @@ namespace mystap.Controllers
                     obj.cost_center = Request.Form["cost_center"].FirstOrDefault();
                     obj.Criticallity = Request.Form["critical"].FirstOrDefault();
                     obj.Remark = Request.Form["remark"].FirstOrDefault();
-                    obj.updatedBy = 1;
+                    obj.updatedBy = HttpContext.Session.GetInt32("id");
 
                     _context.SaveChanges();
                     return Json(new { result = true, cek = true });
@@ -1196,7 +1197,7 @@ namespace mystap.Controllers
 
                 if (obj != null)
                 {
-                    obj.deletedBy = 1;
+                    obj.deletedBy = HttpContext.Session.GetInt32("id");
                     obj.deleted = 1;
                     _context.SaveChanges();
 
@@ -1304,7 +1305,7 @@ namespace mystap.Controllers
                 catalogProfile.equipment_group = formcollaction["equipment_group"];
                 catalogProfile.long_description = formcollaction["long_description"];
                 catalogProfile.created_date = DateTime.Now;
-                catalogProfile.createdBy = 1;
+                catalogProfile.createdBy = HttpContext.Session.GetInt32("id");
                 catalogProfile.deleted = 0;
 
                 Boolean t;
@@ -1342,7 +1343,7 @@ namespace mystap.Controllers
                     obj.equipment_group = Request.Form["equipment_group"].FirstOrDefault();
                     obj.long_description = Request.Form["long_description"].FirstOrDefault();
                     obj.lastmodify = DateTime.Now;
-                    obj.modifyBy = 1;
+                    obj.modifyBy = HttpContext.Session.GetInt32("id");
 
                     _context.SaveChanges();
                     return Json(new { result = true });
@@ -1365,7 +1366,7 @@ namespace mystap.Controllers
 
                 if (obj != null)
                 {
-                    obj.deletedBy = 1;
+                    obj.deletedBy = HttpContext.Session.GetInt32("id");
                     obj.deleted = 1;
                     _context.SaveChanges();
 
@@ -1498,7 +1499,7 @@ namespace mystap.Controllers
                 memo.reqYear = DateTime.Parse(Request.Form["reqDate"].ToString()).Year.ToString();
                 memo.requestor = Convert.ToInt32(formcollaction["requestor"]);
                 memo.showing = Convert.ToInt32(formcollaction["showing"]);
-                memo.createdBy = 1;
+                memo.createdBy = HttpContext.Session.GetInt32("id");
                 memo.deleted = 0;
                 memo.dateCreated = DateTime.Now;
 
@@ -1575,7 +1576,7 @@ namespace mystap.Controllers
                     }
                     obj.showing = Convert.ToInt32(Request.Form["showing"].FirstOrDefault());
                     obj.updated = 1;
-                    obj.updatedBy = 1;
+                    obj.updatedBy = HttpContext.Session.GetInt32("id");
                     _context.SaveChanges();
                     return Json(new { Results = true });
                 }
@@ -1687,7 +1688,7 @@ namespace mystap.Controllers
                 requestor.description = formcollaction["description"];
                 requestor.deleted = 0;
                 //requestor.updated = 0;
-                requestor.createdBy = 1;
+                requestor.createdBy = HttpContext.Session.GetInt32("id");
                 requestor.dateCreated = DateTime.Now;
 
                 Boolean t;
@@ -1723,7 +1724,7 @@ namespace mystap.Controllers
                     obj.description = Request.Form["description"].FirstOrDefault();
                     obj.name = Request.Form["name"].FirstOrDefault();
                     obj.updated = 1;
-                    obj.updatedBy = 1;
+                    obj.updatedBy = HttpContext.Session.GetInt32("id");
 
                     _context.SaveChanges();
                     return Json(new { result = true });
@@ -1747,7 +1748,7 @@ namespace mystap.Controllers
                 if (obj != null)
                 {
                     obj.deleted = 1;
-                    obj.deletedBy = 1;
+                    obj.deletedBy = HttpContext.Session.GetInt32("id");
                     _context.SaveChanges();
 
                     return Json(new { title = "Sukses!", icon = "success", status = "Berhasil Dihapus" });
@@ -1840,7 +1841,7 @@ namespace mystap.Controllers
                 unit.unitGroup = formcollaction["unitGroup"];
                 unit.groupName = formcollaction["groupName"];
                 unit.unitName = formcollaction["unitName"];
-                unit.createdBy = 1;
+                unit.createdBy = HttpContext.Session.GetInt32("id");
                 unit.deleted = 0;
                 unit.dateCreated = DateTime.Now;
 
@@ -1882,7 +1883,7 @@ namespace mystap.Controllers
                     obj.groupName = Request.Form["groupName"].FirstOrDefault();
                     obj.unitName = Request.Form["unitName"].FirstOrDefault();
                     obj.updated = 1;
-                    obj.updatedBy = 1;
+                    obj.updatedBy = HttpContext.Session.GetInt32("id");
                     _context.SaveChanges();
                     return Json(new { result = true });
                 }
@@ -1974,10 +1975,27 @@ namespace mystap.Controllers
                 var project_filter = Request.Form["project"].FirstOrDefault();
                 var disiplin_filter = Request.Form["disiplin"].FirstOrDefault();
 
-               
+                var sql = @"SELECT bom.id, max(bom.no_wo) as no_wo, max(bom.tag_no) as tag_no, max(bom.id_project) as id_project, max(bom.disiplin) as disiplin, max(bom.created_date) as created_date,max(bom.created_by) as created_by ,max(users.alias) as alias, max(bom.last_modify) as last_modify, max(bom.modify_by) as modify_by, max(bom.deleted) as deleted, string_agg(bom_files.files, ';') as file_bom
+                            FROM Mystap.dbo.bom
+                            LEFT JOIN Mystap.dbo.bom_files on bom.id = bom_files.id_bom
+                            LEFT JOIN Mystap.dbo.users on bom.created_by = users.id
+                            LEFT JOIN Mystap.dbo.project on bom.id_project = project.id
+                            where bom.deleted = 0
+                            group by bom.id";
 
-                var customerData = _context.bom.Include("users").Where(s => s.disiplin == disiplin_filter).Where(s => s.id_project == Convert.ToInt64(project_filter)).Where(s => s.deleted == 0).Select(a => new { id = a.id, no_wo = a.no_wo, tag_no = a.tag_no, id_project = a.id_project, disiplin = a.disiplin, created_date = a.created_date, created_by = a.users.alias, last_modify = a.last_modify, modify_by = a.users.alias });
-                var files = _context.bomFiles.Include("bom").Select(a => new { id = a.id, files = a.files });
+                var c = FormattableStringFactory.Create(sql);
+                var customerData = _context.viewBom.FromSql(c);
+
+                if (!string.IsNullOrEmpty(project_filter))
+                {
+                    customerData = customerData.Where(s => s.id_project == Convert.ToInt64(project_filter));
+                }
+
+                if (!string.IsNullOrEmpty(disiplin_filter))
+                {
+                    customerData = customerData.Where(s => s.disiplin == disiplin_filter);
+                }
+
                 if (!(string.IsNullOrEmpty(sortColumn) && string.IsNullOrEmpty(sortColumnDirection)))
                 {
                     customerData = customerData.OrderBy(sortColumn + " " + sortColumnDirection);
@@ -2004,65 +2022,63 @@ namespace mystap.Controllers
         }
 
 		[AuthorizedAction]
-		public IActionResult Create_Bom(BomFiles bomFiles,IFormCollection formcollaction)
+		public IActionResult Create_Bom(IFormCollection formcollaction)
         {
+            Bom bom = new Bom();
+            bom.id_project = Convert.ToInt32(formcollaction["id_project"]);
+            bom.tag_no = formcollaction["tag_no"];
+            bom.no_wo = formcollaction["no_wo"];
+            bom.disiplin = formcollaction["disiplin"];
+            bom.created_date = DateTime.Now;
+            bom.created_by = HttpContext.Session.GetInt32("id");
+            bom.deleted = 0;
+            Boolean t;
+            using var transaction = _context.Database.BeginTransaction();
+            try
+            {
+                _context.bom.Add(bom);
+                _context.SaveChanges();
 
-           
-                Bom bom = new Bom();
-                bom.id_project = Convert.ToInt32(formcollaction["id_project"]);
-                bom.tag_no = formcollaction["tag_no"];
-                bom.no_wo = formcollaction["no_wo"];
-                bom.disiplin = formcollaction["disiplin"];
-                bom.created_date = DateTime.Now;
-                bom.created_by = 1;
-                bom.deleted = 0;
-                using var transaction = _context.Database.BeginTransaction();
-                try
+                var id_bom = bom.id;
+                var files = formcollaction["attach"];
+                if (Request.Form.Files.Count() != 0)
                 {
-                    var id_bom = bom.id;
-                    var files = formcollaction["attach"];
-                    if (Request.Form.Files.Count() != 0)
+                    if (files.Count > 0)
                     {
-                        if (files.Count > 0)
+                        var cek = _context.bomFiles.Where(p => p.id_bom == bom.id).FirstOrDefault();
+                        if (cek != null)
                         {
-                            var cek = _context.bomFiles.Where(p => p.id_bom == bom.id).FirstOrDefault();
-                            if (cek != null)
+                            _context.bomFiles.Where(p => p.id_bom == bom.id).ExecuteDelete();
+                        }
+                        foreach (var val in files)
+                        {
+                            BomFiles bomFiles = new BomFiles();
+                            IFormFile postedFile = Request.Form.Files[0];
+                            string fileName = DateTime.Now.ToString("yyyyMMddHHmmssfff") + "_" + postedFile.FileName;
+                            string path = environment.WebRootPath + "/upload/bom/" + fileName;
+                            using (var stream = System.IO.File.Create(path))
                             {
-                                _context.bomFiles.Where(p => p.id_bom == bom.id).ExecuteDelete();
+                                postedFile.CopyTo(stream);
+                                bomFiles.files = "upload/bom/" + fileName;
+                                
                             }
-                            foreach (var val in files)
-                            {
-                                IFormFile postedFile = Request.Form.Files[0];
-                                string fileName = DateTime.Now.ToString("yyyyMMddHHmmssfff") + "_" + postedFile.FileName;
-                                string path = environment.WebRootPath + "/upload/bom/" + fileName;
-                                using (var stream = System.IO.File.Create(path))
-                                {
-                                    postedFile.CopyTo(stream);
-                                    bomFiles.files = "upload/bom/" + fileName;
-                                    bomFiles.id_bom = (int)id_bom;
-                                }
-                            }
+                            bomFiles.id_bom = (int)id_bom;
+                            _context.bomFiles.Add(bomFiles);
+                            _context.SaveChanges();
                         }
                     }
+                }
 
-                    Boolean t;
-                    if (bom != null)
-                    {
-                        _context.bom.Add(bom);
-                        _context.SaveChanges();
-                        t = true;
-                    }
-                    else
-                    {
-                        t = false;
-                    }
-                    transaction.Commit();
-                    return Json(new { result = t });
-                }
-                catch (Exception)
-                {
-                    throw;
-                }
+                t = true;
+                transaction.Commit();
+            }
+            catch (Exception)
+            {
+                transaction.Rollback();
+                t = false;
+            }
+
+            return Json(new { result = t });
         }
 
 		[AuthorizedAction]
@@ -2080,9 +2096,53 @@ namespace mystap.Controllers
                     obj.no_wo = Request.Form["no_wo"].FirstOrDefault();
                     obj.disiplin = Request.Form["disiplin"].FirstOrDefault();
                     obj.last_modify = DateTime.Now;
-                    obj.modify_by = 1;
-                    _context.SaveChanges();
-                    return Json(new { result = true });
+                    obj.modify_by = HttpContext.Session.GetInt32("id");
+                    Boolean t;
+                    using var transaction = _context.Database.BeginTransaction();
+                    try
+                    {
+                        _context.SaveChanges();
+
+                        var id_bom = bom.id;
+                        var files = Request.Form["attach"];
+                        if (Request.Form.Files.Count() != 0)
+                        {
+                            if (files.Count > 0)
+                            {
+                                var cek = _context.bomFiles.Where(p => p.id_bom == bom.id).FirstOrDefault();
+                                if (cek != null)
+                                {
+                                    _context.bomFiles.Where(p => p.id_bom == bom.id).ExecuteDelete();
+                                }
+                                foreach (var val in files)
+                                {
+                                    BomFiles bomFiles = new BomFiles();
+                                    IFormFile postedFile = Request.Form.Files[0];
+                                    string fileName = DateTime.Now.ToString("yyyyMMddHHmmssfff") + "_" + postedFile.FileName;
+                                    string path = environment.WebRootPath + "/upload/bom/" + fileName;
+                                    using (var stream = System.IO.File.Create(path))
+                                    {
+                                        postedFile.CopyTo(stream);
+                                        bomFiles.files = "upload/bom/" + fileName;
+
+                                    }
+                                    bomFiles.id_bom = (int)id_bom;
+                                    _context.bomFiles.Add(bomFiles);
+                                    _context.SaveChanges();
+                                }
+                            }
+                        }
+
+                        t = true;
+                        transaction.Commit();
+                    }
+                    catch (Exception)
+                    {
+                        transaction.Rollback();
+                        t = false;
+                    }
+
+                    return Json(new { result = t });
                 }
                 return Json(new { result = false });
             }

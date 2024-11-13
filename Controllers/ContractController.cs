@@ -265,7 +265,7 @@ namespace mystap.Controllers
 
                 }
 
-                sow.createdBy = "Rama";
+                sow.createdBy = HttpContext.Session.GetString("alias");
                 sow.createdDate = DateTime.Now;
                 sow.deleted = 0;
                 Boolean t;
@@ -347,7 +347,7 @@ namespace mystap.Controllers
                         obj.file = Request.Form["file_"].FirstOrDefault();
                     }
                   
-                    obj.modifyBy = "Rama";
+                    obj.modifyBy = HttpContext.Session.GetString("alias");
                     obj.lastModify = DateTime.Now;
                     _context.SaveChanges();
                     return Json(new { result = true });
@@ -815,7 +815,7 @@ namespace mystap.Controllers
                 val.targetBukaPH = Convert.ToDateTime(Request.Form["target_buka_ph"].FirstOrDefault()).Date;
                 val.targetSP = Convert.ToDateTime(Request.Form["target_terbit_sp"].FirstOrDefault()).Date;
                 val.dateCreated = DateTime.Now;
-                val.createdBy = 1;
+                val.createdBy = HttpContext.Session.GetInt32("id");
                 val.deleted = 0;
 
                 var durasi = _context.durasi.Where(p => p.id_project == Convert.ToInt64(Request.Form["projectID"].FirstOrDefault()) && p.kat_tender == Request.Form["katTender"].FirstOrDefault()).FirstOrDefault();

@@ -45,7 +45,7 @@
             { data: 'pg', name: 'pg' },
         ],
         "order": [],
-        buttons: /*(user_auth == 'superadmin' || user_auth == 'admin') ?*/ [
+        buttons: (role_ == 'superadmin' || role_ == 'admin') ? [
             {
                 text: '<i class="far fa-edit"></i>Upload PR',
                 className: 'btn btn-warning',
@@ -64,13 +64,13 @@
                 text: '<i class="far fa-file-code"></i> Excel',
                 titleAttr: 'Excel',
             },
-        ] /*: [{
+        ] : [{
             extend: 'excel',
             title: 'Outstanding Reservasi',
             className: 'btn',
             text: '<i class="far fa-file-code"></i> Excel',
             titleAttr: 'Excel',
-        }]*/
+        }]
     });
 
     $("#import-form").validate({

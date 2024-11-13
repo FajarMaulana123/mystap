@@ -42,11 +42,6 @@ $(document).ready(function () {
             }
         },
         columns: [
-            //{
-            //    "data": null, orderable: false, "render": function (data, type, full, meta) {
-            //        return meta.row + 1;
-            //    }
-            //},
             { data: 'contract.noPaket', name: 'contract.noPaket' },
             {
                 render: function (data, type, full, meta) {
@@ -249,8 +244,15 @@ $(document).ready(function () {
                 orderable: false,
                 searchable: false,
                 render: function (data, type, full, meta) {
-                    var actionBtn = '<div class="d-flex"><a href="/edit_contract/' + full.contract.idPaket + '" class="btn btn-xs waves-effect waves-light btn-outline-warning edit mr-1" ><i class="fas fa-pen fa-xs"></i></a><a href="javascript:void(0);" style="margin-left:5px" class="btn btn-danger btn-xs delete " data-id="' + full.contract.idPaket+'"><i class="fas fa-trash fa-xs"></i></a></div>';
-                    return actionBtn;
+                    var val = '<div class="d-flex">';
+                    if (role_ == "superadmin" || role_ == "admin") {
+                        val += '<a href="/edit_contract/' + full.contract.idPaket + '" class="btn btn-xs waves-effect waves-light btn-outline-warning edit mr-1" ><i class="fas fa-pen fa-xs"></i></a>';
+                    }
+                    if (role_ == "superadmin" ) {
+                        val += '<a href="javascript:void(0);" style="margin-left:5px" class="btn btn-danger btn-xs delete " data-id="' + full.contract.idPaket + '"><i class="fas fa-trash fa-xs"></i></a>';
+                    }
+                    val += '</div>';
+                    return val;
                 }
             },
         ],
@@ -285,9 +287,9 @@ $(document).ready(function () {
                     })
                 }
             },
-           /* (user_auth == 'user') ? { "visible": false, "targets": [17] } : {},*/
+            (role_ == 'user') ? { "visible": false, "targets": [18] } : {},
         ],
-        buttons: [{
+        buttons: (role_ == 'superadmin' || role_ == 'admin') ? [{
             text: '<i class="far fa-edit"></i> New',
             className: 'btn btn-success',
             action: function (e, dt, node, config) {
@@ -313,7 +315,23 @@ $(document).ready(function () {
         },
 
 
-        ]
+        ] : [{
+            extend: 'excel',
+            title: 'Kontrak Jasa',
+            className: 'btn',
+            text: '<i class="far fa-file-code"></i> Excel',
+            titleAttr: 'Excel',
+            exportOptions: {
+                columns: ':not(:last-child)',
+            }
+        },
+        {
+            text: '<i class="far fa-file"></i> Summary Progress',
+            className: 'btn btn-warning',
+            action: function (e, dt, node, config) {
+                window.location.href = 'progress';
+            }
+        }]
 
     });
 

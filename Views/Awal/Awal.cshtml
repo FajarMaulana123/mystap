@@ -1,7 +1,8 @@
 ﻿@{
     ViewData["Title"] = "Awal";
 }
-
+@using Microsoft.AspNetCore.Http;
+@inject IHttpContextAccessor Accessor;
 
 <div class="row justify-content-center" style="margin-bottom: 20px;">
   <div class="col-xl-9 col-lg-9 col-md-9 col-sm-12 col-12 layout-spacing "> 
@@ -23,67 +24,71 @@
 </div>
 
 
+@if (Accessor.HttpContext.Session.GetString("statPekerja") == "PLANNER")
+{
+    <div class="row justify-content-center">
+        <div class="col-xl-9 col-lg-9 col-md-9 col-sm-12 col-12 layout-spacing mb-10"> 
+            <div class="panel panel-inverse">
+                <div class="panel-heading">
+                    <h4 class="panel-title"></h4>
+                    <div class="panel-heading-btn">   
+                    </div>
+                </div> 
+                <div class="panel-body">
+                    <div class="row">
+                        <div class="col-xl-4 col-lg-4 col-md-12 col-sm-12 col-12 layout-spacing">
+                            <select name="project_filter" id="project_filter" class="form-control form-control-sm">
+                                @foreach (var val in ViewBag.project)
+                                {
+                                    <option value="@(val.id)"> @(val.description)</option>
+                                }
+                            </select><br>
+                        </div>
 
-<div class="row justify-content-center">
-  <div class="col-xl-9 col-lg-9 col-md-9 col-sm-12 col-12 layout-spacing mb-10"> 
-    <div class="panel panel-inverse">
-      <div class="panel-heading">
-        <h4 class="panel-title"></h4>
-        <div class="panel-heading-btn">   
-        </div>
-      </div> 
-      <div class="panel-body">
-        <div class="row">
-          <div class="col-xl-4 col-lg-4 col-md-12 col-sm-12 col-12 layout-spacing">
-          <select name="project_filter" id="project_filter" class="form-control form-control-sm">
-              
-          </select><br>
-          </div>
-          
-        </div>
-        <div class="row">
-          <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12 layout-spacing">
-            <div class="row gx-2 mb-10px">
-              <div class="col-lg-4 col-sm-4">
-                <div class="widget widget-stats bg-red mb-7px">
-                <div class="stats-icon"><i class="fa fa-clipboard fa-fw"></i></div>
-                    <div class="stats-content">
-                        <div class="stats-title">Not Identify</div>
-                        <div class="stats-number not_planned"></div>
-                       
+                    </div>
+                    <div class="row">
+                        <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12 layout-spacing">
+                            <div class="row gx-2 mb-10px">
+                                <div class="col-lg-4 col-sm-4">
+                                    <div class="widget widget-stats bg-red mb-7px">
+                                        <div class="stats-icon"><i class="fa fa-clipboard fa-fw"></i></div>
+                                        <div class="stats-content">
+                                            <div class="stats-title">Not Identify</div>
+                                            <div class="stats-number not_planned"></div>
+
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-lg-4 col-sm-4">
+                                    <div class="widget widget-stats bg-orange mb-7px">
+                                        <div class="stats-icon"><i class="fa fa-clock fa-fw"></i></div>
+                                        <div class="stats-content">
+                                            <div class="stats-title">Not Completed</div>
+                                            <div class="stats-number not_completed"></div>
+
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-lg-4 col-sm-4">
+                                    <div class="widget widget-stats bg-green  mb-7px">
+                                        <div class="stats-icon"><i class="fa fa-clipboard-check fa-fw"></i></div>
+                                        <div class="stats-content">
+                                            <div class="stats-title">Completed</div>
+                                            <div class="stats-number completed"></div>
+
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
-            <div class="col-lg-4 col-sm-4">
-                <div class="widget widget-stats bg-orange mb-7px">
-                    <div class="stats-icon"><i class="fa fa-clock fa-fw"></i></div>
-                    <div class="stats-content">
-                        <div class="stats-title">Not Completed</div>
-                        <div class="stats-number not_completed"></div>
-                        
-                    </div>
-                </div>
-            </div>
-            <div class="col-lg-4 col-sm-4">
-                <div class="widget widget-stats bg-green  mb-7px">
-                    <div class="stats-icon"><i class="fa fa-clipboard-check fa-fw"></i></div>
-                    <div class="stats-content">
-                        <div class="stats-title">Completed</div>
-                        <div class="stats-number completed"></div>
-                      
-                    </div>
-                </div>
-            </div>
-            
-          </div>
         </div>
-      </div>
     </div>
-  </div>
-</div>
-</div>
+}
 
-   
 
 
     <!--  END CONTENT AREA  -->

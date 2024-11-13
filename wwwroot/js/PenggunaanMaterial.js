@@ -56,10 +56,10 @@
             { data: 'prognosa_matl', name: 'prognosa_matl' },
         ],
         columnDefs: [
-            
+            (role_ == 'user') ? { "visible": false, "targets": [0] } : {},
         ],
         order: [],
-        buttons:  [
+        buttons: (role_ == 'superadmin' || role_ == 'admin') ?[
             {
                 text: 'Set Penggunaan Material',
                 className: 'btn btn-success',
@@ -75,7 +75,13 @@
                 text: '<i class="far fa-file-code"></i> Excel',
                 titleAttr: 'Excel',
             },
-        ] 
+        ] : [{
+            extend: 'excel',
+            title: 'Outstanding Reservasi',
+            className: 'btn',
+            text: '<i class="far fa-file-code"></i> Excel',
+            titleAttr: 'Excel',
+        }]
 
     });
 

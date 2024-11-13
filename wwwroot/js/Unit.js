@@ -31,16 +31,23 @@
             { data: 'unitName', name: 'unitName' },
             {
                 "render": function (data, type, full, meta) {
-                    return '<div class="d-flex"><a href="javascript:void(0);" class="btn btn-warning  btn-xs edit mr-1" data-id="' + full.id + '"  data-unitPlan="' + full.unitPlan + '" data-codeJob="'+ full.codeJob + '" data-unitCode="' + full.unitCode + '" data-unitProses="' + full.unitProses + '" data-unitKilang="' + full.unitKilang + '" data-unitGroup="' + full.unitGroup + '" data-groupName="' + full.groupName + '" data-unitName="' + full.unitName + '"><i class="fas fa-pen fa-xs"></i></a><a href = "javascript:void(0);" style = "margin-left:5px" class="btn btn-danger btn-xs delete " data-id="' + full.id + '" > <i class="fas fa-trash fa-xs"></i></a ></div > ';
+                    var val = "";
+                    if (role_ == "superadmin" || role_ == "admin") {
+                        val += '<div class="d-flex"><a href="javascript:void(0);" class="btn btn-warning  btn-xs edit mr-1" data-id="' + full.id + '"  data-unitPlan="' + full.unitPlan + '" data-codeJob="' + full.codeJob + '" data-unitCode="' + full.unitCode + '" data-unitProses="' + full.unitProses + '" data-unitKilang="' + full.unitKilang + '" data-unitGroup="' + full.unitGroup + '" data-groupName="' + full.groupName + '" data-unitName="' + full.unitName + '"><i class="fas fa-pen fa-xs"></i></a>';
+                    }
+                    if (role_ == "superadmin" ) {
+                        val += '<a href = "javascript:void(0);" style = "margin-left:5px" class="btn btn-danger btn-xs delete " data-id="' + full.id + '" > <i class="fas fa-trash fa-xs"></i></a ></div > ';
+                    }
+                    return val;
                 },
                 orderable: false,
                 searchable: false
             },
         ],
-        //columnDefs: [
-        //    (user_auth == 'user') ? { "visible": false, "targets": [9] } : {},
-        //],
-        buttons:/* (user_auth == 'superadmin' || user_auth == 'admin') ? */[{
+        columnDefs: [
+            (role_ == 'user') ? { "visible": false, "targets": [9] } : {},
+        ],
+        buttons: (role_ == 'superadmin' || role_ == 'admin') ? [{
             text: '<i class="far fa-edit"></i> New',
             className: 'btn btn-success',
             action: function (e, dt, node, config) {
@@ -62,7 +69,7 @@
                 columns: ':not(:last-child)',
             }
         },
-        ] /*: [{
+        ] : [{
             extend: 'excel',
             title: 'Unit',
             className: 'btn',
@@ -71,7 +78,7 @@
             exportOptions: {
                 columns: ':not(:last-child)',
             }
-        }]*/
+        }]
 
     });
 

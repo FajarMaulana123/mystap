@@ -134,7 +134,7 @@ $(document).ready(function () {
             //        })
             //    }
             //},
-           /* { "visible": false, "targets": [0] } */
+            (role_ == 'user') ? { "visible": false, "targets": [0] } : {},
         ],
         columns: [
             {
@@ -146,6 +146,7 @@ $(document).ready(function () {
             },
             { data: 'eqTagNo', name: 'eqTagNo' },
             {
+                data: 'd.jobDesc', name: 'd.jobDesc',
                 render: function (data, type, full, meta) {
                     return full.d.jobDesc;
                 }
@@ -219,7 +220,7 @@ $(document).ready(function () {
             },
         ],
         order: [],
-        buttons: [{
+        buttons: (role_ == 'superadmin' || role_ == 'admin') ? [{
             text: 'Dikerjakan',
             className: 'btn btn-success',
             action: function (e, dt, node, config) {
@@ -245,7 +246,7 @@ $(document).ready(function () {
                 $('#status_').val('tidak_dikerjakan');
                 document.getElementById('mitigasi_').style.display = 'block';
             }
-        },]
+         },] : []
     });
 
     $('body').on('click', '.check-all', function () {

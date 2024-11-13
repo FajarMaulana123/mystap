@@ -24,32 +24,58 @@
         },
         columnDefs: [
             { className: 'text-center', targets: [4, 5] },
-            /*(user_auth == 'user') ? { "visible": false, "targets": [5] } : {},*/
+            (role_ == 'user') ? { "visible": false, "targets": [6] } : {},
         ],
         columns: [
             { data: 'tag_no', name: 'tag_no' },
             { data: 'no_wo', name: 'no_wo' },
             { data: 'disiplin', name: 'disiplin' },
-            { data: 'created_by', name: 'users.alias' },
-            { data: 'created_date', name: 'created_date' },
+            { data: 'alias', name: 'alias' },
+            {
+                data: 'created_date', name: 'created_date',
+                render: function (data, type, full, meta) {
+                    var date = full.created_date;
+                    if (date != null) {
+                        return date.split('T')[0];
+                    } else {
+                        return "";
+                    }
+                }
+            },
             {
 
                 "render": function (data, type, full, meta) {
-                    return '<a href="' + full.files + '" class="badge bg-info" target="blank_"><i class="far fa-copy"></i> file</a>';
+                    var bom = "";
+                    if (full.file_bom != null) {
+                        var bom_file = full.file_bom.split(";");
+                        bom_file.forEach(function (val) {
+                            bom += '<a href="' + val + '" class="badge bg-success" target="blank_"><i class="far fa-copy"></i> file</a>';
+                        });
+                    }
+                    return bom;
                 },
                 orderable: false,
                 searchable: false
             },
             {
                 "render": function (data, type, full, meta) {
-                    return '<div class="d-flex"><a href="javascript:void(0);" class="btn btn-warning  btn-xs edit mr-1" data-id="' + full.id + '"data-id_project="' + full.id_project + '" data-tag_no="' + full.tag_no + '" data-no_wo="' + full.no_wo + '" data-disiplin="' + full.disiplin + '" ><i class="fas fa-pen fa-xs"></i></a><a href = "javascript:void(0);" style = "margin-left:5px" class="btn btn-danger btn-xs delete " data-id="' + full.id + '" > <i class="fas fa-trash fa-xs"></i></a ></div > ';
+                    var val = '<div class="d-flex">';
+                    if (role_ == "superadmin" || role_ == "admin") {
+                        val += '<a href="javascript:void(0);" class="btn btn-warning  btn-xs edit mr-1" data-id="' + full.id + '"data-id_project="' + full.id_project + '" data-tag_no="' + full.tag_no + '" data-no_wo="' + full.no_wo + '" data-disiplin="' + full.disiplin + '" ><i class="fas fa-pen fa-xs"></i></a>'; 
+                    }
+
+                    if (role_ == "superadmin") {
+                        val += '<a href = "javascript:void(0);" style = "margin-left:5px" class="btn btn-danger btn-xs delete " data-id="' + full.id + '" > <i class="fas fa-trash fa-xs"></i></a>';
+                    }
+                    val += '</div>';
+                    return val
                 },
                 orderable: false,
                 searchable: false
             },
         ],
 
-        buttons: /*(user_auth == 'superadmin' || user_auth == 'admin') ?*/ [{
+        buttons: (role_ == 'superadmin' || role_ == 'admin') ? [{
             text: '<i class="far fa-edit"></i> New',
             className: 'btn btn-success',
             action: function (e, dt, node, config) {
@@ -73,23 +99,22 @@
         },
 
 
-        //] : [{
-        //    extend: 'excel',
-        //    title: 'Plant',
-        //    className: 'btn',
-        //    text: '<i class="far fa-file-code"></i> Excel',
-        //    titleAttr: 'Excel',
-        //    exportOptions: {
-        //        columns: ':not(:last-child)',
-        //    }
-            //}
-        ]
+        ] : [{
+            extend: 'excel',
+            title: 'Plant',
+            className: 'btn',
+            text: '<i class="far fa-file-code"></i> Excel',
+            titleAttr: 'Excel',
+            exportOptions: {
+                columns: ':not(:last-child)',
+            }
+        }]
     });
     // table.button( 0 ).nodes().css('height', '35px')
 
     $(document).on('click', '#filter', function () {
         var project = $('#project_filter').find(':selected').data('desc');
-        $('#title-bom').html('Data BOM ( ' + project + ' )');
+        //$('#title-bom').html('Data BOM ( ' + project + ' )');
         table.ajax.reload();
     })
 

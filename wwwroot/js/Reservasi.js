@@ -155,11 +155,11 @@ $(document).ready(function () {
             { data: 'action', name: 'action', orderable: false, searchable: false },
 
         ],
-       /* columnDefs: [
-            (user_auth == 'user' || user_auth == 'admin') ? { "visible": false, "targets": [21] } : {},+
-        ],*/
+        columnDefs: [
+            (role_ == 'user' || role_ == 'admin') ? { "visible": false, "targets": [21] } : {},
+        ],
         "order": [],
-        buttons: /*(user_auth == 'superadmin' || user_auth == 'admin') ?*/ [
+        buttons: (role_ == 'superadmin' || role_ == 'admin') ? [
             {
                 text: '<i class="fas fa-upload"></i> ORDER',
                 className: 'btn btn-danger',
@@ -258,13 +258,13 @@ $(document).ready(function () {
             //     }
             // },     
 
-        ] /*: [{
+        ] : [{
             extend: 'excel',
             title: 'Data Reservasi',
             className: 'btn',
             text: '<i class="far fa-file-code"></i> Export Excel',
             titleAttr: 'Excel',
-        }]*/
+        }]
     });
 
     $(document).on('click', '.delete', function () {

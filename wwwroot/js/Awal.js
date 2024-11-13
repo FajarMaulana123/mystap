@@ -8,16 +8,9 @@
                 lldi_filter: lldi_filter
             },
             success: function (res) {
-                var datas = res.data;
-                if (datas != null) {
-                    $('.not_planned').html(res.data.not_planned);
-                    $('.not_completed').html(res.data.not_completed);
-                    $('.completed').html(res.data.completed);
-                } else {
-                    $('.not_planned').html('0');
-                    $('.not_completed').html('0');
-                    $('.completed').html('0');
-                }
+                $('.not_planned').html(res.not_planned);
+                $('.not_completed').html(res.not_completed);
+                $('.completed').html(res.completed);
 
                 // $('.detail_outs_ta_all').html('<a href="/detail_outs_ta/'+project_id+'/ta_all" target="_blank">Lihat Detail <i class="fa fa-arrow-alt-circle-right"></i></a>');
                 // $('.detail_outs_ta_lldi').html('<a href="/detail_outs_ta/'+project_id+'/ta_lldi" target="_blank">Lihat Detail <i class="fa fa-arrow-alt-circle-right"></i></a>');

@@ -57,7 +57,15 @@
 
             {
                 "render": function (data, type, full, meta) {
-                    return '<div class="d-flex"><a href="javascript:void(0);" class="btn btn-warning  btn-xs edit mr-1" data-id="' + full.id + '" data-id_project="' + full.id_project + '" data-kat_tender="' + full.kat_tender + '" data-susun_kak="' + full.susun_kak + '" data-susun_oe="' + full.susun_oe + '" data-persetujuan="' + full.persetujuan + '" data-kirim_ke_co="' + full.kirim_ke_co + '" data-pengumuman_pendaftaran="' + full.pengumuman_pendaftaran + '" data-sertifikasi="' + full.sertifikasi + '" data-prakualifikasi="' + full.prakualifikasi + '" data-undangan="' + full.undangan + '" data-pemberian="' + full.pemberian + '" data-penyampaian="' + full.penyampaian + '" data-pembukaan="' + full.pembukaan + '" data-evaluasi="' + full.evaluasi + '" data-negosiasi="' + full.negosiasi + '" data-usulan="' + full.usulan + '" data-keputusan="' + full.keputusan + '" data-pengumuman_pemenang="' + full.pengumuman_pemenang + '" data-pengajuan_sanggah="' + full.pengajuan_sanggah + '" data-jawaban_sanggah="' + full.jawaban_sanggah + '" data-tunjuk_pemenang="' + full.tunjuk_pemenang + '" data-proses_spb="' + full.proses_spb + '"><i class="fas fa-pen fa-xs"></i></a><a href = "javascript:void(0);" style = "margin-left:5px" class="btn btn-danger btn-xs delete " data-id="' + full.id + '" > <i class="fas fa-trash fa-xs"></i></a ></div > ';
+                    var val = '<div class="d-flex">';
+                    if (role_ == "superadmin" || role_ == "admin") {
+                        val += '<a href="javascript:void(0);" class="btn btn-warning  btn-xs edit mr-1" data-id="' + full.id + '" data-id_project="' + full.id_project + '" data-kat_tender="' + full.kat_tender + '" data-susun_kak="' + full.susun_kak + '" data-susun_oe="' + full.susun_oe + '" data-persetujuan="' + full.persetujuan + '" data-kirim_ke_co="' + full.kirim_ke_co + '" data-pengumuman_pendaftaran="' + full.pengumuman_pendaftaran + '" data-sertifikasi="' + full.sertifikasi + '" data-prakualifikasi="' + full.prakualifikasi + '" data-undangan="' + full.undangan + '" data-pemberian="' + full.pemberian + '" data-penyampaian="' + full.penyampaian + '" data-pembukaan="' + full.pembukaan + '" data-evaluasi="' + full.evaluasi + '" data-negosiasi="' + full.negosiasi + '" data-usulan="' + full.usulan + '" data-keputusan="' + full.keputusan + '" data-pengumuman_pemenang="' + full.pengumuman_pemenang + '" data-pengajuan_sanggah="' + full.pengajuan_sanggah + '" data-jawaban_sanggah="' + full.jawaban_sanggah + '" data-tunjuk_pemenang="' + full.tunjuk_pemenang + '" data-proses_spb="' + full.proses_spb + '"><i class="fas fa-pen fa-xs"></i></a>';
+                    }
+                    if (role_ == "superadmin") {
+                        val += '<a href = "javascript:void(0);" style = "margin-left:5px" class="btn btn-danger btn-xs delete " data-id="' + full.id + '" > <i class="fas fa-trash fa-xs"></i></a>';
+                    }
+                    val += '</div>';
+                    return val;
                 },
                 orderable: false,
                 searchable: false
@@ -74,9 +82,9 @@
 
 
             },
-           /* (user_auth == 'user') ? { "visible": false, "targets": [22] } : {},*/
+            (role_ == 'user') ? { "visible": false, "targets": [23] } : {},
         ],
-        buttons: /*(user_auth == 'superadmin' || user_auth == 'admin') ?*/ [{
+        buttons: (role_ == 'superadmin' || role_ == 'admin') ? [{
             text: '<i class="far fa-edit"></i> New',
             className: 'btn btn-success',
             action: function (e, dt, node, config) {
@@ -99,7 +107,7 @@
             exportOptions: {
                 columns: ':not(:last-child)',
             }
-        }] /*: [{
+        }] : [{
             extend: 'excel',
             title: 'Project',
             className: 'btn btn-outline-primary',
@@ -108,7 +116,7 @@
             exportOptions: {
                 columns: ':not(:last-child)',
             }
-        }]*/
+        }]
     });
     // table.button( 0 ).nodes().css('height', '35px')
 

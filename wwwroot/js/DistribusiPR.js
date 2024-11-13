@@ -133,13 +133,13 @@ $(document).ready(function () {
 
     var targets_ = [];
 
-    //if (fungsi_user != 'TA') {
-    //    targets_ = [13, 14];
-    //}
+    if (fungsi_user != 'TA') {
+        targets_ = [13, 14];
+    }
 
-    //if (fungsi_user == 'INVENTORY') {
-    //    targets_ = [13, 15];
-    //}
+    if (fungsi_user == 'INVENTORY') {
+        targets_ = [13, 15];
+    }
 
 
     table = $('#table').DataTable({
@@ -280,9 +280,9 @@ $(document).ready(function () {
                     })
                 }
             },
-            /*(user_auth == 'user') ? { "visible": false, "targets": [0] } : {},*/
+            (role_ == 'user') ? { "visible": false, "targets": [0] } : {},
         ],
-        buttons: [
+        buttons: (role_ == 'superadmin' || role_ == 'admin' && fungsi_user == 'PURCHASING') ? [
             // {
             //     text: 'Set Buyer',
             //     className: 'btn btn-success',
@@ -343,15 +343,14 @@ $(document).ready(function () {
             //         $('#keterangan').modal('show');
             //     }
             // },
-        ] 
-        //: (fungsi_user == 'TA' || fungsi_user == 'INVENTORY') ? [{
-        //    text: 'Isi DT',
-        //    className: 'btn btn-info',
-        //    action: function (e, dt, node, config) {
-        //        $('#dt-form')[0].reset();
-        //        $('#dt').modal('show');
-        //    }
-        //}] : []
+        ] : (fungsi_user == 'TA' || fungsi_user == 'INVENTORY') ? [{
+            text: 'Isi DT',
+            className: 'btn btn-info',
+            action: function (e, dt, node, config) {
+                $('#dt-form')[0].reset();
+                $('#dt').modal('show');
+            }
+        }] : []
     });
 
 

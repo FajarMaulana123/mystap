@@ -1,11 +1,11 @@
-﻿using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
+﻿using Microsoft.EntityFrameworkCore;
+
 namespace mystap.Models
 {
-    public class Bom
+    [Keyless]
+    public class ViewBom
     {
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public long id { get; set; }
+        public long? id { get; set; }
         public string? no_wo { get; set; }
         public string? tag_no { get; set; }
         public long? id_project { get; set; }
@@ -15,8 +15,8 @@ namespace mystap.Models
         public DateTime? last_modify { get; set; }
         public long? modify_by { get; set; }
         public int? deleted { get; set; }
+        public string? file_bom { get; set; }
+        public string? alias { get; set; }
 
-    
-       
     }
 }
