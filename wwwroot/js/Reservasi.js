@@ -152,8 +152,17 @@ $(document).ready(function () {
             { data: 'dt_', name: 'dt_' },
             { data: 'prognosa_', name: 'prognosa_' },
             { data: 'md', name: 'md' },
-            { data: 'action', name: 'action', orderable: false, searchable: false },
+            {
+                orderable: false, searchable: false,
+                render: function (data, type, full, meta) {
+                    var val = "";
+                    if (role_ == "superadmin") {
 
+                        val += '<div class="d-flex"><a href="javascript:void(0);" style="margin-left:5px" class="btn btn-xs waves-effect waves-light btn-outline-danger delete " data-order="' + full.order + '"  data-itm="'+ full.itm +'"><i class="fas fa-trash fa-xs"></i></a></div>';
+                    }
+                    return val;
+                }
+            },
         ],
         columnDefs: [
             (role_ == 'user' || role_ == 'admin') ? { "visible": false, "targets": [21] } : {},
@@ -269,7 +278,6 @@ $(document).ready(function () {
 
     $(document).on('click', '.delete', function () {
         var order = $(this).data('order');
-        var material = $(this).data('material');
         var itm = $(this).data('itm');
         Swal.fire({
             title: 'Apakah Anda Yakin?',
@@ -285,7 +293,6 @@ $(document).ready(function () {
                     type: "POST",
                     data: {
                         order: order,
-                        material: material,
                         itm: itm,
                     },
                     dataType: "JSON",

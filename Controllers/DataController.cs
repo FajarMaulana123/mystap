@@ -117,30 +117,31 @@ namespace mystap.Controllers
 
                 if (Request.Form.Files.Count() != 0)
                 {
-                    
-                    if (rapat.materi == null)
+                    var i = 0;
+                    foreach (var val in Request.Form.Files)
                     {
-                        IFormFile postedFile = Request.Form.Files[0];
-                        string fileName = DateTime.Now.ToString("yyyyMMddHHmmssfff") + "_" + postedFile.FileName;
-                        string path = environment.WebRootPath + "/upload/rapat/materi/" + fileName;
-                        using (var stream = System.IO.File.Create(path))
+                        IFormFile postFile = Request.Form.Files[i];
+                        string fileName = DateTime.Now.ToString("yyyyMMddHHmmssfff") + "_" + postFile.FileName;
+                        if (postFile.Name == "materi")
                         {
-                            postedFile.CopyTo(stream);
-                            rapat.materi = "upload/rapat/materi/" + fileName;
+                            string path = environment.WebRootPath + "/upload/rapat/materi/" + fileName;
+                            using (var stream = System.IO.File.Create(path))
+                            {
+                                postFile.CopyTo(stream);
+                                rapat.materi = "upload/rapat/materi/" + fileName;
+                            }
                         }
-                    }
-                    if(rapat.notulen == null)
-                    {
-                        IFormFile postedFile2 = Request.Form.Files[1];
-                        string fileName2 = DateTime.Now.ToString("yyyyMMddHHmmssfff") + "_" + postedFile2.FileName;
-                        string path = environment.WebRootPath + "/upload/rapat/notulen/" + fileName2;
-                        using (var stream = System.IO.File.Create(path))
+                        if (postFile.Name == "notulen")
                         {
-                            postedFile2.CopyTo(stream);
-                            rapat.notulen = "upload/rapat/notulen/" + fileName2;
+                            string path = environment.WebRootPath + "/upload/rapat/notulen/" + fileName;
+                            using (var stream = System.IO.File.Create(path))
+                            {
+                                postFile.CopyTo(stream);
+                                rapat.notulen = "upload/rapat/notulen/" + fileName;
+                            }
                         }
+                        i++;
                     }
-                   
 
                 }
                 
@@ -182,38 +183,43 @@ namespace mystap.Controllers
 
                     if (Request.Form.Files.Count() != 0)
                     {
-                        if (obj.materi != null)
+                        var i = 0;
+                        foreach (var val in Request.Form.Files)
                         {
-                            string ExitingFile = environment.WebRootPath + "/" + obj.materi;
-                            System.IO.File.Delete(ExitingFile);
-
-                            IFormFile postedFile = Request.Form.Files[0];
-                            string fileName = DateTime.Now.ToString("yyyyMMddHHmmssfff") + "_" + postedFile.FileName;
-                            string path = environment.WebRootPath + "/upload/rapat/materi/" + fileName;
-
-                            using (var stream = System.IO.File.Create(path))
+                            IFormFile postFile = Request.Form.Files[i];
+                            string fileName = DateTime.Now.ToString("yyyyMMddHHmmssfff") + "_" + postFile.FileName;
+                            if (postFile.Name == "materi")
                             {
-                                postedFile.CopyTo(stream);
-                                obj.materi = "upload/rapat/materi/" + fileName;
+                                string ExitingFile = environment.WebRootPath + "/" + Request.Form["materi_"].FirstOrDefault();
+                                System.IO.File.Delete(ExitingFile);
+
+                                string path = environment.WebRootPath + "/upload/rapat/materi/" + fileName;
+                                using (var stream = System.IO.File.Create(path))
+                                {
+                                    postFile.CopyTo(stream);
+                                    obj.materi = "upload/rapat/materi/" + fileName;
+                                }
                             }
-                        }
-                        if (obj.notulen != null)
-                        {
-                            string ExitingFile = environment.WebRootPath + "/" + obj.notulen;
-                            System.IO.File.Delete(ExitingFile);
-
-                            IFormFile postedFile = Request.Form.Files[1];
-                            string fileName2 = DateTime.Now.ToString("yyyyMMddHHmmssfff") + "_" + postedFile.FileName;
-                            string path = environment.WebRootPath + "/upload/rapat/notulen/" + fileName2;
-
-                            using (var stream = System.IO.File.Create(path))
+                            if (postFile.Name == "notulen")
                             {
-                                postedFile.CopyTo(stream);
-                                obj.notulen = "upload/rapat/notulen/" + fileName2;
+                                string ExitingFile = environment.WebRootPath + "/" + Request.Form["notulen_"].FirstOrDefault();
+                                System.IO.File.Delete(ExitingFile);
+
+                                string path = environment.WebRootPath + "/upload/rapat/notulen/" + fileName;
+                                using (var stream = System.IO.File.Create(path))
+                                {
+                                    postFile.CopyTo(stream);
+                                    obj.notulen = "upload/rapat/notulen/" + fileName;
+                                }
                             }
+                            i++;
                         }
 
-
+                    }
+                    else
+                    {
+                        obj.materi = Request.Form["materi_"].FirstOrDefault();
+                        obj.notulen = Request.Form["notulen_"].FirstOrDefault();
                     }
                     _context.SaveChanges();
                     return Json(new { result = true });
@@ -338,30 +344,31 @@ namespace mystap.Controllers
 
                 if (Request.Form.Files.Count() != 0)
                 {
-
-                    if (steerco.materi == null)
+                    var i = 0;
+                    foreach(var val in Request.Form.Files)
                     {
-                        IFormFile postFile = Request.Form.Files[0];
+                        IFormFile postFile = Request.Form.Files[i];
                         string fileName = DateTime.Now.ToString("yyyyMMddHHmmssfff") + "_" + postFile.FileName;
-                        string path = environment.WebRootPath + "/upload/steerco/materi/" + fileName;
-                        using (var stream = System.IO.File.Create(path))
+                        if(postFile.Name == "materi")
                         {
-                            postFile.CopyTo(stream);
-                            steerco.materi = "upload/steerco/materi/" + fileName;
+                            string path = environment.WebRootPath + "/upload/steerco/materi/" + fileName;
+                            using (var stream = System.IO.File.Create(path))
+                            {
+                                postFile.CopyTo(stream);
+                                steerco.materi = "upload/steerco/materi/" + fileName;
+                            }
                         }
-                    }
-                    if (steerco.notulen == null)
-                    {
-                        IFormFile postFile2 = Request.Form.Files[1];
-                        string fileName2 = DateTime.Now.ToString("yyyyMMddHHmmssfff") + "_" + postFile2.FileName;
-                        string path = environment.WebRootPath + "/upload/steerco/notulen/" + fileName2;
-                        using (var stream = System.IO.File.Create(path))
+                        if (postFile.Name == "notulen")
                         {
-                            postFile2.CopyTo(stream);
-                            steerco.notulen = "upload/steerco/notulen/" + fileName2;
+                            string path = environment.WebRootPath + "/upload/steerco/notulen/" + fileName;
+                            using (var stream = System.IO.File.Create(path))
+                            {
+                                postFile.CopyTo(stream);
+                                steerco.notulen = "upload/steerco/notulen/" + fileName;
+                            }
                         }
+                        i++;
                     }
-
 
                 }
 
@@ -401,38 +408,43 @@ namespace mystap.Controllers
 
                     if (Request.Form.Files.Count() != 0)
                     {
-                        if (obj.materi != null)
+
+                        var i = 0;
+                        foreach (var val in Request.Form.Files)
                         {
-                            string ExitingFile = environment.WebRootPath + "/" + obj.materi;
-                            System.IO.File.Delete(ExitingFile);
-
-                            IFormFile postedFile = Request.Form.Files[0];
-                            string fileName = DateTime.Now.ToString("yyyyMMddHHmmssfff") + "_" + postedFile.FileName;
-                            string path = environment.WebRootPath + "/upload/steerco/materi/" + fileName;
-
-                            using (var stream = System.IO.File.Create(path))
+                            IFormFile postFile = Request.Form.Files[i];
+                            string fileName = DateTime.Now.ToString("yyyyMMddHHmmssfff") + "_" + postFile.FileName;
+                            if (postFile.Name == "materi")
                             {
-                                postedFile.CopyTo(stream);
-                                obj.materi = "upload/steerco/materi/" + fileName;
+                                string ExitingFile = environment.WebRootPath + "/" + Request.Form["materi_"].FirstOrDefault();
+                                System.IO.File.Delete(ExitingFile);
+
+                                string path = environment.WebRootPath + "/upload/steerco/materi/" + fileName;
+                                using (var stream = System.IO.File.Create(path))
+                                {
+                                    postFile.CopyTo(stream);
+                                    obj.materi = "upload/steerco/materi/" + fileName;
+                                }
                             }
-                        }
-                        if (obj.notulen != null)
-                        {
-                            string ExitingFile = environment.WebRootPath + "/" + obj.notulen;
-                            System.IO.File.Delete(ExitingFile);
-
-                            IFormFile postedFile = Request.Form.Files[1];
-                            string fileName2 = DateTime.Now.ToString("yyyyMMddHHmmssfff") + "_" + postedFile.FileName;
-                            string path = environment.WebRootPath + "/upload/steerco/notulen/" + fileName2;
-
-                            using (var stream = System.IO.File.Create(path))
+                            if (postFile.Name == "notulen")
                             {
-                                postedFile.CopyTo(stream);
-                                obj.notulen = "upload/steerco/notulen/" + fileName2;
+                                string ExitingFile = environment.WebRootPath + "/" + Request.Form["notulen_"].FirstOrDefault();
+                                System.IO.File.Delete(ExitingFile);
+
+                                string path = environment.WebRootPath + "/upload/steerco/notulen/" + fileName;
+                                using (var stream = System.IO.File.Create(path))
+                                {
+                                    postFile.CopyTo(stream);
+                                    obj.notulen = "upload/steerco/notulen/" + fileName;
+                                }
                             }
+                            i++;
                         }
-
-
+                    }
+                    else
+                    {
+                        obj.materi = Request.Form["materi_"].FirstOrDefault();
+                        obj.notulen = Request.Form["notulen_"].FirstOrDefault();
                     }
                     _context.SaveChanges();
                     return Json(new { result = true });
@@ -560,30 +572,31 @@ namespace mystap.Controllers
 
                 if (Request.Form.Files.Count() != 0)
                 {
-
-                    if (pir.materi == null)
+                    var i = 0;
+                    foreach (var val in Request.Form.Files)
                     {
-                        IFormFile postedFile = Request.Form.Files[0];
-                        string fileName = DateTime.Now.ToString("yyyyMMddHHmmssfff") + "_" + postedFile.FileName;
-                        string path = environment.WebRootPath + "/upload/pir/materi/" + fileName;
-                        using (var stream = System.IO.File.Create(path))
+                        IFormFile postFile = Request.Form.Files[i];
+                        string fileName = DateTime.Now.ToString("yyyyMMddHHmmssfff") + "_" + postFile.FileName;
+                        if (postFile.Name == "materi")
                         {
-                            postedFile.CopyTo(stream);
-                            pir.materi = "upload/pir/materi/" + fileName;
+                            string path = environment.WebRootPath + "/upload/pir/materi/" + fileName;
+                            using (var stream = System.IO.File.Create(path))
+                            {
+                                postFile.CopyTo(stream);
+                                pir.materi = "upload/pir/materi/" + fileName;
+                            }
                         }
-                    }
-                    if (pir.notulen == null)
-                    {
-                        IFormFile postedFile2 = Request.Form.Files[1];
-                        string fileName2 = DateTime.Now.ToString("yyyyMMddHHmmssfff") + "_" + postedFile2.FileName;
-                        string path = environment.WebRootPath + "/upload/pir/notulen/" + fileName2;
-                        using (var stream = System.IO.File.Create(path))
+                        if (postFile.Name == "notulen")
                         {
-                            postedFile2.CopyTo(stream);
-                            pir.notulen = "upload/pir/notulen/" + fileName2;
+                            string path = environment.WebRootPath + "/upload/pir/notulen/" + fileName;
+                            using (var stream = System.IO.File.Create(path))
+                            {
+                                postFile.CopyTo(stream);
+                                pir.notulen = "upload/pir/notulen/" + fileName;
+                            }
                         }
+                        i++;
                     }
-
 
                 }
 
@@ -625,38 +638,42 @@ namespace mystap.Controllers
 
                     if (Request.Form.Files.Count() != 0)
                     {
-                        if (obj.materi != null)
+                        var i = 0;
+                        foreach (var val in Request.Form.Files)
                         {
-                            string ExitingFile = environment.WebRootPath + "/" + obj.materi;
-                            System.IO.File.Delete(ExitingFile);
-
-                            IFormFile postedFile = Request.Form.Files[0];
-                            string fileName = DateTime.Now.ToString("yyyyMMddHHmmssfff") + "_" + postedFile.FileName;
-                            string path = environment.WebRootPath + "/upload/pir/materi/" + fileName;
-
-                            using (var stream = System.IO.File.Create(path))
+                            IFormFile postFile = Request.Form.Files[i];
+                            string fileName = DateTime.Now.ToString("yyyyMMddHHmmssfff") + "_" + postFile.FileName;
+                            if (postFile.Name == "materi")
                             {
-                                postedFile.CopyTo(stream);
-                                obj.materi = "upload/pir/materi/" + fileName;
+                                string ExitingFile = environment.WebRootPath + "/" + Request.Form["materi_"].FirstOrDefault();
+                                System.IO.File.Delete(ExitingFile);
+
+                                string path = environment.WebRootPath + "/upload/pir/materi/" + fileName;
+                                using (var stream = System.IO.File.Create(path))
+                                {
+                                    postFile.CopyTo(stream);
+                                    obj.materi = "upload/pir/materi/" + fileName;
+                                }
                             }
-                        }
-                        if (obj.notulen != null)
-                        {
-                            string ExitingFile = environment.WebRootPath + "/" + obj.notulen;
-                            System.IO.File.Delete(ExitingFile);
-
-                            IFormFile postedFile = Request.Form.Files[1];
-                            string fileName2 = DateTime.Now.ToString("yyyyMMddHHmmssfff") + "_" + postedFile.FileName;
-                            string path = environment.WebRootPath + "/upload/pir/notulen/" + fileName2;
-
-                            using (var stream = System.IO.File.Create(path))
+                            if (postFile.Name == "notulen")
                             {
-                                postedFile.CopyTo(stream);
-                                obj.notulen = "upload/pir/notulen/" + fileName2;
+                                string ExitingFile = environment.WebRootPath + "/" + Request.Form["notulen_"].FirstOrDefault();
+                                System.IO.File.Delete(ExitingFile);
+
+                                string path = environment.WebRootPath + "/upload/pir/notulen/" + fileName;
+                                using (var stream = System.IO.File.Create(path))
+                                {
+                                    postFile.CopyTo(stream);
+                                    obj.notulen = "upload/pir/notulen/" + fileName;
+                                }
                             }
+                            i++;
                         }
-
-
+                    }
+                    else
+                    {
+                        obj.materi = Request.Form["materi_"].FirstOrDefault();
+                        obj.notulen = Request.Form["notulen_"].FirstOrDefault();
                     }
                     _context.SaveChanges();
                     return Json(new { result = true });

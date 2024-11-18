@@ -33,18 +33,18 @@
             },
             { data: 'judul', name: 'judul' },
             {
-                data: 'tanggal', name: 'tanggal', render: function (data, type, full, meta) {
-                    var date = new Date(full.created_date);
-                    var string = date.getDate() + "-" + date.getMonth() + "-" + date.getFullYear();
-                    return string;
-                } },
+                data: 'tanggal', name: 'tanggal',
+            },
             { data: 'nama_', name: 'nama_' },
             {
                 data: 'created_date', name: 'created_date',
                 render: function (data, type, full, meta) {
-                    var date = new Date(full.created_date);
-                    var string = date.getDate() + "-" + date.getMonth() + "-" + date.getFullYear();
-                    return string;
+                    var date = full.created_date;
+                    if (date != null) {
+                        return date.split('T')[0];
+                    } else {
+                        return "";
+                    }
                 }
             },
             {

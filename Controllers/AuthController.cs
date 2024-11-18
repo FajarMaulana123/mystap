@@ -41,6 +41,7 @@ namespace mystap.Controllers
                             HttpContext.Session.SetString("role", admin.role);
 							HttpContext.Session.SetString("alias", admin.alias);
 							HttpContext.Session.SetString("fungsi", admin.subSection);
+							HttpContext.Session.SetString("foto", admin.foto);
 
                             var builderM = (from um in _context.userModul
 											join m in _context.modul on um.id_modul equals m.id_modul

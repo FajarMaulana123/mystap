@@ -29,6 +29,23 @@ app.UseHttpsRedirection();
 app.UseStaticFiles();
 app.UseRouting();
 app.UseAuthorization();
+app.Use(async (context, next) => {
+    await next.Invoke();
+    //handle response
+    //you may also need to check the request path to check whether it requests image
+    if (context.User.Identity.IsAuthenticated)
+    {
+        var userName = context.User.Identity.Name;
+        //retrieve uer by userName
+        using (var dbContext = context.RequestServices.GetRequiredService<DatabaseContext>())
+        {
+            var user = dbContext.users.Where(u => u.username == userName).FirstOrDefault();
+            user.lastLogin = DateTime.Now;
+            dbContext.Update(user);
+            dbContext.SaveChanges();
+        }
+    }
+});
 app.UseSession();
 app.UseEndpoints(endpoints =>
 {
@@ -65,11 +82,6 @@ app.UseEndpoints(endpoints =>
         name: "data_material_planner",
         pattern: "data_material_planner",
         defaults: new { controller = "Awal", action = "DataPlanner" });
-
-    endpoints.MapControllerRoute(
-        name: "profile_",
-        pattern: "profile_",
-        defaults: new { controller = "Data", action = "Profile_" });
 
     //DASHBOARD EQUIPMENT
     endpoints.MapControllerRoute(
@@ -790,14 +802,14 @@ app.UseEndpoints(endpoints =>
 
 
     endpoints.MapControllerRoute(
-       name: "profile",
-       pattern: "profile",
-       defaults: new { controller = "User", action = "Profile" });
+        name: "profile",
+        pattern: "profile",
+        defaults: new { controller = "User", action = "Profile" });
 
     endpoints.MapControllerRoute(
-      name: "profile_",
-      pattern: "profile_",
-      defaults: new { controller = "User", action = "Edit_Profile" });
+        name: "edit_profile_",
+        pattern: "edit_profile_",
+        defaults: new { controller = "User", action = "Edit_Profile" });
 
     endpoints.MapControllerRoute(
         name: "user",
@@ -830,9 +842,9 @@ app.UseEndpoints(endpoints =>
         defaults: new { controller = "User", action = "Delete_User" });
 
     endpoints.MapControllerRoute(
-      name: "bom",
-      pattern: "bom",
-      defaults: new { controller = "Data", action = "Bom" });
+        name: "bom",
+        pattern: "bom",
+        defaults: new { controller = "Data", action = "Bom" });
 
     endpoints.MapControllerRoute(
         name: "bom_",
@@ -864,6 +876,11 @@ app.UseEndpoints(endpoints =>
         name: "material_",
         pattern: "material_",
         defaults: new { controller = "Material", action = "Get_Material" });
+
+    endpoints.MapControllerRoute(
+        name: "delete_reservasi",
+        pattern: "delete_reservasi",
+        defaults: new { controller = "Material", action = "DeleteReservasi" });
 
     endpoints.MapControllerRoute(
         name: "outstanding_reservasi",

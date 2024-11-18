@@ -14,8 +14,14 @@
                 <a href="/profile" class="menu-profile-link" data-toggle="app-sidebar-profile" data-target="#appSidebarProfileMenu">
                     <div class="menu-profile-cover with-shadow"></div>
                     <div class="menu-profile-image menu-profile-image-icon bg-gray-900 text-gray-600">
-                       
-                        <img src="" alt="" />
+                        @if (Accessor.HttpContext.Session.GetString("foto") != null)
+                        {
+                            <img src="@Accessor.HttpContext.Session.GetString("foto")" alt=""/>
+                        }
+                        else
+                        {
+                            <img src="~/assets/images/noimage.jpg" alt=""/>
+                        }
                     </div>
                     <div class="menu-profile-info">
                         <div class="d-flex align-items-center">

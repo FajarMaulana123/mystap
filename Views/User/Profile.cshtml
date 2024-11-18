@@ -2,7 +2,6 @@
 @{
     ViewData["Title"] = "Edit Profile";
 }
-@inject IHttpContextAccessor Accessor;
     <ol class="breadcrumb float-xl-end">
         <li class="breadcrumb-item"><a href="javascript:void(0);"> <i data-feather="package"></i></a></li>
         <li class="breadcrumb-item active" aria-current="page"><span>My Profile</span></li>
@@ -13,13 +12,20 @@
             <div class="profile-header">
                 <div class="profile-header-cover"></div>
                 <div class="profile-header-content">
-                    <div class="profile-header-img">     
-                        <img src="" alt="" />
+                    <div class="profile-header-img"> 
+                    @if(ViewBag.profile.foto != null)
+                    {
+                        <img src="@(ViewBag.profile.foto)" alt="" />
+                    }
+                    else
+                    {
+                        <img src="~/assets/images/noimage.jpg" alt="" />
+                    }
                     </div>
                     <div class="profile-header-info">
-                        <h4 class="mt-0 mb-1"> @Accessor.HttpContext.Session.GetString("name") </h4>
-                        <p class="mb-2"> @Accessor.HttpContext.Session.GetString("jabatan") </p>
-                        <a href="#" class="btn btn-xs btn-yellow disabled"> @Accessor.HttpContext.Session.GetString("noPekerja") </a>
+                        <h4 class="mt-0 mb-1"> @(ViewBag.profile.name) </h4>
+                        <p class="mb-2">@(ViewBag.profile.jabatan) </p>
+                        <a href="#" class="btn btn-xs btn-yellow disabled"> @(ViewBag.profile.noPekerja) </a>
                     </div>
                 </div>
                 <ul class="profile-header-tab nav nav-tabs">
@@ -33,7 +39,7 @@
                 <div class="tab-pane fade show active" id="profile-post">
                     <div class="row">
                         <div class="col-xl-12 col-lg-12 col-md-12 layout-spacing">
-                        <form id="general-info" class="section general-info" asp-action="/profile_" method="POST" enctype="multipart/form-data">
+                            <form id="add-form" class="section general-info">
                                
                                 <div class="row">
                                     <div class="col-lg-11 mx-auto">
@@ -46,6 +52,7 @@
                                                                 <div class="form-group">
                                                                     <label>Image</label>
                                                                     <input type="file" name="image" id="image_name" class="form-control form-control-sm">
+                                                                    <input type="hidden" name="image_" id="image_name_" class="form-control form-control-sm" value="@(ViewBag.profile.foto)">
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -54,13 +61,13 @@
                                                         <div class="col-md-6 mb-2">
                                                             <div class="form-group">
                                                                 <label>Username</label>
-                                                                <input type="text" name="username" id="username" class="form-control form-control-sm" value="">
+                                                                <input type="text" name="username" id="username" class="form-control form-control-sm" value="@(ViewBag.profile.username)">
                                                             </div>
                                                         </div>
                                                         <div class="col-md-6 mb-2">
                                                             <div class="form-group">
                                                                 <label>E-mail</label>
-                                                                <input type="email" name="email" id="email" class="form-control form-control-sm" value="">
+                                                                <input type="email" name="email" id="email" class="form-control form-control-sm" value="@(ViewBag.profile.email)">
                                                             </div>
                                                         </div>   
                                                     </div>                                        
@@ -108,4 +115,5 @@
     <script src="demo2/plugins/dropify/dropify.min.js"></script>
     <script src="demo2/plugins/blockui/jquery.blockUI.min.js"></script>
     <script src="demo2/assets/js/users/account-settings.js"></script>
+    <script src="~/js/Profile.js"></script>
 }

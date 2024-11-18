@@ -17,7 +17,7 @@ using System.Linq.Dynamic.Core;
 using System.Reflection.Metadata;
 using System.Text.RegularExpressions;
 using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
-using SelectPdf;
+//using SelectPdf;
 
 namespace mystap.Controllers
 {
@@ -1401,35 +1401,35 @@ namespace mystap.Controllers
 
         }
 
-        [HttpGet("GeneratePdf")]
+        //[HttpGet("GeneratePdf")]
 
-        public IActionResult GeneratePdf(string htmlContent)
+        //public IActionResult GeneratePdf(string htmlContent)
 
-        {
+        //{
 
-            // Create a new HTML to PDF converter
+        //    // Create a new HTML to PDF converter
 
-            var converter = new HtmlToPdf();
-
-
-
-            // Convert HTML to PDF
-
-            var pdfDocument = converter.ConvertHtmlString(htmlContent);
+        //    var converter = new HtmlToPdf();
 
 
 
-            // Save the PDF to a byte array
+        //    // Convert HTML to PDF
 
-            byte[] pdfBytes = pdfDocument.Save();
+        //    var pdfDocument = converter.ConvertHtmlString(htmlContent);
 
 
 
-            // Return the PDF as a download
+        //    // Save the PDF to a byte array
 
-            return File(pdfBytes, "application/pdf", "myPDF.pdf");
+        //    byte[] pdfBytes = pdfDocument.Save();
 
-        }
+
+
+        //    // Return the PDF as a download
+
+        //    return File(pdfBytes, "application/pdf", "myPDF.pdf");
+
+        //}
 
     }
 }

@@ -8,6 +8,7 @@ using mystap.Helpers;
 using mystap.Models;
 using Newtonsoft.Json;
 using NuGet.Packaging;
+using System;
 using System.Collections;
 using System.Data;
 using System.Linq.Dynamic;
@@ -19,10 +20,12 @@ namespace mystap.Controllers
     public class UserController : Controller
     {
         private readonly DatabaseContext _context;
-       
-        public UserController(DatabaseContext context)
+        private readonly IWebHostEnvironment environment;
+
+        public UserController(DatabaseContext context, IWebHostEnvironment environment)
         {
             _context = context;
+            this.environment = environment;
         }
 
         [AuthorizedAction]
@@ -236,62 +239,40 @@ namespace mystap.Controllers
             }
         }
 
-
-		
-
-        public IActionResult Locked_User(Users users)
+        [AuthorizedAction]
+        public IActionResult Locked_User(Users user)
         {
             try
             {
-                int id = Int32.Parse(Request.Form["hidden_id"].FirstOrDefault());
+                int id = Int32.Parse(Request.Form["id"].FirstOrDefault());
                 Users obj = _context.users.Where(p => p.id == id).FirstOrDefault();
-                //var r = new Dictionary<string, string>();
-
-                if (obj.locked == 1)
+                if (obj != null)
                 {
-                    obj.locked = 0;
+                    if (obj.locked == 1)
+                    {
+                        obj.locked = 0;
+                    }
+                    else
+                    {
+                        obj.locked = 1;
+                    }
 
-                    //if (obj.locked == 0)
-                    //{
-                    //    r["title"] = "Sukses!";
-                    //    r["icon"] = "success";
-                    //    r["status"] = "Berhasil Unlocked!";
-                    //}
-                    //else
-                    //{
-                    //    r["title"] = "Maaf!";
-                    //    r["icon"] = "error";
-                    //    r["status"] = "<br><b>Tidak dapat di Hapus! <br> Silakan hubungi Administrator.</b>";
-                    //}
-                    _context.SaveChanges();
-                    return Json(new { Results = true });
-                }
-                else
-                {
-                    obj.locked = 1;
 
-                    //if (obj.locked == 1)
-                    //{
-                    //    r["title"] = "Sukses!";
-                    //    r["icon"] = "success";
-                    //    r["status"] = "Berhasil Locked";
-                    //}
-                    //else
-                    //{
-                    //    r["title"] = "Maaf!";
-                    //    r["icon"] = "error";
-                    //    r["status"] = "<br><b>Tidak dapat di Hapus! <br> Silakan hubungi Administrator.</b>";
-                    //}
                     _context.SaveChanges();
-                    return Json(new { Results = true });
+
+                    return Json(new { title = "Sukses!", icon = "success", status = "Berhasil Merubah Status" });
                 }
+                return Json(new { title = "Maaf!", icon = "error", status = "Tidak Dapat di Hapus!, Silahkan Hubungi Administrator " });
             }
             catch
             {
                 throw;
             }
         }
-        //[AuthorizedAction]
+
+
+
+        [AuthorizedAction]
         public IActionResult Deleted_User(Users users)
         {
             try
@@ -315,42 +296,70 @@ namespace mystap.Controllers
         }
 
         [AuthorizedAction]
-        public IActionResult Profile(long id)
+        public IActionResult Profile()
         {
-            
+            var id = HttpContext.Session.GetInt32("id");
+            ViewBag.profile = _context.users.Where(p => p.id == id).FirstOrDefault();
             return View();
           
         }
 
         [AuthorizedAction]
-        public async Task<IActionResult> Edit_Profile(Users Update_User)
+        public IActionResult Edit_Profile()
         {
+            try
             {
-                if (ModelState.IsValid)
+                var id = HttpContext.Session.GetInt32("id");
+                Users obj = _context.users.Where(p => p.id == Convert.ToInt32(id)).FirstOrDefault();
+
+                if(obj != null)
                 {
-                    Users existingUser = _context.users.FirstOrDefault(u => u.id == Update_User.id);
-
-                    // Get the currently authenticated user's ID
-                    var authenticatedUserId = Guid.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
-
-                    if (existingUser != null || existingUser.id == Update_User.id )
-                    {
-                        // User is trying to update another user's profile or the profile doesn't exist, handle accordingly
-                        return NotFound();
-                    }
-
-                    existingUser.username = Update_User.username;
-                    existingUser.email = Update_User.email;
+                    obj.username = Request.Form["username"].FirstOrDefault();
+                    obj.email = Request.Form["email"].FirstOrDefault();
 
                     if (Request.Form["password"].FirstOrDefault() != "")
                     {
-                        existingUser.password = EncryptPassword.Encrypt(Request.Form["password"].FirstOrDefault());
+                        obj.password = EncryptPassword.Encrypt(Request.Form["password"].FirstOrDefault());
+                    }
+
+                    if (Request.Form.Files.Count() != 0)
+                    {
+                        if (!string.IsNullOrEmpty(Request.Form["image_"].FirstOrDefault()))
+                        {
+                            string ExitingFile = environment.WebRootPath + "/" + Request.Form["image_"].FirstOrDefault();
+                            System.IO.File.Delete(ExitingFile);
+                        }
+                        
+
+                        IFormFile postedFile = Request.Form.Files[0];
+                        string fileName = DateTime.Now.ToString("yyyyMMddHHmmssfff") + "_" + postedFile.FileName;
+                        string path = environment.WebRootPath + "/upload/users/" + fileName;
+
+                        using (var stream = System.IO.File.Create(path))
+                        {
+                            postedFile.CopyTo(stream);
+                            obj.foto = "upload/users/" + fileName;
+                            HttpContext.Session.SetString("foto", obj.foto);
+                        }
+
+
+                    }
+                    else
+                    {
+                        obj.foto = Request.Form["image_"].FirstOrDefault();
                     }
 
                     _context.SaveChanges();
+                    return Json(new { Results = true });
                 }
-
-                return View(Profile);
+                else
+                {
+                    return Json(new { Results = false });
+                }
+            }
+            catch
+            {
+                throw;
             }
         }
     }

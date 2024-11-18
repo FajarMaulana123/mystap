@@ -152,7 +152,29 @@ namespace mystap.Controllers
             }
         }
 
-		[AuthorizedAction]
+        [AuthorizedAction]
+        public IActionResult DeleteReservasi(Zpm01 zpm01)
+        {
+            try
+            {
+                Zpm01 obj = _context.zpm01.Where(p => p.no_order == Request.Form["order"].FirstOrDefault() && p.itm == Request.Form["itm"].FirstOrDefault()).FirstOrDefault();
+
+                if (obj != null)
+                {
+                    obj.del = "X";
+                    _context.SaveChanges();
+
+                    return Json(new { title = "Sukses!", icon = "success", status = "Berhasil Dihapus" });
+                }
+                return Json(new { title = "Maaf!", icon = "error", status = "Tidak Dapat di Hapus!, Silahkan Hubungi Administrator " });
+            }
+            catch
+            {
+                throw;
+            }
+        }
+
+        [AuthorizedAction]
 		public IActionResult OutstandingReservasi()
         {
             ViewBag.role = "OUTSTANDING_RESERVASI";
