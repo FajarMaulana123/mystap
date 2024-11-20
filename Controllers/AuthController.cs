@@ -33,15 +33,16 @@ namespace mystap.Controllers
 					{
 						if(admin.locked == 0)
 						{
+							var foto = (admin.foto != null) ? admin.foto : "";
 
-							HttpContext.Session.SetInt32("id", Convert.ToInt32(admin.id));
+                            HttpContext.Session.SetInt32("id", Convert.ToInt32(admin.id));
 							HttpContext.Session.SetString("username", admin.username);
 							HttpContext.Session.SetString("status", admin.status);
 							HttpContext.Session.SetString("statPekerja", admin.statPekerja);
                             HttpContext.Session.SetString("role", admin.role);
 							HttpContext.Session.SetString("alias", admin.alias);
 							HttpContext.Session.SetString("fungsi", admin.subSection);
-							HttpContext.Session.SetString("foto", admin.foto);
+							HttpContext.Session.SetString("foto", foto);
 
                             var builderM = (from um in _context.userModul
 											join m in _context.modul on um.id_modul equals m.id_modul
