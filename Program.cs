@@ -233,6 +233,11 @@ app.UseEndpoints(endpoints =>
        pattern: "detail_summary_material_pengadaan_",
        defaults: new { controller = "Dashboard", action = "DetailMaterialPengadaan" });
 
+    endpoints.MapControllerRoute(
+       name: "update_grafik_summary",
+       pattern: "update_grafik_summary",
+       defaults: new { controller = "Dashboard", action = "UpdateSummaryMaterial" });
+
     //PLANT
     endpoints.MapControllerRoute(
         name: "plant",

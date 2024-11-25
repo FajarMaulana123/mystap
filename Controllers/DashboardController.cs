@@ -5,6 +5,7 @@ using Microsoft.CodeAnalysis.FlowAnalysis;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using Microsoft.Extensions.Caching.Memory;
+using Microsoft.IdentityModel.Tokens;
 using mystap.Helpers;
 using mystap.Models;
 using Newtonsoft.Json.Linq;
@@ -1747,6 +1748,69 @@ namespace mystap.Controllers
             catch
             {
                 throw;
+            }
+        }
+
+        [AuthorizedAction]
+        public IActionResult UpdateSummaryMaterial()
+        {
+            using var transaction = _context.Database.BeginTransaction();
+            try
+            {
+            
+                var query = "select b.revision," +
+                    " count(b.[order]) as total, " +
+                    " count( case when b.status_ = 'terpenuhi_stock' then b.[order] else null end) as stock," +
+                    " count( case when b.status_ = 'create_pr' then b.[order] else null end) as belum_pr," +
+                    " count( case when b.status_ = 'outstanding_pr' or b.status_ = 'inquiry_harga' or b.status_ = 'hps_oe' or b.status_ = 'proses_tender' or b.status_ = 'penetapan_pemenang' then b.[order] else null end) as sudah_pr,\r\ncount( case when b.status_ = 'outstanding_pr' then b.[order] else null end) as outstanding_pr, " +
+                    " count( case when b.status_ = 'inquiry_harga' then b.[order] else null end) as inquiry_harga, " +
+                    " count( case when b.status_ = 'hps_oe' then b.[order] else null end) as hps_oe, " +
+                    " count( case when b.status_ = 'proses_tender' then b.[order] else null end) as proses_tender, " +
+                    " count( case when b.status_ = 'penetapan_pemenang' then b.[order] else null end) as penetapan_pemenang, " +
+                    " count( case when b.status_ = 'tunggu_onsite' or b.status_ = 'onsite' then b.[order] else null end) as sudah_po, " +
+                    " count( case when b.status_ = 'tunggu_onsite' then b.[order] else null end) as belum_tiba, " +
+                    " count( case when b.status_ = 'onsite' then b.[order] else null end) as sudah_tiba from (select work_order.[order],max(zpm01.revision) as revision,(case when max(zpm01.pr) is null or max(zpm01.pr) = '' then (case when max(zpm01.reqmt_qty) = max(zpm01.qty_res) then 'terpenuhi_stock' else 'create_pr' end) else (case when (max(zpm01.pr) is not null or max(zpm01.pr) != '') and (max(purch_order.po) is null or max(purch_order.po) = '') then (case when (max(zpm01.status_pengadaan) = 'tunggu_pr' or max(zpm01.status_pengadaan) = 'evaluasi_dp3' or max(zpm01.status_pengadaan) is null) then 'outstanding_pr' when max(zpm01.status_pengadaan) = 'inquiry_harga' then 'inquiry_harga' when (max(zpm01.status_pengadaan) = 'hps_oe' or max(zpm01.status_pengadaan) = 'bidder_list' or max(zpm01.status_pengadaan) = 'penilaian_kualifikasi' or max(zpm01.status_pengadaan) = 'rfq') then 'hps_oe' when (max(zpm01.status_pengadaan) = 'pemasukan_penawaran' or max(zpm01.status_pengadaan) = 'pembukaan_penawaran' or max(zpm01.status_pengadaan) = 'evaluasi_penawaran' or max(zpm01.status_pengadaan) = 'klarifikasi_spesifikasi' or max(zpm01.status_pengadaan) = 'evaluasi_teknis' or max(zpm01.status_pengadaan) = 'evaluasi_tkdn' or max(zpm01.status_pengadaan) = 'negosiasi'  or max(zpm01.status_pengadaan) = 'lhp') then 'proses_tender' when (max(zpm01.status_pengadaan) = 'pengumuman_pemenang' or max(zpm01.status_pengadaan) = 'penunjuk_pemenang' or max(zpm01.status_pengadaan) = 'purchase_order') then 'penetapan_pemenang' else 'outstanding_pr' end) when (max(zpm01.pr) is not null or max(zpm01.pr) != '') and (max(purch_order.po) is not null or max(purch_order.po) != '') then (case when max(purch_order.dci) is null or max(purch_order.dci) = '' then 'tunggu_onsite' else 'onsite' end) end) end) as status_ from Mystap.dbo.zpm01 " +
+                    " left join Mystap.dbo.work_order on work_order.[order] = zpm01.no_order " +
+                    " left join Mystap.dbo.prognosa_oh on prognosa_oh.eqTagno = work_order.equipment " +
+                    " left join Mystap.dbo.project on project.revision = work_order.revision " +
+                    " left join Mystap.dbo.purch_order on purch_order.material = zpm01.material AND purch_order.pr = zpm01.pr AND purch_order.item_pr = zpm01.itm_pr where ((del is null or del != 'X') and (zpm01.reqmt_qty is not null and zpm01.reqmt_qty != '0')) " +
+              
+                    " group by work_order.[order], zpm01.itm) as b group by b.revision";
+                var c = FormattableStringFactory.Create(query);
+                var data = _context.view_summary_material.FromSql(c).ToList();
+                var date = DateTime.Now;
+
+                var cek = _context.historyReservasi.Where(p => p.created_date.Date == DateTime.Now.Date).ToList();
+                if (!cek.IsNullOrEmpty())
+                {
+                    _context.historyReservasi.Where(p => p.created_date.Date == DateTime.Now.Date).ExecuteDelete();
+                }
+
+                foreach (var val in data)
+                {
+                    HistoryReservasi hs = new HistoryReservasi();
+                    hs.revision = val.revision;
+                    hs.total_item = val.total;
+                    hs.stock = val.stock;
+                    hs.create_pr = val.belum_pr;
+                    hs.outstanding_pr = val.outstanding_pr;
+                    hs.inquiry_harga = val.inquiry_harga;
+                    hs.hps_oe = val.hps_oe;
+                    hs.proses_tender = val.proses_tender;
+                    hs.penetapan_pemenang = val.penetapan_pemenang;
+                    hs.tunggu_onsite = val.belum_tiba;
+                    hs.onsite = val.sudah_tiba;
+                    hs.created_date = DateTime.Now;
+                    _context.historyReservasi.Add(hs);
+                    _context.SaveChanges();
+                }
+                transaction.Commit();
+                return Json(new { title = "Sukses!", icon = "success", status = "Update Berhasil!" });
+            }
+            catch
+            {
+                transaction.Rollback();
+                return Json(new { title = "Maaf!", icon = "error", status = "Tidak Dapat di Update!, Silahkan Hubungi Administrator " });
             }
         }
 

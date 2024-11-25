@@ -24,6 +24,24 @@ function get_summary_pengadaan_material(project_id, project_name, lldi) {
     })
 }
 
+//function update_grafik_pengadaan() {
+//    $.ajax({                   
+//        url: '/update_grafik_summary',
+//        method: 'POST',
+//        data: {
+//            //project_id: project_id,
+//            //project_name: project_name,
+//            //lldi: lldi,
+//        },
+//        beforeSend: function () {
+//            document.getElementById('load_grafik_pengadaan').style.display = 'block';
+//        },
+//        success: function (res) {
+//            document.getElementById('load_grafik_pengadaan').style.display = 'none';
+//        }
+//    })
+//}
+
 function get_status_summary(project_id, lldi) {
     $.ajax({
         url: '/grafik_status_summary',
@@ -411,6 +429,44 @@ $(document).ready(function () {
         grafik_material(project_id, project_name, lldi);
         get_status_summary(project_id, lldi);
         grafik_progress_material(project_id, lldi);
+    })
+
+    $(document).on('click', '#update_grafik', function () {
+        //var id = $(this).data('id');
+        Swal.fire({
+            title: 'Apakah Anda Yakin ?',
+            text: 'Update Data History Reservasi Hari Ini!',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            confirmButtonText: 'Ya, Update!',
+            cancelButtonText: 'Tidak',
+        }).then((result) => {
+            if (result.value) {
+                $.ajax({
+                    url: "/update_grafik_summary",
+                    type: "POST",
+                    data: {
+                    },
+                    dataType: "JSON",
+                    success: function (data) {
+                        grafik_progress_material(project_id, lldi);
+                        Swal.fire({
+                            title: data.title,
+                            text: data.status,
+                            icon: data.icon,
+                            showCancelButton: false,
+                            showConfirmButton: true,
+                            // buttons: false,
+                        });
+                    },
+                    error: function (jqXHR, textStatus, errorThrown) {
+                        alert('Error');
+                    }
+                });
+            }
+        })
+        
     })
 
 })
