@@ -800,6 +800,10 @@ app.UseEndpoints(endpoints =>
          pattern: "progress_",
          defaults: new { controller = "Contract", action = "Progress_" });
 
+    endpoints.MapControllerRoute(
+        name: "generatePDF",
+        pattern: "generatePDF",
+        defaults: new { controller = "Contract", action = "ExportToPDF" });
 
     endpoints.MapControllerRoute(
         name: "profile",

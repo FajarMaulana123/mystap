@@ -16,7 +16,7 @@
     }
 
     function downloadFile(response) {
-        var blob = new Blob([response], {type: 'application/pdf'})
+    var blob = new Blob([response], {type: 'application/pdf'})
     var url = URL.createObjectURL(blob);
     location.assign(url);
     }
@@ -36,11 +36,13 @@
     get_data(project, katpaket, pic);
         })
 
-    $('#ex').on('click', function(){
+        $('#btnSubmit').on('click', function () {
+         
+            var gridHtml = $("#Grid").html();
             var project = $('#project_filter').val();
-    var project_title = $('#project_filter').find(':selected').data('title');
-    var katpaket = $('#kategori_paket_filter').val();
-    var pic = $('#pic_filter').val();
+            var project_title = $('#project_filter').find(':selected').data('title');
+            var katpaket = $('#kategori_paket_filter').val();
+            var pic = $('#pic_filter').val();
             // var url = '/generatePDF/'+project+'/'+katpaket+'/'+pic;
             // window.open(url);
             // $.ajax({
@@ -59,7 +61,8 @@
                 project: project,
                 katpaket: katpaket,
                 pic: pic,
-                project_title: project_title
+                project_title: project_title,
+                gridHtml: gridHtml
             },
             xhrFields: {
                 responseType: 'blob'
@@ -68,7 +71,7 @@
                 var blob = new Blob([response]);
                 var link = document.createElement('a');
                 link.href = window.URL.createObjectURL(blob);
-                link.download = "kontrak_kerja.pdf";
+                link.download = "Summary_Progress.pdf";
                 link.click();
             },
             error: function (blob) {

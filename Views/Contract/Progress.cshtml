@@ -84,7 +84,8 @@
                         <span class="badge  text-warning px-2 pt-5px pb-5px rounded fs-12px d-inline-flex align-items-center"><i class="fa fa-circle fs-9px fa-fw me-5px"></i> Potensi Delay</span>
                         <span class="badge  text-danger px-2 pt-5px pb-5px rounded fs-12px d-inline-flex align-items-center"><i class="fa fa-circle fs-9px fa-fw me-5px"></i> Delay</span>
                         <span class="badge  text-primary px-2 pt-5px pb-5px rounded fs-12px d-inline-flex align-items-center"><i class="fa fa-circle fs-9px fa-fw me-5px"></i> SP</span>
-                        <button class="btn btn-secondary px-2 pt-5px pb-5px d-inline-flex align-items-center" id="ex">Export To PDF</button>
+                    @* <button class="btn btn-secondary px-2 pt-5px pb-5px d-inline-flex align-items-center" id="ex" name="GridHtml">Export To PDF</button> *@
+                    <button class="btn btn-secondary px-2 pt-5px pb-5px d-inline-flex align-items-center" id="btnSubmit" name="GridHtml">Export To PDF</button>
                        
                     </div>
                 </div>
@@ -94,51 +95,53 @@
                     </div>
                 </div>
             </div>
-           
-            <div class="table-responsive">
-                <table id="table" class="table small table-danger table-bordered dataTables_wrapper" style="    border-color: #ff8e8a; --bs-table-accent-bg: #ffe4ce; font-size:0.6em;" width="1000px">
-                    <thead>
-                        <tr>
-                            <th  rowspan="3" style="vertical-align: middle; color:white; --bs-table-accent-bg: #482a00;">No.WO.PO.PR</th>
-                            <th width="200px" rowspan="3"  style="vertical-align: middle; color:white; --bs-table-accent-bg: #482a00;">judul Pekerjaan</th>
-                            <th rowspan="3" colspan="2" style="vertical-align: middle; color:white; --bs-table-accent-bg: #482a00;">Status</th>
-                            
-                            <td  colspan="20" style="text-align: center; color:white; --bs-table-accent-bg: #482a00;">Proses Paket Kontrak Jasa</td>
-                            <th  rowspan="3" style="vertical-align: middle; color:white; --bs-table-accent-bg: #482a00;">Keterangan</th>
-                        </tr>
-                        <tr>
-                            <td colspan="4" style="text-align: center; color:white; --bs-table-accent-bg: #927449;">Turn Arround</td>
-                            <td colspan="16" style="text-align: center; color:white; --bs-table-accent-bg: #d27d00;">Contract Office</td>
-                        </tr>
-                        <tr>
-                            <th width="26px" style="text-align: center; color:white; --bs-table-accent-bg: #927449;">Susun Kak</th>
-                            <th width="26px" style="text-align: center; color:white; --bs-table-accent-bg: #927449;">Perse- tujuan</th>
-                            <th width="26px" style="text-align: center; color:white; --bs-table-accent-bg: #927449;">Susun OE</th>
-                            <th width="26px" style="text-align: center; color:white; --bs-table-accent-bg: #927449;">Kirim CO</th>
-                            <th width="26px" style="text-align: center; color:white; --bs-table-accent-bg: #d27d00;">Pendaftaran</th>
-                            <th width="26px" style="text-align: center; color:white; --bs-table-accent-bg: #d27d00;">Sertifikasi</th>
-                            <th width="26px" style="text-align: center; color:white; --bs-table-accent-bg: #d27d00;">Prakualifikasi</th>
-                            <th width="26px" style="text-align: center; color:white; --bs-table-accent-bg: #d27d00;">Undangan</th>
-                            <th width="26px" style="text-align: center; color:white; --bs-table-accent-bg: #d27d00;">Penjelasan</th>
-                            <th width="26px" style="text-align: center; color:white; --bs-table-accent-bg: #d27d00;">Buka PH</th>
-                            <th width="26px" style="text-align: center; color:white; --bs-table-accent-bg: #d27d00;">Buka Dokumen</th>
-                            <th width="26px" style="text-align: center; color:white; --bs-table-accent-bg: #d27d00;">Evaluasi</th>
-                            <th width="26px" style="text-align: center; color:white; --bs-table-accent-bg: #d27d00;">Negosiasi</th>
-                            <th width="26px" style="text-align: center; color:white; --bs-table-accent-bg: #d27d00;">Tap Nang</th>
-                            <th width="26px" style="text-align: center; color:white; --bs-table-accent-bg: #d27d00;">Kep Nang</th>
-                            <th width="26px" style="text-align: center; color:white; --bs-table-accent-bg: #d27d00;">Pengumaman</th>
-                            <th width="26px" style="text-align: center; color:white; --bs-table-accent-bg: #d27d00;">Ajuan Sanggah</th>
-                            <th width="26px" style="text-align: center; color:white; --bs-table-accent-bg: #d27d00;">Jawab Sanggah</th>
-                            <th width="26px" style="text-align: center; color:white; --bs-table-accent-bg: #d27d00;">Juk Nang</th>
-                            <th width="26px" style="text-align: center; color:white; --bs-table-accent-bg: #d27d00;">SPB</th>
-                        </tr>
-                    </thead> 
-                    <tbody id="isi_table">
-                       <tr>
-                            <td colspan="25" style="text-align:center">Data tidak ditemukan - Silahkan Filter data Contract terlebih dahulu !</td>
-                       </tr>
-                    </tbody>
-                </table>
+
+            <div id="Grid">
+                <div class="table-responsive">
+                <table id="table" class="table small table-danger table-bordered dataTables_wrapper" style="border-color:brown; background-color:#ffe4ce; --bs-table-accent-bg: #ffe4ce; font-size:0.6em;" width="1000px">
+                        <thead>
+                            <tr>
+                            <th rowspan="3" style="vertical-align: middle; color:white; background-color: #482a00; --bs-table-accent-bg: #482a00;">No.WO.PO.PR</th>
+                            <th width="200px" rowspan="3" style="vertical-align: middle; color:white; background-color: #482a00; --bs-table-accent-bg: #482a00;">judul Pekerjaan</th>
+                            <th rowspan="3" colspan="2" style="vertical-align: middle; color:white; background-color: #482a00; --bs-table-accent-bg: #482a00;">Status</th>
+
+                            <td colspan="20" style="text-align: center; color:white; background-color: #482a00; --bs-table-accent-bg: #482a00;">Proses Paket Kontrak Jasa</td>
+                            <th rowspan="3" style="vertical-align: middle; color:white; background-color: #482a00; --bs-table-accent-bg: #482a00;">Keterangan</th>
+                            </tr>
+                            <tr>
+                            <td colspan="4" style="text-align: center; color:white; background-color:  #927449;; --bs-table-accent-bg: #927449;">Turn Arround</td>
+                            <td colspan="16" style="text-align: center; color:white; background-color: #d27d00; --bs-table-accent-bg: #d27d00;">Contract Office</td>
+                            </tr>
+                            <tr>
+                            <th width="50px" style="text-align: center; color:white; background-color: #927449; --bs-table-accent-bg: #927449;">Susun Kak</th>
+                            <th width="50px" style="text-align: center; color:white; background-color: #927449; --bs-table-accent-bg: #927449;">Perse- tujuan</th>
+                            <th width="50px" style="text-align: center; color:white; background-color: #927449; --bs-table-accent-bg: #927449;">Susun OE</th>
+                            <th width="50px" style="text-align: center; color:white; background-color: #927449; --bs-table-accent-bg: #927449;">Kirim CO</th>
+                            <th width="50px" style="text-align: center; color:white; background-color: #d27d00; --bs-table-accent-bg: #d27d00;">Pendaftaran</th>
+                            <th width="50px" style="text-align: center; color:white; background-color: #d27d00; --bs-table-accent-bg: #d27d00;">Sertifikasi</th>
+                            <th width="50px" style="text-align: center; color:white; background-color: #d27d00; --bs-table-accent-bg: #d27d00;">Prakualifikasi</th>
+                            <th width="50px" style="text-align: center; color:white; background-color: #d27d00; --bs-table-accent-bg: #d27d00;">Undangan</th>
+                            <th width="50px" style="text-align: center; color:white; background-color: #d27d00; --bs-table-accent-bg: #d27d00;">Penjelasan</th>
+                            <th width="50px" style="text-align: center; color:white; background-color: #d27d00; --bs-table-accent-bg: #d27d00;">Buka PH</th>
+                            <th width="50px" style="text-align: center; color:white; background-color: #d27d00; --bs-table-accent-bg: #d27d00;">Buka Dokumen</th>
+                            <th width="50px" style="text-align: center; color:white; background-color: #d27d00; --bs-table-accent-bg: #d27d00;">Evaluasi</th>
+                            <th width="50px" style="text-align: center; color:white; background-color: #d27d00; --bs-table-accent-bg: #d27d00;">Negosiasi</th>
+                            <th width="50px" style="text-align: center; color:white; background-color: #d27d00; --bs-table-accent-bg: #d27d00;">Tap Nang</th>
+                            <th width="50px" style="text-align: center; color:white; background-color: #d27d00; --bs-table-accent-bg: #d27d00;">Kep Nang</th>
+                            <th width="50px" style="text-align: center; color:white; background-color: #d27d00; --bs-table-accent-bg: #d27d00;">Pengumaman</th>
+                            <th width="50px" style="text-align: center; color:white; background-color: #d27d00; --bs-table-accent-bg: #d27d00;">Ajuan Sanggah</th>
+                            <th width="50px" style="text-align: center; color:white; background-color: #d27d00; --bs-table-accent-bg: #d27d00;">Jawab Sanggah</th>
+                            <th width="50px" style="text-align: center; color:white; background-color: #d27d00; --bs-table-accent-bg: #d27d00;">Juk Nang</th>
+                            <th width="50px" style="text-align: center; color:white; background-color: #d27d00; --bs-table-accent-bg: #d27d00;">SPB</th>
+                            </tr>
+                        </thead> 
+                        <tbody id="isi_table">
+                           <tr>
+                                <td colspan="25" style="text-align:center">Data tidak ditemukan - Silahkan Filter data Contract terlebih dahulu !</td>
+                           </tr>
+                        </tbody>
+                    </table>
+                </div>
             </div>
         </div>
     </div>

@@ -15,8 +15,15 @@ using System.Globalization;
 using System.IO;
 using System.Linq.Dynamic.Core;
 using System.Reflection.Metadata;
+using System.Text;
 using System.Text.RegularExpressions;
 using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
+using DocumentFormat.OpenXml.Wordprocessing;
+using iText.Html2pdf;
+using iText.IO.Source;
+using iText.Kernel.Geom;
+using iText.Kernel.Pdf;
+using Spire.Doc.Documents;
 //using SelectPdf;
 
 namespace mystap.Controllers
@@ -1294,7 +1301,7 @@ namespace mystap.Controllers
                 }
 
                 var data = query.ToList();
-                var table = "";
+                var table_progres = "";
                 if (data != null)
                 {
                     foreach (var d in data)
@@ -1333,7 +1340,7 @@ namespace mystap.Controllers
                             file = "";
                         }
 
-                        table += "<tr><td rowspan = '2'>" + d.WO + "<br>" + d.po + "<br>" + d.PR + "<br>" + d.noSP + "<br>" + file + "</td>" +
+                        table_progres += "<tr><td rowspan = '2'>" + d.WO + "<br>" + d.po + "<br>" + d.PR + "<br>" + d.noSP + "<br>" + file + "</td>" +
                             "<td rowspan = '2'>" + d.judulPekerjaan + "</td>" +
                             "<td rowspan = '2' style = 'text-align: center;'>" + isi + "<br>" + d.pic + "</td>" +
                             "<td> P </td>" +
@@ -1386,12 +1393,12 @@ namespace mystap.Controllers
                 }
                 else
                 {
-                    table += "<tr>" +
+                    table_progres += "<tr>" +
                                 "<td colspan = '24' style = 'text-align:center'> Data tidak ditemukan</td>" +
                            "</tr>";
                 }
 
-                return Ok(table);
+                return Ok(table_progres);
 
             }
             catch
@@ -1400,36 +1407,19 @@ namespace mystap.Controllers
             }
 
         }
-
-        //[HttpGet("GeneratePdf")]
-
-        //public IActionResult GeneratePdf(string htmlContent)
-
-        //{
-
-        //    // Create a new HTML to PDF converter
-
-        //    var converter = new HtmlToPdf();
-
-
-
-        //    // Convert HTML to PDF
-
-        //    var pdfDocument = converter.ConvertHtmlString(htmlContent);
-
-
-
-        //    // Save the PDF to a byte array
-
-        //    byte[] pdfBytes = pdfDocument.Save();
-
-
-
-        //    // Return the PDF as a download
-
-        //    return File(pdfBytes, "application/pdf", "myPDF.pdf");
-
-        //}
-
+        
+        public FileResult ExportToPDF(string gridHtml)
+        {
+            using (MemoryStream stream = new MemoryStream(Encoding.ASCII.GetBytes(gridHtml)))
+            {
+                ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+                PdfWriter writer = new PdfWriter(byteArrayOutputStream);
+                PdfDocument pdfDocument = new PdfDocument(writer);
+                pdfDocument.SetDefaultPageSize(iText.Kernel.Geom.PageSize.A3.Rotate());
+                HtmlConverter.ConvertToPdf(stream, pdfDocument);
+                pdfDocument.Close();
+                return File(byteArrayOutputStream.ToArray(), "application/pdf", "Grid.pdf");
+            }
+        }
     }
 }
