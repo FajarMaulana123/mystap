@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Razor.TagHelpers;
 using Microsoft.EntityFrameworkCore;
 using mystap.Models;
+using Rotativa.AspNetCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -13,7 +14,6 @@ builder.Services.AddControllersWithViews();
 builder.Services.AddMemoryCache();
 builder.Services.AddSession();
 builder.Services.AddHttpContextAccessor();
-
 
 var app = builder.Build();
 
@@ -970,5 +970,5 @@ app.UseEndpoints(endpoints =>
 
 
 });
-
+app.UseRotativa();
 app.Run();

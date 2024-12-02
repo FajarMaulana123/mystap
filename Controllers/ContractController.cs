@@ -23,7 +23,11 @@ using iText.Html2pdf;
 using iText.IO.Source;
 using iText.Kernel.Geom;
 using iText.Kernel.Pdf;
-using Spire.Doc.Documents;
+using DocumentFormat.OpenXml.EMMA;
+using iText.Layout.Element;
+using static System.Net.WebRequestMethods;
+using System.Runtime.InteropServices;
+using Rotativa.AspNetCore;
 //using SelectPdf;
 
 namespace mystap.Controllers
@@ -1408,18 +1412,38 @@ namespace mystap.Controllers
 
         }
         
-        public FileResult ExportToPDF(string gridHtml)
+        public IActionResult ExportToPDF()
         {
-            using (MemoryStream stream = new MemoryStream(Encoding.ASCII.GetBytes(gridHtml)))
+            var project_filter = Request.Form["project_filter"].FirstOrDefault();
+            var kategori_paket_filter = Request.Form["kategori_paket_filter"].FirstOrDefault();
+            var pic_filter = Request.Form["pic_filter"].FirstOrDefault();
+
+            var query = _context.contractTracking.Where(p => p.deleted == 0);
+
+            if (!string.IsNullOrEmpty(project_filter))
             {
-                ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-                PdfWriter writer = new PdfWriter(byteArrayOutputStream);
-                PdfDocument pdfDocument = new PdfDocument(writer);
-                pdfDocument.SetDefaultPageSize(iText.Kernel.Geom.PageSize.A3.Rotate());
-                HtmlConverter.ConvertToPdf(stream, pdfDocument);
-                pdfDocument.Close();
-                return File(byteArrayOutputStream.ToArray(), "application/pdf", "Grid.pdf");
+                var pi = long.Parse(project_filter);
+                query = query.Where(p => p.projectID == pi);
             }
+
+            if (!string.IsNullOrEmpty(kategori_paket_filter))
+            {
+                query = query.Where(p => p.kategoriPaket == kategori_paket_filter);
+            }
+
+            if (!string.IsNullOrEmpty(pic_filter))
+            {
+                query = query.Where(p => p.pic == pic_filter);
+            }
+
+            var exp = new ViewAsPdf("TemplateSummaryProgress", query.ToList())
+            {
+                FileName = "Summary_Progress.pdf",
+                PageOrientation = Rotativa.AspNetCore.Options.Orientation.Landscape,
+                PageSize = Rotativa.AspNetCore.Options.Size.Letter,
+            };
+
+            return exp;
         }
     }
 }

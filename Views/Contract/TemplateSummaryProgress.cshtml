@@ -1,17 +1,15 @@
-﻿<!DOCTYPE html>
+﻿@model List<ContractTracking>
+@{
+    Layout = null;
+}
+<!DOCTYPE html>
 <html lang="en">
 <head>
-    {{--
-    <meta charset="UTF-8"> --}}
-    {{--
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge"> --}}
+   
     <title>Summary Progress Contract</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" />
-    {{--
-    <script src="https://use.fontawesome.com/e25999ef3a.js"></script> --}}
-    {{--
-    <link href="{{ asset('../../assets/assets/css/vendor.min.css') }}" rel="stylesheet" /> --}}
+    <link href="~/assets/assets/css/default/app.min.css" rel="stylesheet" />
+    <link href="~/assets/assets/css/vendor.min.css" rel="stylesheet" />
     <style>
 
         table, td, th {
@@ -20,12 +18,16 @@
             background: #ffe4ce;
             font-size: 6px;
         }
+
+        thead, tfoot {
+            display: table-row-group;
+        }
     </style>
 </head>
 <body>
     <div class="row text-center">
         <p>Progress Paket Kontrak</p>
-        <p style="margin-top:-20px">{{$judul}}</p>
+        <p style="margin-top:-20px">project</p>
     </div>
     <div class="row">
 
@@ -66,161 +68,91 @@
                         <td style="text-align: center; color:white; background: #d27d00;">SPB</td>
                     </tr>
                 </thead>
-                <tbody>
-                    if (data != null)
+                <tbody id="isi_table">
+                    
+                    @if(Model != null)
                     {
-                    foreach (var d in data)
-                    {
-                    var isi = "";
-                    if (d.aktualSP != null)
-                    {
-                    isi = "
-                    <span class='text-primary'><i class='fa fa-circle fs-20px fa-fw '></i></span>";
-                    }
-                    else
-                    {
-                    if (d.t_light > 30)
-                    {
-                    isi = "
-                    <span class='text-green-600 text-center'><i class='fa fa-circle fs-20px fa-fw'></i></span>";
-                    }
-                    else if (d.t_light <= 30 && d.t_light > 20)
-                    {
-                    isi = "
-                    <span class='text-warning text-center'><i class='fa fa-circle fs-20px fa-fw '></i></span>";
-                    }
-                    else if (d.t_light <= 20)
-                    {
-                    isi = "
-                    <span class='text-danger text-center'><i class='fa fa-circle fs-20px fa-fw'></i></span>";
-                    }
-                    else
-                    {
-                    isi = "-";
-                    }
-                    }
-                    var file = "";
-                    if (d.file_sp != null)
-                    {
-                    file = "
-                    <a href='" + d.file_sp + "' class='btn btn-info btn-sm' target='_blank'>File</a>";
-                    }
-                    else
-                    {
-                    file = "";
-                    }
+                        @foreach(var val in Model)
+                        {
+                            var isi = "";
+                            @if(val.aktualSP != null)
+                            {
+                                isi += "<span class='text-primary'><i class='fa fa-circle fs - 20px fa-fw me-5px'></i></span>";
+                            }
+                            else
+                            {
+                                if(val.t_light > 30)
+                                {
+                                    isi += "<span class='text-success'><i class='fas fa-lg fa-fw me-10px fa-circle'></i></span>";
+                                }else if(val.t_light <= 30 && val.t_light > 20)
+                                {
+                                    isi += "<span class='text-warning'><i class='fas fa-lg fa-fw me-10px fa-circle'></i></span>";
+                                }else if(val.t_light <= 20)
+                                {
+                                    isi += "<span class='text-danger'><i class='fas fa-lg fa-fw me-10px fa-circle'></i></span>";
+                                }
+                                else
+                                {
+                                    isi += "-";
+                                }
+                            }
 
-                    table += "
-                    <tr>
-                        <td rowspan='2'>" + d.WO + "<br>" + d.po + "<br>" + d.PR + "<br>" + d.noSP + "<br>" + file + "</td>" +
-                        "
-                        <td rowspan='2'>" + d.judulPekerjaan + "</td>" +
-                        "
-                        <td rowspan='2' style='text-align: center;'>" + isi + "<br>" + d.pic + "</td>" +
-                        "
-                        <td> P </td>" +
-                        "
-                        <td style='text-align: center;  --bs-table-accent-bg: #ffcc80;'>" + d.target_kak + "</td>" +
-                        "
-                        <td style='text-align: center;  --bs-table-accent-bg: #ffcc80;'>" + d.target_persetujuan + "</td>" +
-                        "
-                        <td style='text-align: center;  --bs-table-accent-bg: #ffcc80;'>" + d.target_oe + "</td>" +
-                        "
-                        <td style='text-align: center; color:blue;  --bs-table-accent-bg: #ffcc80;'>" + d.targetCO + "</td>" +
-                        "
-                        <td style='text-align: center;  --bs-table-accent-bg: #ffcc80;'>" + d.target_pengumuman + "</td>" +
-                        "
-                        <td style='text-align: center;  --bs-table-accent-bg: #ffcc80;'>" + d.target_sertifikasi + "</td> " +
-                        "
-                        <td style='text-align: center;  --bs-table-accent-bg: #ffcc80;'>" + d.target_prakualifikasi + "</td>" +
-                        "
-                        <td style='text-align: center;  --bs-table-accent-bg: #ffcc80;'>" + d.target_undangan + "</td>" +
-                        "
-                        <td style='text-align: center;  --bs-table-accent-bg: #ffcc80;'>" + d.target_pemberian + "</td>" +
-                        "
-                        <td style='text-align: center;   --bs-table-accent-bg: #ffcc80;'>" + d.targetBukaPH + "</td>" +
-                        "
-                        <td style='text-align: center;  --bs-table-accent-bg: #ffcc80;'>" + d.target_pembukaan + "</td>" +
-                        "
-                        <td style='text-align: center;  --bs-table-accent-bg: #ffcc80;'>" + d.target_evaluasi + "</td>" +
-                        "
-                        <td style='text-align: center;  --bs-table-accent-bg: #ffcc80;'>" + d.target_negosiasi + "</td>" +
-                        "
-                        <td style='text-align: center;  --bs-table-accent-bg: #ffcc80;'>" + d.target_usulan_pemenang + "</td>" +
-                        "
-                        <td style='text-align: center;  --bs-table-accent-bg: #ffcc80;'>" + d.target_keputusan_pemenang + "</td>" +
-                        "
-                        <td style='text-align: center;  --bs-table-accent-bg: #ffcc80;'>" + d.target_pengumuman_pemenang + "</td>" +
-                        "
-                        <td style='text-align: center;  --bs-table-accent-bg: #ffcc80;'>" + d.target_pengajuan_sanggah + "</td>" +
-                        "
-                        <td style='text-align: center;  --bs-table-accent-bg: #ffcc80;'>" + d.target_jawaban_sanggah + "</td>" +
-                        "
-                        <td style='text-align: center;  --bs-table-accent-bg: #ffcc80;'>" + d.target_penunjukan_pemenang + "</td>" +
-                        "
-                        <td style='text-align: center; color:blue; --bs-table-accent-bg: #ffcc80;'>" + d.targetSP + "</td>" +
-                        "
-                        <td rowspan='2'>" + d.currStat + "</td>" +
-                        "
-                    </tr>" +
-                    "
-                    <tr>
-                        " +
-                        "
-                        <td> A </td>" +
-                        "
-                        <td style='text-align: center;'>" + d.akt_kak + "</td>" +
-                        "
-                        <td style='text-align: center;'>" + d.akt_persetujuan + "</td>" +
-                        "
-                        <td style='text-align: center;'>" + d.akt_oe + "</td>" +
-                        "
-                        <td style='text-align: center;'>" + d.aktualCO + "</td>" +
-                        "
-                        <td style='text-align: center;'>" + d.akt_pengumuman + "</td>" +
-                        "
-                        <td style='text-align: center;'>" + d.akt_sertifikasi + "</td>" +
-                        "
-                        <td style='text-align: center;'>" + d.akt_prakualifikasi + "</td>" +
-                        "
-                        <td style='text-align: center;'>" + d.akt_undangan + "</td>" +
-                        "
-                        <td style='text-align: center;'>" + d.akt_pemberian + "</td>" +
-                        "
-                        <td style='text-align: center;'>" + d.aktualBukaPH + "</td>" +
-                        "
-                        <td style='text-align: center;'>" + d.akt_pembukaan + "</td>" +
-                        "
-                        <td style='text-align: center;'>" + d.akt_evaluasi + "</td>" +
-                        "
-                        <td style='text-align: center;'>" + d.akt_negosiasi + "</td>" +
-                        "
-                        <td style='text-align: center;'>" + d.akt_usulan_pemenang + "</td>" +
-                        "
-                        <td style='text-align: center;'>" + d.akt_keputusan_pemenang + "</td>" +
-                        "
-                        <td style='text-align: center;'>" + d.akt_pengumuman_pemenang + "</td>" +
-                        "
-                        <td style='text-align: center;'>" + d.akt_pengajuan_sanggah + "</td>" +
-                        "
-                        <td style='text-align: center;'>" + d.akt_jawaban_sanggah + "</td>" +
-                        "
-                        <td style='text-align: center;'>" + d.akt_penunjukan_pemenang + "</td>" +
-                        "
-                        <td style='text-align: center;'>" + d.aktualSP + "</td>" +
-                        "
-                    </tr>";
-                    }
+                            <tr>
+                                <td rowspan="2">@(val.WO) @(val.po) @(val.PR)</td>
+                                <td rowspan="2">@(val.judulPekerjaan)</td>
+                                <td rowspan="2"><br><span class="text-danger"><i class='fa fa-circle '></i></span>@(isi) @(val.pic)</td>
+                                <td class="text-warning">P</td>
+                                <td>@(val.target_kak)</td>
+                                <td>@(val.target_oe)</td>
+                                <td>@(val.target_co)</td>
+                                <td>@(val.target_pengumuman)</td>
+                                <td>@(val.target_sertifikasi)</td>
+                                <td>@(val.target_prakualifikasi)</td>
+                                <td>@(val.target_undangan)</td>
+                                <td>@(val.target_pemberian)</td>
+                                <td>@(val.targetBukaPH)</td>
+                                <td>@(val.target_pembukaan)</td>
+                                <td>@(val.target_evaluasi)</td>
+                                <td>@(val.target_negosiasi)</td>
+                                <td>@(val.target_usulan_pemenang)</td>
+                                <td>@(val.target_keputusan_pemenang)</td>
+                                <td>@(val.target_pengumuman_pemenang)</td>
+                                <td>@(val.target_pengajuan_sanggah)</td>
+                                <td>@(val.target_jawaban_sanggah)</td>
+                                <td>@(val.target_penunjukan_pemenang)</td>
+                                <td>@(val.targetSP)</td>
+                                <td rowspan="2">@(val.currStat)</td>
+                            </tr>
+                            <tr>
+                                <td>A</td>
+                                <td>@(val.akt_kak)</td>
+                                <td>@(val.akt_oe)</td>
+                                <td>@(val.aktualCO)</td>
+                                <td>@(val.akt_pengumuman)</td>
+                                <td>@(val.akt_sertifikasi)</td>
+                                <td>@(val.akt_prakualifikasi)</td>
+                                <td>@(val.akt_undangan)</td>
+                                <td>@(val.akt_pemberian)</td>
+                                <td>@(val.aktualBukaPH)</td>
+                                <td>@(val.akt_pembukaan)</td>
+                                <td>@(val.akt_evaluasi)</td>
+                                <td>@(val.akt_negosiasi)</td>
+                                <td>@(val.akt_usulan_pemenang)</td>
+                                <td>@(val.akt_keputusan_pemenang)</td>
+                                <td>@(val.akt_pengumuman_pemenang)</td>
+                                <td>@(val.akt_pengajuan_sanggah)</td>
+                                <td>@(val.akt_jawaban_sanggah)</td>
+                                <td>@(val.akt_penunjukan_pemenang)</td>
+                                <td>@(val.aktualSP)</td>
+                               
+                            </tr>
+                        }
                     }
                     else
                     {
-                    table += "
-                    <tr>
-                        " +
-                        "
-                        <td colspan='24' style='text-align:center'> Data tidak ditemukan</td>" +
-                        "
-                    </tr>";
+                        <tr>
+                            <td colspan="25" style="text-align:center">Data tidak ditemukan - Silahkan Filter data Contract terlebih dahulu !</td>
+                        </tr>
                     }
 
                 </tbody>

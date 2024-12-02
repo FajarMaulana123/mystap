@@ -29,31 +29,21 @@
             }
         });
     $('#filter').on('click', function(){
-            var project = $('#project_filter').val();
-    var katpaket = $('#kategori_paket_filter').val();
-    var pic = $('#pic_filter').val();
+        var project = $('#project_filter').val();
+        var katpaket = $('#kategori_paket_filter').val();
+        var pic = $('#pic_filter').val();
 
-    get_data(project, katpaket, pic);
-        })
+        get_data(project, katpaket, pic);
+    })
 
-        $('#btnSubmit').on('click', function () {
+    $('#btnSubmit').on('click', function () {
          
-            var gridHtml = $("#Grid").html();
-            var project = $('#project_filter').val();
-            var project_title = $('#project_filter').find(':selected').data('title');
-            var katpaket = $('#kategori_paket_filter').val();
-            var pic = $('#pic_filter').val();
-            // var url = '/generatePDF/'+project+'/'+katpaket+'/'+pic;
-            // window.open(url);
-            // $.ajax({
-        //     url:"/generatePDF",
-        //     method: "POST",
-        //     data: {
-        //         project: project,
-        //         katpaket: katpaket,
-        //         pic: pic
-        //     },
-        // }).done(downloadFile);
+        var gridHtml = $("#Grid").html();
+        var project = $('#project_filter').val();
+        var project_title = $('#project_filter').find(':selected').data('title');
+        var katpaket = $('#kategori_paket_filter').val();
+        var pic = $('#pic_filter').val();
+            
         $.ajax({
             url: "/generatePDF",
             method: "POST",
@@ -68,6 +58,7 @@
                 responseType: 'blob'
             },
             success: function (response) {
+                console.log(response);
                 var blob = new Blob([response]);
                 var link = document.createElement('a');
                 link.href = window.URL.createObjectURL(blob);
