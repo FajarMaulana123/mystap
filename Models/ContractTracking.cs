@@ -16,6 +16,7 @@ namespace mystap.Models
         public string? koordinasi { get; set; }
         public string? unit { get; set; }
         public string? pic { get; set; }
+        [Column(TypeName = "date")]
         public DateTime? deadLine { get; set; }
         public string? descSP { get; set; }
         public int? kak { get; set; }
@@ -66,6 +67,7 @@ namespace mystap.Models
         public DateTime? dateCreated { get; set; }
         public int? deleted { get; set; }
         public int? updated { get; set; }
+        [Column(TypeName = "date")]
         public DateTime? targetCO { get; set; }
         public DateTime? aktualCO { get; set; }
         public DateTime? targetSP { get; set; }
@@ -118,7 +120,9 @@ namespace mystap.Models
         public string? klasifikasiKontrak { get; set; }
         public string? organik { get; set; }
         public DateTime? targetBukaPH { get; set; }
+        [Column(TypeName = "date")]
         public DateTime? target_kak { get; set; }
+        [Column(TypeName = "date")]
         public DateTime? akt_kak { get; set; }
         public DateTime? target_oe { get; set; }
         public DateTime? akt_oe { get; set; }

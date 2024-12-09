@@ -150,8 +150,28 @@ $(document).ready(function () {
                 }
             },
             { data: 'dt_', name: 'dt_' },
-            { data: 'prognosa_', name: 'prognosa_' },
-            { data: 'md', name: 'md' },
+            {
+                data: 'prognosa_', name: 'prognosa_',
+                render: function (data, type, full, meta) {
+                    var date = full.prognosa_;
+                    if (date != null) {
+                        return date.split('T')[0];
+                    } else {
+                        return "";
+                    }
+                }
+            },
+            {
+                data: 'md', name: 'md',
+                render: function (data, type, full, meta) {
+                    var date = full.md;
+                    if (date != null) {
+                        return date.split('T')[0];
+                    } else {
+                        return "";
+                    }
+                }
+            },
             {
                 orderable: false, searchable: false,
                 render: function (data, type, full, meta) {
