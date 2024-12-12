@@ -373,51 +373,53 @@ namespace mystap.Controllers
                             }
 
                         table += "<tr><td rowspan = '2'>" + d.WO + "<br>" + d.po + "<br>" + d.PR + "<br>" + d.noSP + "<br>" + file + "</td>" +
-                            "<td rowspan = '2'>" + d.judulPekerjaan + "</td>"+
+                            "<td rowspan = '2'>" + d.judulPekerjaan + "</td>" +
                             "<td rowspan = '2' style = 'text-align: center;'>" + isi + "<br>" + d.pic + "</td>" +
                             "<td> P </td>" +
-                            "<td style = 'text-align: center;  --bs-table-accent-bg: #ffcc80;'>" + d.target_kak + "</td>" +
-                            "<td style = 'text-align: center;  --bs-table-accent-bg: #ffcc80;'>" + d.target_oe + "</td>" +
-                            "<td style = 'text-align: center; color:blue;  --bs-table-accent-bg: #ffcc80;'>" + d.targetCO + "</td>" +
-                            "<td style = 'text-align: center;  --bs-table-accent-bg: #ffcc80;'>" + d.target_pengumuman + "</td>" +
-                            "<td style = 'text-align: center;  --bs-table-accent-bg: #ffcc80;'>" + d.target_sertifikasi + "</td> " +
-                            "<td style = 'text-align: center;  --bs-table-accent-bg: #ffcc80;'>" + d.target_prakualifikasi + "</td>" +
-                            "<td style = 'text-align: center;  --bs-table-accent-bg: #ffcc80;'>" + d.target_undangan + "</td>" +
-                            "<td style = 'text-align: center;  --bs-table-accent-bg: #ffcc80;'>" + d.target_pemberian + "</td>" +
-                            "<td style = 'text-align: center;   --bs-table-accent-bg: #ffcc80;'>" + d.targetBukaPH + "</td>" +
-                            "<td style = 'text-align: center;  --bs-table-accent-bg: #ffcc80;'>" + d.target_pembukaan + "</td>" +
-                            "<td style = 'text-align: center;  --bs-table-accent-bg: #ffcc80;'>" + d.target_evaluasi + "</td>" +
-                            "<td style = 'text-align: center;  --bs-table-accent-bg: #ffcc80;'>" + d.target_negosiasi + "</td>" +
-                            "<td style = 'text-align: center;  --bs-table-accent-bg: #ffcc80;'>" + d.target_usulan_pemenang + "</td>" +
-                            "<td style = 'text-align: center;  --bs-table-accent-bg: #ffcc80;'>" + d.target_keputusan_pemenang + "</td>" +
-                            "<td style = 'text-align: center;  --bs-table-accent-bg: #ffcc80;'>" + d.target_pengumuman_pemenang + "</td>" +
-                            "<td style = 'text-align: center;  --bs-table-accent-bg: #ffcc80;'>" + d.target_pengajuan_sanggah + "</td>" +
-                            "<td style = 'text-align: center;  --bs-table-accent-bg: #ffcc80;'>" + d.target_jawaban_sanggah + "</td>" +
-                            "<td style = 'text-align: center;  --bs-table-accent-bg: #ffcc80;'>" + d.target_penunjukan_pemenang + "</td>" +
-                            "<td style = 'text-align: center; color:blue; --bs-table-accent-bg: #ffcc80;'>" + d.targetSP + "</td>" +
+                           "<td style = 'text-align: center;  --bs-table-accent-bg: #ffcc80;'>" + ((d.target_kak != null) ? Convert.ToDateTime(d.target_kak).ToShortDateString() : "") + "</td>" +
+                            "<td style = 'text-align: center;  --bs-table-accent-bg: #ffcc80;'>" + ((d.target_persetujuan != null) ? Convert.ToDateTime(d.target_persetujuan).ToShortDateString() : "") + "</td>" +
+                            "<td style = 'text-align: center;  --bs-table-accent-bg: #ffcc80;'>" + ((d.target_oe != null) ? Convert.ToDateTime(d.target_oe).ToShortDateString() : "") + "</td>" +
+                            "<td style = 'text-align: center; color:blue;  --bs-table-accent-bg: #ffcc80;'>" + ((d.targetCO != null) ? Convert.ToDateTime(d.targetCO).ToShortDateString() : "") + "</td>" +
+                            "<td style = 'text-align: center;  --bs-table-accent-bg: #ffcc80;'>" + ((d.target_pengumuman != null) ? Convert.ToDateTime(d.target_pengumuman).ToShortDateString() : "") + "</td>" +
+                            "<td style = 'text-align: center;  --bs-table-accent-bg: #ffcc80;'>" + ((d.target_sertifikasi != null) ? Convert.ToDateTime(d.target_sertifikasi).ToShortDateString() : "") + "</td>" +
+                            "<td style = 'text-align: center;  --bs-table-accent-bg: #ffcc80;'>" + ((d.target_prakualifikasi != null) ? Convert.ToDateTime(d.target_prakualifikasi).ToShortDateString() : "") + "</td>" +
+                            "<td style = 'text-align: center;  --bs-table-accent-bg: #ffcc80;'>" + ((d.target_undangan != null) ? Convert.ToDateTime(d.target_undangan).ToShortDateString() : "") + "</td>" +
+                            "<td style = 'text-align: center;  --bs-table-accent-bg: #ffcc80;'>" + ((d.target_pemberian != null) ? Convert.ToDateTime(d.target_pemberian).ToShortDateString() : "") + "</td>" +
+                            "<td style = 'text-align: center;   --bs-table-accent-bg: #ffcc80;'>" + ((d.targetBukaPH != null) ? Convert.ToDateTime(d.targetBukaPH).ToShortDateString() : "") + "</td>" +
+                            "<td style = 'text-align: center;  --bs-table-accent-bg: #ffcc80;'>" + ((d.target_pembukaan != null) ? Convert.ToDateTime(d.target_pembukaan).ToShortDateString() : "") + "</td>" +
+                            "<td style = 'text-align: center;  --bs-table-accent-bg: #ffcc80;'>" + ((d.target_evaluasi != null) ? Convert.ToDateTime(d.target_evaluasi).ToShortDateString() : "") + "</td>" +
+                            "<td style = 'text-align: center;  --bs-table-accent-bg: #ffcc80;'>" + ((d.target_negosiasi != null) ? Convert.ToDateTime(d.target_negosiasi).ToShortDateString() : "") + "</td>" +
+                            "<td style = 'text-align: center;  --bs-table-accent-bg: #ffcc80;'>" + ((d.target_usulan_pemenang != null) ? Convert.ToDateTime(d.target_usulan_pemenang).ToShortDateString() : "") + "</td>" +
+                            "<td style = 'text-align: center;  --bs-table-accent-bg: #ffcc80;'>" + ((d.target_keputusan_pemenang != null) ? Convert.ToDateTime(d.target_keputusan_pemenang).ToShortDateString() : "") + "</td>" +
+                            "<td style = 'text-align: center;  --bs-table-accent-bg: #ffcc80;'>" + ((d.target_pengumuman_pemenang != null) ? Convert.ToDateTime(d.target_pengumuman_pemenang).ToShortDateString() : "") + "</td>" +
+                            "<td style = 'text-align: center;  --bs-table-accent-bg: #ffcc80;'>" + ((d.target_pengajuan_sanggah != null) ? Convert.ToDateTime(d.target_pengajuan_sanggah).ToShortDateString() : "") + "</td>" +
+                            "<td style = 'text-align: center;  --bs-table-accent-bg: #ffcc80;'>" + ((d.target_jawaban_sanggah != null) ? Convert.ToDateTime(d.target_jawaban_sanggah).ToShortDateString() : "") + "</td>" +
+                            "<td style = 'text-align: center;  --bs-table-accent-bg: #ffcc80;'>" + ((d.target_penunjukan_pemenang != null) ? Convert.ToDateTime(d.target_penunjukan_pemenang).ToShortDateString() : "") + "</td>" +
+                            "<td style = 'text-align: center; color:blue; --bs-table-accent-bg: #ffcc80;'>" + ((d.targetSP != null) ? Convert.ToDateTime(d.targetSP).ToShortDateString() : "") + "</td>" +
                             "<td rowspan = '2'>" + d.currStat + "</td>" +
                         "</tr>" +
                         "<tr>" +
                             "<td> A </td>" +
-                            "<td style = 'text-align: center;'>" + d.akt_kak + "</td>" +
-                            "<td style = 'text-align: center;'>" + d.akt_oe + "</td>" +
-                            "<td style = 'text-align: center;'>" + d.aktualCO + "</td>" +
-                            "<td style = 'text-align: center;'>" + d.akt_pengumuman + "</td>" +
-                            "<td style = 'text-align: center;'>" + d.akt_sertifikasi + "</td>" +
-                            "<td style = 'text-align: center;'>" + d.akt_prakualifikasi + "</td>" +
-                            "<td style = 'text-align: center;'>" + d.akt_undangan + "</td>" +
-                            "<td style = 'text-align: center;'>" + d.akt_pemberian + "</td>" +
-                            "<td style = 'text-align: center;'>" + d.aktualBukaPH + "</td>" +
-                            "<td style = 'text-align: center;'>" + d.akt_pembukaan + "</td>" +
-                            "<td style = 'text-align: center;'>" + d.akt_evaluasi + "</td>" +
-                            "<td style = 'text-align: center;'>" + d.akt_negosiasi + "</td>" +
-                            "<td style = 'text-align: center;'>" + d.akt_usulan_pemenang +"</td>" +
-                            "<td style = 'text-align: center;'>" + d.akt_keputusan_pemenang + "</td>" +
-                            "<td style = 'text-align: center;'>" + d.akt_pengumuman_pemenang + "</td>" +
-                            "<td style = 'text-align: center;'>" + d.akt_pengajuan_sanggah + "</td>" +
-                            "<td style = 'text-align: center;'>" + d.akt_jawaban_sanggah + "</td>" +
-                            "<td style = 'text-align: center;'>" + d.akt_penunjukan_pemenang + "</td>" +
-                            "<td style = 'text-align: center;'>" + d.aktualSP + "</td>" +
+                            "<td style = 'text-align: center;'>" + ((d.akt_kak != null) ? Convert.ToDateTime(d.akt_kak).ToShortDateString() : "") + "</td>" +
+                            "<td style = 'text-align: center;'>" + ((d.akt_persetujuan != null) ? Convert.ToDateTime(d.akt_persetujuan).ToShortDateString() : "") + "</td>" +
+                            "<td style = 'text-align: center;'>" + ((d.akt_oe != null) ? Convert.ToDateTime(d.akt_oe).ToShortDateString() : "") + "</td>" +
+                            "<td style = 'text-align: center;'>" + ((d.aktualCO != null) ? Convert.ToDateTime(d.aktualCO).ToShortDateString() : "") + "</td>" +
+                            "<td style = 'text-align: center;'>" + ((d.akt_pengumuman != null) ? Convert.ToDateTime(d.akt_pengumuman).ToShortDateString() : "") + "</td>" +
+                            "<td style = 'text-align: center;'>" + ((d.akt_sertifikasi != null) ? Convert.ToDateTime(d.akt_sertifikasi).ToShortDateString() : "") + "</td>" +
+                            "<td style = 'text-align: center;'>" + ((d.akt_prakualifikasi != null) ? Convert.ToDateTime(d.akt_prakualifikasi).ToShortDateString() : "") + "</td>" +
+                            "<td style = 'text-align: center;'>" + ((d.akt_undangan != null) ? Convert.ToDateTime(d.akt_undangan).ToShortDateString() : "") + "</td>" +
+                            "<td style = 'text-align: center;'>" + ((d.akt_pemberian != null) ? Convert.ToDateTime(d.akt_pemberian).ToShortDateString() : "") + "</td>" +
+                            "<td style = 'text-align: center;'>" + ((d.aktualBukaPH != null) ? Convert.ToDateTime(d.aktualBukaPH).ToShortDateString() : "") + "</td>" +
+                            "<td style = 'text-align: center;'>" + ((d.akt_pembukaan != null) ? Convert.ToDateTime(d.akt_pembukaan).ToShortDateString() : "") + "</td>" +
+                            "<td style = 'text-align: center;'>" + ((d.akt_evaluasi != null) ? Convert.ToDateTime(d.akt_evaluasi).ToShortDateString() : "") + "</td>" +
+                            "<td style = 'text-align: center;'>" + ((d.akt_negosiasi != null) ? Convert.ToDateTime(d.akt_negosiasi).ToShortDateString() : "") + "</td>" +
+                            "<td style = 'text-align: center;'>" + ((d.akt_usulan_pemenang != null) ? Convert.ToDateTime(d.akt_usulan_pemenang).ToShortDateString() : "") + "</td>" +
+                            "<td style = 'text-align: center;'>" + ((d.akt_keputusan_pemenang != null) ? Convert.ToDateTime(d.akt_keputusan_pemenang).ToShortDateString() : "") + "</td>" +
+                            "<td style = 'text-align: center;'>" + ((d.akt_pengumuman_pemenang != null) ? Convert.ToDateTime(d.akt_pengumuman_pemenang).ToShortDateString() : "") + "</td>" +
+                            "<td style = 'text-align: center;'>" + ((d.akt_pengajuan_sanggah != null) ? Convert.ToDateTime(d.akt_pengajuan_sanggah).ToShortDateString() : "") + "</td>" +
+                            "<td style = 'text-align: center;'>" + ((d.akt_jawaban_sanggah != null) ? Convert.ToDateTime(d.akt_jawaban_sanggah).ToShortDateString() : "") + "</td>" +
+                            "<td style = 'text-align: center;'>" + ((d.akt_penunjukan_pemenang != null) ? Convert.ToDateTime(d.akt_penunjukan_pemenang).ToShortDateString() : "") + "</td>" +
+                            "<td style = 'text-align: center;'>" + ((d.aktualSP != null) ? Convert.ToDateTime(d.aktualSP).ToShortDateString() : "") + "</td>" +
                         "</tr>";
                     }
                 }
