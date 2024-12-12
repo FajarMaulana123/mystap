@@ -56,13 +56,13 @@
 				<div class="navbar-item navbar-user dropdown">
 					<a href="#" class="navbar-link dropdown-toggle d-flex align-items-center" data-bs-toggle="dropdown">
 						<div class="me-2 avatar-sm rounded-circle" alt="profile-image">
-							@if(Accessor.HttpContext.Session.GetString("foto") != null)
+							@if(Accessor.HttpContext.Session.GetString("foto") != "")
 							{
 								<img style="object-fit: cover;" src="@Accessor.HttpContext.Session.GetString("foto")" alt="" class="mr-2" />
 							}
 							else
 							{
-								<img style="object-fit: cover;" src="~/assets/images/noimage.jpg" alt="" class="mr-2" />
+								<img style="object-fit: cover;" src="~/assets/images/noimage.jpg" alt="" class="mr-2">
 							}
 						</div>
 						<span>

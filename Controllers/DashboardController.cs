@@ -1753,7 +1753,7 @@ namespace mystap.Controllers
             }
         }
 
-        [AuthorizedAction]
+        
         public IActionResult UpdateSummaryMaterial()
         {
             using var transaction = _context.Database.BeginTransaction();

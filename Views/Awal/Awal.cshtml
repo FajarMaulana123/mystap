@@ -9,10 +9,16 @@
     <div class="card border-0">
       <div class="card-body">
         <div class=" d-flex">
-           
-            <img src="" alt="" class="mr-2" width="15%"/>
+                    @if (Accessor.HttpContext.Session.GetString("foto") != "")
+                    {
+                        <img src="@Accessor.HttpContext.Session.GetString("foto")" alt="" class="mr-2" width="15%" />
+                    }
+                    else
+                    {
+                        <img src="~/assets/images/noimage.jpg" alt="" class="mr-2" width="15%"/>
+                    }
             <div  style="margin: left 5px; justify-content:center; margin-left:20px;">
-            <h1 data-content='Hello!' id='greetings'>Hallo, <b> </b> 
+            <h1 data-content='Hello!' id='greetings'>Hallo, <b>@Accessor.HttpContext.Session.GetString("alias")</b> 
           <!-- weather widget start -->
           
           </h1><br><h4>Welcome to MyStap</h4>

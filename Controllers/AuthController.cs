@@ -27,59 +27,66 @@ namespace mystap.Controllers
 				var password = Request.Form["password"].FirstOrDefault();
 
 				var admin = _context.users.Where(p => p.username == username).FirstOrDefault();
-				if(admin != null)
+				if (admin != null)
 				{
-					if(password == EncryptPassword.Decrypt(admin.password))
+					if (EncryptPassword.Decrypt(admin.password) != "gagal")
 					{
-						if(admin.locked == 0)
+						if (password == EncryptPassword.Decrypt(admin.password))
 						{
-							var foto = (admin.foto != null) ? admin.foto : "";
-
-                            HttpContext.Session.SetInt32("id", Convert.ToInt32(admin.id));
-							HttpContext.Session.SetString("username", admin.username);
-							HttpContext.Session.SetString("status", admin.status);
-							HttpContext.Session.SetString("statPekerja", admin.statPekerja);
-                            HttpContext.Session.SetString("role", admin.role);
-							HttpContext.Session.SetString("alias", admin.alias);
-							HttpContext.Session.SetString("fungsi", admin.subSection);
-							HttpContext.Session.SetString("foto", foto);
-
-                            var builderM = (from um in _context.userModul
-											join m in _context.modul on um.id_modul equals m.id_modul
-											select new
-											{
-												id_user = um.id_user,
-												nama = m.nama,
-												alias = m.alias
-											}).Where(p => p.id_user == admin.id && p.alias != "");
-
-                            List<string> nama = new List<string>();
-                            List<string> alias = new List<string>();
-
-                            if (builderM.Count() > 0)
+							if (admin.locked == 0)
 							{
-								foreach(var val in builderM.ToList())
+								var foto = (admin.foto != null) ? admin.foto : "";
+
+								HttpContext.Session.SetInt32("id", Convert.ToInt32(admin.id));
+								HttpContext.Session.SetString("username", admin.username);
+								HttpContext.Session.SetString("status", admin.status);
+								HttpContext.Session.SetString("statPekerja", admin.statPekerja);
+								HttpContext.Session.SetString("role", admin.role);
+								HttpContext.Session.SetString("alias", admin.alias);
+								HttpContext.Session.SetString("fungsi", admin.subSection);
+								HttpContext.Session.SetString("foto", foto);
+
+								var builderM = (from um in _context.userModul
+												join m in _context.modul on um.id_modul equals m.id_modul
+												select new
+												{
+													id_user = um.id_user,
+													nama = m.nama,
+													alias = m.alias
+												}).Where(p => p.id_user == admin.id && p.alias != "");
+
+								List<string> nama = new List<string>();
+								List<string> alias = new List<string>();
+
+								if (builderM.Count() > 0)
 								{
-									nama.Add(val.nama);
-									alias.Add(val.alias);
-                                }
+									foreach (var val in builderM.ToList())
+									{
+										nama.Add(val.nama);
+										alias.Add(val.alias);
+									}
+								}
+
+								HttpContext.Session.SetString("admin_modules", JsonConvert.SerializeObject(alias));
+
+
+
+								return Json(new { result = true, text = "Login Berhasil" });
 							}
-							
-							HttpContext.Session.SetString("admin_modules", JsonConvert.SerializeObject(alias));
-
-
-
-							return Json(new { result = true, text = "Login Berhasil" });
+							else
+							{
+								return Json(new { result = false, text = "Akun Terkunci!, Harap segera hubungi Administrator" });
+							}
 						}
 						else
 						{
-							return Json(new { result = false, text = "Akun Terkunci!, Harap segera hubungi Administrator" });
+							return Json(new { result = false, text = "Password Anda Salah!" });
 						}
 					}
 					else
 					{
-						return Json(new { result = false, text = "Password Anda Salah!" });
-					}
+                        return Json(new { result = false, text = "Password Belum dibuat silahkan hubungi Administrator" });
+                    }
 				}
 				else
 				{

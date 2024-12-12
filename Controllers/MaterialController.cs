@@ -142,6 +142,10 @@ namespace mystap.Controllers
                 }
                 // Total number of rows count
                 recordsTotal = datas.Count();
+                if(pageSize > 0)
+                {
+                    datas = datas.Skip(skip).Take(pageSize);
+                }
                 // Paging
                 var data = await datas.ToListAsync();
                 // Returning Json Data
@@ -268,6 +272,10 @@ namespace mystap.Controllers
                 // Total number of rows count
                 recordsTotal = datas.Count();
                 // Paging
+                if (pageSize > 0)
+                {
+                    datas = datas.Skip(skip).Take(pageSize);
+                }
                 var data = await datas.ToListAsync();
                 // Returning Json Data
                 return Json(new { draw = draw, recordsFiltered = recordsTotal, recordsTotal = recordsTotal, data = data });
@@ -367,6 +375,10 @@ namespace mystap.Controllers
                 // Total number of rows count
                 recordsTotal = datas.Count();
                 // Paging
+                if (pageSize > 0)
+                {
+                    datas = datas.Skip(skip).Take(pageSize);
+                }
                 var data = await datas.ToListAsync();
                 // Returning Json Data
                 return Json(new { draw = draw, recordsFiltered = recordsTotal, recordsTotal = recordsTotal, data = data });
@@ -533,6 +545,10 @@ namespace mystap.Controllers
                     }
                     // Total number of rows count
                     recordsTotal = datas.Count();
+                    if (pageSize > 0)
+                    {
+                        datas = datas.Skip(skip).Take(pageSize);
+                    }
                     // Paging
                     var data = await datas.ToListAsync();
                     // Returning Json Data
@@ -692,6 +708,10 @@ namespace mystap.Controllers
                 // Total number of rows count
                 recordsTotal = datas.Count();
                 // Paging
+                if (pageSize > 0)
+                {
+                    datas = datas.Skip(skip).Take(pageSize);
+                }
                 var data = await datas.ToListAsync();
                 // Returning Json Data
                 return Json(new { draw = draw, recordsFiltered = recordsTotal, recordsTotal = recordsTotal, data = data });
@@ -825,6 +845,10 @@ namespace mystap.Controllers
                 // Total number of rows count
                 recordsTotal = datas.Count();
                 // Paging
+                if (pageSize > 0)
+                {
+                    datas = datas.Skip(skip).Take(pageSize);
+                }
                 var data = await datas.ToListAsync();
                 // Returning Json Data
                 return Json(new { draw = draw, recordsFiltered = recordsTotal, recordsTotal = recordsTotal, data = data });
