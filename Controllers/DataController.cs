@@ -757,7 +757,7 @@ namespace mystap.Controllers
 
                 if (!string.IsNullOrEmpty(searchValue))
                 {
-                    customerData = customerData.Where(b => b.description.StartsWith(searchValue));
+                    customerData = customerData.Where(b => b.description.Contains(searchValue) || b.revision.Contains(searchValue));
                 }
 
 
@@ -1031,7 +1031,7 @@ namespace mystap.Controllers
 
                 if (!string.IsNullOrEmpty(searchValue))
                 {
-                    customerData = customerData.Where(b => b.eqDesc.StartsWith(searchValue) || b.eqTagNo.StartsWith(searchValue));
+                    customerData = customerData.Where(b => b.eqDesc.Contains(searchValue) || b.eqTagNo.Contains(searchValue) || b.funcLocID.Contains(searchValue));
                 }
 
                 //Console.WriteLine(customerData);
@@ -1292,7 +1292,7 @@ namespace mystap.Controllers
 
                 if (!string.IsNullOrEmpty(searchValue))
                 {
-                    customerData = customerData.Where(b => b.long_description.StartsWith(searchValue));
+                    customerData = customerData.Where(b => b.long_description.Contains(searchValue) || b.equipment_class.Contains(searchValue) || b.equipment_group.Contains(searchValue));
                 }
                 // Total number of rows count
                 //Console.WriteLine(customerData);
@@ -1483,7 +1483,7 @@ namespace mystap.Controllers
                 //search
                 if (!string.IsNullOrEmpty(searchValue))
                 {
-                    customerData = customerData.Where(m => m.reqNo.StartsWith(searchValue) || m.reqDesc.StartsWith(searchValue) || m.createBy.StartsWith(searchValue) || m.requestorName.StartsWith(searchValue));
+                    customerData = customerData.Where(m => m.reqNo.Contains(searchValue) || m.reqDesc.Contains(searchValue) || m.createBy.Contains(searchValue) || m.requestorName.Contains(searchValue));
                 }
 
 
@@ -1676,7 +1676,7 @@ namespace mystap.Controllers
 
                 if (!string.IsNullOrEmpty(searchValue))
                 {
-                    customerData = customerData.Where(b => b.description.StartsWith(searchValue));
+                    customerData = customerData.Where(b => b.name.Contains(searchValue) || b.description.Contains(searchValue));
                 }
                 // Total number of rows count
                 //Console.WriteLine(customerData);
@@ -1826,7 +1826,7 @@ namespace mystap.Controllers
 
                 if (!string.IsNullOrEmpty(searchValue))
                 {
-                    customerData = customerData.Where(b => b.unitPlan.StartsWith(searchValue));
+                    customerData = customerData.Where(b => b.unitPlan.Contains(searchValue) || b.unitKilang.Contains(searchValue));
                 }
                 // Total number of rows count
                 //Console.WriteLine(customerData);
@@ -2020,7 +2020,7 @@ namespace mystap.Controllers
 
                 if (!string.IsNullOrEmpty(searchValue))
                 {
-                    customerData = customerData.Where(b => b.tag_no.StartsWith(searchValue));
+                    customerData = customerData.Where(b => b.tag_no.Contains(searchValue) || b.no_wo.Contains(searchValue) || b.disiplin.Contains(searchValue));
                 }
                 // Total number of rows count
                 //Console.WriteLine(customerData);

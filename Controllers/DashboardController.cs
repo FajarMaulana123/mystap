@@ -101,7 +101,7 @@ namespace mystap.Controllers
                 //search
                 if (!string.IsNullOrEmpty(searchValue))
                 {
-                    customerData = customerData.Where(m => m.jobNo.StartsWith(searchValue) || m.eqTagNo.StartsWith(searchValue) || m.status_tagno.StartsWith(searchValue));
+                    customerData = customerData.Where(m => m.jobNo.Contains(searchValue) || m.eqTagNo.Contains(searchValue) || m.status_tagno.Contains(searchValue));
                 }
 
                 if (!string.IsNullOrEmpty(filter))
@@ -295,7 +295,7 @@ namespace mystap.Controllers
                     //search
                     if (!string.IsNullOrEmpty(searchValue))
                     {
-                        query = query.Where(m => m.order.StartsWith(searchValue) || m.itm.StartsWith(searchValue) || m.material.StartsWith(searchValue) || m.material_description.StartsWith(searchValue) || m.lld.StartsWith(searchValue) || m.status_.StartsWith(searchValue));
+                        query = query.Where(m => m.order.Contains(searchValue) || m.itm.Contains(searchValue) || m.material.Contains(searchValue) || m.material_description.Contains(searchValue) || m.lld.Contains(searchValue) || m.status_.StartsWith(searchValue));
                     }
                     // Total number of rows count
                     //Console.WriteLine(customerData);
@@ -497,7 +497,7 @@ namespace mystap.Controllers
                 //search
                 if (!string.IsNullOrEmpty(searchValue))
                 {
-                    customerData = customerData.Where(m => m.tag_no.StartsWith(searchValue) || m.disiplin.StartsWith(searchValue) || m.status_tagno.StartsWith(searchValue));
+                    customerData = customerData.Where(m => m.tag_no.Contains(searchValue) || m.disiplin.Contains(searchValue) || m.status_tagno.Contains(searchValue));
                 }
 
                 if (!string.IsNullOrEmpty(filter_status))
@@ -686,7 +686,7 @@ namespace mystap.Controllers
                 //search
                 if (!string.IsNullOrEmpty(searchValue))
                 {
-                    query = query.Where(m => m.alias.StartsWith(searchValue) );
+                    query = query.Where(m => m.alias.Contains(searchValue) );
                 }
 
                 
@@ -782,7 +782,7 @@ namespace mystap.Controllers
                 //search
                 if (!string.IsNullOrEmpty(searchValue))
                 {
-                    query = query.Where(m => m.alias.StartsWith(searchValue));
+                    query = query.Where(m => m.alias.Contains(searchValue));
                 }
 
 
@@ -1402,7 +1402,7 @@ namespace mystap.Controllers
                 //search
                 if (!string.IsNullOrEmpty(searchValue))
                 {
-                    datas = datas.Where(m => m.description.StartsWith(searchValue));
+                    datas = datas.Where(m => m.description.Contains(searchValue));
                 }
                 // Total number of rows count
                 recordsTotal = datas.Count();
@@ -1738,7 +1738,7 @@ namespace mystap.Controllers
                 //search
                 if (!string.IsNullOrEmpty(searchValue))
                 {
-                    datas = datas.Where(m => m.material_description.StartsWith(searchValue));
+                    datas = datas.Where(m => m.material_description.Contains(searchValue));
                 }
                 // Total number of rows count
                 recordsTotal = datas.Count();

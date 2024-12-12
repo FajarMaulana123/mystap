@@ -83,7 +83,7 @@ namespace mystap.Controllers
 
                 if (!string.IsNullOrEmpty(searchValue))
                 {
-                    customerData = customerData.Where(b => b.name.StartsWith(searchValue));
+                    customerData = customerData.Where(b => b.name.Contains(searchValue));
                 }
                 // Total number of rows count
                 //Console.WriteLine(customerData);

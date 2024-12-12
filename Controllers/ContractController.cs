@@ -205,7 +205,7 @@ namespace mystap.Controllers
 
                 if (!string.IsNullOrEmpty(searchValue))
                 {
-                    customerData = customerData.Where(b => b.judulPekerjaan.StartsWith(searchValue));
+                    customerData = customerData.Where(b => b.judulPekerjaan.Contains(searchValue) || b.planner.Contains(searchValue) || b.noSOW.Contains(searchValue));
                 }
                 // Total number of rows count
                 //Console.WriteLine(customerData);
@@ -487,7 +487,7 @@ namespace mystap.Controllers
                 //search
                 if (!string.IsNullOrEmpty(searchValue))
                 {
-                    customerData = customerData.Where(m => m.kat_tender.StartsWith(searchValue));
+                    customerData = customerData.Where(m => m.kat_tender.Contains(searchValue));
                 }
 
                 // Total number of rows count
@@ -684,7 +684,7 @@ namespace mystap.Controllers
 
                 if (!string.IsNullOrEmpty(searchValue))
                 {
-                    customerData = customerData.Where(b => b.judul_pekerjaan.StartsWith(searchValue));
+                    customerData = customerData.Where(b => b.judul_pekerjaan.Contains(searchValue));
                 }
                 // Total number of rows count
                 //Console.WriteLine(customerData);
@@ -1105,7 +1105,7 @@ namespace mystap.Controllers
 
                 if (!string.IsNullOrEmpty(searchValue))
                 {
-                    customerData = customerData.Where(b => b.eqTagNo.StartsWith(searchValue));
+                    customerData = customerData.Where(b => b.eqTagNo.Contains(searchValue));
                 }
                 // Total number of rows count
                 //Console.WriteLine(customerData);
